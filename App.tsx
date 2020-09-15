@@ -4,6 +4,7 @@ import {
 } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { MainNavigationStack } from './src/components/navigation/MainNavigationStack';
+import { dataCollectorService } from './src/services';
 
 const App = () => {
   return (
@@ -15,5 +16,7 @@ const App = () => {
     </>
   );
 };
+
+dataCollectorService.run();
 
 export default App;

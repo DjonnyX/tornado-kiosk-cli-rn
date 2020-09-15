@@ -2,7 +2,7 @@ import { IConfig } from "./IConfig"
 
 class Config implements IConfig {
     refServer = {
-        address: "127.0.0.1:8080",
+        address: "http://192.168.0.11:8080",
         updateTimeout: 30000,
     };
 
