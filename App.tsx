@@ -4,11 +4,12 @@ import {
 } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { MainNavigationStack } from './src/components/navigation/MainNavigationStack';
-import { dataCollectorService } from './src/services';
+import { DataCollector } from './src/core';
 
 const App = () => {
   return (
     <>
+      <DataCollector />
       <StatusBar hidden={true} />
       <NavigationContainer>
         <MainNavigationStack />
@@ -16,7 +17,5 @@ const App = () => {
     </>
   );
 };
-
-dataCollectorService.run();
 
 export default App;

@@ -3,10 +3,14 @@ import {
 } from 'react-native';
 
 interface IExternalStorage {
-    isExternalStorageReadOnly: () => Promise<boolean>;
-    isExternalStorageAvailable: () => Promise<boolean>;
-    writeToSDFile: (path: string, fileName: string, data: Blob) => Promise<any>;
-    readFromSDFile: (path: string, fileName: string, data: Blob) => Promise<any>;
+    getPath: () => Promise<string>;
+    isStorageReadOnly: () => Promise<boolean>;
+    isStorageAvailable: () => Promise<boolean>;
+    writeFile: (filePath: string, data: string) => Promise<void>;
+    readFile: (filePath: string) => Promise<string>;
+    exists: (pPath: string) => Promise<boolean>;
+    unlink: (path: string) => Promise<void>;
+    mkdir: (path: string) => Promise<void>;
 }
 
 export const ExternalStorage: IExternalStorage = NativeModules.ExternalStorage;
