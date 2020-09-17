@@ -1,6 +1,5 @@
 package com.tornadokiosk.utils;
 
-import android.net.Uri;
 import android.os.Environment;
 import android.util.Base64;
 
@@ -9,12 +8,16 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 
-import java.io.ByteArrayOutputStream;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 
 public class ExternalStorageModule extends ReactContextBaseJavaModule {
 
@@ -23,12 +26,12 @@ public class ExternalStorageModule extends ReactContextBaseJavaModule {
     private boolean storageAvailable;
     private boolean storageReadOnly;
 
-    public ExternalStorageModule(ReactApplicationContext reactContext) {
+    public ExternalStorageModule(ReactApplicationContext reactContext) throws Exception {
         super(reactContext);
 
         this.reactContext = reactContext;
 
-        File root = android.os.Environment.getExternalStorageDirectory();
+        File root = this.reactContext.getExternalFilesDir(null);
         storagePath = root.getAbsolutePath();
 
         String extStorageState = Environment.getExternalStorageState();
@@ -41,27 +44,37 @@ public class ExternalStorageModule extends ReactContextBaseJavaModule {
         return "ExternalStorage";
     }
 
+    /**
+     * Проверка на существование файла
+     */
     @ReactMethod
     public void exists(String filepath, Promise promise) {
         boolean isExists = false;
         try {
             File file = new File(filepath);
             isExists = file.exists();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            promise.reject(ex);
+        } catch (Exception e) {
+            e.printStackTrace();
+            promise.reject(e);
         }
         promise.resolve(isExists);
     }
 
+    /**
+     * Запись файла
+     */
     @ReactMethod
     public void writeFile(String filepath, String base64Content, Promise promise) {
         try {
             byte[] bytes = Base64.decode(base64Content, Base64.DEFAULT);
 
-            OutputStream outputStream = getOutputStream(filepath, false);
-            outputStream.write(bytes);
-            outputStream.close();
+            File file = new File(filepath);
+            file.createNewFile();
+
+            FileOutputStream out = new FileOutputStream(file);
+            out.write(bytes);
+            out.flush();
+            out.close();
         } catch (Exception ex) {
             ex.printStackTrace();
             promise.reject(ex);
@@ -70,21 +83,36 @@ public class ExternalStorageModule extends ReactContextBaseJavaModule {
         promise.resolve(null);
     }
 
+    /**
+     * Чтение файла
+     */
     @ReactMethod
     public void readFile(String filepath, Promise promise) {
         String base64 = "";
+
+        File file = new File(filepath);
+        int size = (int) file.length();
+        byte[] bytes = new byte[size];
         try {
-            InputStream inputStream = getInputStream(filepath);
-            byte[] inputData = getInputStreamBytes(inputStream);
-            base64 = Base64.encodeToString(inputData, Base64.NO_WRAP);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            promise.reject(ex);
+            BufferedInputStream buf = new BufferedInputStream(new FileInputStream(file));
+            buf.read(bytes, 0, bytes.length);
+            buf.close();
+
+            base64 = Base64.encodeToString(bytes, Base64.DEFAULT);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            promise.reject(e);
+        } catch (IOException e) {
+            e.printStackTrace();
+            promise.reject(e);
         }
 
         promise.resolve(base64);
     }
 
+    /**
+     * Удаление файла
+     */
     @ReactMethod
     public void unlink(String filepath, Promise promise) {
         try {
@@ -92,38 +120,39 @@ public class ExternalStorageModule extends ReactContextBaseJavaModule {
 
             if (!file.exists()) throw new Exception("File does not exist");
 
-            DeleteRecursive(file);
+            deleteRecursive(file);
 
             promise.resolve(null);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            promise.reject(ex);
+        } catch (Exception e) {
+            e.printStackTrace();
+            promise.reject(e);
         }
     }
 
+    /**
+     * Создание директории
+     */
     @ReactMethod
     public void mkdir(String filepath, Promise promise) {
         try {
             File file = new File(filepath);
 
-            file.mkdirs();
+            boolean isCreated = file.mkdirs();
 
-            boolean exists = file.exists();
-
-            if (!exists) throw new Exception("Directory could not be created");
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            promise.reject(ex);
+            if (!isCreated) throw new Exception("Directory could not be created");
+        } catch (Exception e) {
+            e.printStackTrace();
+            promise.reject(e);
         }
 
         promise.resolve(null);
     }
 
     /**
-     * Возвращает true, если внешнее хранилище (SD) доступно только для чтения
+     * Возвращает true, если внешнее хранилище (SD) доступно для чтения
      */
     @ReactMethod
-    public void isStorageReadOnly(final Promise promise) {
+    public void isStorageWritable(Promise promise) {
         promise.resolve(storageReadOnly);
     }
 
@@ -131,7 +160,7 @@ public class ExternalStorageModule extends ReactContextBaseJavaModule {
      * Возвращает true, если внешнее хранилище (SD) доступно
      */
     @ReactMethod
-    public void isStorageAvailable(final Promise promise) {
+    public void isStorageAvailable(Promise promise) {
         promise.resolve(storageAvailable);
     }
 
@@ -139,78 +168,56 @@ public class ExternalStorageModule extends ReactContextBaseJavaModule {
      * Возвращает путь к внешнему хранилищу (SD)
      */
     @ReactMethod
-    public void getPath(final Promise promise) {
+    public void getPath(Promise promise) {
         promise.resolve(storagePath);
     }
 
-    private Uri getFileUri(String filepath, boolean isDirectoryAllowed) throws IORejectionException {
-        Uri uri = Uri.parse(filepath);
-        if (uri.getScheme() == null) {
-            // No prefix, assuming that provided path is absolute path to file
-            File file = new File(filepath);
-            if (!isDirectoryAllowed && file.isDirectory()) {
-                throw new IORejectionException("EISDIR", "EISDIR: illegal operation on a directory, read '" + filepath + "'");
-            }
-            uri = Uri.parse("file://" + filepath);
-        }
-        return uri;
-    }
-
-    private OutputStream getOutputStream(String filepath, boolean append) throws IORejectionException {
-        Uri uri = getFileUri(filepath, false);
-        OutputStream stream;
-        try {
-            stream = reactContext.getContentResolver().openOutputStream(uri, append ? "wa" : "w");
-        } catch (FileNotFoundException ex) {
-            throw new IORejectionException("ENOENT", "ENOENT: " + ex.getMessage() + ", open '" + filepath + "'");
-        }
-        if (stream == null) {
-            throw new IORejectionException("ENOENT", "ENOENT: could not open an output stream for '" + filepath + "'");
-        }
-        return stream;
-    }
-    
-    private InputStream getInputStream(String filepath) throws IORejectionException {
-        Uri uri = getFileUri(filepath, false);
-        InputStream stream;
-        try {
-            stream = reactContext.getContentResolver().openInputStream(uri);
-        } catch (FileNotFoundException ex) {
-            throw new IORejectionException("ENOENT", "ENOENT: " + ex.getMessage() + ", open '" + filepath + "'");
-        }
-        if (stream == null) {
-            throw new IORejectionException("ENOENT", "ENOENT: could not open an input stream for '" + filepath + "'");
-        }
-        return stream;
-    }
-
-    private static byte[] getInputStreamBytes(InputStream inputStream) throws IOException {
-        byte[] bytesResult;
-        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
-        int bufferSize = 1024;
-        byte[] buffer = new byte[bufferSize];
-        try {
-            int len;
-            while ((len = inputStream.read(buffer)) != -1) {
-                byteBuffer.write(buffer, 0, len);
-            }
-            bytesResult = byteBuffer.toByteArray();
-        } finally {
-            try {
-                byteBuffer.close();
-            } catch (IOException ignored) {
-            }
-        }
-        return bytesResult;
-    }
-
-    private void DeleteRecursive(File fileOrDirectory) {
+    /**
+     * Рекурсивное удаление
+     */
+    private void deleteRecursive(File fileOrDirectory) {
         if (fileOrDirectory.isDirectory()) {
             for (File child : fileOrDirectory.listFiles()) {
-                DeleteRecursive(child);
+                deleteRecursive(child);
             }
         }
 
         fileOrDirectory.delete();
+    }
+
+    @ReactMethod
+    protected void downloadFile(String urlSrc, String outputPath, Promise promise) {
+        int count;
+        try {
+            URL url = new URL(urlSrc);
+            URLConnection conection = url.openConnection();
+            conection.connect();
+
+            InputStream input = new BufferedInputStream(url.openStream(),
+                    8192);
+
+            File file = new File(outputPath);
+            file.createNewFile();
+
+            OutputStream output = new FileOutputStream(file);
+
+            byte data[] = new byte[1024];
+
+            long total = 0;
+
+            while ((count = input.read(data)) != -1) {
+                total += count;
+                output.write(data, 0, count);
+            }
+
+            output.flush();
+            output.close();
+            input.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            promise.reject(e);
+        }
+
+        promise.resolve(null);
     }
 }

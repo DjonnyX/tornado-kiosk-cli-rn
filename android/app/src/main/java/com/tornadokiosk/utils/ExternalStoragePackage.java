@@ -21,7 +21,11 @@ public class ExternalStoragePackage implements ReactPackage {
                               ReactApplicationContext reactContext) {
     List<NativeModule> modules = new ArrayList<>();
 
-    modules.add(new ExternalStorageModule(reactContext));
+    try {
+      modules.add(new ExternalStorageModule(reactContext));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
 
     return modules;
   }

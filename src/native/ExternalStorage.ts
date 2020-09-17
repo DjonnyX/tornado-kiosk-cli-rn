@@ -4,8 +4,9 @@ import {
 
 interface IExternalStorage {
     getPath: () => Promise<string>;
-    isStorageReadOnly: () => Promise<boolean>;
     isStorageAvailable: () => Promise<boolean>;
+    isStorageWritable: () => Promise<boolean>;
+    downloadFile: (url: string, outputPath: string) => Promise<void>;
     writeFile: (filePath: string, data: string) => Promise<void>;
     readFile: (filePath: string) => Promise<string>;
     exists: (pPath: string) => Promise<boolean>;

@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import { from, of, Subject } from "rxjs";
 import { take, takeUntil } from "rxjs/operators";
 import { IAsset } from "@djonnyx/tornado-types";
@@ -6,7 +6,7 @@ import { AssetsStore } from "@djonnyx/tornado-assets-store";
 import { DataCombiner } from "@djonnyx/tornado-refs-processor";
 import { ExternalStorage } from "../native";
 import { config } from "../Config";
-import { refApiService, assetsService, fsService } from "../services";
+import { assetsService, refApiService } from "../services";
 
 interface IDataCollectorProps {
 
@@ -16,7 +16,7 @@ interface IDataCollectorState {
 
 }
 
-const APP_CACHE_DIR_NAME = "tornado-app";
+// const APP_CACHE_DIR_NAME = "tornado";
 
 export class DataCollector extends Component<IDataCollectorProps, IDataCollectorState> {
     private _unsubscribe$: Subject<void> | null = new Subject<void>();
@@ -34,18 +34,22 @@ export class DataCollector extends Component<IDataCollectorProps, IDataCollector
 
         try {
             const isStorageAvailable = await ExternalStorage.isStorageAvailable();
-            const isStorageReadOnly = await ExternalStorage.isStorageReadOnly();
+            const isStorageWritable = await ExternalStorage.isStorageWritable();
 
-            if (isStorageAvailable && !isStorageReadOnly) {
+            if (isStorageAvailable && !isStorageWritable) {
                 userDataPath = await ExternalStorage.getPath();
             }
         } catch (err) {
             console.warn(err);
+            return;
         }
 
-        const storePath = `${userDataPath}/${APP_CACHE_DIR_NAME}/assets`;
+        const storePath = `${userDataPath}/assets`; //${APP_CACHE_DIR_NAME}/
 
-        this._assetsStore = new AssetsStore(storePath, fsService, assetsService);
+        this._assetsStore = new AssetsStore(storePath, assetsService, {
+            createDirectoryRecurtion: false, 
+            maxThreads: 1,
+        });
 
         this._dataCombiner = new DataCombiner({
             assetsTransformer: (assets: Array<IAsset>) => {
@@ -89,5 +93,9 @@ export class DataCollector extends Component<IDataCollectorProps, IDataCollector
             this._unsubscribe$.complete();
             this._unsubscribe$ = null;
         }
+    }
+
+    render() {
+        return <></>;
     }
 }
