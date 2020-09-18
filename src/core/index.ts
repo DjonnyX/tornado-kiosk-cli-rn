@@ -1,1 +1,1 @@
-export * from "./DataCollector";
+export * from "./DataCollectorService";
