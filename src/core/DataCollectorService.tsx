@@ -105,7 +105,6 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
     }
 }
 
-
 const mapStateToProps = (state: IAppState) => {
     return {};
 };

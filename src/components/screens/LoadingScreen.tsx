@@ -14,7 +14,7 @@ export const LoadingScreen = ({ navigation }: ILoadingProps) => {
         <Text>Loading screen</Text>
         <Button
           title="Go to Profile"
-          onPress={() => navigation.navigate('Profile')}
+          onPress={() => navigation.navigate('Ad')}
         />
       </View>
     );

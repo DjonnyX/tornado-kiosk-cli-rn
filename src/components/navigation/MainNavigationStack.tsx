@@ -4,6 +4,7 @@ import {
 } from '@react-navigation/stack';
 
 import { LoadingScreen } from '../screens/LoadingScreen';
+import { AdScreen } from "../screens/IntroScreen";
 
 const Stack = createStackNavigator();
 
@@ -17,16 +18,10 @@ export const MainNavigationStack = () => {
       <Stack.Screen
         name="Loading"
         component={LoadingScreen}
-        options={{
-          title: 'Awesome app',
-        }}
       />
       <Stack.Screen
-        name="Profile"
-        component={LoadingScreen}
-        options={{
-          title: 'My profile',
-        }}
+        name="Ad"
+        component={AdScreen}
       />
       <Stack.Screen
         name="Settings"
