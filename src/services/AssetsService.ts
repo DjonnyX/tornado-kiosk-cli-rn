@@ -25,14 +25,12 @@ class AssetsService implements IAssetStoreFileService {
         ).pipe(
             map(data => new Buffer(data, 'base64')),
             map(string => {
-                console.log("manifest", JSON.parse(string.toString("utf8")))
                 return JSON.parse(string.toString("utf8"));
             })
         ).toPromise();
     }
 
     writeManifest(path: string, data: Array<IAsset>): Promise<void> {
-        console.log("write manifest", data)
         return ExternalStorage.writeFile(
             this.normalizeFilePath(`${path}/${this.manifestFileName}`),
             new Buffer(JSON.stringify(data), "utf8").toString("base64"),
@@ -40,7 +38,6 @@ class AssetsService implements IAssetStoreFileService {
     }
 
     downloadAsset(url: string, outputPath: string): Promise<void> {
-        console.log("addr: ", `${config.refServer.address}/${url}`.replace("\\", "/"), ", output:", this.normalizeFilePath(outputPath))
         return from(
             ExternalStorage.downloadFile(
                 `${config.refServer.address}/${url}`.replace("\\", "/"),
@@ -50,7 +47,6 @@ class AssetsService implements IAssetStoreFileService {
     }
 
     deleteAsset(filePath: string): Promise<void> {
-        console.log("delete: ", `filePath`);
         return ExternalStorage.unlink(
             this.normalizeFilePath(filePath),
         );
