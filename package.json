@@ -6,12 +6,13 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
+    "start:reset-cache": "npm start -- --reset-cache",
     "build:android": "cd android && ./gradlew assembleRelease",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
-    "@djonnyx/tornado-assets-store": "0.0.10",
+    "@djonnyx/tornado-assets-store": "0.0.14",
     "@djonnyx/tornado-refs-processor": "^1.1.5",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-navigation/native": "^5.7.3",
