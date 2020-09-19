@@ -3,17 +3,19 @@ import { connect } from "react-redux";
 import { from, of, Subject } from "rxjs";
 import { take, takeUntil } from "rxjs/operators";
 import { IAsset, ICompiledData } from "@djonnyx/tornado-types";
-import { AssetsStore } from "@djonnyx/tornado-assets-store";
+import { AssetsStore, IAssetsStoreResult } from "@djonnyx/tornado-assets-store";
 import { DataCombiner } from "@djonnyx/tornado-refs-processor";
 import { ExternalStorage } from "../native";
 import { config } from "../Config";
 import { assetsService, refApiService } from "../services";
 import { IAppState } from "../store/state";
 import { CombinedDataActions } from "../store/actions";
+import { IProgress } from "@djonnyx/tornado-refs-processor/dist/DataCombiner";
 
 interface IDataCollectorServiceProps {
     // store
     _onChange: (data: ICompiledData) => void;
+    _onProgress: (progress: IProgress) => void;
 
     // self
 
@@ -58,7 +60,10 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
 
         this._dataCombiner = new DataCombiner({
             assetsTransformer: (assets: Array<IAsset>) => {
-                return this._assetsStore?.setManifest(assets) || of(assets);
+                return this._assetsStore?.setManifest(assets) || {
+                    onComplete: of(assets),
+                    onProgress: of({ total: 0, current: 0 }),
+                } as IAssetsStoreResult;
             },
             dataService: refApiService,
             updateTimeout: config.refServer.updateTimeout,
@@ -69,6 +74,14 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
         ).subscribe(
             data => {
                 this.props._onChange(data);
+            },
+        );
+
+        this._dataCombiner.onProgress.pipe(
+            takeUntil(this._unsubscribe$ as any),
+        ).subscribe(
+            progress => {
+                this.props._onProgress(progress);
             },
         );
 
@@ -113,7 +126,10 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => {
     return {
         _onChange: (data: ICompiledData) => {
             dispatch(CombinedDataActions.setData(data));
-        }
+        },
+        _onProgress: (progress: IProgress) => {
+            dispatch(CombinedDataActions.setProgress(progress));
+        },
     };
 };
 

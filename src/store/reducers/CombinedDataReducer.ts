@@ -3,22 +3,31 @@ import { TCombinedDataActions, CombinedDataActionTypes } from "../actions";
 import { ICombinedDataState } from "../state";
 
 const initialState: ICombinedDataState = {
-	data: null,
+    data: null,
+    progress: {
+        total: 0,
+        current: 0,
+    },
 };
 
 const combinedDataReducer: Reducer<ICombinedDataState, TCombinedDataActions> = (
-	state = initialState,
-	action
+    state = initialState,
+    action
 ) => {
-	switch (action.type) {
-		case CombinedDataActionTypes.SET_DATA:
-			return {
-				...state,
-				data: action.data,
-			};
-		default:
-			return state;
-	}
+    switch (action.type) {
+        case CombinedDataActionTypes.SET_DATA:
+            return {
+                ...state,
+                data: (action as any).data,
+            };
+        case CombinedDataActionTypes.SET_PROGRESS:
+            return {
+                ...state,
+                progress: (action as any).progress,
+            };
+        default:
+            return state;
+    }
 };
 
 export default combinedDataReducer;

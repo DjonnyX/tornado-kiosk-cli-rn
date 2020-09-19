@@ -3,31 +3,34 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { View, Text, Image } from "react-native";
 import { IAppState } from "../../store/state";
 import { connect } from "react-redux";
+import { TouchableHighlight, TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { MainNavigationScreenTypes } from "../navigation";
 
-interface IAdProps {
+interface IIntroSelfProps {
     // store
     ads: string;
-
-    // self
-
-    // for stack navigator
-    [x: string]: any;
 }
 
-interface IAdProps extends StackScreenProps<IAdProps, 'Ad'> { }
+interface IIntroProps extends StackScreenProps<any, MainNavigationScreenTypes.INTRO>, IIntroSelfProps { }
 
-const AdScreenContainer = ({ ads, navigation }: IAdProps) => {
+const IntroScreenContainer = ({ ads, navigation }: IIntroProps) => {
+    const pressHandler = () => {
+        navigation.navigate(MainNavigationScreenTypes.MENU);
+    }
+
     return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Image style={{ position: 'absolute', width: '100%', height: '100%' }} source={{
-                uri: `file://${ads}`,
-                scale: 1,
-            }}></Image>
+            <TouchableWithoutFeedback style={{ position: 'absolute', width: '100%', height: '100%' }} onPress={() => pressHandler()}>
+                <Image style={{ position: 'absolute', width: '100%', height: '100%' }} source={{
+                    uri: `file://${ads}`,
+                    scale: 1,
+                }}></Image>
+            </TouchableWithoutFeedback>
         </View>
     );
 }
 
-const mapStateToProps = (state: IAppState, ownProps: IAdProps) => {
+const mapStateToProps = (state: IAppState, ownProps: IIntroProps) => {
     console.log("state", state)
     return {
         ads: (state.combinedData?.data?.refs as any)?.assets[55].path,
@@ -42,5 +45,5 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => {
     };
 };
 
-export const AdScreen = connect(mapStateToProps, mapDispatchToProps)(AdScreenContainer);
+export const IntroScreen = connect(mapStateToProps, mapDispatchToProps)(IntroScreenContainer);
   // navigation.navigate('Profile')
