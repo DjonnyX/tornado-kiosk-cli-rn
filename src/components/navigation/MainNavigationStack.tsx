@@ -4,32 +4,35 @@ import {
 } from '@react-navigation/stack';
 
 import { LoadingScreen } from '../screens/LoadingScreen';
+import { IntroScreen } from "../screens/IntroScreen";
+import { MainNavigationScreenTypes } from "./MainNavigationScreenTypes";
 
 const Stack = createStackNavigator();
 
 export const MainNavigationStack = () => {
   return (
     <Stack.Navigator
-      initialRouteName="Loading"
+      initialRouteName={MainNavigationScreenTypes.LOADING}
       headerMode="none"
       screenOptions={{}}
     >
       <Stack.Screen
-        name="Loading"
+        name={MainNavigationScreenTypes.LOADING}
+        component={LoadingScreen}
+      />
+      <Stack.Screen
+        name={MainNavigationScreenTypes.INTRO}
+        component={IntroScreen}
+      />
+      <Stack.Screen
+        name={MainNavigationScreenTypes.MENU}
         component={LoadingScreen}
         options={{
-          title: 'Awesome app',
+          gestureEnabled: false,
         }}
       />
       <Stack.Screen
-        name="Profile"
-        component={LoadingScreen}
-        options={{
-          title: 'My profile',
-        }}
-      />
-      <Stack.Screen
-        name="Settings"
+        name={MainNavigationScreenTypes.MY_ORDER}
         component={LoadingScreen}
         options={{
           gestureEnabled: false,
