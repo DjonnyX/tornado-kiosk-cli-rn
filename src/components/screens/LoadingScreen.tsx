@@ -1,9 +1,11 @@
 import React, { Dispatch } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
-import { View, Button, Text, ProgressBarAndroid } from "react-native";
+import { ProgressBar } from "@react-native-community/progress-bar-android";
+import { View, Text } from "react-native";
 import { MainNavigationScreenTypes } from "../navigation";
 import { IAppState } from "../../store/state";
 import { connect } from "react-redux";
+import { CombinedDataSelectors } from "../../store/selectors";
 
 interface ILoadingSelfProps {
   // store props
@@ -22,7 +24,7 @@ const LoadingScreenContainer = ({ _progress, _loaded, navigation }: ILoadingProp
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <ProgressBarAndroid progress={_progress}></ProgressBarAndroid>
+      <ProgressBar style={{ width: '100%', maxWidth: 200, marginLeft: '10%', marginRight: '10%' }} styleAttr="Horizontal" progress={_progress / 100} indeterminate={false}></ProgressBar>
       <Text>
         {
           `${_progress}%`
@@ -33,19 +35,9 @@ const LoadingScreenContainer = ({ _progress, _loaded, navigation }: ILoadingProp
 }
 
 const mapStateToProps = (state: IAppState, ownProps: ILoadingProps) => {
-  const _progress = Math.ceil(state.combinedData?.progress.total === 0 ? 0 : ((state.combinedData?.progress.current || 0) / state.combinedData?.progress.total) * 100);
-  const _loaded = !!state.combinedData.data;
   return {
-    _progress,
-    _loaded,
-  };
-};
-
-const mapDispatchToProps = (dispatch: Dispatch<any>) => {
-  return {
-    /*_onChange: (data: ICompiledData) => {
-        dispatch(CombinedDataActions.setData(data));
-    }*/
+    _progress: CombinedDataSelectors.selectProgress(state),
+    _loaded: CombinedDataSelectors.selectLoaded(state),
   };
 };
 
