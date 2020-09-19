@@ -1,6 +1,6 @@
 {
   "name": "TornadoKiosk",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@djonnyx/tornado-assets-store": "0.1.0",
-    "@djonnyx/tornado-refs-processor": "^1.1.7",
+    "@djonnyx/tornado-refs-processor": "^1.1.8",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-navigation/native": "^5.7.3",
     "@react-navigation/stack": "^5.9.0",
