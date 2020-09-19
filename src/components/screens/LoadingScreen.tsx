@@ -6,28 +6,38 @@ import { IAppState } from "../../store/state";
 import { connect } from "react-redux";
 
 interface ILoadingSelfProps {
-  
+  // store props
+  _progress: number;
+  _loaded: boolean;
+
+  // self props
 }
 
 interface ILoadingProps extends StackScreenProps<any, MainNavigationScreenTypes.LOADING>, ILoadingSelfProps { }
 
-const LoadingScreenContainer = ({ navigation }: ILoadingProps) => {
+const LoadingScreenContainer = ({ _progress, _loaded, navigation }: ILoadingProps) => {
+  if (_loaded) {
+    navigation.navigate(MainNavigationScreenTypes.INTRO);
+  }
+
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <ProgressBarAndroid progress={50}></ProgressBarAndroid>
-      <Text>Loading screen</Text>
-      <Button
-        title="Go to Profile 2"
-        onPress={() => navigation.navigate(MainNavigationScreenTypes.INTRO)}
-      />
+      <ProgressBarAndroid progress={_progress}></ProgressBarAndroid>
+      <Text>
+        {
+          `${_progress}%`
+        }
+      </Text>
     </View>
   );
 }
 
 const mapStateToProps = (state: IAppState, ownProps: ILoadingProps) => {
-  console.log("state", state)
+  const _progress = Math.ceil(state.combinedData?.progress.total === 0 ? 0 : ((state.combinedData?.progress.current || 0) / state.combinedData?.progress.total) * 100);
+  const _loaded = !!state.combinedData.data;
   return {
-    ads: (state.combinedData?.data?.refs as any)?.assets[55].path,
+    _progress,
+    _loaded,
   };
 };
 
@@ -39,4 +49,4 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => {
   };
 };
 
-export const LoadingScreen = connect(mapStateToProps, mapDispatchToProps)(LoadingScreenContainer);
+export const LoadingScreen = connect(mapStateToProps, null)(LoadingScreenContainer);

@@ -12,7 +12,7 @@ const Stack = createStackNavigator();
 export const MainNavigationStack = () => {
   return (
     <Stack.Navigator
-      initialRouteName={MainNavigationScreenTypes.INTRO}
+      initialRouteName={MainNavigationScreenTypes.LOADING}
       headerMode="none"
       screenOptions={{}}
     >

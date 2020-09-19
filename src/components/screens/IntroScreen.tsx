@@ -31,9 +31,8 @@ const IntroScreenContainer = ({ ads, navigation }: IIntroProps) => {
 }
 
 const mapStateToProps = (state: IAppState, ownProps: IIntroProps) => {
-    console.log("state", state)
     return {
-        ads: (state.combinedData?.data?.refs as any)?.assets[55].path,
+        ads: state.combinedData?.data?.refs.__raw?.assets[55].path || "",
     };
 };
 
