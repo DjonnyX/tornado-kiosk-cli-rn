@@ -20,7 +20,6 @@ interface ILoadingProps extends StackScreenProps<any, MainNavigationScreenTypes.
 const LoadingScreenContainer = ({ _progress, _loaded, navigation }: ILoadingProps) => {
   if (_loaded) {
     navigation.navigate(MainNavigationScreenTypes.INTRO);
-    return <></>;
   }
 
   return (

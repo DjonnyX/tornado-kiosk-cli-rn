@@ -20,7 +20,6 @@ interface IIntroProps extends StackScreenProps<any, MainNavigationScreenTypes.IN
 
 const IntroScreenContainer = ({ _defaultLanguageCode, _intros, navigation }: IIntroProps) => {
     const [currentAdIndex, _setCurrentAdIndex] = useState(0);
-    const [timeCount, _setTmer] = useState(0);
 
     const nextCurrentAdIndex = () => {
         _setCurrentAdIndex(prevAdIndex => {
