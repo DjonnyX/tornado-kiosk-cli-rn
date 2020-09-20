@@ -1,7 +1,7 @@
 import React, { Component, Dispatch } from "react";
 import { connect } from "react-redux";
 import { from, of, Subject } from "rxjs";
-import { take, takeUntil } from "rxjs/operators";
+import { take, takeUntil, filter } from "rxjs/operators";
 import { IAsset, ICompiledData } from "@djonnyx/tornado-types";
 import { AssetsStore, IAssetsStoreResult } from "@djonnyx/tornado-assets-store";
 import { DataCombiner } from "@djonnyx/tornado-refs-processor";
@@ -71,6 +71,7 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
 
         this._dataCombiner.onChange.pipe(
             takeUntil(this._unsubscribe$ as any),
+            filter(data => !!data),
         ).subscribe(
             data => {
                 this.props._onChange(data);
