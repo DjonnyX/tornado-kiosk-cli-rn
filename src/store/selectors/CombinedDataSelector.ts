@@ -11,4 +11,12 @@ export namespace CombinedDataSelectors {
     export const selectLoaded = createSelector(getCombinedData, (state) => {
         return !!state?.data;
     });
+
+    export const selectDefaultLanguageCode = createSelector(getCombinedData, (state) => {
+        return state?.data?.refs.defaultLanguage?.code;
+    });
+
+    export const selectIntros = createSelector(getCombinedData, (state) => {
+        return state?.data?.refs.ads.intros;
+    });
 }

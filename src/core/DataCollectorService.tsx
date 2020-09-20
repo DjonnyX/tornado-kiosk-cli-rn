@@ -133,4 +133,4 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => {
     };
 };
 
-export const DataCollectorService = connect(mapStateToProps, mapDispatchToProps)(DataCollectorServiceContainer);
+export const DataCollectorService = connect(null, mapDispatchToProps)(DataCollectorServiceContainer);
