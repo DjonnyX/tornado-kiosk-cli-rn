@@ -112,16 +112,25 @@ public class MainActivity extends ReactActivity {
      */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // Блокировка кнопки "назад"
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            Toast.makeText(this, "Back button is disabled", Toast.LENGTH_SHORT).show();
+            return true;
+        }
 
+        // Блокировка кнопки громкости
         if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
             Toast.makeText(this, "Volume button is disabled", Toast.LENGTH_SHORT).show();
             return true;
         }
 
+        // Блокировка кнопки громкости
         if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
             Toast.makeText(this, "Volume button is disabled", Toast.LENGTH_SHORT).show();
             return true;
         }
+
+        Toast.makeText(this, keyCode, Toast.LENGTH_SHORT).show();
 
         return super.onKeyDown(keyCode, event);
     }
