@@ -19,4 +19,8 @@ export namespace CombinedDataSelectors {
     export const selectIntros = createSelector(getCombinedData, (state) => {
         return state?.data?.refs.ads.intros;
     });
+
+    export const selectBanners = createSelector(getCombinedData, (state) => {
+        return state?.data?.refs.ads.banners;
+    });
 }
