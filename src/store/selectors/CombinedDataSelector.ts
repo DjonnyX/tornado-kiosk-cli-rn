@@ -23,4 +23,8 @@ export namespace CombinedDataSelectors {
     export const selectBanners = createSelector(getCombinedData, (state) => {
         return state?.data?.refs.ads.banners;
     });
+
+    export const selectMenu = createSelector(getCombinedData, (state) => {
+        return state?.data?.menu;
+    });
 }
