@@ -1,7 +1,7 @@
 import React, { Component, Dispatch } from "react";
 import { connect } from "react-redux";
 import { from, of, Subject } from "rxjs";
-import { take, takeUntil } from "rxjs/operators";
+import { take, takeUntil, filter } from "rxjs/operators";
 import { IAsset, ICompiledData } from "@djonnyx/tornado-types";
 import { AssetsStore, IAssetsStoreResult } from "@djonnyx/tornado-assets-store";
 import { DataCombiner } from "@djonnyx/tornado-refs-processor";
@@ -9,7 +9,7 @@ import { ExternalStorage } from "../native";
 import { config } from "../Config";
 import { assetsService, refApiService } from "../services";
 import { IAppState } from "../store/state";
-import { CombinedDataActions } from "../store/actions";
+import { CombinedDataActions, CapabilitiesActions } from "../store/actions";
 import { IProgress } from "@djonnyx/tornado-refs-processor/dist/DataCombiner";
 
 interface IDataCollectorServiceProps {
@@ -71,6 +71,7 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
 
         this._dataCombiner.onChange.pipe(
             takeUntil(this._unsubscribe$ as any),
+            filter(data => !!data),
         ).subscribe(
             data => {
                 this.props._onChange(data);
@@ -126,6 +127,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => {
     return {
         _onChange: (data: ICompiledData) => {
             dispatch(CombinedDataActions.setData(data));
+            dispatch(CapabilitiesActions.setDefaultLanguageCode(data.refs.defaultLanguage?.code));
         },
         _onProgress: (progress: IProgress) => {
             dispatch(CombinedDataActions.setProgress(progress));
@@ -133,4 +135,4 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => {
     };
 };
 
-export const DataCollectorService = connect(mapStateToProps, mapDispatchToProps)(DataCollectorServiceContainer);
+export const DataCollectorService = connect(null, mapDispatchToProps)(DataCollectorServiceContainer);

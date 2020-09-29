@@ -1,48 +1,46 @@
 import React, { Dispatch } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
-import { View, Text, Image } from "react-native";
+import { View } from "react-native";
 import { IAppState } from "../../store/state";
 import { connect } from "react-redux";
-import { TouchableHighlight, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { MainNavigationScreenTypes } from "../navigation";
+import { CombinedDataSelectors } from "../../store/selectors";
+import { ICompiledAd } from "@djonnyx/tornado-types/dist/interfaces/ICompiledAd";
+import { Ads } from "../simple";
+import { CapabilitiesSelectors } from "../../store/selectors/CapabilitiesSelector";
 
 interface IIntroSelfProps {
-    // store
-    ads: string;
+    // store props
+    _intros: Array<ICompiledAd>;
+    _defaultLanguageCode: string;
+
+    // self props
 }
 
 interface IIntroProps extends StackScreenProps<any, MainNavigationScreenTypes.INTRO>, IIntroSelfProps { }
 
-const IntroScreenContainer = ({ ads, navigation }: IIntroProps) => {
-    const pressHandler = () => {
+const IntroScreenContainer = ({ _defaultLanguageCode, _intros, navigation }: IIntroProps) => {
+
+    const pressHandler = (ad: ICompiledAd) => {
         navigation.navigate(MainNavigationScreenTypes.MENU);
     }
 
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <TouchableWithoutFeedback style={{ position: 'absolute', width: '100%', height: '100%' }} onPress={() => pressHandler()}>
-                <Image style={{ position: 'absolute', width: '100%', height: '100%' }} source={{
-                    uri: `file://${ads}`,
-                    scale: 1,
-                }}></Image>
-            </TouchableWithoutFeedback>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
+            <Ads ads={_intros} languageCode={_defaultLanguageCode} onPress={pressHandler}></Ads>
         </View>
     );
 }
 
 const mapStateToProps = (state: IAppState, ownProps: IIntroProps) => {
     return {
-        ads: state.combinedData?.data?.refs.__raw?.assets[55].path || "",
+        _intros: CombinedDataSelectors.selectIntros(state),
+        _defaultLanguageCode: CapabilitiesSelectors.selectDefaultLanguageCode(state),
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => {
-    return {
-        /*_onChange: (data: ICompiledData) => {
-            dispatch(CombinedDataActions.setData(data));
-        }*/
-    };
+const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
+    return {};
 };
 
 export const IntroScreen = connect(mapStateToProps, mapDispatchToProps)(IntroScreenContainer);
-  // navigation.navigate('Profile')

@@ -1,9 +1,9 @@
-import { IConfig } from "./IConfig"
+import { IConfig } from "./IConfig";
 
 class Config implements IConfig {
     refServer = {
-        address: "http://192.168.0.11:8080",
-        updateTimeout: 10000,
+        address: "http://192.168.1.4:8080",
+        updateTimeout: 1000,
     };
 
     license = {
