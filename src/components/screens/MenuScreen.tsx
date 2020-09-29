@@ -75,7 +75,7 @@ const MenuScreenContainer = ({ _languages, _currency, _menu, _banners, _defaultL
                         {
                             selectedCategoty !== _menu
                                 ?
-                                <View style={{ width: 90, justifyContent: "center", alignItems: "center" }}>
+                                <View style={{ width: 132, justifyContent: "center", alignItems: "center" }}>
                                     <MenuButton onPress={onBack}></MenuButton>
                                 </View>
                                 :
@@ -96,7 +96,7 @@ const MenuScreenContainer = ({ _languages, _currency, _menu, _banners, _defaultL
                     {
                         selectedCategoty !== _menu
                             ?
-                            <View style={{ width: 128, height: '100%', justifyContent: 'center', alignItems: 'center', marginTop: 48 }}>
+                            <View style={{ width: 152, height: '100%', justifyContent: 'center', alignItems: 'center', marginTop: 48 }}>
                                 <SideMenu menu={_menu} languageCode={_defaultLanguageCode} selected={selectedCategoty} onPress={selectSideMenuCategoryHandler}></SideMenu>
                             </View>
                             :

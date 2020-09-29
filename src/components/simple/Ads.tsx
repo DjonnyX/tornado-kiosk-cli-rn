@@ -39,7 +39,7 @@ export const Ads = ({ languageCode, ads, onPress }: IAdsProps) => {
         nextCurrentAdIndex();
     }
 
-    const currentAdContent = !!ads && ads.length > 0 ? ads[currentAdIndex].contents[languageCode] : undefined;
+    const currentAdContent = !!ads && ads.length > 0 && !!ads[currentAdIndex] ? ads[currentAdIndex].contents[languageCode] : undefined;
     const currentAdAsset = currentAdContent?.resources?.main;
 
     const isVideo = currentAdAsset?.ext === '.mp4';
