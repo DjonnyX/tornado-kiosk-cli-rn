@@ -32,14 +32,14 @@ const MenuScreenContainer = ({ _menu, _banners, _defaultLanguageCode, navigation
 
     return (
         <View style={{ flex: 1 }}>
-            <View style={{ display: 'flex', height: '10%', width: '100%', minHeight: 200 }}>
+            <View style={{ display: 'flex', height: '10%', width: '100%', minHeight: 178 }}>
                 <Ads ads={_banners} languageCode={_defaultLanguageCode} onPress={selectAdHandler}></Ads>
             </View>
-            <View style={{ flex: 1, flexDirection: 'row', height: '100%', maxHeight: '90%' }}>
-                <View style={{ flex: 0.15, height: '100%', justifyContent: 'center', alignItems: 'center' }}>
+            <View style={{ flex: 1, flexDirection: 'row', width: '100%', height: '100%', maxHeight: '90%' }}>
+                <View style={{ flex: 0.2, width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
                     <SideMenu menu={_menu} languageCode={_defaultLanguageCode} onPress={selectCategoryHandler}></SideMenu>
                 </View>
-                <View style={{ flex: 0.85, height: '100%', justifyContent: 'center', alignItems: 'center' }}>
+                <View style={{ flex: 0.8, width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
                     <NavMenu menu={_menu} languageCode={_defaultLanguageCode} onPress={selectCategoryHandler}></NavMenu>
                 </View>
             </View>

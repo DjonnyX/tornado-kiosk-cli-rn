@@ -1,5 +1,5 @@
 import React from "react";
-import { SafeAreaView } from "react-native";
+import { SafeAreaView, View } from "react-native";
 import { ICompiledMenu, ICompiledMenuNode } from "@djonnyx/tornado-types";
 import { SideMenuItem } from "./SideMenuItem";
 import { ScrollView } from "react-native-gesture-handler";
@@ -12,13 +12,15 @@ interface ISideMenuProps {
 
 export const SideMenu = ({ languageCode, menu, onPress }: ISideMenuProps) => {
     return (
-        <SafeAreaView style={{ flex: 1 }}>
-            <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 20 }} horizontal={false}>
-                {
-                    menu.children.map(child =>
-                        <SideMenuItem key={child.id} node={child} languageCode={languageCode} onPress={onPress}></SideMenuItem>
-                    )
-                }
+        <SafeAreaView style={{ flex: 1, width: '100%' }}>
+            <ScrollView horizontal={false}>
+                <View style={{ padding: 20 }}>
+                    {
+                        menu.children.map(child =>
+                            <SideMenuItem key={child.id} node={child} languageCode={languageCode} onPress={onPress}></SideMenuItem>
+                        )
+                    }
+                </View>
             </ScrollView>
         </SafeAreaView>
     );
