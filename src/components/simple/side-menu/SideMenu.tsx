@@ -12,8 +12,8 @@ interface ISideMenuProps {
 
 export const SideMenu = ({ languageCode, menu, onPress }: ISideMenuProps) => {
     return (
-        <SafeAreaView style={{ display: 'flex', height: '100%' }}>
-            <ScrollView style={{ flex: 1 }} horizontal={false}>
+        <SafeAreaView style={{ display: 'flex', width: '100%', height: '100%' }}>
+            <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 20 }} horizontal={false}>
                 {
                     menu.children.map(child =>
                         <SideMenuItem key={child.id} node={child} languageCode={languageCode} onPress={onPress}></SideMenuItem>

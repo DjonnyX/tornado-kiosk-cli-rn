@@ -57,11 +57,11 @@ export const SideMenuItem = ({ languageCode, node, onPress }: ISideMenuItemProps
     const currentAdAsset = currentContent?.resources?.icon;
 
     return (
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, marginBottom: 20 }}>
             <TouchableOpacity style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center' }} onPress={pressHandler}>
-                <Image style={{ width: 128, height: 128 }} source={{
+                <Image style={{ width: '100%', height: 128, marginBottom: 5 }} source={{
                     uri: `file://${currentAdAsset?.path}`,
-                }} resizeMode='contain'></Image>
+                }} resizeMode='contain' resizeMethod='scale'></Image>
                 <Text>
                     {
                         currentContent.name

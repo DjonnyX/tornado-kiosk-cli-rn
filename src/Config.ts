@@ -1,4 +1,4 @@
-import { IConfig } from "./IConfig"
+import { IConfig } from "./IConfig";
 
 class Config implements IConfig {
     refServer = {
