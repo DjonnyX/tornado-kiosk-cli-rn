@@ -1,21 +1,50 @@
-import React from "react";
+import React, { Dispatch } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
-import { View, Button, Text } from "react-native";
+import { ProgressBar } from "@react-native-community/progress-bar-android";
+import { View, Text } from "react-native";
+import { MainNavigationScreenTypes } from "../navigation";
+import { IAppState } from "../../store/state";
+import { connect } from "react-redux";
+import { CombinedDataSelectors } from "../../store/selectors";
 
 interface ILoadingSelfProps {
-    [x: string]: any;
+  // store props
+  _progress: number;
+  _loaded: boolean;
+
+  // self props
 }
 
-interface ILoadingProps extends StackScreenProps<ILoadingSelfProps, 'Loading'> { }
+interface ILoadingProps extends StackScreenProps<any, MainNavigationScreenTypes.LOADING>, ILoadingSelfProps { }
 
-export const LoadingScreen = ({ navigation }: ILoadingProps) => {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Loading screen</Text>
-        <Button
-          title="Go to Profile"
-          onPress={() => navigation.navigate('Profile')}
-        />
-      </View>
-    );
+const LoadingScreenContainer = ({ _progress, _loaded, navigation }: ILoadingProps) => {
+  if (_loaded) {
+    setTimeout(() => {
+      navigation.navigate(MainNavigationScreenTypes.INTRO);
+    });
   }
+
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <ProgressBar style={{ width: '100%', maxWidth: 200, marginLeft: '10%', marginRight: '10%' }} styleAttr="Horizontal" progress={_progress / 100} indeterminate={false}></ProgressBar>
+      <Text>
+        {
+          `${_progress}%`
+        }
+      </Text>
+    </View>
+  );
+}
+
+const mapStateToProps = (state: IAppState, ownProps: ILoadingProps) => {
+  return {
+    _progress: CombinedDataSelectors.selectProgress(state),
+    _loaded: CombinedDataSelectors.selectLoaded(state),
+  };
+};
+
+const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
+  return {};
+};
+
+export const LoadingScreen = connect(mapStateToProps, mapDispatchToProps)(LoadingScreenContainer);

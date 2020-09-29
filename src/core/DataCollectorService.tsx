@@ -1,31 +1,38 @@
-import React, { Component } from "react";
+import React, { Component, Dispatch } from "react";
+import { connect } from "react-redux";
 import { from, of, Subject } from "rxjs";
-import { take, takeUntil } from "rxjs/operators";
-import { IAsset } from "@djonnyx/tornado-types";
-import { AssetsStore } from "@djonnyx/tornado-assets-store";
+import { take, takeUntil, filter } from "rxjs/operators";
+import { IAsset, ICompiledData } from "@djonnyx/tornado-types";
+import { AssetsStore, IAssetsStoreResult } from "@djonnyx/tornado-assets-store";
 import { DataCombiner } from "@djonnyx/tornado-refs-processor";
 import { ExternalStorage } from "../native";
 import { config } from "../Config";
 import { assetsService, refApiService } from "../services";
+import { IAppState } from "../store/state";
+import { CombinedDataActions, CapabilitiesActions } from "../store/actions";
+import { IProgress } from "@djonnyx/tornado-refs-processor/dist/DataCombiner";
 
-interface IDataCollectorProps {
+interface IDataCollectorServiceProps {
+    // store
+    _onChange: (data: ICompiledData) => void;
+    _onProgress: (progress: IProgress) => void;
+
+    // self
 
 }
 
-interface IDataCollectorState {
-
-}
+interface IDataCollectorServiceState { }
 
 // const APP_CACHE_DIR_NAME = "tornado";
 
-export class DataCollector extends Component<IDataCollectorProps, IDataCollectorState> {
+class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps, IDataCollectorServiceState> {
     private _unsubscribe$: Subject<void> | null = new Subject<void>();
 
     private _assetsStore: AssetsStore | null = null;
 
     private _dataCombiner: DataCombiner | null = null;
 
-    constructor(props: IDataCollectorProps) {
+    constructor(props: IDataCollectorServiceProps) {
         super(props);
     }
 
@@ -47,13 +54,16 @@ export class DataCollector extends Component<IDataCollectorProps, IDataCollector
         const storePath = `${userDataPath}/assets`; //${APP_CACHE_DIR_NAME}/
 
         this._assetsStore = new AssetsStore(storePath, assetsService, {
-            createDirectoryRecurtion: false, 
+            createDirectoryRecurtion: false,
             maxThreads: 1,
         });
 
         this._dataCombiner = new DataCombiner({
             assetsTransformer: (assets: Array<IAsset>) => {
-                return this._assetsStore?.setManifest(assets) || of(assets);
+                return this._assetsStore?.setManifest(assets) || {
+                    onComplete: of(assets),
+                    onProgress: of({ total: 0, current: 0 }),
+                } as IAssetsStoreResult;
             },
             dataService: refApiService,
             updateTimeout: config.refServer.updateTimeout,
@@ -61,9 +71,18 @@ export class DataCollector extends Component<IDataCollectorProps, IDataCollector
 
         this._dataCombiner.onChange.pipe(
             takeUntil(this._unsubscribe$ as any),
+            filter(data => !!data),
         ).subscribe(
             data => {
-                console.log(data);
+                this.props._onChange(data);
+            },
+        );
+
+        this._dataCombiner.onProgress.pipe(
+            takeUntil(this._unsubscribe$ as any),
+        ).subscribe(
+            progress => {
+                this.props._onProgress(progress);
             },
         );
 
@@ -99,3 +118,21 @@ export class DataCollector extends Component<IDataCollectorProps, IDataCollector
         return <></>;
     }
 }
+
+const mapStateToProps = (state: IAppState) => {
+    return {};
+};
+
+const mapDispatchToProps = (dispatch: Dispatch<any>) => {
+    return {
+        _onChange: (data: ICompiledData) => {
+            dispatch(CombinedDataActions.setData(data));
+            dispatch(CapabilitiesActions.setDefaultLanguageCode(data.refs.defaultLanguage?.code));
+        },
+        _onProgress: (progress: IProgress) => {
+            dispatch(CombinedDataActions.setProgress(progress));
+        },
+    };
+};
+
+export const DataCollectorService = connect(null, mapDispatchToProps)(DataCollectorServiceContainer);
