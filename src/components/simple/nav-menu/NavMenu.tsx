@@ -12,8 +12,8 @@ interface INavMenuProps {
 
 export const NavMenu = ({ languageCode, menu, onPress }: INavMenuProps) => {
     return (
-        <SafeAreaView style={{ display: 'flex', width: '100%', height: '100%' }}>
-            <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 20 }} horizontal={false}>
+        <SafeAreaView style={{ flex: 1, width: '100%' }}>
+            <ScrollView style={{ flex: 1 }} contentContainerStyle={{padding: 20, flexWrap: 'wrap', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' }} horizontal={false}>
                 {
                     menu.children.map(child =>
                         <NavMenuItem key={child.id} node={child} languageCode={languageCode} onPress={onPress}></NavMenuItem>

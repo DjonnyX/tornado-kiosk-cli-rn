@@ -20,9 +20,9 @@ export const NavMenuItem = ({ languageCode, node, onPress }: INavMenuItemProps) 
     const currentAdAsset = currentContent?.resources?.icon;
 
     return (
-        <View style={{ flex: 1, marginBottom: 20 }}>
+        <View style={{ flex: 1, marginBottom: 20, minWidth: 256, width: 256 }}>
             <TouchableOpacity style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center' }} onPress={pressHandler}>
-                <Image style={{ width: '100%', height: 128, marginBottom: 5 }} source={{
+                <Image style={{ width: '100%', height: 256, marginBottom: 5 }} source={{
                     uri: `file://${currentAdAsset?.path}`,
                 }} resizeMode='contain' resizeMethod='scale'></Image>
                 <Text>

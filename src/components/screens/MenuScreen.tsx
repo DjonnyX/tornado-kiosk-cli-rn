@@ -4,7 +4,7 @@ import { View, Text, Button } from "react-native";
 import { MainNavigationScreenTypes } from "../navigation";
 import { IAppState } from "../../store/state";
 import { connect } from "react-redux";
-import { Ads } from "../simple";
+import { Ads, NavMenu } from "../simple";
 import { ICompiledAd, ICompiledMenu, ICompiledMenuNode } from "@djonnyx/tornado-types";
 import { CombinedDataSelectors } from "../../store/selectors";
 import { SideMenu } from "../simple/side-menu/SideMenu";
@@ -35,8 +35,13 @@ const MenuScreenContainer = ({ _menu, _banners, _defaultLanguageCode, navigation
             <View style={{ display: 'flex', height: '10%', width: '100%', minHeight: 200 }}>
                 <Ads ads={_banners} languageCode={_defaultLanguageCode} onPress={selectAdHandler}></Ads>
             </View>
-            <View style={{ flex: 1, height: '100%', maxHeight: '90%', width: '15%', justifyContent: 'center', alignItems: 'center' }}>
-                <SideMenu menu={_menu} languageCode={_defaultLanguageCode} onPress={selectCategoryHandler}></SideMenu>
+            <View style={{ flex: 1, flexDirection: 'row', height: '100%', maxHeight: '90%' }}>
+                <View style={{ flex: 0.15, height: '100%', justifyContent: 'center', alignItems: 'center' }}>
+                    <SideMenu menu={_menu} languageCode={_defaultLanguageCode} onPress={selectCategoryHandler}></SideMenu>
+                </View>
+                <View style={{ flex: 0.85, height: '100%', justifyContent: 'center', alignItems: 'center' }}>
+                    <NavMenu menu={_menu} languageCode={_defaultLanguageCode} onPress={selectCategoryHandler}></NavMenu>
+                </View>
             </View>
         </View>
     );
