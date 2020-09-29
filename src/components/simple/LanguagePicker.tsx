@@ -38,8 +38,8 @@ export const LanguagePicker = ({ defaultLanguageCode, languages, onSelect }: ILa
         <View style={{ justifyContent: 'center', alignItems: 'center', height: 48 }}>
             <Modal
                 animationType="slide"
-                transparent={true}
                 visible={modalVisible}
+                presentationStyle="fullScreen"
             >
                 <View style={{
                     flex: 1,
