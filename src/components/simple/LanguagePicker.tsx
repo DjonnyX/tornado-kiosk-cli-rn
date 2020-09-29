@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Image, Text, Modal, TouchableHighlight } from "react-native";
+import { View, Image, Text, Modal, TouchableOpacity } from "react-native";
 import { ICompiledLanguage } from "@djonnyx/tornado-types";
 import { FlatList } from "react-native-gesture-handler";
 
@@ -62,7 +62,7 @@ export const LanguagePicker = ({ language, languages, onSelect }: ILanguagePicke
                         elevation: 8,
                     }}>
                         <FlatList style={{ flexGrow: 0, padding: 12 }} data={languages} renderItem={({ item }) => {
-                            return <TouchableHighlight onPress={() => {
+                            return <TouchableOpacity onPress={() => {
                                 selectHandler(item);
                             }}>
                                 <View style={{ flexDirection: "column", alignItems: "center", justifyContent: "center", marginBottom: 32 }}>
@@ -75,19 +75,19 @@ export const LanguagePicker = ({ language, languages, onSelect }: ILanguagePicke
                                         }
                                     </Text>
                                 </View>
-                            </TouchableHighlight>
+                            </TouchableOpacity>
                         }}>
                         </FlatList>
                     </View>
                 </View>
             </Modal>
-            <TouchableHighlight style={{ flex: 1, justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }} onPress={pressHandler}>
+            <TouchableOpacity style={{ flex: 1, justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }} onPress={pressHandler}>
                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", borderWidth: 0.5, borderColor: "rgba(0, 0, 0, 0.5)", padding: 8, overflow: "hidden", width: 64, height: 64, borderRadius: 32 }}>
                     <Image style={{ position: "absolute", width: 96, height: 96 }} source={{
                         uri: `file://${currentLanguage?.resources?.main?.mipmap.x128}`,
                     }} resizeMode="cover"></Image>
                 </View>
-            </TouchableHighlight>
+            </TouchableOpacity>
         </View>
     );
 }

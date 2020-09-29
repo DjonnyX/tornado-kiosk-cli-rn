@@ -1,7 +1,6 @@
 import React from "react";
-import { View, TouchableHighlight, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import { Icons } from "../../theme";
-import LinearGradient from "react-native-linear-gradient";
 
 interface IMenuButtonProps {
     onPress: () => void;
