@@ -1,13 +1,13 @@
 import React, { Dispatch } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
 import { View } from "react-native";
-import { IAppState } from "../../store/state";
 import { connect } from "react-redux";
+import { ICompiledAd } from "@djonnyx/tornado-types/dist/interfaces/ICompiledAd";
+import { IAppState } from "../../store/state";
 import { MainNavigationScreenTypes } from "../navigation";
 import { CombinedDataSelectors } from "../../store/selectors";
-import { ICompiledAd } from "@djonnyx/tornado-types/dist/interfaces/ICompiledAd";
-import { Ads } from "../simple";
 import { CapabilitiesSelectors } from "../../store/selectors/CapabilitiesSelector";
+import { Ads } from "../simple";
 
 interface IIntroSelfProps {
     // store props
