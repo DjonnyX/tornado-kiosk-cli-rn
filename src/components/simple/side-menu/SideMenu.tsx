@@ -23,7 +23,7 @@ export const SideMenu = ({ languageCode, menu, onPress }: ISideMenuProps) => {
     return (
         <SafeAreaView style={{ flex: 1, width: '100%' }}>
             <ScrollView horizontal={false}>
-                <View style={{ padding: 10 }}>
+                <View style={{ padding: 10, paddingTop: 78 }}>
                     {
                         menu.children.map(child =>
                             <SideMenuItem key={child.id} selected={category} node={child} languageCode={languageCode} onPress={onSelect}></SideMenuItem>

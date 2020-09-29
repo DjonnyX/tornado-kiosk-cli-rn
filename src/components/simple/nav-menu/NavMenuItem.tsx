@@ -31,7 +31,7 @@ export const NavMenuItem = ({ imageHeight, currency, languageCode, node, onPress
                         uri: `file://${currentAdAsset?.mipmap.x128}`,
                     }} resizeMode='contain' resizeMethod='scale'></Image>
                 </View>
-                <Text numberOfLines={2} ellipsizeMode='tail' style={{ fontSize: 20, fontWeight: "bold", marginBottom: 8 }}>
+                <Text numberOfLines={2} ellipsizeMode='tail' style={{ fontSize: 20, fontWeight: "bold", marginBottom: 6, color: 'rgba(0, 0, 0, 0.75)' }}>
                     {
                         currentContent.name
                     }
@@ -43,17 +43,16 @@ export const NavMenuItem = ({ imageHeight, currency, languageCode, node, onPress
                 </Text>
                 {
                     
-                        <View style={{ borderStyle: 'solid', borderWidth: 1, borderRadius: 8, alignItems: 'center', justifyContent: 'center', borderColor: 'rgba(0, 0, 0, 0.5)', marginBottom: 12 }}>
-                            <Text style={{ fontSize: 18, fontWeight: 'bold', paddingTop: 8, paddingBottom: 8, paddingLeft: 14, paddingRight: 14 }}>
+                    node.type === NodeTypes.PRODUCT
+                    ?
+                    <View style={{ borderStyle: 'solid', borderWidth: 0.5, borderRadius: 6, alignItems: 'center', justifyContent: 'center', borderColor: 'rgba(0, 0, 0, 0.5)', marginBottom: 12 }}>
+                            <Text style={{ fontSize: 18, fontWeight: 'bold', paddingTop: 8, paddingBottom: 8, paddingLeft: 14, paddingRight: 14, color: 'rgba(0, 0, 0, 0.75)' }}>
                                 {
-                                    node.type === NodeTypes.PRODUCT
-                                    ?
                                     `${((node.content as ICompiledProduct).prices[currency.id as string]?.value * 0.01).toFixed(2)} ${currency.name}`
-                                    :
-                                    `min price: `
                                 }
                             </Text>
                         </View>
+                        : undefined
                 }
                 {
                 /*<View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>

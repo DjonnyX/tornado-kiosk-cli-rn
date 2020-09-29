@@ -1,6 +1,7 @@
 import React, { Dispatch, useState } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
-import { View } from "react-native";
+import LinearGradient from "react-native-linear-gradient";
+import { View, Button, Text } from "react-native";
 import { MainNavigationScreenTypes } from "../navigation";
 import { IAppState } from "../../store/state";
 import { connect } from "react-redux";
@@ -44,18 +45,43 @@ const MenuScreenContainer = ({ _currency, _menu, _banners, _defaultLanguageCode,
         }
     }
 
+    const onBack = () => {
+        setSelectedCategory(_menu);
+    }
+
     return (
         <View style={{ flex: 1, backgroundColor: '#fff' }}>
             <View style={{ display: 'flex', height: '10%', width: '100%', minHeight: 144 }}>
                 <Ads ads={_banners} languageCode={_defaultLanguageCode} onPress={selectAdHandler}></Ads>
             </View>
-            <View style={{ flex: 1, flexDirection: 'row', width: '100%', height: '100%', maxHeight: '90%' }}>
-                <View style={{ flex: 0.15, maxWidth: 128, width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
-                    <SideMenu menu={_menu} languageCode={_defaultLanguageCode} onPress={selectSideMenuCategoryHandler}></SideMenu>
-                </View>
-                
-                <View style={{ flex: 0.85, width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
-                    <NavMenu node={selectedCategoty} currency={_currency} languageCode={_defaultLanguageCode} onPress={selectNavMenuCategoryHandler}></NavMenu>
+            <View style={{ flex: 1, width: '100%', height: '100%', maxHeight: '90%' }}>
+                <LinearGradient
+                    colors={['rgba(255, 255, 255, 1)', 'rgba(255, 255, 255, 1)', 'rgba(255, 255, 255, 0)']}
+                    style={{ display: 'flex', position: 'absolute', width: '100%', height: 78, zIndex: 1 }}
+                >
+                    <View style={{ display: 'flex', alignItems: 'center', flexDirection: 'row', width: '100%', height: '100%', padding: 16 }}>
+                        <Button title="back" onPress={onBack}></Button>
+                        <View style={{ flex: 1 }}></View>
+                        <Text style={{ fontSize: 32, fontWeight: 'bold' }}>
+                            {
+                                selectedCategoty?.content?.contents[_defaultLanguageCode]?.name || "Меню"
+                            }
+                        </Text>
+                    </View>
+                </LinearGradient>
+                <View style={{ flex: 1, flexDirection: 'row', width: '100%', height: '100%' }}>
+                    {
+                        selectedCategoty !== _menu ?
+                            <View style={{ flex: 0.15, maxWidth: 128, width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center', marginTop: 48 }}>
+                                <SideMenu menu={_menu} languageCode={_defaultLanguageCode} onPress={selectSideMenuCategoryHandler}></SideMenu>
+                            </View>
+                            :
+                            undefined
+                    }
+
+                    <View style={{ flex: selectedCategoty !== _menu ? 0.85 : 1, width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
+                        <NavMenu node={selectedCategoty} currency={_currency} languageCode={_defaultLanguageCode} onPress={selectNavMenuCategoryHandler}></NavMenu>
+                    </View>
                 </View>
             </View>
         </View>

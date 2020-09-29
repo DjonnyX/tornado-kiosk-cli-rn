@@ -17,7 +17,7 @@ export const NavMenu = ({ currency, languageCode, node, onPress }: INavMenuProps
         <SafeAreaView style={{ flex: 1, width: '100%' }}>
             <ScrollView style={{ flex: 1 }} horizontal={false}
             >
-                <FlatGrid style={{ flex: 1 }} spacing={6} data={node.children} itemDimension={196} renderItem={({ item }) => {
+                <FlatGrid style={{ flex: 1, paddingTop: 78 }} spacing={6} data={node.children} itemDimension={196} renderItem={({ item }) => {
                     return <NavMenuItem key={item.id} node={item} currency={currency} languageCode={languageCode} imageHeight={144} onPress={onPress}></NavMenuItem>
                 }}
                     keyExtractor={(item, index) => item.id}>
