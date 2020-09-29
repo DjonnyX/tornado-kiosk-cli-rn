@@ -57,18 +57,32 @@ const MenuScreenContainer = ({ _languages, _currency, _menu, _banners, _defaultL
 
     return (
         <View style={{ flex: 1, backgroundColor: '#fff' }}>
-            <View style={{ display: 'flex', height: '10%', width: '100%', minHeight: 144 }}>
-                <Ads ads={_banners} languageCode={_defaultLanguageCode} onPress={selectAdHandler}></Ads>
-            </View>
-            <View style={{ flex: 1, width: '100%', height: '100%', maxHeight: '90%' }}>
+            {
+                _banners.length > 0
+                    ?
+                    <View style={{ display: 'flex', height: '10%', width: '100%', minHeight: 144 }}>
+                        <Ads ads={_banners} languageCode={_defaultLanguageCode} onPress={selectAdHandler}></Ads>
+                    </View>
+                    :
+                    undefined
+            }
+            <View style={{ flex: 1, width: '100%', height: '100%', maxHeight: _banners.length > 0 ? '90%' : '100%' }}>
                 <LinearGradient
-                    colors={['rgba(255, 255, 255, 1)', 'rgba(255, 255, 255, 1)', 'rgba(255, 255, 255, 0)']}
-                    style={{ display: 'flex', position: 'absolute', width: '100%', height: 78, zIndex: 1 }}
+                    colors={['rgba(255, 255, 255, 1)', 'rgba(255, 255, 255, 1)', 'rgba(255, 255, 255, 1)', 'rgba(255, 255, 255, 1)', 'rgba(255, 255, 255, 0)']}
+                    style={{ display: 'flex', position: 'absolute', width: '100%', height: 96, zIndex: 1 }}
                 >
                     <View style={{ display: 'flex', alignItems: 'center', flexDirection: 'row', width: '100%', height: '100%', padding: 16 }}>
-                        <MenuButton onPress={onBack}></MenuButton>
+                        {
+                            selectedCategoty !== _menu
+                                ?
+                                <View style={{ width: 90, justifyContent: "center", alignItems: "center" }}>
+                                    <MenuButton onPress={onBack}></MenuButton>
+                                </View>
+                                :
+                                undefined
+                        }
                         <View style={{ flex: 1 }}></View>
-                        <Text style={{ fontSize: 32, fontWeight: 'bold' }}>
+                        <Text style={{ fontFamily: "RobotoSlab-Black", color: 'rgba(0, 0, 0, 0.75)', fontSize: 32 }}>
                             {
                                 selectedCategoty?.content?.contents[_defaultLanguageCode]?.name || "Меню"
                             }
@@ -80,15 +94,16 @@ const MenuScreenContainer = ({ _languages, _currency, _menu, _banners, _defaultL
                 </LinearGradient>
                 <View style={{ flex: 1, flexDirection: 'row', width: '100%', height: '100%' }}>
                     {
-                        selectedCategoty !== _menu ?
-                            <View style={{ flex: 0.15, maxWidth: 128, width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center', marginTop: 48 }}>
+                        selectedCategoty !== _menu
+                            ?
+                            <View style={{ width: 128, height: '100%', justifyContent: 'center', alignItems: 'center', marginTop: 48 }}>
                                 <SideMenu menu={_menu} languageCode={_defaultLanguageCode} onPress={selectSideMenuCategoryHandler}></SideMenu>
                             </View>
                             :
                             undefined
                     }
 
-                    <View style={{ flex: selectedCategoty !== _menu ? 0.85 : 1, width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
+                    <View style={{ flex: 1, width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
                         <NavMenu node={selectedCategoty} currency={_currency} languageCode={_defaultLanguageCode} onPress={selectNavMenuCategoryHandler}></NavMenu>
                     </View>
                 </View>

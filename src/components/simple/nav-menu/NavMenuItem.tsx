@@ -31,7 +31,7 @@ export const NavMenuItem = ({ imageHeight, currency, languageCode, node, onPress
                         uri: `file://${currentAdAsset?.mipmap.x128}`,
                     }} resizeMode='contain' resizeMethod='scale'></Image>
                 </View>
-                <Text numberOfLines={2} ellipsizeMode='tail' style={{ fontSize: 20, fontWeight: "bold", marginBottom: 6, color: 'rgba(0, 0, 0, 0.75)' }}>
+                <Text numberOfLines={2} ellipsizeMode='tail' style={{ fontFamily: "RobotoSlab-Black", fontSize: 20, marginBottom: 6, color: 'rgba(0, 0, 0, 0.75)' }}>
                     {
                         currentContent.name
                     }

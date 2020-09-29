@@ -65,9 +65,9 @@ const SvgIcon = (props: IIconsProps): JSX.Element | null => {
 SvgIcon.defaultProps = {
     fill: '#000',
     fillRule: 'evenodd',
-    height: '44',
-    width: '44',
-    viewBox: '0 0 100 100'
+    height: '32',
+    width: '32',
+    viewBox: '0 0 32 32'
 };
 
 /**
