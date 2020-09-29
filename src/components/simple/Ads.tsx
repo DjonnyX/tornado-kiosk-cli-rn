@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { View, Image, TouchableOpacity, GestureResponderEvent } from "react-native";
 import { ICompiledAd } from "@djonnyx/tornado-types/dist/interfaces/ICompiledAd";
 import Video from "react-native-video";
-import { AssetExtensions } from "@djonnyx/tornado-types";
 
 interface IAdsProps {
     ads: Array<ICompiledAd>;
@@ -43,7 +42,7 @@ export const Ads = ({ languageCode, ads, onPress }: IAdsProps) => {
     const currentAdContent = !!ads && ads.length > 0 ? ads[currentAdIndex].contents[languageCode] : undefined;
     const currentAdAsset = currentAdContent?.resources?.main;
 
-    const isVideo = currentAdAsset?.ext === AssetExtensions.MP4;
+    const isVideo = currentAdAsset?.ext === '.mp4';
 
     if (!isVideo) {
         updateTimerOfDuration(currentAdContent?.duration || 0);

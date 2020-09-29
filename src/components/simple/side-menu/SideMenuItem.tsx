@@ -20,10 +20,10 @@ export const SideMenuItem = ({ languageCode, node, onPress }: ISideMenuItemProps
     const currentAdAsset = currentContent?.resources?.icon;
 
     return (
-        <View style={{ flex: 1, marginBottom: 20, padding: 10, borderRadius: 4, backgroundColor: currentContent.color }}>
+        <View style={{ flex: 1, marginBottom: 10, padding: 10, borderRadius: 24, backgroundColor: currentContent.color }}>
             <TouchableOpacity style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center' }} onPress={pressHandler}>
-                <Image style={{ width: '100%', height: 128, marginBottom: 5 }} source={{
-                    uri: `file://${currentAdAsset?.path}`,
+                <Image style={{ width: '100%', height: 64, marginBottom: 5 }} source={{
+                    uri: `file://${currentAdAsset?.mipmap.x128}`,
                 }} resizeMode='contain' resizeMethod='scale'></Image>
                 <Text>
                     {
