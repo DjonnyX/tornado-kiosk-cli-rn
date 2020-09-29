@@ -1,9 +1,9 @@
 import React from "react";
 import {
   createStackNavigator,
-} from '@react-navigation/stack';
+} from "@react-navigation/stack";
 
-import { LoadingScreen } from '../screens/LoadingScreen';
+import { LoadingScreen } from "../screens/LoadingScreen";
 import { IntroScreen } from "../screens/IntroScreen";
 import { MainNavigationScreenTypes } from "./MainNavigationScreenTypes";
 import { MenuScreen } from "../screens/MenuScreen";

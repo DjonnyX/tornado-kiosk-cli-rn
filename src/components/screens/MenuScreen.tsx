@@ -6,7 +6,7 @@ import { MainNavigationScreenTypes } from "../navigation";
 import { IAppState } from "../../store/state";
 import { connect } from "react-redux";
 import { Ads, NavMenu, MenuButton } from "../simple";
-import { ICompiledAd, ICompiledMenu, ICompiledMenuNode, NodeTypes, ICurrency, ICompiledLanguage } from "@djonnyx/tornado-types";
+import { ICompiledAd, ICompiledMenu, ICompiledMenuNode, NodeTypes, ICurrency, ICompiledLanguage, ICompiledOrderType } from "@djonnyx/tornado-types";
 import { CombinedDataSelectors } from "../../store/selectors";
 import { SideMenu } from "../simple/side-menu/SideMenu";
 import { CapabilitiesSelectors } from "../../store/selectors/CapabilitiesSelector";
@@ -16,20 +16,22 @@ import { MyOrderPanel } from "../simple/MyOrderPanel";
 interface IMenuSelfProps {
     // store props
     _languages: Array<ICompiledLanguage>;
+    _orderTypes: Array<ICompiledOrderType>;
     _currency: ICurrency;
     _menu: ICompiledMenu;
     _banners: Array<ICompiledAd>;
-    _defaultLanguageCode: string;
+    _language: ICompiledLanguage;
 
     // store dispatches
     _onChangeLanguage: (language: ICompiledLanguage) => void;
+    _onChangeOrderType: (orderType: ICompiledOrderType) => void;
 
     // self props
 }
 
 interface IMenuProps extends StackScreenProps<any, MainNavigationScreenTypes.MENU>, IMenuSelfProps { }
 
-const MenuScreenContainer = ({ _languages, _currency, _menu, _banners, _defaultLanguageCode, _onChangeLanguage, navigation, route }: IMenuProps) => {
+const MenuScreenContainer = ({ _languages, _orderTypes, _currency, _menu, _banners, _language, _onChangeLanguage, _onChangeOrderType, navigation, route }: IMenuProps) => {
     const [selectedCategoty, _setSelectedCategory] = useState(_menu);
 
     const setSelectedCategory = (category: ICompiledMenuNode) => {
@@ -62,7 +64,7 @@ const MenuScreenContainer = ({ _languages, _currency, _menu, _banners, _defaultL
                 _banners.length > 0
                     ?
                     <View style={{ display: "flex", height: "10%", width: "100%", minHeight: 144 }}>
-                        <Ads ads={_banners} languageCode={_defaultLanguageCode} onPress={selectAdHandler}></Ads>
+                        <Ads ads={_banners} language={_language} onPress={selectAdHandler}></Ads>
                     </View>
                     :
                     undefined
@@ -86,7 +88,7 @@ const MenuScreenContainer = ({ _languages, _currency, _menu, _banners, _defaultL
                             <View style={{ flex: 1 }}></View>
                             <Text style={{ fontFamily: "RobotoSlab-Black", color: "rgba(0, 0, 0, 0.75)", fontSize: 32 }}>
                                 {
-                                    selectedCategoty?.content?.contents[_defaultLanguageCode]?.name || "Меню"
+                                    selectedCategoty?.content?.contents[_language.code]?.name || "Меню"
                                 }
                             </Text>
                         </View>
@@ -96,19 +98,19 @@ const MenuScreenContainer = ({ _languages, _currency, _menu, _banners, _defaultL
                             selectedCategoty !== _menu
                                 ?
                                 <View style={{ width: 152, height: "100%", justifyContent: "center", alignItems: "center", marginTop: 48 }}>
-                                    <SideMenu menu={_menu} languageCode={_defaultLanguageCode} selected={selectedCategoty} onPress={selectSideMenuCategoryHandler}></SideMenu>
+                                    <SideMenu menu={_menu} language={_language} selected={selectedCategoty} onPress={selectSideMenuCategoryHandler}></SideMenu>
                                 </View>
                                 :
                                 undefined
                         }
 
                         <View style={{ flex: 1, width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}>
-                            <NavMenu node={selectedCategoty} currency={_currency} languageCode={_defaultLanguageCode} onPress={selectNavMenuCategoryHandler}></NavMenu>
+                            <NavMenu node={selectedCategoty} currency={_currency} language={_language} onPress={selectNavMenuCategoryHandler}></NavMenu>
                         </View>
                     </View>
                 </View>
                 <View style={{ display: "flex", width: 144, height: "100%" }}>
-                    <MyOrderPanel defaultLanguageCode={_defaultLanguageCode} languages={_languages} onChangeLanguage={_onChangeLanguage}></MyOrderPanel>
+                    <MyOrderPanel language={_language} languages={_languages} orderTypes={_orderTypes} onChangeLanguage={_onChangeLanguage} onChangeOrderType={_onChangeOrderType}></MyOrderPanel>
                 </View>
             </View>
         </View>
@@ -121,14 +123,18 @@ const mapStateToProps = (state: IAppState, ownProps: IMenuProps) => {
         _currency: CombinedDataSelectors.selectCurrency(state),
         _menu: CombinedDataSelectors.selectMenu(state),
         _languages: CombinedDataSelectors.selectLangages(state),
-        _defaultLanguageCode: CapabilitiesSelectors.selectDefaultLanguageCode(state),
+        _orderTypes: CombinedDataSelectors.selectOrderTypes(state),
+        _language: CapabilitiesSelectors.selecLanguage(state),
     };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
     return {
         _onChangeLanguage: (language: ICompiledLanguage) => {
-            dispatch(CapabilitiesActions.setDefaultLanguageCode(language.code));
+            dispatch(CapabilitiesActions.setLanguage(language));
+        },
+        _onChangeOrderType: (orderType: ICompiledOrderType) => {
+            dispatch(CapabilitiesActions.setOrderType(orderType));
         },
     };
 };

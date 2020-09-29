@@ -32,6 +32,10 @@ export namespace CombinedDataSelectors {
         return state?.data?.refs.languages;
     });
 
+    export const selectOrderTypes = createSelector(getCombinedData, (state) => {
+        return state?.data?.refs.orderTypes;
+    });
+
     export const selectMenu = createSelector(getCombinedData, (state) => {
         return state?.data?.menu;
     });

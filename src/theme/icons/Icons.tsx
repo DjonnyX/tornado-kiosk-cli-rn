@@ -63,11 +63,11 @@ const SvgIcon = (props: IIconsProps): JSX.Element | null => {
 }
 
 SvgIcon.defaultProps = {
-    fill: '#000',
-    fillRule: 'evenodd',
-    height: '32',
-    width: '32',
-    viewBox: '0 0 32 32'
+    fill: "#000",
+    fillRule: "evenodd",
+    height: "32",
+    width: "32",
+    viewBox: "0 0 32 32"
 };
 
 /**

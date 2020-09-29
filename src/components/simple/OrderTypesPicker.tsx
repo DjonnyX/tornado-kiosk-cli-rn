@@ -1,21 +1,21 @@
 import React, { useState } from "react";
-import { View, Image, Text, Modal, TouchableHighlight } from "react-native";
-import { ICompiledLanguage } from "@djonnyx/tornado-types";
+import { View, Image, Text, Modal, TouchableOpacity } from "react-native";
+import { ICompiledOrderType, ICompiledLanguage } from "@djonnyx/tornado-types";
 import { FlatList } from "react-native-gesture-handler";
 
-interface ILanguagePickerProps {
-    languages: Array<ICompiledLanguage>;
+interface IOrderTypesPickerProps {
+    orderTypes: Array<ICompiledOrderType>;
     language: ICompiledLanguage;
-    onSelect: (lang: ICompiledLanguage) => void;
+    onSelect: (orderType: ICompiledOrderType) => void;
 }
 
-export const LanguagePicker = ({ language, languages, onSelect }: ILanguagePickerProps) => {
-    const [currentLanguage, _setCurrentLanguage] = useState(languages.find(lang => lang.code === language.code));
+export const OrderTypesPicker = ({ language, orderTypes, onSelect }: IOrderTypesPickerProps) => {
+    const [currentOrderType, _setCurrentOrderTypes] = useState(orderTypes[0]);
     const [modalVisible, _setModalVisible] = useState(false);
 
-    const setCurrentLanguage = (lang: ICompiledLanguage) => {
-        _setCurrentLanguage(prevLang => {
-            return lang;
+    const setCurrentOrderTypes = (orderType: ICompiledOrderType) => {
+        _setCurrentOrderTypes(prevOrderType => {
+            return orderType;
         });
     };
 
@@ -27,10 +27,10 @@ export const LanguagePicker = ({ language, languages, onSelect }: ILanguagePicke
         setModalVisible(true);
     }
 
-    const selectHandler = (lang: ICompiledLanguage) => {
-        setCurrentLanguage(lang);
+    const selectHandler = (orderType: ICompiledOrderType) => {
+        setCurrentOrderTypes(orderType);
         setModalVisible(false);
-        onSelect(lang);
+        onSelect(orderType);
     }
 
     return (
@@ -61,33 +61,38 @@ export const LanguagePicker = ({ language, languages, onSelect }: ILanguagePicke
                         shadowRadius: 3.84,
                         elevation: 8,
                     }}>
-                        <FlatList style={{ flexGrow: 0, padding: 12 }} data={languages} renderItem={({ item }) => {
-                            return <TouchableHighlight onPress={() => {
+                        <FlatList style={{ flexGrow: 0, padding: 12 }} data={orderTypes} renderItem={({ item }) => {
+                            return <TouchableOpacity onPress={() => {
                                 selectHandler(item);
                             }}>
                                 <View style={{ flexDirection: "column", alignItems: "center", justifyContent: "center", marginBottom: 32 }}>
                                     <Image style={{ width: 128, height: 128, borderWidth: 1, borderColor: "rgba(0, 0, 0, 0.1)", marginBottom: 8 }} source={{
-                                        uri: `file://${item?.resources?.main?.mipmap.x128}`,
+                                        uri: `file://${item.contents[language?.code]?.resources?.main?.mipmap.x128}`,
                                     }} resizeMode="cover"></Image>
                                     <Text style={{ fontSize: 16 }}>
                                         {
-                                            item?.name
+                                            item.contents[language?.code]?.name
                                         }
                                     </Text>
                                 </View>
-                            </TouchableHighlight>
+                            </TouchableOpacity>
                         }}>
                         </FlatList>
                     </View>
                 </View>
             </Modal>
-            <TouchableHighlight style={{ flex: 1, justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }} onPress={pressHandler}>
-                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", borderWidth: 0.5, borderColor: "rgba(0, 0, 0, 0.5)", padding: 8, overflow: "hidden", width: 64, height: 64, borderRadius: 32 }}>
-                    <Image style={{ position: "absolute", width: 96, height: 96 }} source={{
-                        uri: `file://${currentLanguage?.resources?.main?.mipmap.x128}`,
-                    }} resizeMode="cover"></Image>
+            <TouchableOpacity style={{ flex: 1, justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }} onPress={pressHandler}>
+                <View style={{ flexDirection: "row", alignItems: "center", borderWidth: 0.5, borderColor: "rgba(0, 0, 0, 0.5)", borderRadius: 6, padding: 8 }}>
+                    <Image style={{ width: 32, height: 32, marginRight: 8 }} source={{
+                        uri: `file://${currentOrderType?.contents[language?.code]?.resources?.main?.mipmap.x128}`,
+                    }}></Image>
+                    <Text>
+                        {
+                            currentOrderType?.contents[language?.code]?.name
+                        }
+                    </Text>
                 </View>
-            </TouchableHighlight>
+            </TouchableOpacity>
         </View>
     );
 }

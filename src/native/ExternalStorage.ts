@@ -1,6 +1,6 @@
 import {
     NativeModules
-} from 'react-native';
+} from "react-native";
 
 interface IExternalStorage {
     getPath: () => Promise<string>;

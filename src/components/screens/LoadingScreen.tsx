@@ -25,8 +25,8 @@ const LoadingScreenContainer = ({ _progress, _loaded, navigation }: ILoadingProp
   }
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <ProgressBar style={{ width: '100%', maxWidth: 200, marginLeft: '10%', marginRight: '10%' }} styleAttr="Horizontal" progress={_progress / 100} indeterminate={false}></ProgressBar>
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <ProgressBar style={{ width: "100%", maxWidth: 200, marginLeft: "10%", marginRight: "10%" }} styleAttr="Horizontal" progress={_progress / 100} indeterminate={false}></ProgressBar>
       <Text>
         {
           `${_progress}%`

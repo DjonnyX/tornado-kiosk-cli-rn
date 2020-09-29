@@ -4,7 +4,7 @@ import { IAppState } from "../state";
 const getCapabilities = (state: IAppState) => state.capabilities;
 
 export namespace CapabilitiesSelectors {
-    export const selectDefaultLanguageCode = createSelector(getCapabilities, (state) => {
-        return state?.defaultLanguageCode;
+    export const selecLanguage = createSelector(getCapabilities, (state) => {
+        return state?.language;
     });
 }

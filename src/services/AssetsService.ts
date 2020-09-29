@@ -12,8 +12,8 @@ class AssetsService implements IAssetStoreFileService {
 
     normalizeFilePath(path: string): string {
         let result: string;
-        result = path.startsWith('file://') ? path.slice(7) : path;
-        result = path.indexOf('/') === 0 ? path.slice(1) : path;
+        result = path.startsWith("file://") ? path.slice(7) : path;
+        result = path.indexOf("/") === 0 ? path.slice(1) : path;
         return result;
     }
 
@@ -23,7 +23,7 @@ class AssetsService implements IAssetStoreFileService {
                 this.normalizeFilePath(`${path}/${this.manifestFileName}`)
             ),
         ).pipe(
-            map(data => new Buffer(data, 'base64')),
+            map(data => new Buffer(data, "base64")),
             map(string => {
                 return JSON.parse(string.toString("utf8"));
             })
