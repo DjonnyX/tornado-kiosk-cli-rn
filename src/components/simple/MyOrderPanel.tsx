@@ -17,8 +17,10 @@ export const MyOrderPanel = ({ language, languages, orderTypes, onChangeLanguage
         <View
             style={{ flex: 1, alignItems: "center", backgroundColor: "rgba(0, 0, 0, 0.05)", padding: 16 }}
         >
-            <View style={{ margin: "auto" }}>
+            <View style={{ margin: "auto", marginTop: 20, marginBottom: 32 }}>
                 <LanguagePicker language={language} languages={languages} onSelect={onChangeLanguage}></LanguagePicker>
+            </View>
+            <View style={{ margin: "auto", marginBottom: 20 }}>
                 <OrderTypesPicker language={language} orderTypes={orderTypes} onSelect={onChangeOrderType}></OrderTypesPicker>
             </View>
         </View>
