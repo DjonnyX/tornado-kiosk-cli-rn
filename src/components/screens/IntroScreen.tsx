@@ -7,6 +7,7 @@ import { MainNavigationScreenTypes } from "../navigation";
 import { CombinedDataSelectors } from "../../store/selectors";
 import { ICompiledAd } from "@djonnyx/tornado-types/dist/interfaces/ICompiledAd";
 import { Ads } from "../simple";
+import { CapabilitiesSelectors } from "../../store/selectors/CapabilitiesSelector";
 
 interface IIntroSelfProps {
     // store props
@@ -34,7 +35,7 @@ const IntroScreenContainer = ({ _defaultLanguageCode, _intros, navigation }: IIn
 const mapStateToProps = (state: IAppState, ownProps: IIntroProps) => {
     return {
         _intros: CombinedDataSelectors.selectIntros(state),
-        _defaultLanguageCode: CombinedDataSelectors.selectDefaultLanguageCode(state),
+        _defaultLanguageCode: CapabilitiesSelectors.selectDefaultLanguageCode(state),
     };
 };
 

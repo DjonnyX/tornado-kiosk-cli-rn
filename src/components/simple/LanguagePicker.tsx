@@ -31,6 +31,7 @@ export const LanguagePicker = ({ defaultLanguageCode, languages, onSelect }: ILa
     const selectHandler = (lang: ICompiledLanguage) => {
         setCurrentLanguage(lang);
         setModalVisible(false);
+        onSelect(lang);
     }
 
     return (

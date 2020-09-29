@@ -9,7 +9,7 @@ import { ExternalStorage } from "../native";
 import { config } from "../Config";
 import { assetsService, refApiService } from "../services";
 import { IAppState } from "../store/state";
-import { CombinedDataActions } from "../store/actions";
+import { CombinedDataActions, CapabilitiesActions } from "../store/actions";
 import { IProgress } from "@djonnyx/tornado-refs-processor/dist/DataCombiner";
 
 interface IDataCollectorServiceProps {
@@ -127,6 +127,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => {
     return {
         _onChange: (data: ICompiledData) => {
             dispatch(CombinedDataActions.setData(data));
+            dispatch(CapabilitiesActions.setDefaultLanguageCode(data.refs.defaultLanguage?.code));
         },
         _onProgress: (progress: IProgress) => {
             dispatch(CombinedDataActions.setProgress(progress));

@@ -9,6 +9,8 @@ import { Ads, NavMenu, LanguagePicker } from "../simple";
 import { ICompiledAd, ICompiledMenu, ICompiledMenuNode, NodeTypes, ICurrency, ICompiledLanguage } from "@djonnyx/tornado-types";
 import { CombinedDataSelectors } from "../../store/selectors";
 import { SideMenu } from "../simple/side-menu/SideMenu";
+import { CapabilitiesSelectors } from "../../store/selectors/CapabilitiesSelector";
+import { CapabilitiesActions } from "../../store/actions";
 
 interface IMenuSelfProps {
     // store props
@@ -18,12 +20,15 @@ interface IMenuSelfProps {
     _banners: Array<ICompiledAd>;
     _defaultLanguageCode: string;
 
+    // store dispatches
+    _onChangeLanguage: (language: ICompiledLanguage) => void;
+
     // self props
 }
 
 interface IMenuProps extends StackScreenProps<any, MainNavigationScreenTypes.MENU>, IMenuSelfProps { }
 
-const MenuScreenContainer = ({ _languages, _currency, _menu, _banners, _defaultLanguageCode, navigation, route }: IMenuProps) => {
+const MenuScreenContainer = ({ _languages, _currency, _menu, _banners, _defaultLanguageCode, _onChangeLanguage, navigation, route }: IMenuProps) => {
     const [selectedCategoty, _setSelectedCategory] = useState(_menu);
 
     const setSelectedCategory = (category: ICompiledMenuNode) => {
@@ -45,8 +50,6 @@ const MenuScreenContainer = ({ _languages, _currency, _menu, _banners, _defaultL
             // etc
         }
     }
-
-    const onSelectLanguage = (lang: ICompiledLanguage) => { }
 
     const onBack = () => {
         setSelectedCategory(_menu);
@@ -71,7 +74,7 @@ const MenuScreenContainer = ({ _languages, _currency, _menu, _banners, _defaultL
                             }
                         </Text>
                         <View style={{ marginLeft: 12, marginRight: 12 }}>
-                            <LanguagePicker defaultLanguageCode={_defaultLanguageCode} languages={_languages} onSelect={onSelectLanguage}></LanguagePicker>
+                            <LanguagePicker defaultLanguageCode={_defaultLanguageCode} languages={_languages} onSelect={_onChangeLanguage}></LanguagePicker>
                         </View>
                     </View>
                 </LinearGradient>
@@ -100,12 +103,16 @@ const mapStateToProps = (state: IAppState, ownProps: IMenuProps) => {
         _currency: CombinedDataSelectors.selectCurrency(state),
         _menu: CombinedDataSelectors.selectMenu(state),
         _languages: CombinedDataSelectors.selectLangages(state),
-        _defaultLanguageCode: CombinedDataSelectors.selectDefaultLanguageCode(state),
+        _defaultLanguageCode: CapabilitiesSelectors.selectDefaultLanguageCode(state),
     };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
-    return {};
+    return {
+        _onChangeLanguage: (language: ICompiledLanguage) => {
+            dispatch(CapabilitiesActions.setDefaultLanguageCode(language.code));
+        },
+    };
 };
 
 export const MenuScreen = connect(mapStateToProps, mapDispatchToProps)(MenuScreenContainer);
