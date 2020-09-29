@@ -5,13 +5,14 @@ import { View, Button, Text } from "react-native";
 import { MainNavigationScreenTypes } from "../navigation";
 import { IAppState } from "../../store/state";
 import { connect } from "react-redux";
-import { Ads, NavMenu } from "../simple";
-import { ICompiledAd, ICompiledMenu, ICompiledMenuNode, NodeTypes, ICurrency } from "@djonnyx/tornado-types";
+import { Ads, NavMenu, LanguagePicker } from "../simple";
+import { ICompiledAd, ICompiledMenu, ICompiledMenuNode, NodeTypes, ICurrency, ICompiledLanguage } from "@djonnyx/tornado-types";
 import { CombinedDataSelectors } from "../../store/selectors";
 import { SideMenu } from "../simple/side-menu/SideMenu";
 
 interface IMenuSelfProps {
     // store props
+    _languages: Array<ICompiledLanguage>;
     _currency: ICurrency;
     _menu: ICompiledMenu;
     _banners: Array<ICompiledAd>;
@@ -22,7 +23,7 @@ interface IMenuSelfProps {
 
 interface IMenuProps extends StackScreenProps<any, MainNavigationScreenTypes.MENU>, IMenuSelfProps { }
 
-const MenuScreenContainer = ({ _currency, _menu, _banners, _defaultLanguageCode, navigation, route }: IMenuProps) => {
+const MenuScreenContainer = ({ _languages, _currency, _menu, _banners, _defaultLanguageCode, navigation, route }: IMenuProps) => {
     const [selectedCategoty, _setSelectedCategory] = useState(_menu);
 
     const setSelectedCategory = (category: ICompiledMenuNode) => {
@@ -44,6 +45,8 @@ const MenuScreenContainer = ({ _currency, _menu, _banners, _defaultLanguageCode,
             // etc
         }
     }
+
+    const onSelectLanguage = (lang: ICompiledLanguage) => { }
 
     const onBack = () => {
         setSelectedCategory(_menu);
@@ -67,6 +70,9 @@ const MenuScreenContainer = ({ _currency, _menu, _banners, _defaultLanguageCode,
                                 selectedCategoty?.content?.contents[_defaultLanguageCode]?.name || "Меню"
                             }
                         </Text>
+                        <View style={{ marginLeft: 12, marginRight: 12 }}>
+                            <LanguagePicker defaultLanguageCode={_defaultLanguageCode} languages={_languages} onSelect={onSelectLanguage}></LanguagePicker>
+                        </View>
                     </View>
                 </LinearGradient>
                 <View style={{ flex: 1, flexDirection: 'row', width: '100%', height: '100%' }}>
@@ -93,6 +99,7 @@ const mapStateToProps = (state: IAppState, ownProps: IMenuProps) => {
         _banners: CombinedDataSelectors.selectBanners(state),
         _currency: CombinedDataSelectors.selectCurrency(state),
         _menu: CombinedDataSelectors.selectMenu(state),
+        _languages: CombinedDataSelectors.selectLangages(state),
         _defaultLanguageCode: CombinedDataSelectors.selectDefaultLanguageCode(state),
     };
 };

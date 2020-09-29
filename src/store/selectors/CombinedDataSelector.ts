@@ -28,6 +28,10 @@ export namespace CombinedDataSelectors {
         return state?.data?.refs.__raw.currencies[0];
     });
 
+    export const selectLangages = createSelector(getCombinedData, (state) => {
+        return state?.data?.refs.languages;
+    });
+
     export const selectMenu = createSelector(getCombinedData, (state) => {
         return state?.data?.menu;
     });
