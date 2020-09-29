@@ -24,7 +24,7 @@ export const SideMenuItem = ({ selected, languageCode, node, onPress }: ISideMen
     return (
         <View style={{
             flex: 1, marginBottom: 10, padding: 10, borderRadius: 24,
-            backgroundColor: node === selected ? Color.rgb(currentContent.color).alpha(0.5).toString() : Color.rgb(currentContent.color).alpha(0.1).toString()
+            backgroundColor: node === selected ? Color.rgb(currentContent.color).alpha(0.25).toString() : Color.rgb(currentContent.color).alpha(0.05).toString()
         }}>
             <TouchableOpacity style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center' }} onPress={pressHandler}>
                 <Image style={{ width: '100%', height: 64, marginBottom: 5 }} source={{

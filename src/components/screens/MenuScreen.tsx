@@ -97,7 +97,7 @@ const MenuScreenContainer = ({ _languages, _currency, _menu, _banners, _defaultL
                         selectedCategoty !== _menu
                             ?
                             <View style={{ width: 128, height: '100%', justifyContent: 'center', alignItems: 'center', marginTop: 48 }}>
-                                <SideMenu menu={_menu} languageCode={_defaultLanguageCode} onPress={selectSideMenuCategoryHandler}></SideMenu>
+                                <SideMenu menu={_menu} languageCode={_defaultLanguageCode} selected={selectedCategoty} onPress={selectSideMenuCategoryHandler}></SideMenu>
                             </View>
                             :
                             undefined

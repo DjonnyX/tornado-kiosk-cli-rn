@@ -6,27 +6,19 @@ import { ScrollView } from "react-native-gesture-handler";
 
 interface ISideMenuProps {
     menu: ICompiledMenu;
+    selected: ICompiledMenuNode;
     languageCode: string;
     onPress: (category: ICompiledMenuNode) => void;
 }
 
-export const SideMenu = ({ languageCode, menu, onPress }: ISideMenuProps) => {
-    const [category, setCategory] = useState(menu);
-
-    const onSelect = (category: ICompiledMenuNode) => {
-        setCategory(prevCategory => category);
-        if (!!onPress) {
-            onPress(category);
-        }
-    }
-
+export const SideMenu = ({ selected, languageCode, menu, onPress }: ISideMenuProps) => {
     return (
         <SafeAreaView style={{ flex: 1, width: '100%' }}>
             <ScrollView horizontal={false}>
                 <View style={{ padding: 10, paddingTop: 78 }}>
                     {
                         menu.children.map(child =>
-                            <SideMenuItem key={child.id} selected={category} node={child} languageCode={languageCode} onPress={onSelect}></SideMenuItem>
+                            <SideMenuItem key={child.id} selected={selected} node={child} languageCode={languageCode} onPress={onPress}></SideMenuItem>
                         )
                     }
                 </View>
