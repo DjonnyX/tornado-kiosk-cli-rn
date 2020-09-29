@@ -35,7 +35,7 @@ export const LanguagePicker = ({ defaultLanguageCode, languages, onSelect }: ILa
     }
 
     return (
-        <View style={{ justifyContent: 'center', alignItems: 'center', height: 48 }}>
+        <View style={{ justifyContent: "center", alignItems: "center", height: 48 }}>
             <Modal
                 animationType="slide"
                 visible={modalVisible}
@@ -66,8 +66,8 @@ export const LanguagePicker = ({ defaultLanguageCode, languages, onSelect }: ILa
                             return <TouchableHighlight onPress={() => {
                                 selectHandler(item);
                             }}>
-                                <View style={{ flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginBottom: 32 }}>
-                                    <Image style={{ width: 128, height: 128, borderWidth: 1, borderColor: 'rgba(0, 0, 0, 0.1)', marginBottom: 8 }} source={{
+                                <View style={{ flexDirection: "column", alignItems: "center", justifyContent: "center", marginBottom: 32 }}>
+                                    <Image style={{ width: 128, height: 128, borderWidth: 1, borderColor: "rgba(0, 0, 0, 0.1)", marginBottom: 8 }} source={{
                                         uri: `file://${item?.resources?.main?.mipmap.x128}`,
                                     }} resizeMode="cover"></Image>
                                     <Text style={{ fontSize: 16 }}>
@@ -82,16 +82,11 @@ export const LanguagePicker = ({ defaultLanguageCode, languages, onSelect }: ILa
                     </View>
                 </View>
             </Modal>
-            <TouchableHighlight style={{ flex: 1, justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }} onPress={pressHandler}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', borderWidth: 0.5, borderColor: "rgba(0, 0, 0, 0.5)", borderRadius: 6, padding: 8 }}>
-                    <Image style={{ width: 32, height: 32, marginRight: 8 }} source={{
-                        uri: `file://${currentLanguage?.resources?.main?.mipmap.x32}`,
-                    }}></Image>
-                    <Text>
-                        {
-                            currentLanguage?.name
-                        }
-                    </Text>
+            <TouchableHighlight style={{ flex: 1, justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }} onPress={pressHandler}>
+                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", borderWidth: 0.5, borderColor: "rgba(0, 0, 0, 0.5)", padding: 8, overflow: "hidden", width: 64, height: 64, borderRadius: 32 }}>
+                    <Image style={{ position: "absolute", width: 96, height: 96 }} source={{
+                        uri: `file://${currentLanguage?.resources?.main?.mipmap.x128}`,
+                    }} resizeMode="cover"></Image>
                 </View>
             </TouchableHighlight>
         </View>
