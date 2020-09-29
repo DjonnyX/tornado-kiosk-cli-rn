@@ -14,6 +14,7 @@ import com.tornadokiosk.utils.ExternalStoragePackage;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+import com.horcrux.svg.SvgPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
 
 public class MainApplication extends Application implements ReactApplication {

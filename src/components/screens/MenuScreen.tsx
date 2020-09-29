@@ -5,7 +5,7 @@ import { View, Button, Text } from "react-native";
 import { MainNavigationScreenTypes } from "../navigation";
 import { IAppState } from "../../store/state";
 import { connect } from "react-redux";
-import { Ads, NavMenu, LanguagePicker } from "../simple";
+import { Ads, NavMenu, LanguagePicker, MenuButton } from "../simple";
 import { ICompiledAd, ICompiledMenu, ICompiledMenuNode, NodeTypes, ICurrency, ICompiledLanguage } from "@djonnyx/tornado-types";
 import { CombinedDataSelectors } from "../../store/selectors";
 import { SideMenu } from "../simple/side-menu/SideMenu";
@@ -66,7 +66,7 @@ const MenuScreenContainer = ({ _languages, _currency, _menu, _banners, _defaultL
                     style={{ display: 'flex', position: 'absolute', width: '100%', height: 78, zIndex: 1 }}
                 >
                     <View style={{ display: 'flex', alignItems: 'center', flexDirection: 'row', width: '100%', height: '100%', padding: 16 }}>
-                        <Button title="back" onPress={onBack}></Button>
+                        <MenuButton onPress={onBack}></MenuButton>
                         <View style={{ flex: 1 }}></View>
                         <Text style={{ fontSize: 32, fontWeight: 'bold' }}>
                             {
