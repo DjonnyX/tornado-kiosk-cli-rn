@@ -5,17 +5,17 @@ import { NavMenuItem } from "./NavMenuItem";
 import { ScrollView } from "react-native-gesture-handler";
 
 interface INavMenuProps {
-    menu: ICompiledMenu;
+    node: ICompiledMenu;
     languageCode: string;
     onPress: (ad: ICompiledMenuNode) => void;
 }
 
-export const NavMenu = ({ languageCode, menu, onPress }: INavMenuProps) => {
+export const NavMenu = ({ languageCode, node, onPress }: INavMenuProps) => {
     return (
         <SafeAreaView style={{ flex: 1, width: '100%' }}>
             <ScrollView style={{ flex: 1 }} contentContainerStyle={{padding: 20, flexWrap: 'wrap', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' }} horizontal={false}>
                 {
-                    menu.children.map(child =>
+                    node.children.map(child =>
                         <NavMenuItem key={child.id} node={child} languageCode={languageCode} onPress={onPress}></NavMenuItem>
                     )
                 }

@@ -1,6 +1,6 @@
-import React, { Dispatch } from "react";
+import React, { Dispatch, useState } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
-import { View, Text, Button } from "react-native";
+import { View } from "react-native";
 import { MainNavigationScreenTypes } from "../navigation";
 import { IAppState } from "../../store/state";
 import { connect } from "react-redux";
@@ -21,13 +21,18 @@ interface IMenuSelfProps {
 interface IMenuProps extends StackScreenProps<any, MainNavigationScreenTypes.MENU>, IMenuSelfProps { }
 
 const MenuScreenContainer = ({ _menu, _banners, _defaultLanguageCode, navigation, route }: IMenuProps) => {
+    const [selectedCategoty, _setSelectedCategory] = useState(_menu);
+
+    const setSelectedCategory = (category: ICompiledMenuNode) => {
+        _setSelectedCategory(prevCategory => category);
+    };
 
     const selectAdHandler = (ad: ICompiledAd) => {
         // navigation.navigate(MainNavigationScreenTypes.MENU);
     }
 
     const selectCategoryHandler = (node: ICompiledMenuNode) => {
-        // navigation.navigate(MainNavigationScreenTypes.MENU);
+        setSelectedCategory(node);
     }
 
     return (
@@ -39,8 +44,9 @@ const MenuScreenContainer = ({ _menu, _banners, _defaultLanguageCode, navigation
                 <View style={{ flex: 0.2, width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
                     <SideMenu menu={_menu} languageCode={_defaultLanguageCode} onPress={selectCategoryHandler}></SideMenu>
                 </View>
+                
                 <View style={{ flex: 0.8, width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
-                    <NavMenu menu={_menu} languageCode={_defaultLanguageCode} onPress={selectCategoryHandler}></NavMenu>
+                    <NavMenu node={selectedCategoty} languageCode={_defaultLanguageCode} onPress={selectCategoryHandler}></NavMenu>
                 </View>
             </View>
         </View>
