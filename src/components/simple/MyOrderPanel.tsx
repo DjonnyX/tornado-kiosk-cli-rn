@@ -4,7 +4,7 @@ import { LanguagePicker } from "./LanguagePicker";
 import { ICompiledLanguage, ICompiledOrderType, ICompiledProduct, ICurrency } from "@djonnyx/tornado-types";
 import { OrderTypesPicker } from "./OrderTypesPicker";
 import { MyOrderList } from "./my-order-list";
-import { ConfirmOrderButton } from "./ConfirmOrderButton";
+import { CtrlMenuButton } from "./CtrlMenuButton";
 
 interface IMyOrderPanelProps {
     currency: ICurrency;
@@ -19,25 +19,21 @@ interface IMyOrderPanelProps {
     removePosition: (position: ICompiledProduct) => void;
     onChangeLanguage: (lang: ICompiledLanguage) => void;
     onChangeOrderType: (lang: ICompiledOrderType) => void;
+    onConfirm: () => void;
 }
 
 export const MyOrderPanel = ({ currency, language, languages, orderTypes, positions, sum,
-    addPosition, updatePosition, removePosition, onChangeLanguage, onChangeOrderType,
+    addPosition, updatePosition, removePosition, onChangeLanguage, onChangeOrderType, onConfirm,
 }: IMyOrderPanelProps) => {
-
-    const confirmHandler = () => {
-        // etc...
-    };
-
     return (
         <View
             style={{ flex: 1, backgroundColor: "rgba(0, 0, 0, 0.05)" }}
         >
             <View style={{ padding: 16, alignItems: "center" }}>
-                <View style={{ margin: "auto", marginTop: 20, marginBottom: 32, alignItems: "center" }}>
+                <View style={{ margin: "auto", marginTop: 12, marginBottom: 12, alignItems: "center" }}>
                     <LanguagePicker language={language} languages={languages} onSelect={onChangeLanguage}></LanguagePicker>
                 </View>
-                <View style={{ margin: "auto", marginBottom: 20, alignItems: "center" }}>
+                <View style={{ margin: "auto", marginBottom: 12, alignItems: "center" }}>
                     <OrderTypesPicker language={language} orderTypes={orderTypes} onSelect={onChangeOrderType}></OrderTypesPicker>
                 </View>
                 <View style={{ margin: "auto", marginBottom: 20, alignItems: "center" }}>
@@ -56,8 +52,8 @@ export const MyOrderPanel = ({ currency, language, languages, orderTypes, positi
                     addPosition={addPosition} updatePosition={updatePosition} removePosition={removePosition}
                 ></MyOrderList>
             </View>
-            <View style={{ flex: 0, height: 172, margin: "auto", padding: 16 }}>
-                <ConfirmOrderButton onPress={confirmHandler}></ConfirmOrderButton>
+            <View style={{ flex: 0, height: 186, margin: "auto", padding: 24 }}>
+                <CtrlMenuButton text="Заказать" disabled={positions.length === 0} onPress={onConfirm}></CtrlMenuButton>
             </View>
         </View>
     )

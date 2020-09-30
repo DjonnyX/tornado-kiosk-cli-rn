@@ -10,9 +10,9 @@ export const MenuButton = ({ onPress }: IMenuButtonProps) => {
     return (
         <TouchableOpacity onPress={onPress}>
             <View
-                style={{ borderRadius: 16, padding: 12, borderWidth: 2, borderColor: "rgba(0, 0, 0, 0.15)" }}
+                style={{ padding: 12, borderRadius: 16 }}
             >
-                <Icons name="Menu" fill="rgba(0, 0, 0, 0.3)"></Icons>
+                <Icons name="ArrLeft" fill="rgba(0, 0, 0, 0.3)" width={56} height={56} ></Icons>
             </View>
         </TouchableOpacity>
     )

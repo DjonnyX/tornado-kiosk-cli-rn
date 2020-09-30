@@ -25,13 +25,13 @@ export const MyOrderListItem = ({ imageHeight, currency, language, product }: IM
                     uri: `file://${currentAdAsset?.mipmap.x128}`,
                 }} resizeMode="contain" resizeMethod="scale"></Image>
             </View>
-            <Text numberOfLines={3} ellipsizeMode="tail" style={{ textAlign: "center", fontSize: 14, marginBottom: 4, color: "rgba(0, 0, 0, 0.75)", fontWeight: "bold" }}>
+            <Text numberOfLines={3} ellipsizeMode="tail" style={{ textAlign: "center", fontSize: 14, color: "rgba(0, 0, 0, 0.75)", fontWeight: "bold" }}>
                 {
                     currentContent.name
                 }
             </Text>
             <View style={{ alignItems: "center", justifyContent: "center", marginBottom: 1 }}>
-                <Text style={{ textAlign: "center", fontSize: 12, fontWeight: "bold", paddingTop: 4, paddingBottom: 4, paddingLeft: 6, paddingRight: 6, color: "rgba(0, 0, 0, 0.75)" }}>
+                <Text style={{ textAlign: "center", fontSize: 12, paddingTop: 4, paddingBottom: 4, paddingLeft: 6, paddingRight: 6, color: "rgba(0, 0, 0, 0.5)" }}>
                     {
                         `${(product.prices[currency.id as string]?.value * 0.01).toFixed(2)} ${currency.symbol}`
                     }

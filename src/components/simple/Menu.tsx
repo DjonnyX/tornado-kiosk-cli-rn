@@ -5,6 +5,7 @@ import { NavMenu } from "./nav-menu";
 import { ICompiledMenuNode, ICompiledMenu, NodeTypes, ICompiledLanguage, ICurrency, ICompiledProduct } from "@djonnyx/tornado-types";
 import LinearGradient from "react-native-linear-gradient";
 import { MenuButton } from "./MenuButton";
+import { CtrlMenuButton } from "./CtrlMenuButton";
 
 interface IMenuProps {
     menu: ICompiledMenu;
@@ -13,6 +14,7 @@ interface IMenuProps {
     width: number;
     positions: Array<ICompiledProduct>;
 
+    cancelOrder: () => void;
     addPosition: (position: ICompiledProduct) => void;
     updatePosition: (position: ICompiledProduct) => void;
     removePosition: (position: ICompiledProduct) => void;
@@ -21,7 +23,7 @@ interface IMenuProps {
 const sideMenuWidth = 152;
 
 export const Menu = ({
-    menu, language, currency, width, positions,
+    menu, language, currency, width, positions, cancelOrder,
     addPosition, updatePosition, removePosition,
 }: IMenuProps) => {
     const [selectedCategoty, _setSelectedCategory] = useState(menu);
@@ -107,17 +109,16 @@ export const Menu = ({
                 style={{ display: "flex", position: "absolute", width: "100%", height: 96, zIndex: 1 }}
             >
                 <View style={{ display: "flex", alignItems: "center", flexDirection: "row", width: "100%", height: "100%", padding: 16 }}>
-                    {
-                        selectedCategoty !== menu
-                            ?
-                            <View style={{ width: 132, justifyContent: "center", alignItems: "center" }}>
-                                <MenuButton onPress={onBackToMenu}></MenuButton>
-                            </View>
-                            :
-                            undefined
-                    }
+                    <Animated.View style={{ width: 132, justifyContent: "center", alignItems: "center",
+                    top: 10,
+                    left: menuPosition.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [-10, -sideMenuWidth],
+                    }), }}>
+                        <MenuButton onPress={onBackToMenu}></MenuButton>
+                    </Animated.View>
                     <View style={{ flex: 1 }}></View>
-                    <Text style={{ fontFamily: "RobotoSlab-Black", color: "rgba(0, 0, 0, 0.75)", fontSize: 32 }}>
+                    <Text style={{ fontFamily: "RobotoSlab-Black", color: "rgba(0, 0, 0, 0.75)", fontSize: 32, marginRight: 24 }}>
                         {
                             selectedCategoty?.content?.contents[language.code]?.name || "Меню"
                         }
@@ -127,7 +128,7 @@ export const Menu = ({
             <View style={{ flex: 1, flexDirection: "row", width: "100%", height: "100%" }}>
                 <Animated.View style={{
                     position: "absolute",
-                    width: 152,
+                    width: sideMenuWidth,
                     height: "100%",
                     justifyContent: "center",
                     alignItems: "center",
@@ -137,7 +138,12 @@ export const Menu = ({
                         outputRange: [0, -sideMenuWidth],
                     }),
                 }}>
-                    <SideMenu menu={menu} language={language} selected={selectedCategoty} onPress={selectSideMenuCategoryHandler}></SideMenu>
+                    <View style={{ flex: 1, flexGrow: 1, margin: "auto" }}>
+                        <SideMenu menu={menu} language={language} selected={selectedCategoty} onPress={selectSideMenuCategoryHandler}></SideMenu>
+                    </View>
+                    <View style={{ flex: 0, width: "100%", height: 234, margin: "auto", padding: 24 }}>
+                        <CtrlMenuButton gradient={["rgb(240, 30, 26)", "rgb(242, 62, 26)"]} text="Отменить" onPress={cancelOrder}></CtrlMenuButton>
+                    </View>
                 </Animated.View>
                 <Animated.View style={{
                     position: "absolute",

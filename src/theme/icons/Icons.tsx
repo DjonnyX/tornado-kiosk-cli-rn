@@ -77,6 +77,8 @@ SvgIcon.defaultProps = {
 export const Icons = (props: {
     name: string;
     fill: string | number;
+    width?: number | string;
+    height?: number | string;
     [x: string]: any;
 }) => {
     return <SvgIcon {...props as any} svgs={svgs} />

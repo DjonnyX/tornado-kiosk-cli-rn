@@ -40,7 +40,7 @@ export const MainNavigationStack = () => {
       />
       <Stack.Screen
         name={MainNavigationScreenTypes.MY_ORDER}
-        component={LoadingScreen}
+        component={IntroScreen}
         options={{
           gestureEnabled: false,
         }}
