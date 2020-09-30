@@ -36,7 +36,7 @@ const IntroScreenContainer = ({ _language, _intros, navigation }: IIntroProps) =
 const mapStateToProps = (state: IAppState, ownProps: IIntroProps) => {
     return {
         _intros: CombinedDataSelectors.selectIntros(state),
-        _language: CapabilitiesSelectors.selecLanguage(state),
+        _language: CapabilitiesSelectors.selectLanguage(state),
     };
 };
 

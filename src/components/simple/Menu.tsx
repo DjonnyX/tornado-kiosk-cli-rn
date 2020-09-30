@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, Animated, EasingFunction, Easing } from "react-native";
 import { SideMenu } from "./side-menu";
 import { NavMenu } from "./nav-menu";
-import { ICompiledMenuNode, ICompiledMenu, NodeTypes, ICompiledLanguage, ICurrency } from "@djonnyx/tornado-types";
+import { ICompiledMenuNode, ICompiledMenu, NodeTypes, ICompiledLanguage, ICurrency, ICompiledProduct } from "@djonnyx/tornado-types";
 import LinearGradient from "react-native-linear-gradient";
 import { MenuButton } from "./MenuButton";
 
@@ -11,9 +11,17 @@ interface IMenuProps {
     currency: ICurrency;
     language: ICompiledLanguage;
     width: number;
+    positions: Array<ICompiledProduct>;
+
+    addPosition: (position: ICompiledProduct) => void;
+    updatePosition: (position: ICompiledProduct) => void;
+    removePosition: (position: ICompiledProduct) => void;
 }
 
-export const Menu = ({ menu, language, currency, width }: IMenuProps) => {
+export const Menu = ({
+    menu, language, currency, width, positions,
+    addPosition, updatePosition, removePosition,
+}: IMenuProps) => {
     const [selectedCategoty, _setSelectedCategory] = useState(menu);
     const [menuPosition, _setMenuPosition] = useState(new Animated.Value(1));
     let menuAnimation: Animated.CompositeAnimation;

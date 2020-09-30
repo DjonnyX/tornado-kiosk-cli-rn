@@ -4,11 +4,11 @@ import { IAppState } from "../state";
 const getMyOrder = (state: IAppState) => state.myOrder;
 
 export namespace MyOrderSelectors {
-    export const selecPositions = createSelector(getMyOrder, (state) => {
+    export const selectPositions = createSelector(getMyOrder, (state) => {
         return state.positions;
     });
 
-    export const selecSum = createSelector((state: IAppState) => { return state }, (state) => {
+    export const selectSum = createSelector((state: IAppState) => { return state }, (state) => {
         let sum = 0;
         const currency = state.combinedData.data?.refs.defaultCurrency;
         for (const pos of state.myOrder.positions) {
