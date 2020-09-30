@@ -1,17 +1,16 @@
 import React, { Dispatch, useState } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
-import LinearGradient from "react-native-linear-gradient";
-import { View, Text } from "react-native";
+import { View, Dimensions } from "react-native";
 import { MainNavigationScreenTypes } from "../navigation";
 import { IAppState } from "../../store/state";
 import { connect } from "react-redux";
-import { Ads, NavMenu, MenuButton } from "../simple";
-import { ICompiledAd, ICompiledMenu, ICompiledMenuNode, NodeTypes, ICurrency, ICompiledLanguage, ICompiledOrderType } from "@djonnyx/tornado-types";
+import { Ads } from "../simple";
+import { ICompiledAd, ICompiledMenu, ICurrency, ICompiledLanguage, ICompiledOrderType } from "@djonnyx/tornado-types";
 import { CombinedDataSelectors } from "../../store/selectors";
-import { SideMenu } from "../simple/side-menu/SideMenu";
 import { CapabilitiesSelectors } from "../../store/selectors/CapabilitiesSelector";
 import { CapabilitiesActions } from "../../store/actions";
 import { MyOrderPanel } from "../simple/MyOrderPanel";
+import { Menu } from "../simple/Menu";
 
 interface IMenuSelfProps {
     // store props
@@ -32,32 +31,22 @@ interface IMenuSelfProps {
 interface IMenuProps extends StackScreenProps<any, MainNavigationScreenTypes.MENU>, IMenuSelfProps { }
 
 const MenuScreenContainer = ({ _languages, _orderTypes, _defaultCurrency, _menu, _banners, _language, _onChangeLanguage, _onChangeOrderType, navigation, route }: IMenuProps) => {
-
-    const [selectedCategoty, _setSelectedCategory] = useState(_menu);
-
-    const setSelectedCategory = (category: ICompiledMenuNode) => {
-        _setSelectedCategory(prevCategory => category);
-    };
+    const [width, _setWidth] = useState(Dimensions.get("window").width);
 
     const selectAdHandler = (ad: ICompiledAd) => {
-        // navigation.navigate(MainNavigationScreenTypes.MENU);
+        // etc...
     }
 
-    const selectSideMenuCategoryHandler = (node: ICompiledMenuNode) => {
-        setSelectedCategory(node);
-    }
+    const myOrderWidth = 156;
+    let menuWidth = width - myOrderWidth;
 
-    const selectNavMenuCategoryHandler = (node: ICompiledMenuNode) => {
-        if (node.type === NodeTypes.SELECTOR || node.type === NodeTypes.SELECTOR_NODE) {
-            setSelectedCategory(node);
-        } else if (node.type === NodeTypes.PRODUCT) {
-            // etc
-        }
-    }
-
-    const onBack = () => {
-        setSelectedCategory(_menu);
-    }
+    Dimensions.addEventListener("change", ({window}) => {
+        _setWidth(prevWidth => {
+            const w = window.width;
+            menuWidth = w - myOrderWidth;
+            return w;
+        });
+    })
 
     return (
         <View style={{ flex: 1, backgroundColor: "#fff" }}>
@@ -71,46 +60,10 @@ const MenuScreenContainer = ({ _languages, _orderTypes, _defaultCurrency, _menu,
                     undefined
             }
             <View style={{ flex: 1, flexDirection: "row", width: "100%", height: "100%", maxHeight: _banners.length > 0 ? "90%" : "100%" }}>
-                <View style={{ flex: 1, width: "100%", height: "100%" }}>
-                    <LinearGradient
-                        colors={["rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 0)"]}
-                        style={{ display: "flex", position: "absolute", width: "100%", height: 96, zIndex: 1 }}
-                    >
-                        <View style={{ display: "flex", alignItems: "center", flexDirection: "row", width: "100%", height: "100%", padding: 16 }}>
-                            {
-                                selectedCategoty !== _menu
-                                    ?
-                                    <View style={{ width: 132, justifyContent: "center", alignItems: "center" }}>
-                                        <MenuButton onPress={onBack}></MenuButton>
-                                    </View>
-                                    :
-                                    undefined
-                            }
-                            <View style={{ flex: 1 }}></View>
-                            <Text style={{ fontFamily: "RobotoSlab-Black", color: "rgba(0, 0, 0, 0.75)", fontSize: 32 }}>
-                                {
-                                    selectedCategoty?.content?.contents[_language.code]?.name || "Меню"
-                                }
-                            </Text>
-                        </View>
-                    </LinearGradient>
-                    <View style={{ flex: 1, flexDirection: "row", width: "100%", height: "100%" }}>
-                        {
-                            selectedCategoty !== _menu
-                                ?
-                                <View style={{ width: 152, height: "100%", justifyContent: "center", alignItems: "center", marginTop: 48 }}>
-                                    <SideMenu menu={_menu} language={_language} selected={selectedCategoty} onPress={selectSideMenuCategoryHandler}></SideMenu>
-                                </View>
-                                :
-                                undefined
-                        }
-
-                        <View style={{ flex: 1, width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}>
-                            <NavMenu node={selectedCategoty} currency={_defaultCurrency} language={_language} onPress={selectNavMenuCategoryHandler}></NavMenu>
-                        </View>
-                    </View>
+                <View style={{ display: "flex", width: width - myOrderWidth, height: "100%" }}>
+                    <Menu currency={_defaultCurrency} language={_language} menu={_menu} width={menuWidth}></Menu>
                 </View>
-                <View style={{ display: "flex", width: 144, height: "100%" }}>
+                <View style={{ display: "flex", width: myOrderWidth, height: "100%" }}>
                     <MyOrderPanel language={_language} languages={_languages} orderTypes={_orderTypes} onChangeLanguage={_onChangeLanguage} onChangeOrderType={_onChangeOrderType}></MyOrderPanel>
                 </View>
             </View>
