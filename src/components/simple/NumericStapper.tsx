@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleProp, ViewStyle } from "react-native";
+import { View, Text, TouchableOpacity, StyleProp, ViewStyle, TextStyle } from "react-native";
 
 interface INumericStepperButtonProps {
     icon: string;
@@ -24,13 +24,14 @@ const NumericStepperButton = ({ icon, style, onPress }: INumericStepperButtonPro
 interface INumericStapperProps {
     onChange: (value: number) => void;
     startWith?: number;
+    textStyle?: StyleProp<TextStyle>;
     buttonStyle?: StyleProp<ViewStyle>;
     containerStyle?: StyleProp<ViewStyle>;
     iconDecrement?: string;
     iconIncrement?: string;
 }
 
-export const NumericStapper = ({ startWith = 0, iconDecrement = "-", iconIncrement = "+", buttonStyle, containerStyle, onChange }: INumericStapperProps) => {
+export const NumericStapper = ({ startWith = 0, iconDecrement = "-", iconIncrement = "+", buttonStyle, containerStyle, textStyle, onChange }: INumericStapperProps) => {
     const [value, _setValue] = useState((startWith));
 
     const setValue = (value: number) => {
@@ -48,9 +49,9 @@ export const NumericStapper = ({ startWith = 0, iconDecrement = "-", iconIncreme
     };
 
     return (
-        <View style={{ flex: 1, flexDirection: "row", ...containerStyle as any }}>
+        <View style={{ flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "center", ...containerStyle as any }}>
             <NumericStepperButton style={buttonStyle} icon={iconDecrement} onPress={decrementHandler} />
-            <Text>
+            <Text style={{ textAlign: "center", ...textStyle as any }}>
                 {
                     value.toString()
                 }
