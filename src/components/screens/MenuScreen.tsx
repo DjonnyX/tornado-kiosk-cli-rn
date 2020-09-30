@@ -17,7 +17,7 @@ interface IMenuSelfProps {
     // store props
     _languages: Array<ICompiledLanguage>;
     _orderTypes: Array<ICompiledOrderType>;
-    _currency: ICurrency;
+    _defaultCurrency: ICurrency;
     _menu: ICompiledMenu;
     _banners: Array<ICompiledAd>;
     _language: ICompiledLanguage;
@@ -31,7 +31,7 @@ interface IMenuSelfProps {
 
 interface IMenuProps extends StackScreenProps<any, MainNavigationScreenTypes.MENU>, IMenuSelfProps { }
 
-const MenuScreenContainer = ({ _languages, _orderTypes, _currency, _menu, _banners, _language, _onChangeLanguage, _onChangeOrderType, navigation, route }: IMenuProps) => {
+const MenuScreenContainer = ({ _languages, _orderTypes, _defaultCurrency, _menu, _banners, _language, _onChangeLanguage, _onChangeOrderType, navigation, route }: IMenuProps) => {
     const [selectedCategoty, _setSelectedCategory] = useState(_menu);
 
     const setSelectedCategory = (category: ICompiledMenuNode) => {
@@ -105,7 +105,7 @@ const MenuScreenContainer = ({ _languages, _orderTypes, _currency, _menu, _banne
                         }
 
                         <View style={{ flex: 1, width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}>
-                            <NavMenu node={selectedCategoty} currency={_currency} language={_language} onPress={selectNavMenuCategoryHandler}></NavMenu>
+                            <NavMenu node={selectedCategoty} currency={_defaultCurrency} language={_language} onPress={selectNavMenuCategoryHandler}></NavMenu>
                         </View>
                     </View>
                 </View>
@@ -120,7 +120,7 @@ const MenuScreenContainer = ({ _languages, _orderTypes, _currency, _menu, _banne
 const mapStateToProps = (state: IAppState, ownProps: IMenuProps) => {
     return {
         _banners: CombinedDataSelectors.selectBanners(state),
-        _currency: CombinedDataSelectors.selectCurrency(state),
+        _defaultCurrency: CombinedDataSelectors.selectDefaultCurrency(state),
         _menu: CombinedDataSelectors.selectMenu(state),
         _languages: CombinedDataSelectors.selectLangages(state),
         _orderTypes: CombinedDataSelectors.selectOrderTypes(state),
