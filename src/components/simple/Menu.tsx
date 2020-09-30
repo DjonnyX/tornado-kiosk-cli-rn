@@ -37,21 +37,32 @@ export const Menu = ({
     };
 
     const selectSideMenuCategoryHandler = (node: ICompiledMenuNode) => {
-        setSelectedCategory(node);
+        navigateTo(node);
     }
 
     const selectNavMenuCategoryHandler = (node: ICompiledMenuNode) => {
+        navigateTo(node);
+    }
+
+    // навигация / добавление продукта
+    const navigateTo = (node: ICompiledMenuNode) => {
         if (node.type === NodeTypes.SELECTOR || node.type === NodeTypes.SELECTOR_NODE) {
+
+            // навигация по категории
             setSelectedCategory(node);
         } else if (node.type === NodeTypes.PRODUCT) {
-            // etc
+
+            // добавление позиции
+            addPosition(node.content as ICompiledProduct);
         }
     }
 
-    const onBack = () => {
+    // возврат к корню меню
+    const onBackToMenu = () => {
         setSelectedCategory(menu);
     }
 
+    // анимация скрытия бокового меню
     const sideMenuFadeOut = () => {
         if (menuAnimation) {
             menuAnimation.stop();
@@ -66,6 +77,7 @@ export const Menu = ({
         menuAnimation.start();
     };
 
+    // анимация отображения бокового меню
     const sideMenuFadeIn = () => {
         if (menuAnimation) {
             menuAnimation.stop();
@@ -93,7 +105,7 @@ export const Menu = ({
                         selectedCategoty !== menu
                             ?
                             <View style={{ width: 132, justifyContent: "center", alignItems: "center" }}>
-                                <MenuButton onPress={onBack}></MenuButton>
+                                <MenuButton onPress={onBackToMenu}></MenuButton>
                             </View>
                             :
                             undefined
