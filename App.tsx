@@ -10,6 +10,8 @@ import { Provider } from "react-redux";
 import { store } from "./src/store";
 
 const App = () => {
+  console.disableYellowBox = true;
+  
   const [combinedData, setData] = useState<ICompiledData | null>(null);
 
   const setCombinedData = (data: ICompiledData) => {
