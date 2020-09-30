@@ -18,6 +18,8 @@ interface IMenuProps {
     removePosition: (position: ICompiledProduct) => void;
 }
 
+const sideMenuWidth = 152;
+
 export const Menu = ({
     menu, language, currency, width, positions,
     addPosition, updatePosition, removePosition,
@@ -27,7 +29,9 @@ export const Menu = ({
     let menuAnimation: Animated.CompositeAnimation;
 
     const setSelectedCategory = (category: ICompiledMenuNode) => {
-        _setSelectedCategory(prevCategory => category);
+        _setSelectedCategory(prevCateg => {
+            return category;
+        });
 
         if (category === menu) {
             sideMenuFadeOut();
@@ -46,20 +50,24 @@ export const Menu = ({
 
     // навигация / добавление продукта
     const navigateTo = (node: ICompiledMenuNode) => {
-        if (node.type === NodeTypes.SELECTOR || node.type === NodeTypes.SELECTOR_NODE) {
+        setTimeout(() => {
+            if (node.type === NodeTypes.SELECTOR || node.type === NodeTypes.SELECTOR_NODE) {
 
-            // навигация по категории
-            setSelectedCategory(node);
-        } else if (node.type === NodeTypes.PRODUCT) {
+                // навигация по категории
+                setSelectedCategory(node);
+            } else if (node.type === NodeTypes.PRODUCT) {
 
-            // добавление позиции
-            addPosition(node.content as ICompiledProduct);
-        }
+                // добавление позиции
+                addPosition(node.content as ICompiledProduct);
+            }
+        });
     }
 
     // возврат к корню меню
     const onBackToMenu = () => {
-        setSelectedCategory(menu);
+        setTimeout(() => {
+            setSelectedCategory(menu);
+        });
     }
 
     // анимация скрытия бокового меню
@@ -91,8 +99,6 @@ export const Menu = ({
         });
         menuAnimation.start();
     };
-
-    const sideMenuWidth = 152;
 
     return (
         <View style={{ flex: 1, width, height: "100%" }}>
@@ -145,6 +151,7 @@ export const Menu = ({
                     width: menuPosition.interpolate({
                         inputRange: [0, 1],
                         outputRange: [width - sideMenuWidth, width],
+                        easing: Easing.step0,
                     }),
                 }}>
                     <NavMenu node={selectedCategoty} language={language} currency={currency} onPress={selectNavMenuCategoryHandler}></NavMenu>

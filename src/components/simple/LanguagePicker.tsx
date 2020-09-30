@@ -82,8 +82,8 @@ export const LanguagePicker = ({ language, languages, onSelect }: ILanguagePicke
                 </View>
             </Modal>
             <TouchableOpacity style={{ flex: 1, justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }} onPress={pressHandler}>
-                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", borderWidth: 0.5, borderColor: "rgba(0, 0, 0, 0.5)", padding: 8, overflow: "hidden", width: 64, height: 64, borderRadius: 32 }}>
-                    <Image style={{ position: "absolute", width: 96, height: 96 }} source={{
+                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", borderWidth: 0.5, borderColor: "rgba(0, 0, 0, 0.5)", padding: 8, overflow: "hidden", width: 44, height: 44, borderRadius: 32 }}>
+                    <Image style={{ position: "absolute", width: 64, height: 64 }} source={{
                         uri: `file://${currentLanguage?.resources?.main?.mipmap.x128}`,
                     }} resizeMode="cover"></Image>
                 </View>

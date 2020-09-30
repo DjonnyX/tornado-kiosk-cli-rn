@@ -29,7 +29,7 @@ export const NavMenuItem = ({ imageHeight, currency, language, node, onPress }: 
                 <View style={{ flex: 1, width: "100%", height: imageHeight, marginBottom: 5, justifyContent: "flex-end" }}>
                     <Image style={{ width: "100%", height: "100%" }} source={{
                         uri: `file://${currentAdAsset?.mipmap.x128}`,
-                    }} resizeMode="contain" resizeMethod="scale"></Image>
+                    }} fadeDuration={0} resizeMode="contain" resizeMethod="scale"></Image>
                 </View>
                 <Text numberOfLines={2} ellipsizeMode="tail" style={{ fontFamily: "RobotoSlab-Black", fontSize: 20, marginBottom: 6, color: "rgba(0, 0, 0, 0.75)" }}>
                     {
@@ -42,32 +42,32 @@ export const NavMenuItem = ({ imageHeight, currency, language, node, onPress }: 
                     }
                 </Text>
                 {
-                    
+
                     node.type === NodeTypes.PRODUCT
-                    ?
-                    <View style={{ borderStyle: "solid", borderWidth: 0.5, borderRadius: 6, alignItems: "center", justifyContent: "center", borderColor: "rgba(0, 0, 0, 0.5)", marginBottom: 12 }}>
+                        ?
+                        <View style={{ borderStyle: "solid", borderWidth: 0.5, borderRadius: 6, alignItems: "center", justifyContent: "center", borderColor: "rgba(0, 0, 0, 0.5)", marginBottom: 12 }}>
                             <Text style={{ fontSize: 18, fontWeight: "bold", paddingTop: 8, paddingBottom: 8, paddingLeft: 14, paddingRight: 14, color: "rgba(0, 0, 0, 0.75)" }}>
                                 {
-                                    `${((node.content as ICompiledProduct).prices[currency.id as string]?.value * 0.01).toFixed(2)} ${currency.name}`
+                                    `${((node.content as ICompiledProduct).prices[currency.id as string]?.value * 0.01).toFixed(2)} ${currency.symbol}`
                                 }
                             </Text>
                         </View>
                         : undefined
                 }
                 {
-                /*<View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-                    {
-                        tags?.map(tag =>
-                            tag?.contents[language]?.resources?.main?.mipmap?.x32
-                                ?
-                                <Image style={{ width: 16, height: 16 }} source={{
-                                    uri: `file://${tag?.contents[language]?.resources?.main?.mipmap?.x32}`,
-                                }} resizeMode="contain" resizeMethod="scale"></Image>
-                                :
-                            <View key={tag.id} style={{ width: 8, height: 8, marginRight: 2, backgroundColor: tag?.contents[language]?.color, borderRadius: 4 }}></View>
-                        )
-                    }
-                </View>*/
+                    /*<View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+                        {
+                            tags?.map(tag =>
+                                tag?.contents[language]?.resources?.main?.mipmap?.x32
+                                    ?
+                                    <Image style={{ width: 16, height: 16 }} source={{
+                                        uri: `file://${tag?.contents[language]?.resources?.main?.mipmap?.x32}`,
+                                    }} resizeMode="contain" resizeMethod="scale"></Image>
+                                    :
+                                <View key={tag.id} style={{ width: 8, height: 8, marginRight: 2, backgroundColor: tag?.contents[language]?.color, borderRadius: 4 }}></View>
+                            )
+                        }
+                    </View>*/
                 }
             </TouchableOpacity>
         </View>

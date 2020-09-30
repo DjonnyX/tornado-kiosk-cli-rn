@@ -34,7 +34,7 @@ export const OrderTypesPicker = ({ language, orderTypes, onSelect }: IOrderTypes
     }
 
     return (
-        <View style={{ justifyContent: "center", alignItems: "center", height: 48 }}>
+        <View style={{ justifyContent: "center", alignItems: "center", width: "100%", height: 48 }}>
             <Modal
                 animationType="slide"
                 visible={modalVisible}
@@ -83,9 +83,13 @@ export const OrderTypesPicker = ({ language, orderTypes, onSelect }: IOrderTypes
             </Modal>
             <TouchableOpacity style={{ flex: 1, justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }} onPress={pressHandler}>
                 <View style={{ flexDirection: "row", alignItems: "center", borderWidth: 0.5, borderColor: "rgba(0, 0, 0, 0.5)", borderRadius: 6, padding: 8 }}>
-                    <Image style={{ width: 32, height: 32, marginRight: 8 }} source={{
-                        uri: `file://${currentOrderType?.contents[language?.code]?.resources?.main?.mipmap.x128}`,
-                    }}></Image>
+                    {
+                        /*
+                        <Image style={{ width: 32, height: 32, marginRight: 8 }} source={{
+                            uri: `file://${currentOrderType?.contents[language?.code]?.resources?.main?.mipmap.x128}`,
+                        }}></Image>
+                        */
+                    }
                     <Text>
                         {
                             currentOrderType?.contents[language?.code]?.name

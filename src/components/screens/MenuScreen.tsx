@@ -15,6 +15,7 @@ import { Menu } from "../simple/Menu";
 interface IMenuSelfProps {
     // store props
     _languages: Array<ICompiledLanguage>;
+    _orderSum: number;
     _orderTypes: Array<ICompiledOrderType>;
     _defaultCurrency: ICurrency;
     _menu: ICompiledMenu;
@@ -36,10 +37,10 @@ interface IMenuProps extends StackScreenProps<any, MainNavigationScreenTypes.MEN
 
 const MenuScreenContainer = ({
     _languages, _orderTypes, _defaultCurrency,
-    _menu, _banners, _language, _orderPositions,
+    _menu, _banners, _language, _orderPositions, _orderSum,
     _onChangeLanguage, _onChangeOrderType,
     _onAddOrderPosition, _onUpdateOrderPosition,
-    _onRemoveOrderPosition, navigation, route
+    _onRemoveOrderPosition, navigation, route,
 }: IMenuProps) => {
     const [width, _setWidth] = useState(Dimensions.get("window").width);
 
@@ -70,15 +71,15 @@ const MenuScreenContainer = ({
                     undefined
             }
             <View style={{ flex: 1, flexDirection: "row", width: "100%", height: "100%", maxHeight: _banners.length > 0 ? "90%" : "100%" }}>
-                <View style={{ display: "flex", width: width - myOrderWidth, height: "100%" }}>
+                <View style={{ display: "flex", width: width - myOrderWidth, height: "100%", zIndex: 1 }}>
                     <Menu currency={_defaultCurrency} language={_language} menu={_menu} width={menuWidth} positions={_orderPositions}
                         addPosition={_onAddOrderPosition} updatePosition={_onUpdateOrderPosition} removePosition={_onRemoveOrderPosition}
                     ></Menu>
                 </View>
-                <View style={{ display: "flex", width: myOrderWidth, height: "100%" }}>
-                    <MyOrderPanel language={_language} languages={_languages} orderTypes={_orderTypes} positions={_orderPositions}
+                <View style={{ display: "flex", width: myOrderWidth, height: "100%", zIndex: 2 }}>
+                    <MyOrderPanel currency={_defaultCurrency} sum={_orderSum} language={_language} languages={_languages} orderTypes={_orderTypes} positions={_orderPositions}
                         addPosition={_onAddOrderPosition} updatePosition={_onUpdateOrderPosition} removePosition={_onRemoveOrderPosition}
-                    onChangeLanguage={_onChangeLanguage} onChangeOrderType={_onChangeOrderType}></MyOrderPanel>
+                        onChangeLanguage={_onChangeLanguage} onChangeOrderType={_onChangeOrderType}></MyOrderPanel>
                 </View>
             </View>
         </View>
