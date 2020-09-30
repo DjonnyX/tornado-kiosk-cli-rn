@@ -2,7 +2,7 @@ import React from "react";
 import { SafeAreaView, ScrollView } from "react-native";
 import { ICompiledProduct, ICompiledLanguage, ICurrency } from "@djonnyx/tornado-types";
 import { FlatList } from "react-native-gesture-handler";
-import { MyOrderListItemItem } from "./MyOrderListItem";
+import { MyOrderListItem } from "./MyOrderListItem";
 
 interface IMyOrderListProps {
     positions: Array<ICompiledProduct>;
@@ -20,7 +20,7 @@ export const MyOrderList = ({ currency, language, positions, addPosition, update
             <ScrollView style={{ flex: 1 }} horizontal={false}
             >
                 <FlatList style={{ flex: 1 }} data={positions} renderItem={({ item }) => {
-                    return <MyOrderListItemItem key={item.id} product={item} currency={currency} language={language} imageHeight={48}></MyOrderListItemItem>
+                    return <MyOrderListItem key={item.id} product={item} currency={currency} language={language} imageHeight={48}></MyOrderListItem>
                 }}
                     keyExtractor={(item, index) => item.id}>
                 </FlatList>
