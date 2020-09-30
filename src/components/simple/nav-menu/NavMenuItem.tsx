@@ -31,12 +31,12 @@ export const NavMenuItem = ({ imageHeight, currency, language, node, onPress }: 
                         uri: `file://${currentAdAsset?.mipmap.x128}`,
                     }} fadeDuration={0} resizeMode="contain" resizeMethod="scale"></Image>
                 </View>
-                <Text numberOfLines={2} ellipsizeMode="tail" style={{ fontFamily: "RobotoSlab-Black", fontSize: 20, marginBottom: 6, color: "rgba(0, 0, 0, 0.75)" }}>
+                <Text numberOfLines={2} ellipsizeMode="tail" style={{ textAlign: "center", fontFamily: "RobotoSlab-Black", fontSize: 20, marginBottom: 6, color: "rgba(0, 0, 0, 0.75)" }}>
                     {
                         currentContent.name
                     }
                 </Text>
-                <Text numberOfLines={3} ellipsizeMode="tail" style={{ fontSize: 10, color: "rgba(0, 0, 0, 0.5)", marginBottom: 12 }}>
+                <Text numberOfLines={3} ellipsizeMode="tail" style={{ textAlign: "center", fontSize: 10, color: "rgba(0, 0, 0, 0.5)", marginBottom: 12 }}>
                     {
                         currentContent.description
                     }
@@ -46,7 +46,7 @@ export const NavMenuItem = ({ imageHeight, currency, language, node, onPress }: 
                     node.type === NodeTypes.PRODUCT
                         ?
                         <View style={{ borderStyle: "solid", borderWidth: 0.5, borderRadius: 6, alignItems: "center", justifyContent: "center", borderColor: "rgba(0, 0, 0, 0.5)", marginBottom: 12 }}>
-                            <Text style={{ fontSize: 18, fontWeight: "bold", paddingTop: 8, paddingBottom: 8, paddingLeft: 14, paddingRight: 14, color: "rgba(0, 0, 0, 0.75)" }}>
+                            <Text style={{ textAlign: "center", fontSize: 18, fontWeight: "bold", paddingTop: 8, paddingBottom: 8, paddingLeft: 14, paddingRight: 14, color: "rgba(0, 0, 0, 0.75)" }}>
                                 {
                                     `${((node.content as ICompiledProduct).prices[currency.id as string]?.value * 0.01).toFixed(2)} ${currency.symbol}`
                                 }
