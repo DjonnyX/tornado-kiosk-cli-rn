@@ -23,7 +23,7 @@ interface IDataCollectorServiceProps {
 
 interface IDataCollectorServiceState { }
 
-// const APP_CACHE_DIR_NAME = "tornado";
+const COMPILED_DATA_FILE_NAME = "data.json";
 
 class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps, IDataCollectorServiceState> {
     private _unsubscribe$: Subject<void> | null = new Subject<void>();
@@ -51,7 +51,14 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
             return;
         }
 
-        const storePath = `${userDataPath}/assets`; //${APP_CACHE_DIR_NAME}/
+        const storePath = `${userDataPath}/assets`;
+
+        let savedData: ICompiledData | undefined;
+        try {
+            savedData = await assetsService.readFile(`${storePath}/${COMPILED_DATA_FILE_NAME}`);
+        } catch (err) {
+            console.warn("Saved data not found.");
+        }
 
         this._assetsStore = new AssetsStore(storePath, assetsService, {
             createDirectoryRecurtion: false,
@@ -74,6 +81,7 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
             filter(data => !!data),
         ).subscribe(
             data => {
+                assetsService.writeFile(`${storePath}/${COMPILED_DATA_FILE_NAME}`, data);
                 this.props._onChange(data);
             },
         );
@@ -92,7 +100,7 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
             take(1),
             takeUntil(this._unsubscribe$ as any),
         ).subscribe(() => {
-            this._dataCombiner?.init();
+            this._dataCombiner?.init(savedData?.refs?.__raw);
         });
     }
 

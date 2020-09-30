@@ -32,6 +32,7 @@ interface IMenuSelfProps {
 interface IMenuProps extends StackScreenProps<any, MainNavigationScreenTypes.MENU>, IMenuSelfProps { }
 
 const MenuScreenContainer = ({ _languages, _orderTypes, _defaultCurrency, _menu, _banners, _language, _onChangeLanguage, _onChangeOrderType, navigation, route }: IMenuProps) => {
+
     const [selectedCategoty, _setSelectedCategory] = useState(_menu);
 
     const setSelectedCategory = (category: ICompiledMenuNode) => {
