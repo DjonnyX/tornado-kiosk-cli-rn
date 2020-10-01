@@ -42,20 +42,21 @@ const MenuScreenContainer = ({
     _onAddOrderPosition, _onUpdateOrderPosition,
     _onRemoveOrderPosition, navigation, route,
 }: IMenuProps) => {
-    const [width, _setWidth] = useState(Dimensions.get("window").width);
+    const [windowSize, _setWindowSize] = useState({ width: Dimensions.get("window").width, height: Dimensions.get("window").height });
 
     const selectAdHandler = (ad: ICompiledAd) => {
         // etc...
     }
 
     const myOrderWidth = 156;
-    let menuWidth = width - myOrderWidth;
+    let menuWidth = windowSize.width - myOrderWidth;
 
     Dimensions.addEventListener("change", ({ window }) => {
-        _setWidth(prevWidth => {
+        _setWindowSize(size => {
             const w = window.width;
+            const h = window.height;
             menuWidth = w - myOrderWidth;
-            return w;
+            return { width: w, height: h };
         });
     });
 
@@ -79,8 +80,8 @@ const MenuScreenContainer = ({
                     undefined
             }
             <View style={{ flex: 1, flexDirection: "row", width: "100%", height: "100%", maxHeight: _banners.length > 0 ? "90%" : "100%" }}>
-                <View style={{ display: "flex", width: width - myOrderWidth, height: "100%", zIndex: 1 }}>
-                    <Menu currency={_defaultCurrency} language={_language} menu={_menu} width={menuWidth} positions={_orderPositions} cancelOrder={cancelHandler}
+                <View style={{ display: "flex", width: windowSize.width - myOrderWidth, height: "100%", zIndex: 1 }}>
+                    <Menu currency={_defaultCurrency} language={_language} menu={_menu} width={menuWidth} height={windowSize.height} positions={_orderPositions} cancelOrder={cancelHandler}
                         addPosition={_onAddOrderPosition} updatePosition={_onUpdateOrderPosition} removePosition={_onRemoveOrderPosition}
                     ></Menu>
                 </View>

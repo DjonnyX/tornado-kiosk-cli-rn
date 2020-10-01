@@ -12,6 +12,7 @@ interface IMenuProps {
     currency: ICurrency;
     language: ICompiledLanguage;
     width: number;
+    height: number;
     positions: Array<ICompiledProduct>;
 
     cancelOrder: () => void;
@@ -23,30 +24,47 @@ interface IMenuProps {
 const sideMenuWidth = 152;
 
 export const Menu = ({
-    menu, language, currency, width, positions, cancelOrder,
+    menu, language, currency, width, height, positions, cancelOrder,
     addPosition, updatePosition, removePosition,
 }: IMenuProps) => {
-    const [selectedCategoty, _setSelectedCategory] = useState(menu);
+    const [selected, _setSelectedCategory] = useState({current: menu, previouse: menu});
     const [menuPosition, _setMenuPosition] = useState(new Animated.Value(1));
+    const [screenPosition, _setScreenPosition] = useState(new Animated.Value(0));
     let menuAnimation: Animated.CompositeAnimation;
+    let screenAnimation: Animated.CompositeAnimation;
 
     const setSelectedCategory = (category: ICompiledMenuNode) => {
-        _setSelectedCategory(prevCateg => {
-            return category;
-        });
+        _setSelectedCategory(previouse => {
+    
+            if (category.index > previouse.current.index) {
+                screenFadeOut();
+            } else {
+                screenFadeIn();
+            }
+    
+            if (category === menu) {
+                sideMenuFadeOut();
+            } else {
+                sideMenuFadeIn();
+            }
 
-        if (category === menu) {
-            sideMenuFadeOut();
-        } else {
-            sideMenuFadeIn();
-        }
+            return {current: category, previouse: previouse.current};
+        });
     };
 
     const selectSideMenuCategoryHandler = (node: ICompiledMenuNode) => {
+        if (node === selected.current) {
+            return;
+        }
+
         navigateTo(node);
     }
 
     const selectNavMenuCategoryHandler = (node: ICompiledMenuNode) => {
+        if (node === selected.current) {
+            return;
+        }
+
         navigateTo(node);
     }
 
@@ -102,6 +120,38 @@ export const Menu = ({
         menuAnimation.start();
     };
 
+    // анимация скрытия бокового меню
+    const screenFadeOut = () => {
+        if (screenAnimation) {
+            screenAnimation.stop();
+        }
+        screenPosition.setValue(1);
+        screenAnimation = Animated.timing(screenPosition, {
+            useNativeDriver: false,
+            toValue: 0,
+            duration: 500,
+            easing: Easing.cubic,
+            delay: 10,
+        });
+        screenAnimation.start();
+    };
+
+    // анимация отображения бокового меню
+    const screenFadeIn = () => {
+        if (screenAnimation) {
+            screenAnimation.stop();
+        }
+        screenPosition.setValue(0);
+        screenAnimation = Animated.timing(screenPosition, {
+            useNativeDriver: false,
+            toValue: 1,
+            duration: 500,
+            easing: Easing.cubic,
+            delay: 10,
+        });
+        screenAnimation.start();
+    };
+
     return (
         <View style={{ flex: 1, width, height: "100%" }}>
             <LinearGradient
@@ -109,18 +159,20 @@ export const Menu = ({
                 style={{ display: "flex", position: "absolute", width: "100%", height: 96, zIndex: 1 }}
             >
                 <View style={{ display: "flex", alignItems: "center", flexDirection: "row", width: "100%", height: "100%", padding: 16 }}>
-                    <Animated.View style={{ width: 132, justifyContent: "center", alignItems: "center",
-                    top: 10,
-                    left: menuPosition.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [-10, -sideMenuWidth],
-                    }), }}>
+                    <Animated.View style={{
+                        width: 132, justifyContent: "center", alignItems: "center",
+                        top: 10,
+                        left: menuPosition.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: [-10, -sideMenuWidth],
+                        }),
+                    }}>
                         <MenuButton onPress={onBackToMenu}></MenuButton>
                     </Animated.View>
                     <View style={{ flex: 1 }}></View>
                     <Text style={{ fontFamily: "RobotoSlab-Black", color: "rgba(0, 0, 0, 0.75)", fontSize: 32, marginRight: 24 }}>
                         {
-                            selectedCategoty?.content?.contents[language.code]?.name || "Меню"
+                            selected?.current.content?.contents[language.code]?.name || "Меню"
                         }
                     </Text>
                 </View>
@@ -139,7 +191,7 @@ export const Menu = ({
                     }),
                 }}>
                     <View style={{ flex: 1, flexGrow: 1, margin: "auto" }}>
-                        <SideMenu menu={menu} language={language} selected={selectedCategoty} onPress={selectSideMenuCategoryHandler}></SideMenu>
+                        <SideMenu menu={menu} language={language} selected={selected.current} onPress={selectSideMenuCategoryHandler}></SideMenu>
                     </View>
                     <View style={{ flex: 0, width: "100%", height: 234, margin: "auto", padding: 24 }}>
                         <CtrlMenuButton gradient={["rgb(240, 30, 26)", "rgb(242, 62, 26)"]} text="Отменить" onPress={cancelOrder}></CtrlMenuButton>
@@ -160,7 +212,34 @@ export const Menu = ({
                         easing: Easing.step0,
                     }),
                 }}>
-                    <NavMenu node={selectedCategoty} language={language} currency={currency} onPress={selectNavMenuCategoryHandler}></NavMenu>
+
+                    <Animated.View style={{
+                        position: "absolute",
+                        height: "100%",
+                        width: "100%",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        top: screenPosition.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: [0, height],
+                        }),
+                    }}>
+                        <NavMenu node={selected.previouse.index <= selected.current.index ? selected.current : selected.previouse} language={language} currency={currency} onPress={selectNavMenuCategoryHandler}></NavMenu>
+                    </Animated.View>
+
+                    <Animated.View style={{
+                        position: "absolute",
+                        height: "100%",
+                        width: "100%",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        top: screenPosition.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: [-height, 0],
+                        }),
+                    }}>
+                        <NavMenu node={selected.previouse.index > selected.current.index ? selected.current : selected.previouse} language={language} currency={currency} onPress={selectNavMenuCategoryHandler}></NavMenu>
+                    </Animated.View>
                 </Animated.View>
             </View>
         </View >
