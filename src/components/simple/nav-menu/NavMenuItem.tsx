@@ -24,12 +24,12 @@ export const NavMenuItem = ({ imageHeight, currency, language, node, onPress }: 
     const tags = node.type === NodeTypes.PRODUCT && (node.content as ICompiledProduct).tags?.length > 0 ? (node.content as ICompiledProduct).tags : undefined;
 
     return (
-        <View style={{ flex: 1, /*backgroundColor: currentContent.color,*/ borderRadius: 16, padding: 22 }}>
+        <View style={{ flex: 1, /*backgroundColor: currentContent.color,*/ borderRadius: 16, padding: 22 }} renderToHardwareTextureAndroid={true}>
             <TouchableOpacity style={{ flex: 1, alignItems: "center" }} onPress={pressHandler}>
-                <View style={{ flex: 1, width: "100%", height: imageHeight, marginBottom: 5, justifyContent: "flex-end" }}>
+                <View style={{ flex: 1, width: "100%", height: imageHeight, marginBottom: 5 }}>
                     <Image style={{ width: "100%", height: "100%" }} source={{
-                        uri: `file://${currentAdAsset?.mipmap.x128}`,
-                    }} fadeDuration={0} resizeMode="contain" resizeMethod="scale"></Image>
+                        uri: `file://${currentAdAsset?.path}`,
+                    }} resizeMode="contain" resizeMethod="resize"></Image>
                 </View>
                 <Text numberOfLines={2} ellipsizeMode="tail" style={{ textAlign: "center", fontFamily: "RobotoSlab-Black", fontSize: 20, marginBottom: 6, color: "rgba(0, 0, 0, 0.75)" }}>
                     {

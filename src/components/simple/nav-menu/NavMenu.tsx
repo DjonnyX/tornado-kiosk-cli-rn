@@ -15,9 +15,9 @@ interface INavMenuProps {
 export const NavMenu = ({ currency, language, node, onPress }: INavMenuProps) => {
     return (
         <SafeAreaView style={{ flex: 1, width: "100%" }}>
-            <ScrollView style={{ flex: 1 }} horizontal={false}
+            <ScrollView disallowInterruption={true} style={{ flex: 1 }} horizontal={false}
             >
-                <FlatGrid style={{ flex: 1, paddingTop: 78 }} removeClippedSubviews={true} fadingEdgeLength={2} refreshing={true} initialNumToRender={10} spacing={6} data={node.children} itemDimension={196} renderItem={({ item }) => {
+                <FlatGrid renderToHardwareTextureAndroid={false} style={{ flex: 1, paddingTop: 78 }} removeClippedSubviews={true} spacing={6} data={node.children} itemDimension={196} renderItem={({ item }) => {
                     return <NavMenuItem key={item.id} node={item} currency={currency} language={language} imageHeight={144} onPress={onPress}></NavMenuItem>
                 }}
                     keyExtractor={(item, index) => item.id}>

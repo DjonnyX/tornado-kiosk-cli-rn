@@ -27,7 +27,7 @@ export const Menu = ({
     menu, language, currency, width, height, positions, cancelOrder,
     addPosition, updatePosition, removePosition,
 }: IMenuProps) => {
-    const [selected, _setSelectedCategory] = useState({current: menu, previouse: menu});
+    const [selected, _setSelectedCategory] = useState({ current: menu, previouse: menu });
     const [menuPosition, _setMenuPosition] = useState(new Animated.Value(1));
     const [screenPosition, _setScreenPosition] = useState(new Animated.Value(0));
     let menuAnimation: Animated.CompositeAnimation;
@@ -35,20 +35,22 @@ export const Menu = ({
 
     const setSelectedCategory = (category: ICompiledMenuNode) => {
         _setSelectedCategory(previouse => {
-    
-            if (category.index > previouse.current.index) {
-                screenFadeOut();
-            } else {
-                screenFadeIn();
-            }
-    
-            if (category === menu) {
-                sideMenuFadeOut();
-            } else {
-                sideMenuFadeIn();
-            }
 
-            return {current: category, previouse: previouse.current};
+            setTimeout(() => {
+                if (category.index > previouse.current.index) {
+                    screenFadeOut();
+                } else {
+                    screenFadeIn();
+                }
+
+                if (category === menu) {
+                    sideMenuFadeOut();
+                } else {
+                    sideMenuFadeIn();
+                }
+            });
+
+            return { current: category, previouse: previouse.current };
         });
     };
 
@@ -182,8 +184,6 @@ export const Menu = ({
                     position: "absolute",
                     width: sideMenuWidth,
                     height: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
                     marginTop: 48,
                     left: menuPosition.interpolate({
                         inputRange: [0, 1],
@@ -200,8 +200,7 @@ export const Menu = ({
                 <Animated.View style={{
                     position: "absolute",
                     height: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
+                    zIndex: 0,
                     left: menuPosition.interpolate({
                         inputRange: [0, 1],
                         outputRange: [sideMenuWidth, 0],
@@ -217,8 +216,6 @@ export const Menu = ({
                         position: "absolute",
                         height: "100%",
                         width: "100%",
-                        justifyContent: "center",
-                        alignItems: "center",
                         top: screenPosition.interpolate({
                             inputRange: [0, 1],
                             outputRange: [0, height],
@@ -231,8 +228,6 @@ export const Menu = ({
                         position: "absolute",
                         height: "100%",
                         width: "100%",
-                        justifyContent: "center",
-                        alignItems: "center",
                         top: screenPosition.interpolate({
                             inputRange: [0, 1],
                             outputRange: [-height, 0],

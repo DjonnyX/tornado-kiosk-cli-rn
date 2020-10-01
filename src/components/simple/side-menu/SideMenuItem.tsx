@@ -30,7 +30,7 @@ export const SideMenuItem = ({ selected, language, node, onPress }: ISideMenuIte
             <TouchableOpacity style={{ flex: 1, justifyContent: "flex-start", alignItems: "center" }} onPress={pressHandler}>
                 <Image style={{ width: "100%", height: 64, marginBottom: 5 }} source={{
                     uri: `file://${currentAdAsset?.mipmap.x128}`,
-                }} fadeDuration={0} resizeMode="contain" resizeMethod="scale"></Image>
+                }} resizeMode="contain" resizeMethod="scale"></Image>
                 <Text>
                     {
                         currentContent.name
