@@ -7,6 +7,7 @@ import { LoadingScreen } from "../screens/LoadingScreen";
 import { IntroScreen } from "../screens/IntroScreen";
 import { MainNavigationScreenTypes } from "./MainNavigationScreenTypes";
 import { MenuScreen } from "../screens/MenuScreen";
+import { ConfirmationOrderScreen } from "../screens/ConfirmationOrderScreen";
 
 const Stack = createStackNavigator();
 
@@ -39,10 +40,10 @@ export const MainNavigationStack = () => {
         }}
       />
       <Stack.Screen
-        name={MainNavigationScreenTypes.MY_ORDER}
-        component={IntroScreen}
+        name={MainNavigationScreenTypes.CONFIRMATION_ORDER}
+        component={ConfirmationOrderScreen}
         options={{
-          gestureEnabled: false,
+          gestureEnabled: true,
         }}
       />
     </Stack.Navigator>
