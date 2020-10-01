@@ -32,7 +32,7 @@ export const MyOrderList = ({ currency, language, positions, addPosition, update
                 <FlatList style={{ flex: 1 }} data={positions} renderItem={({ item }) => {
                     return <MyOrderListItem key={item.id} product={item} currency={currency} language={language} imageHeight={48}></MyOrderListItem>
                 }}
-                    keyExtractor={(item, index) => item.id}>
+                    keyExtractor={(item, index) => index.toString()}>
                 </FlatList>
             </ScrollView>
         </SafeAreaView>

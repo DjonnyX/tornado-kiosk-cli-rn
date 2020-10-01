@@ -4,7 +4,7 @@ import * as Color from "color";
 import { ICompiledMenuNode, NodeTypes, ICompiledLanguage } from "@djonnyx/tornado-types";
 
 interface ISideMenuItemProps {
-    depth: number;
+    depth?: number;
     node: ICompiledMenuNode;
     selected: ICompiledMenuNode;
     language: ICompiledLanguage;
