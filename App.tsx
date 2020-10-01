@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   StatusBar,
-} from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { MainNavigationStack } from './src/components/navigation/MainNavigationStack';
-import { DataCollectorService } from './src/core';
-import { ICompiledData } from '@djonnyx/tornado-types';
-import { Provider } from 'react-redux';
-import { store } from './src/store';
+} from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { MainNavigationStack } from "./src/components/navigation/MainNavigationStack";
+import { DataCollectorService } from "./src/core";
+import { ICompiledData } from "@djonnyx/tornado-types";
+import { Provider } from "react-redux";
+import { store } from "./src/store";
 
 const App = () => {
+  console.disableYellowBox = true;
+  
   const [combinedData, setData] = useState<ICompiledData | null>(null);
 
   const setCombinedData = (data: ICompiledData) => {

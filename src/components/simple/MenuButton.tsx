@@ -1,5 +1,5 @@
 import React from "react";
-import { View, TouchableHighlight } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import { Icons } from "../../theme";
 
 interface IMenuButtonProps {
@@ -8,10 +8,12 @@ interface IMenuButtonProps {
 
 export const MenuButton = ({ onPress }: IMenuButtonProps) => {
     return (
-        <TouchableHighlight onPress={onPress}>
-            <View>
-                <Icons name="Menu" fill="rgba(0, 0, 0, 0.5)"></Icons>
+        <TouchableOpacity onPress={onPress}>
+            <View
+                style={{ padding: 12, borderRadius: 16 }}
+            >
+                <Icons name="ArrLeft" fill="rgba(0, 0, 0, 0.3)" width={56} height={56} ></Icons>
             </View>
-        </TouchableHighlight>
+        </TouchableOpacity>
     )
 }

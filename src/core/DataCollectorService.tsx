@@ -2,7 +2,7 @@ import React, { Component, Dispatch } from "react";
 import { connect } from "react-redux";
 import { from, of, Subject } from "rxjs";
 import { take, takeUntil, filter } from "rxjs/operators";
-import { IAsset, ICompiledData } from "@djonnyx/tornado-types";
+import { IAsset, ICompiledData, IRefs } from "@djonnyx/tornado-types";
 import { AssetsStore, IAssetsStoreResult } from "@djonnyx/tornado-assets-store";
 import { DataCombiner } from "@djonnyx/tornado-refs-processor";
 import { ExternalStorage } from "../native";
@@ -23,7 +23,7 @@ interface IDataCollectorServiceProps {
 
 interface IDataCollectorServiceState { }
 
-// const APP_CACHE_DIR_NAME = "tornado";
+const COMPILED_DATA_FILE_NAME = "refs.json";
 
 class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps, IDataCollectorServiceState> {
     private _unsubscribe$: Subject<void> | null = new Subject<void>();
@@ -51,7 +51,14 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
             return;
         }
 
-        const storePath = `${userDataPath}/assets`; //${APP_CACHE_DIR_NAME}/
+        const storePath = `${userDataPath}/assets`;
+
+        let savedData: IRefs | undefined;
+        try {
+            savedData = await assetsService.readFile(`${storePath}/${COMPILED_DATA_FILE_NAME}`);
+        } catch (err) {
+            console.warn("Saved data not found.");
+        }
 
         this._assetsStore = new AssetsStore(storePath, assetsService, {
             createDirectoryRecurtion: false,
@@ -74,6 +81,7 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
             filter(data => !!data),
         ).subscribe(
             data => {
+                assetsService.writeFile(`${storePath}/${COMPILED_DATA_FILE_NAME}`, data.refs.__raw);
                 this.props._onChange(data);
             },
         );
@@ -92,7 +100,7 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
             take(1),
             takeUntil(this._unsubscribe$ as any),
         ).subscribe(() => {
-            this._dataCombiner?.init();
+            this._dataCombiner?.init(savedData);
         });
     }
 
@@ -127,7 +135,8 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => {
     return {
         _onChange: (data: ICompiledData) => {
             dispatch(CombinedDataActions.setData(data));
-            dispatch(CapabilitiesActions.setDefaultLanguageCode(data.refs.defaultLanguage?.code));
+            dispatch(CapabilitiesActions.setLanguage(data.refs.defaultLanguage));
+            dispatch(CapabilitiesActions.setOrderType(data.refs.orderTypes[0]));
         },
         _onProgress: (progress: IProgress) => {
             dispatch(CombinedDataActions.setProgress(progress));
