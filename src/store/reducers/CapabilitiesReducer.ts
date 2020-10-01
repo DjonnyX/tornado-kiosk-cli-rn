@@ -3,7 +3,8 @@ import { TCapabilitiesActions, CapabilitiesActionTypes } from "../actions";
 import { ICapabilitiesState } from "../state";
 
 const initialState: ICapabilitiesState = {
-    defaultLanguageCode: undefined,
+    language: undefined,
+    orderType: undefined,
 };
 
 const capabilitiesReducer: Reducer<ICapabilitiesState, TCapabilitiesActions> = (
@@ -11,10 +12,15 @@ const capabilitiesReducer: Reducer<ICapabilitiesState, TCapabilitiesActions> = (
     action
 ) => {
     switch (action.type) {
-        case CapabilitiesActionTypes.SET_DEFAULT_LANGUAGE_CODE:
+        case CapabilitiesActionTypes.SET_LANGUAGE:
             return {
                 ...state,
-                defaultLanguageCode: (action as any).defaultLanguageCode,
+                language: (action as any).language,
+            };
+        case CapabilitiesActionTypes.SET_ORDER_TYPE:
+            return {
+                ...state,
+                orderType: (action as any).orderType,
             };
         default:
             return state;

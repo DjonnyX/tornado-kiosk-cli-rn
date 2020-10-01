@@ -12,29 +12,37 @@ class AssetsService implements IAssetStoreFileService {
 
     normalizeFilePath(path: string): string {
         let result: string;
-        result = path.startsWith('file://') ? path.slice(7) : path;
-        result = path.indexOf('/') === 0 ? path.slice(1) : path;
+        result = path.startsWith("file://") ? path.slice(7) : path;
+        result = path.indexOf("/") === 0 ? path.slice(1) : path;
         return result;
     }
 
     readManifest(path: string): Promise<Array<IAsset>> {
+        return this.readFile<Array<IAsset>>(`${path}/${this.manifestFileName}`);
+    }
+
+    writeManifest(path: string, data: Array<IAsset>): Promise<void> {
+        return this.writeFile(`${path}/${this.manifestFileName}`, data);
+    }
+
+    writeFile(path: string, data: any): Promise<void> {
+        return ExternalStorage.writeFile(
+            this.normalizeFilePath(path),
+            new Buffer(JSON.stringify(data), "utf8").toString("base64"),
+        );
+    }
+
+    readFile<T = any>(path: string): Promise<T> {
         return from(
             ExternalStorage.readFile(
-                this.normalizeFilePath(`${path}/${this.manifestFileName}`)
+                this.normalizeFilePath(path)
             ),
         ).pipe(
-            map(data => new Buffer(data, 'base64')),
+            map(data => new Buffer(data, "base64")),
             map(string => {
                 return JSON.parse(string.toString("utf8"));
             })
         ).toPromise();
-    }
-
-    writeManifest(path: string, data: Array<IAsset>): Promise<void> {
-        return ExternalStorage.writeFile(
-            this.normalizeFilePath(`${path}/${this.manifestFileName}`),
-            new Buffer(JSON.stringify(data), "utf8").toString("base64"),
-        );
     }
 
     downloadAsset(url: string, outputPath: string): Promise<void> {

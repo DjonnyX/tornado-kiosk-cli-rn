@@ -1,32 +1,24 @@
 import React, { useState } from "react";
 import { SafeAreaView, View } from "react-native";
-import { ICompiledMenu, ICompiledMenuNode } from "@djonnyx/tornado-types";
+import { ICompiledMenu, ICompiledMenuNode, ICompiledLanguage } from "@djonnyx/tornado-types";
 import { SideMenuItem } from "./SideMenuItem";
 import { ScrollView } from "react-native-gesture-handler";
 
 interface ISideMenuProps {
     menu: ICompiledMenu;
-    languageCode: string;
+    selected: ICompiledMenuNode;
+    language: ICompiledLanguage;
     onPress: (category: ICompiledMenuNode) => void;
 }
 
-export const SideMenu = ({ languageCode, menu, onPress }: ISideMenuProps) => {
-    const [category, setCategory] = useState(menu);
-
-    const onSelect = (category: ICompiledMenuNode) => {
-        setCategory(prevCategory => category);
-        if (!!onPress) {
-            onPress(category);
-        }
-    }
-
+export const SideMenu = ({ selected, language, menu, onPress }: ISideMenuProps) => {
     return (
-        <SafeAreaView style={{ flex: 1, width: '100%' }}>
+        <SafeAreaView style={{ flex: 1, width: "100%" }}>
             <ScrollView horizontal={false}>
-                <View style={{ padding: 10, paddingTop: 78 }}>
+                <View style={{ paddingLeft: 32, paddingRight: 20, paddingTop: 78, paddingBottom: 10 }}>
                     {
                         menu.children.map(child =>
-                            <SideMenuItem key={child.id} selected={category} node={child} languageCode={languageCode} onPress={onSelect}></SideMenuItem>
+                            <SideMenuItem key={child.id} selected={selected} node={child} language={language} onPress={onPress}></SideMenuItem>
                         )
                     }
                 </View>

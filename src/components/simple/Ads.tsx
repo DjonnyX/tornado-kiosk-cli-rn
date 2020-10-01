@@ -2,14 +2,15 @@ import React, { useState } from "react";
 import { View, Image, TouchableOpacity, GestureResponderEvent } from "react-native";
 import { ICompiledAd } from "@djonnyx/tornado-types/dist/interfaces/ICompiledAd";
 import Video from "react-native-video";
+import { ICompiledLanguage, AssetExtensions } from "@djonnyx/tornado-types";
 
 interface IAdsProps {
     ads: Array<ICompiledAd>;
-    languageCode: string;
+    language: ICompiledLanguage;
     onPress: (ad: ICompiledAd) => void;
 }
 
-export const Ads = ({ languageCode, ads, onPress }: IAdsProps) => {
+export const Ads = ({ language, ads, onPress }: IAdsProps) => {
     const [currentAdIndex, _setCurrentAdIndex] = useState(0);
 
     const nextCurrentAdIndex = () => {
@@ -39,28 +40,28 @@ export const Ads = ({ languageCode, ads, onPress }: IAdsProps) => {
         nextCurrentAdIndex();
     }
 
-    const currentAdContent = !!ads && ads.length > 0 ? ads[currentAdIndex].contents[languageCode] : undefined;
+    const currentAdContent = !!ads && ads.length > 0 && !!ads[currentAdIndex] ? ads[currentAdIndex].contents[language?.code] : undefined;
     const currentAdAsset = currentAdContent?.resources?.main;
 
-    const isVideo = currentAdAsset?.ext === '.mp4';
+    const isVideo = currentAdAsset?.ext === AssetExtensions.MP4;
 
     if (!isVideo) {
         updateTimerOfDuration(currentAdContent?.duration || 0);
     }
 
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
-            <TouchableOpacity style={{ flex: 1, justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }} onPress={pressHandler}>
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
+            <TouchableOpacity style={{ flex: 1, justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }} onPress={pressHandler}>
                 {
                     !!currentAdAsset
                         ?
                         isVideo
                             ?
-                            <Video style={{ width: '100%', height: '100%' }} resizeMode={"cover"} source={{
+                            <Video style={{ width: "100%", height: "100%" }} resizeMode={"cover"} source={{
                                 uri: `file://${currentAdAsset?.path}`,
                             }} controls={false} onEnd={endVideoHandler}></Video>
                             :
-                            <Image style={{ width: '100%', height: '100%' }} source={{
+                            <Image style={{ width: "100%", height: "100%" }} source={{
                                 uri: `file://${currentAdAsset?.path}`,
                             }}></Image>
                         :
