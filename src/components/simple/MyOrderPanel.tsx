@@ -52,7 +52,7 @@ export const MyOrderPanel = ({ currency, language, languages, orderTypes, positi
                     addPosition={addPosition} updatePosition={updatePosition} removePosition={removePosition}
                 ></MyOrderList>
             </View>
-            <View style={{ flex: 0, height: 186, margin: "auto", padding: 24 }}>
+            <View style={{ flex: 0, height: 144, margin: "auto", padding: 24 }}>
                 <CtrlMenuButton text="Заказать" disabled={positions.length === 0} onPress={onConfirm}></CtrlMenuButton>
             </View>
         </View>

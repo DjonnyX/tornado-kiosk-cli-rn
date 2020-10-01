@@ -193,7 +193,7 @@ export const Menu = ({
                     <View style={{ flex: 1, flexGrow: 1, margin: "auto" }}>
                         <SideMenu menu={menu} language={language} selected={selected.current} onPress={selectSideMenuCategoryHandler}></SideMenu>
                     </View>
-                    <View style={{ flex: 0, width: "100%", height: 234, margin: "auto", padding: 24 }}>
+                    <View style={{ flex: 0, width: "100%", height: 192, margin: "auto", padding: 24 }}>
                         <CtrlMenuButton gradient={["rgb(240, 30, 26)", "rgb(242, 62, 26)"]} text="Отменить" onPress={cancelOrder}></CtrlMenuButton>
                     </View>
                 </Animated.View>
