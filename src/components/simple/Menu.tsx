@@ -85,10 +85,10 @@ export const Menu = ({
         });
     }
 
-    // возврат к корню меню
-    const onBackToMenu = () => {
+    // возврат к предидущей категории
+    const onBack = () => {
         setTimeout(() => {
-            setSelectedCategory(menu);
+            setSelectedCategory(selected.current.parent || menu);
         });
     }
 
@@ -169,7 +169,7 @@ export const Menu = ({
                             outputRange: [-10, -sideMenuWidth],
                         }),
                     }}>
-                        <MenuButton onPress={onBackToMenu}></MenuButton>
+                        <MenuButton onPress={onBack}></MenuButton>
                     </Animated.View>
                     <View style={{ flex: 1 }}></View>
                     <Text style={{ fontFamily: "RobotoSlab-Black", color: "rgba(0, 0, 0, 0.75)", fontSize: 32, marginRight: 24 }}>

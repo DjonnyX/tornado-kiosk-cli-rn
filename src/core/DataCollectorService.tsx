@@ -2,7 +2,7 @@ import React, { Component, Dispatch } from "react";
 import { connect } from "react-redux";
 import { from, of, Subject } from "rxjs";
 import { take, takeUntil, filter } from "rxjs/operators";
-import { IAsset, ICompiledData } from "@djonnyx/tornado-types";
+import { IAsset, ICompiledData, IRefs } from "@djonnyx/tornado-types";
 import { AssetsStore, IAssetsStoreResult } from "@djonnyx/tornado-assets-store";
 import { DataCombiner } from "@djonnyx/tornado-refs-processor";
 import { ExternalStorage } from "../native";
@@ -23,7 +23,7 @@ interface IDataCollectorServiceProps {
 
 interface IDataCollectorServiceState { }
 
-const COMPILED_DATA_FILE_NAME = "data.json";
+const COMPILED_DATA_FILE_NAME = "refs.json";
 
 class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps, IDataCollectorServiceState> {
     private _unsubscribe$: Subject<void> | null = new Subject<void>();
@@ -53,7 +53,7 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
 
         const storePath = `${userDataPath}/assets`;
 
-        let savedData: ICompiledData | undefined;
+        let savedData: IRefs | undefined;
         try {
             savedData = await assetsService.readFile(`${storePath}/${COMPILED_DATA_FILE_NAME}`);
         } catch (err) {
@@ -81,7 +81,7 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
             filter(data => !!data),
         ).subscribe(
             data => {
-                assetsService.writeFile(`${storePath}/${COMPILED_DATA_FILE_NAME}`, data);
+                assetsService.writeFile(`${storePath}/${COMPILED_DATA_FILE_NAME}`, data.refs.__raw);
                 this.props._onChange(data);
             },
         );
@@ -100,7 +100,7 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
             take(1),
             takeUntil(this._unsubscribe$ as any),
         ).subscribe(() => {
-            this._dataCombiner?.init(savedData?.refs?.__raw);
+            this._dataCombiner?.init(savedData);
         });
     }
 

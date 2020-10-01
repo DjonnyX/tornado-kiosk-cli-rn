@@ -29,7 +29,7 @@ export const NavMenuItem = ({ imageHeight, currency, language, node, onPress }: 
                 <View style={{ flex: 1, width: "100%", height: imageHeight, marginBottom: 5 }}>
                     <Image style={{ width: "100%", height: "100%" }} source={{
                         uri: `file://${currentAdAsset?.path}`,
-                    }} resizeMode="contain" resizeMethod="resize"></Image>
+                    }} resizeMode="contain" resizeMethod="scale"></Image>
                 </View>
                 <Text numberOfLines={2} ellipsizeMode="tail" style={{ textAlign: "center", fontFamily: "RobotoSlab-Black", fontSize: 20, marginBottom: 6, color: "rgba(0, 0, 0, 0.75)" }}>
                     {
@@ -52,19 +52,19 @@ export const NavMenuItem = ({ imageHeight, currency, language, node, onPress }: 
                                 }
                             </Text>
                         </View>
-                        : undefined
+                        : <View style={{ height: 56 }}></View>
                 }
                 {
-                    /*<View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+                    /*<View style={{ position: "absolute", flexDirection: "row", flexWrap: "wrap" }}>
                         {
                             tags?.map(tag =>
-                                tag?.contents[language]?.resources?.main?.mipmap?.x32
+                                tag?.contents[language.code]?.resources?.main?.mipmap?.x32
                                     ?
                                     <Image style={{ width: 16, height: 16 }} source={{
-                                        uri: `file://${tag?.contents[language]?.resources?.main?.mipmap?.x32}`,
+                                        uri: `file://${tag?.contents[language.code]?.resources?.main?.mipmap?.x32}`,
                                     }} resizeMode="contain" resizeMethod="scale"></Image>
                                     :
-                                <View key={tag.id} style={{ width: 8, height: 8, marginRight: 2, backgroundColor: tag?.contents[language]?.color, borderRadius: 4 }}></View>
+                                <View key={tag.id} style={{ width: 8, height: 8, marginRight: 2, backgroundColor: tag?.contents[language.code]?.color, borderRadius: 4 }}></View>
                             )
                         }
                     </View>*/
