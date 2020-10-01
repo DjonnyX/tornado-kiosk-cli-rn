@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, Animated, EasingFunction, Easing } from "react-native";
+import { View, Text, Animated, Easing } from "react-native";
 import { SideMenu } from "./side-menu";
 import { NavMenu } from "./nav-menu";
 import { ICompiledMenuNode, ICompiledMenu, NodeTypes, ICompiledLanguage, ICurrency, ICompiledProduct } from "@djonnyx/tornado-types";
