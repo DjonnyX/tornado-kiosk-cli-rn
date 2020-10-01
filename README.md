@@ -5,7 +5,7 @@
 Установка администратора устройства:
 
 ```
-adb shell dpm set-device-owner com.tornadokiosk/.TornadoAdmin
+adb shell dpm set-device-owner com.tornadokiosk/com.tornadokiosk.MainActivity
 ```
 
 Обновление приложения:
@@ -17,7 +17,7 @@ adb install -r path/to/tornado-kiosk.apk
 Удаление администратора устройства:
 
 ```
-adb shell dpm remove-active-admin com.tornadokiosk/.TornadoAdmin
+adb shell dpm remove-active-admin com.tornadokiosk/com.tornadokiosk.MainActivity
 ```
 
 source:

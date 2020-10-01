@@ -208,7 +208,7 @@ export const Menu = ({
                     width: menuPosition.interpolate({
                         inputRange: [0, 1],
                         outputRange: [width - sideMenuWidth, width],
-                        easing: Easing.step0,
+                        easing: Easing.linear,
                     }),
                 }}>
 

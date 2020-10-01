@@ -1,9 +1,9 @@
 import React from "react";
-import { SafeAreaView, StyleProp, ViewStyle, View } from "react-native";
+import { SafeAreaView } from "react-native";
 import { ICompiledMenu, ICompiledMenuNode, ICurrency, ICompiledLanguage } from "@djonnyx/tornado-types";
 import { NavMenuItem } from "./NavMenuItem";
 import { ScrollView } from "react-native-gesture-handler";
-import { FlatGrid } from "react-native-super-grid";
+import { GridList } from "../../layouts/GridList";
 
 interface INavMenuProps {
     node: ICompiledMenu;
@@ -15,13 +15,13 @@ interface INavMenuProps {
 export const NavMenu = ({ currency, language, node, onPress }: INavMenuProps) => {
     return (
         <SafeAreaView style={{ flex: 1, width: "100%" }}>
-            <ScrollView disallowInterruption={true} style={{ flex: 1 }} horizontal={false}
+            <ScrollView style={{ flex: 1, paddingTop: 78 }} horizontal={false}
             >
-                <FlatGrid renderToHardwareTextureAndroid={false} style={{ flex: 1, paddingTop: 78 }} removeClippedSubviews={true} spacing={6} data={node.children} itemDimension={196} renderItem={({ item }) => {
-                    return <NavMenuItem key={item.id} node={item} currency={currency} language={language} imageHeight={144} onPress={onPress}></NavMenuItem>
+                <GridList style={{ flex: 1 }} padding={10} spacing={6} data={node.children} itemDimension={196} animationSkipFrames={30} renderItem={({ item }) => {
+                    return <NavMenuItem key={item.id} node={item} currency={currency} language={language} thumbnailHeight={128} onPress={onPress}></NavMenuItem>
                 }}
                     keyExtractor={(item, index) => item.id}>
-                </FlatGrid>
+                </GridList>
             </ScrollView>
         </SafeAreaView>
     );
