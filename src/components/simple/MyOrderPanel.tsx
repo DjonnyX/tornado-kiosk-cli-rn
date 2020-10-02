@@ -22,7 +22,7 @@ interface IMyOrderPanelProps {
     onConfirm: () => void;
 }
 
-export const MyOrderPanel = ({ currency, language, languages, orderTypes, positions, sum,
+export const MyOrderPanel = React.memo(({ currency, language, languages, orderTypes, positions, sum,
     addPosition, updatePosition, removePosition, onChangeLanguage, onChangeOrderType, onConfirm,
 }: IMyOrderPanelProps) => {
     return (
@@ -57,4 +57,4 @@ export const MyOrderPanel = ({ currency, language, languages, orderTypes, positi
             </View>
         </View>
     )
-}
+})

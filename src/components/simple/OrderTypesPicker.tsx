@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import { View, Image, Text, Modal, TouchableOpacity } from "react-native";
-import { ICompiledOrderType, ICompiledLanguage } from "@djonnyx/tornado-types";
+import React, { useState, useCallback } from "react";
+import { View, Text, Modal, TouchableOpacity } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
+import FastImage from "react-native-fast-image";
+import { ICompiledOrderType, ICompiledLanguage } from "@djonnyx/tornado-types";
 
 interface IOrderTypesPickerProps {
     orderTypes: Array<ICompiledOrderType>;
@@ -9,7 +10,7 @@ interface IOrderTypesPickerProps {
     onSelect: (orderType: ICompiledOrderType) => void;
 }
 
-export const OrderTypesPicker = ({ language, orderTypes, onSelect }: IOrderTypesPickerProps) => {
+export const OrderTypesPicker = React.memo(({ language, orderTypes, onSelect }: IOrderTypesPickerProps) => {
     const [currentOrderType, _setCurrentOrderTypes] = useState(orderTypes[0]);
     const [modalVisible, _setModalVisible] = useState(false);
 
@@ -23,15 +24,15 @@ export const OrderTypesPicker = ({ language, orderTypes, onSelect }: IOrderTypes
         _setModalVisible(prevVisibility => value);
     }
 
-    const pressHandler = () => {
+    const pressHandler = useCallback(() => {
         setModalVisible(true);
-    }
+    }, []);
 
-    const selectHandler = (orderType: ICompiledOrderType) => {
+    const selectHandler = useCallback((orderType: ICompiledOrderType) => {
         setCurrentOrderTypes(orderType);
         setModalVisible(false);
         onSelect(orderType);
-    }
+    }, []);
 
     return (
         <View style={{ justifyContent: "center", alignItems: "center", width: "100%", height: 48 }}>
@@ -66,9 +67,9 @@ export const OrderTypesPicker = ({ language, orderTypes, onSelect }: IOrderTypes
                                 selectHandler(item);
                             }}>
                                 <View style={{ flexDirection: "column", alignItems: "center", justifyContent: "center", marginBottom: 32 }}>
-                                    <Image style={{ width: 128, height: 128, borderWidth: 1, borderColor: "rgba(0, 0, 0, 0.1)", marginBottom: 8 }} source={{
+                                    <FastImage style={{ width: 128, height: 128, borderWidth: 1, borderColor: "rgba(0, 0, 0, 0.1)", marginBottom: 8 }} source={{
                                         uri: `file://${item.contents[language?.code]?.resources?.main?.mipmap.x128}`,
-                                    }} resizeMode="cover"></Image>
+                                    }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                                     <Text style={{ fontSize: 16 }}>
                                         {
                                             item.contents[language?.code]?.name
@@ -99,4 +100,4 @@ export const OrderTypesPicker = ({ language, orderTypes, onSelect }: IOrderTypes
             </TouchableOpacity>
         </View>
     );
-}
+})

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { View, Text, TouchableOpacity, StyleProp, ViewStyle, TextStyle } from "react-native";
 
 interface INumericStepperButtonProps {
@@ -31,22 +31,22 @@ interface INumericStapperProps {
     iconIncrement?: string;
 }
 
-export const NumericStapper = ({ startWith = 0, iconDecrement = "-", iconIncrement = "+", buttonStyle, containerStyle, textStyle, onChange }: INumericStapperProps) => {
+export const NumericStapper = React.memo(({ startWith = 0, iconDecrement = "-", iconIncrement = "+", buttonStyle, containerStyle, textStyle, onChange }: INumericStapperProps) => {
     const [value, _setValue] = useState((startWith));
 
     const setValue = (value: number) => {
         _setValue(prevValue => value);
     }
 
-    const decrementHandler = () => {
+    const decrementHandler = useCallback(() => {
         setValue(value - 1);
         onChange(value);
-    };
+    }, []);
 
-    const incrementHandler = () => {
+    const incrementHandler = useCallback(() => {
         setValue(value + 1);
         onChange(value);
-    };
+    }, []);
 
     return (
         <View style={{ flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "center", ...containerStyle as any }}>
@@ -59,6 +59,4 @@ export const NumericStapper = ({ startWith = 0, iconDecrement = "-", iconIncreme
             <NumericStepperButton style={buttonStyle} icon={iconIncrement} onPress={incrementHandler} />
         </View>
     );
-}
-
-
+})

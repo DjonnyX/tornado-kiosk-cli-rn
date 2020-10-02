@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { View, LayoutChangeEvent, StyleProp, ViewStyle } from "react-native";
 
 interface IGridListProps<T = any> {
@@ -13,15 +13,16 @@ interface IGridListProps<T = any> {
     keyExtractor: (item: T, index: number) => number;
 }
 
-export const GridList = ({ data, renderItem, style, keyExtractor, spacing = 0, padding = 0, animationSkipFrames = 0, itemDimension }: IGridListProps) => {
+export const GridList = React.memo(({ data, renderItem, style, keyExtractor, spacing = 0, padding = 0, animationSkipFrames = 0, itemDimension }: IGridListProps) => {
     const [bound, _setBound] = useState({ x: 0, y: 0, width: 0, height: 0 });
+    
     const numColumns = Math.floor(bound.width / itemDimension);
     const gap = spacing * 0.5;
-    const actualItemWidth = (bound.width - padding * 2) / numColumns - (numColumns) * gap * 0.5
+    const actualItemWidth = (bound.width - padding * 2) / numColumns - (numColumns) * gap
     let frameCount = 0;
-    let timer: any;
+    let timer: NodeJS.Timer;
 
-    const onLayout = (event: LayoutChangeEvent) => {
+    const changeLayoutHandler = useCallback((event: LayoutChangeEvent) => {
         frameCount++;
 
         // остановка таймера
@@ -40,12 +41,12 @@ export const GridList = ({ data, renderItem, style, keyExtractor, spacing = 0, p
                 _setBound(prevBound => ({ x, y, width, height }));
             }, 50);
         }
-    }
+    }, []);
 
     return (
         <View
             style={{ flex: 1, height: "100%", ...style as any, padding }}
-            onLayout={onLayout}
+            onLayout={changeLayoutHandler}
         >
             <View style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
                 {
@@ -64,4 +65,4 @@ export const GridList = ({ data, renderItem, style, keyExtractor, spacing = 0, p
             </View>
         </View>
     )
-}
+})

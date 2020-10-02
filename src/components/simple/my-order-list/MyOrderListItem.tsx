@@ -1,5 +1,6 @@
-import React from "react";
-import { View, Image, Text, TouchableOpacity } from "react-native";
+import React, { useCallback } from "react";
+import { View, Text } from "react-native";
+import FastImage from "react-native-fast-image";
 import { ICompiledProduct, ICurrency, ICompiledLanguage } from "@djonnyx/tornado-types";
 import { NumericStapper } from "../NumericStapper";
 
@@ -10,20 +11,20 @@ interface IMyOrderListItemItemProps {
     language: ICompiledLanguage;
 }
 
-export const MyOrderListItem = ({ imageHeight, currency, language, product }: IMyOrderListItemItemProps) => {
+export const MyOrderListItem = React.memo(({ imageHeight, currency, language, product }: IMyOrderListItemItemProps) => {
     const currentContent = product.contents[language?.code];
     const currentAdAsset = currentContent?.resources?.icon;
 
-    const changeQuantityHandler = (value: number) => {
+    const changeQuantityHandler = useCallback((value: number) => {
 
-    };
+    }, []);
 
     return (
         <View style={{ flex: 1, paddingLeft: 24, paddingRight: 24, marginBottom: 20 }}>
             <View style={{ flex: 1, width: "100%", height: imageHeight, marginBottom: 2, justifyContent: "flex-end" }}>
-                <Image style={{ width: "100%", height: "100%" }} source={{
+                <FastImage style={{ width: "100%", height: "100%" }} source={{
                     uri: `file://${currentAdAsset?.mipmap.x128}`,
-                }} resizeMode="contain" resizeMethod="scale"></Image>
+                }} resizeMode={FastImage.resizeMode.contain}></FastImage>
             </View>
             <Text numberOfLines={3} ellipsizeMode="tail" style={{ textAlign: "center", fontSize: 14, color: "rgba(0, 0, 0, 0.75)", fontWeight: "bold" }}>
                 {
@@ -46,4 +47,4 @@ export const MyOrderListItem = ({ imageHeight, currency, language, product }: IM
             />
         </View>
     );
-}
+})

@@ -1,4 +1,4 @@
-import React, { Dispatch } from "react";
+import React, { Dispatch, useCallback } from "react";
 import { View } from "react-native";
 import { connect } from "react-redux";
 import { StackScreenProps } from "@react-navigation/stack";
@@ -19,11 +19,11 @@ interface IConfirmationOrderScreenSelfProps {
 
 interface IConfirmationOrderScreenProps extends StackScreenProps<any, MainNavigationScreenTypes.INTRO>, IConfirmationOrderScreenSelfProps { }
 
-const ConfirmationOrderScreenContainer = ({ _language, _banners, navigation }: IConfirmationOrderScreenProps) => {
+const ConfirmationOrderScreenContainer = React.memo(({ _language, _banners, navigation }: IConfirmationOrderScreenProps) => {
 
-    const selectAdHandler = (ad: ICompiledAd) => {
+    const selectAdHandler = useCallback((ad: ICompiledAd) => {
         // etc...
-    }
+    }, []);
 
     return (
         <View style={{ flex: 1, backgroundColor: "#fff" }}>
@@ -41,7 +41,7 @@ const ConfirmationOrderScreenContainer = ({ _language, _banners, navigation }: I
             </View>
         </View>
     );
-}
+})
 
 const mapStateToProps = (state: IAppState, ownProps: IConfirmationOrderScreenProps) => {
     return {

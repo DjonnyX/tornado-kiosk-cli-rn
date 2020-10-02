@@ -9,7 +9,7 @@ interface ICtrlMenuButtonProps {
     gradient?: Array<string | number>;
 }
 
-export const CtrlMenuButton = ({ onPress, text, disabled = false, gradient = ["rgb(49, 211, 48)", "rgb(126, 216, 59)"] }: ICtrlMenuButtonProps) => {
+export const CtrlMenuButton = React.memo(({ onPress, text, disabled = false, gradient = ["rgb(49, 211, 48)", "rgb(126, 216, 59)"] }: ICtrlMenuButtonProps) => {
     return (
         <TouchableOpacity style={{ flex: 1 }} onPress={onPress}>
             <LinearGradient
@@ -24,4 +24,4 @@ export const CtrlMenuButton = ({ onPress, text, disabled = false, gradient = ["r
             </LinearGradient>
         </TouchableOpacity>
     )
-}
+})

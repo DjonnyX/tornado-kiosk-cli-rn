@@ -11,10 +11,10 @@ interface ISideMenuProps {
     onPress: (category: ICompiledMenuNode) => void;
 }
 
-export const SideMenu = ({ selected, language, menu, onPress }: ISideMenuProps) => {
+export const SideMenu = React.memo(({ selected, language, menu, onPress }: ISideMenuProps) => {
     return (
         <SafeAreaView style={{ flex: 1, width: "100%" }}>
-            <ScrollView horizontal={false}>
+            <ScrollView horizontal={false} renderToHardwareTextureAndroid={true}>
                 <View style={{ paddingLeft: 32, paddingRight: 20, paddingTop: 78, paddingBottom: 10 }}>
                     {
                         menu.children.map(child =>
@@ -25,4 +25,4 @@ export const SideMenu = ({ selected, language, menu, onPress }: ISideMenuProps) 
             </ScrollView>
         </SafeAreaView>
     );
-}
+});

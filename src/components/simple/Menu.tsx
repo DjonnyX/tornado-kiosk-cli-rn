@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { View, Text, Animated, Easing } from "react-native";
 import { SideMenu } from "./side-menu";
 import { NavMenu } from "./nav-menu";
@@ -23,17 +23,18 @@ interface IMenuProps {
 
 const sideMenuWidth = 152;
 
-export const Menu = ({
+export const Menu = React.memo(({
     menu, language, currency, width, height, positions, cancelOrder,
     addPosition, updatePosition, removePosition,
 }: IMenuProps) => {
     const [selected, _setSelectedCategory] = useState({ current: menu, previouse: menu });
     const [menuPosition, _setMenuPosition] = useState(new Animated.Value(1));
+    const [menuWidth, _setMenuWidth] = useState(width);
     const [screenPosition, _setScreenPosition] = useState(new Animated.Value(0));
     let menuAnimation: Animated.CompositeAnimation;
     let screenAnimation: Animated.CompositeAnimation;
 
-    const setSelectedCategory = (category: ICompiledMenuNode) => {
+    const setSelectedCategory = useCallback((category: ICompiledMenuNode) => {
         _setSelectedCategory(previouse => {
 
             setTimeout(() => {
@@ -52,23 +53,23 @@ export const Menu = ({
 
             return { current: category, previouse: previouse.current };
         });
-    };
+    }, []);
 
-    const selectSideMenuCategoryHandler = (node: ICompiledMenuNode) => {
+    const selectSideMenuCategoryHandler = useCallback((node: ICompiledMenuNode) => {
         if (node === selected.current) {
             return;
         }
 
         navigateTo(node);
-    }
+    }, []);
 
-    const selectNavMenuCategoryHandler = (node: ICompiledMenuNode) => {
+    const selectNavMenuCategoryHandler = useCallback((node: ICompiledMenuNode) => {
         if (node === selected.current) {
             return;
         }
 
         navigateTo(node);
-    }
+    }, []);
 
     // навигация / добавление продукта
     const navigateTo = (node: ICompiledMenuNode) => {
@@ -83,20 +84,34 @@ export const Menu = ({
                 addPosition(node.content as ICompiledProduct);
             }
         });
-    }
+    };
 
     // возврат к предидущей категории
-    const onBack = () => {
+    const onBack = useCallback(() => {
         setTimeout(() => {
             setSelectedCategory(selected.current.parent || menu);
         });
-    }
+    }, []);
+
+    useEffect(() => {
+        menuPosition.addListener(({ value }) => {
+            if (value === 0) {
+                _setMenuWidth(() => width - sideMenuWidth);
+            }
+        });
+
+        // will unmount
+        return function dispose() {
+            menuPosition.removeAllListeners();
+        }
+    });
 
     // анимация скрытия бокового меню
-    const sideMenuFadeOut = () => {
+    const sideMenuFadeOut = useCallback(() => {
         if (menuAnimation) {
             menuAnimation.stop();
         }
+        _setMenuWidth(() => width);
         menuAnimation = Animated.timing(menuPosition, {
             useNativeDriver: false,
             toValue: 1,
@@ -105,10 +120,10 @@ export const Menu = ({
             delay: 10,
         });
         menuAnimation.start();
-    };
+    }, []);
 
     // анимация отображения бокового меню
-    const sideMenuFadeIn = () => {
+    const sideMenuFadeIn = useCallback(() => {
         if (menuAnimation) {
             menuAnimation.stop();
         }
@@ -120,10 +135,10 @@ export const Menu = ({
             delay: 10,
         });
         menuAnimation.start();
-    };
+    }, []);
 
     // анимация скрытия бокового меню
-    const screenFadeOut = () => {
+    const screenFadeOut = useCallback(() => {
         if (screenAnimation) {
             screenAnimation.stop();
         }
@@ -136,10 +151,10 @@ export const Menu = ({
             delay: 10,
         });
         screenAnimation.start();
-    };
+    }, []);
 
     // анимация отображения бокового меню
-    const screenFadeIn = () => {
+    const screenFadeIn = useCallback(() => {
         if (screenAnimation) {
             screenAnimation.stop();
         }
@@ -152,7 +167,7 @@ export const Menu = ({
             delay: 10,
         });
         screenAnimation.start();
-    };
+    }, []);
 
     return (
         <View style={{ flex: 1, width, height: "100%" }}>
@@ -179,7 +194,9 @@ export const Menu = ({
                     </Text>
                 </View>
             </LinearGradient>
-            <View style={{ flex: 1, flexDirection: "row", width: "100%", height: "100%" }}>
+            <View style={{
+                flex: 1, flexDirection: "row", overflow: "hidden", width, height: "100%"
+            }}>
                 <Animated.View style={{
                     position: "absolute",
                     width: sideMenuWidth,
@@ -205,11 +222,11 @@ export const Menu = ({
                         inputRange: [0, 1],
                         outputRange: [sideMenuWidth, 0],
                     }),
-                    width: menuPosition.interpolate({
+                    width: menuWidth/*: menuPosition.interpolate({
                         inputRange: [0, 1],
                         outputRange: [width - sideMenuWidth, width],
                         easing: Easing.linear,
-                    }),
+                    })*/,
                 }}>
 
                     <Animated.View style={{
@@ -239,4 +256,4 @@ export const Menu = ({
             </View>
         </View >
     )
-}
+})

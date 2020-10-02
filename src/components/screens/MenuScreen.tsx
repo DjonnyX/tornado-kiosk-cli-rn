@@ -1,11 +1,10 @@
-import React, { Dispatch, useState } from "react";
+import React, { Dispatch, useState, useCallback } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
 import { View, Dimensions } from "react-native";
 import { MainNavigationScreenTypes } from "../navigation";
 import { IAppState } from "../../store/state";
 import { connect } from "react-redux";
-import { Ads } from "../simple";
-import { ICompiledAd, ICompiledMenu, ICurrency, ICompiledLanguage, ICompiledOrderType, ICompiledProduct } from "@djonnyx/tornado-types";
+import { ICompiledMenu, ICurrency, ICompiledLanguage, ICompiledOrderType, ICompiledProduct } from "@djonnyx/tornado-types";
 import { CombinedDataSelectors, MyOrderSelectors } from "../../store/selectors";
 import { CapabilitiesSelectors } from "../../store/selectors/CapabilitiesSelector";
 import { CapabilitiesActions, MyOrderActions } from "../../store/actions";
@@ -34,7 +33,7 @@ interface IMenuSelfProps {
 
 interface IMenuProps extends StackScreenProps<any, MainNavigationScreenTypes.MENU>, IMenuSelfProps { }
 
-const MenuScreenContainer = ({
+const MenuScreenContainer = React.memo(({
     _languages, _orderTypes, _defaultCurrency,
     _menu, _language, _orderPositions, _orderSum,
     _onChangeLanguage, _onChangeOrderType,
@@ -55,13 +54,13 @@ const MenuScreenContainer = ({
         });
     });
 
-    const confirmHandler = () => {
+    const confirmHandler = useCallback(() => {
         navigation.navigate(MainNavigationScreenTypes.CONFIRMATION_ORDER);
-    };
+    }, []);
 
-    const cancelHandler = () => {
+    const cancelHandler = useCallback(() => {
         navigation.navigate(MainNavigationScreenTypes.INTRO);
-    };
+    }, []);
 
     return (
         <View style={{ flex: 1, flexDirection: "row", width: "100%", height: "100%", backgroundColor: "#fff" }}>
@@ -77,7 +76,7 @@ const MenuScreenContainer = ({
             </View>
         </View>
     );
-}
+})
 
 const mapStateToProps = (state: IAppState, ownProps: IMenuProps) => {
     return {

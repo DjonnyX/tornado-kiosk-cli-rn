@@ -12,7 +12,7 @@ interface INavMenuProps {
     onPress: (node: ICompiledMenuNode) => void;
 }
 
-export const NavMenu = ({ currency, language, node, onPress }: INavMenuProps) => {
+export const NavMenu = React.memo(({ currency, language, node, onPress }: INavMenuProps) => {
     return (
         <SafeAreaView style={{ flex: 1, width: "100%" }}>
             <ScrollView style={{ flex: 1, paddingTop: 78 }} horizontal={false}
@@ -25,4 +25,4 @@ export const NavMenu = ({ currency, language, node, onPress }: INavMenuProps) =>
             </ScrollView>
         </SafeAreaView>
     );
-}
+});

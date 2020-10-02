@@ -1,4 +1,4 @@
-import React, { Dispatch } from "react";
+import React, { Dispatch, useEffect } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
 import { ProgressBar } from "@react-native-community/progress-bar-android";
 import { View, Text } from "react-native";
@@ -17,12 +17,14 @@ interface ILoadingSelfProps {
 
 interface ILoadingProps extends StackScreenProps<any, MainNavigationScreenTypes.LOADING>, ILoadingSelfProps { }
 
-const LoadingScreenContainer = ({ _progress, _loaded, navigation }: ILoadingProps) => {
-  if (_loaded) {
-    setTimeout(() => {
-      navigation.navigate(MainNavigationScreenTypes.INTRO);
-    });
-  }
+const LoadingScreenContainer = React.memo(({ _progress, _loaded, navigation }: ILoadingProps) => {
+  useEffect(() => {
+    if (_loaded) {
+      setTimeout(() => {
+        navigation.navigate(MainNavigationScreenTypes.INTRO);
+      });
+    }
+  });
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -30,15 +32,15 @@ const LoadingScreenContainer = ({ _progress, _loaded, navigation }: ILoadingProp
       <Text>
         {
           _progress > 0
-          ?
-          `${_progress}%`
-          :
-          "loading..."
+            ?
+            `${_progress}%`
+            :
+            "loading..."
         }
       </Text>
     </View>
   );
-}
+})
 
 const mapStateToProps = (state: IAppState, ownProps: ILoadingProps) => {
   return {
