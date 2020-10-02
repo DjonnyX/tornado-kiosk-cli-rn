@@ -16,7 +16,7 @@ export const MyOrderListItem = React.memo(({ imageHeight, currency, language, pr
     const currentAdAsset = currentContent?.resources?.icon;
 
     const changeQuantityHandler = useCallback((value: number) => {
-
+        // etc...
     }, []);
 
     return (

@@ -14,11 +14,11 @@ interface ISideMenuItemProps {
 }
 
 export const SideMenuItem = React.memo(({ depth = 0, height = 0, selected, language, node, onPress }: ISideMenuItemProps) => {
-    const [bound, _setBound] = useState({ x: 0, y: 0, width: 0, height: 0 });
+    // const [bound, _setBound] = useState({ x: 0, y: 0, width: 0, height: 0 });
     const [subMenuSize, _setSubMenuSize] = useState(new Animated.Value(1));
     let subMenuSizeAnimation: Animated.CompositeAnimation;
 
-    const onLayout = (event: LayoutChangeEvent) => {
+    /*const layoutChangeHandler = useCallback((event: LayoutChangeEvent) => {
         const { x, y, width, height } = event.nativeEvent.layout;
 
         // выставляется только при инициализации
@@ -26,7 +26,7 @@ export const SideMenuItem = React.memo(({ depth = 0, height = 0, selected, langu
         if (!(width && height)) {
             _setBound(prevBound => ({ x, y, width, height }));
         }
-    }
+    }, []);*/
 
     const pressHandler = useCallback((e: GestureResponderEvent) => {
         if (!!onPress) {
@@ -106,8 +106,9 @@ export const SideMenuItem = React.memo(({ depth = 0, height = 0, selected, langu
                         }),
                         overflow: "hidden"
                     }}>
-                        <View style={{ display: "flex", height: "100%" }} onLayout={onLayout}>
+                        <View style={{ display: "flex", height: "100%" }}>
                             {
+                                // onLayout={layoutChangeHandler}
                                 children.map(child =>
                                     <SideMenuItem key={child.id} depth={depth + 1} height={subItemHwight} node={child} selected={selected} language={language} onPress={onPress}></SideMenuItem>
                                 )
