@@ -46,8 +46,8 @@ export const NavMenuItem = React.memo(({ thumbnailHeight, currency, language, no
 
                     node.type === NodeTypes.PRODUCT
                         ?
-                        <View style={{ borderStyle: "solid", borderWidth: 0.5, borderRadius: 6, alignItems: "center", justifyContent: "center", borderColor: "rgba(0, 0, 0, 0.5)", marginBottom: 12 }}>
-                            <Text style={{ textAlign: "center", fontSize: 18, fontWeight: "bold", paddingTop: 8, paddingBottom: 8, paddingLeft: 14, paddingRight: 14, color: "rgba(0, 0, 0, 0.75)" }}>
+                        <View style={{ borderStyle: "solid", borderWidth: 0.5, borderRadius: 5, alignItems: "center", justifyContent: "center", borderColor: "rgba(0, 0, 0, 0.75)", marginBottom: 12 }}>
+                            <Text style={{ textAlign: "center", fontSize: 16, paddingTop: 6, paddingBottom: 6, paddingLeft: 14, paddingRight: 14, color: "rgba(0, 0, 0, 0.75)" }}>
                                 {
                                     `${((node.content as ICompiledProduct).prices[currency.id as string]?.value * 0.01).toFixed(2)} ${currency.symbol}`
                                 }

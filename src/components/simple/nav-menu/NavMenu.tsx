@@ -15,9 +15,9 @@ interface INavMenuProps {
 export const NavMenu = React.memo(({ currency, language, node, onPress }: INavMenuProps) => {
     return (
         <SafeAreaView style={{ flex: 1, width: "100%" }}>
-            <ScrollView style={{ flex: 1, paddingTop: 78 }} horizontal={false}
+            <ScrollView style={{ flex: 1, marginTop: 68 }} horizontal={false}
             >
-                <GridList style={{ flex: 1 }} padding={10} spacing={6} data={node.children} itemDimension={196} animationSkipFrames={30} renderItem={({ item }) => {
+                <GridList style={{ flex: 1 }} padding={10} spacing={6} data={node.children} itemDimension={196} animationSkipFrames={100} renderItem={({ item }) => {
                     return <NavMenuItem key={item.id} node={item} currency={currency} language={language} thumbnailHeight={128} onPress={onPress}></NavMenuItem>
                 }}
                     keyExtractor={(item, index) => item.id}>

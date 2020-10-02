@@ -80,8 +80,8 @@ export const SideMenuItem = React.memo(({ depth = 0, height = 0, selected, langu
         <View style={{ flex: 1, minHeight: height }} renderToHardwareTextureAndroid={true}>
             <View style={{
                 flex: 1,
-                margin: 8 * depth, marginBottom: depth === 0 ? 5 : 4, marginTop: depth === 0 ? 5 : 0, padding: 8, borderRadius: 24,
-                backgroundColor: node === selected ? Color.rgb(color).alpha(0.15).toString() : Color.rgb(color).alpha(0.025 + 0.025 * depth).toString(),
+                margin: 8 * depth, marginBottom: depth === 0 ? 5 : 4, marginTop: depth === 0 ? 5 : 0, padding: 8, borderRadius: 14,
+                backgroundColor: node === selected ? Color.rgb(color).alpha(0.15).toString() : Color.rgb(color).alpha(0.025).toString(),
                 overflow: "hidden"
             }}>
                 <TouchableOpacity style={{ flex: 1, justifyContent: "flex-start", alignItems: "center" }} onPress={pressHandler}>

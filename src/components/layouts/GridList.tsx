@@ -15,7 +15,7 @@ interface IGridListProps<T = any> {
 
 export const GridList = React.memo(({ data, renderItem, style, keyExtractor, spacing = 0, padding = 0, animationSkipFrames = 0, itemDimension }: IGridListProps) => {
     const [bound, _setBound] = useState({ x: 0, y: 0, width: 0, height: 0 });
-    
+
     const numColumns = Math.floor(bound.width / itemDimension);
     const gap = spacing * 0.5;
     const actualItemWidth = (bound.width - padding * 2) / numColumns - (numColumns) * gap
@@ -39,13 +39,13 @@ export const GridList = React.memo(({ data, renderItem, style, keyExtractor, spa
             // отложенное переопределение лэйаута
             timer = setTimeout(() => {
                 _setBound(prevBound => ({ x, y, width, height }));
-            }, 50);
+            }, 10);
         }
     }, []);
 
     return (
         <View
-            style={{ flex: 1, height: "100%", ...style as any, padding }}
+            style={{ height: "100%", ...style as any, padding }}
             onLayout={changeLayoutHandler}
         >
             <View style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>

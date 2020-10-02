@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { View, Text, Animated, Easing } from "react-native";
 import { SideMenu } from "./side-menu";
 import { NavMenu } from "./nav-menu";
@@ -29,12 +29,11 @@ export const Menu = React.memo(({
 }: IMenuProps) => {
     const [selected, _setSelectedCategory] = useState({ current: menu, previouse: menu });
     const [menuPosition, _setMenuPosition] = useState(new Animated.Value(1));
-    const [menuWidth, _setMenuWidth] = useState(width);
     const [screenPosition, _setScreenPosition] = useState(new Animated.Value(0));
     let menuAnimation: Animated.CompositeAnimation;
     let screenAnimation: Animated.CompositeAnimation;
 
-    const setSelectedCategory = useCallback((category: ICompiledMenuNode) => {
+    const setSelectedCategory = (category: ICompiledMenuNode) => {
         _setSelectedCategory(previouse => {
 
             setTimeout(() => {
@@ -53,7 +52,7 @@ export const Menu = React.memo(({
 
             return { current: category, previouse: previouse.current };
         });
-    }, []);
+    };
 
     const selectSideMenuCategoryHandler = useCallback((node: ICompiledMenuNode) => {
         if (node === selected.current) {
@@ -84,7 +83,7 @@ export const Menu = React.memo(({
                 addPosition(node.content as ICompiledProduct);
             }
         });
-    };
+    }
 
     // возврат к предидущей категории
     const onBack = useCallback(() => {
@@ -93,25 +92,11 @@ export const Menu = React.memo(({
         });
     }, []);
 
-    useEffect(() => {
-        menuPosition.addListener(({ value }) => {
-            if (value === 0) {
-                _setMenuWidth(() => width - sideMenuWidth);
-            }
-        });
-
-        // will unmount
-        return function dispose() {
-            menuPosition.removeAllListeners();
-        }
-    });
-
     // анимация скрытия бокового меню
     const sideMenuFadeOut = useCallback(() => {
         if (menuAnimation) {
             menuAnimation.stop();
         }
-        _setMenuWidth(() => width);
         menuAnimation = Animated.timing(menuPosition, {
             useNativeDriver: false,
             toValue: 1,
@@ -194,9 +179,7 @@ export const Menu = React.memo(({
                     </Text>
                 </View>
             </LinearGradient>
-            <View style={{
-                flex: 1, flexDirection: "row", overflow: "hidden", width, height: "100%"
-            }}>
+            <View style={{ position: "absolute", overflow: "hidden", flexDirection: "row", width: "100%", height: "100%" }}>
                 <Animated.View style={{
                     position: "absolute",
                     width: sideMenuWidth,
@@ -222,11 +205,11 @@ export const Menu = React.memo(({
                         inputRange: [0, 1],
                         outputRange: [sideMenuWidth, 0],
                     }),
-                    width: menuWidth/*: menuPosition.interpolate({
+                    width: menuPosition.interpolate({
                         inputRange: [0, 1],
                         outputRange: [width - sideMenuWidth, width],
                         easing: Easing.linear,
-                    })*/,
+                    }),
                 }}>
 
                     <Animated.View style={{

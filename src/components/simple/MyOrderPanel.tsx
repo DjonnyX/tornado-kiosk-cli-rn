@@ -37,10 +37,10 @@ export const MyOrderPanel = React.memo(({ currency, language, languages, orderTy
                     <OrderTypesPicker language={language} orderTypes={orderTypes} onSelect={onChangeOrderType}></OrderTypesPicker>
                 </View>
                 <View style={{ margin: "auto", marginBottom: 20, alignItems: "center" }}>
-                    <Text>
+                    <Text style={{ textTransform: "lowercase", fontSize: 11, color: "rgba(0, 0, 0, 0.5)"}}>
                         Сумма заказа
                     </Text>
-                    <Text style={{fontWeight: "bold", fontSize: 18}}>
+                    <Text style={{fontWeight: "bold", fontSize: 18, color: "rgba(0, 0, 0, 0.75)"}}>
                         {
                             `${(sum * 0.01).toFixed(2)} ${currency.symbol}`
                         }
