@@ -1,4 +1,4 @@
-import React, { Dispatch, useCallback } from "react";
+import React, { Dispatch, useCallback, useState, useEffect } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
 import { View } from "react-native";
 import { connect } from "react-redux";
@@ -9,6 +9,7 @@ import { CombinedDataSelectors } from "../../store/selectors";
 import { CapabilitiesSelectors } from "../../store/selectors/CapabilitiesSelector";
 import { Ads } from "../simple";
 import { ICompiledLanguage } from "@djonnyx/tornado-types";
+import { CommonActions } from "@react-navigation/native";
 
 interface IIntroSelfProps {
     // store props
@@ -21,9 +22,15 @@ interface IIntroSelfProps {
 interface IIntroProps extends StackScreenProps<any, MainNavigationScreenTypes.INTRO>, IIntroSelfProps { }
 
 const IntroScreenContainer = React.memo(({ _language, _intros, navigation }: IIntroProps) => {
-
     const pressHandler = useCallback((ad: ICompiledAd) => {
-        navigation.navigate(MainNavigationScreenTypes.MENU);
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 1,
+                routes: [
+                    { name: MainNavigationScreenTypes.MENU },
+                ],
+            })
+        );
     }, []);
 
     return (

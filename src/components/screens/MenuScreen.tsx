@@ -1,6 +1,6 @@
-import React, { Dispatch, useState, useCallback } from "react";
+import React, { Dispatch, useState, useCallback, useEffect } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
-import { View, Dimensions } from "react-native";
+import { View, Dimensions, ScaledSize } from "react-native";
 import { MainNavigationScreenTypes } from "../navigation";
 import { IAppState } from "../../store/state";
 import { connect } from "react-redux";
@@ -10,6 +10,7 @@ import { CapabilitiesSelectors } from "../../store/selectors/CapabilitiesSelecto
 import { CapabilitiesActions, MyOrderActions } from "../../store/actions";
 import { MyOrderPanel } from "../simple/MyOrderPanel";
 import { Menu } from "../simple/Menu";
+import { CommonActions } from "@react-navigation/native";
 
 interface IMenuSelfProps {
     // store props
@@ -45,25 +46,46 @@ const MenuScreenContainer = React.memo(({
     const myOrderWidth = 156;
     let menuWidth = windowSize.width - myOrderWidth;
 
-    Dimensions.addEventListener("change", ({ window }) => {
-        _setWindowSize(size => {
-            const w = window.width;
-            const h = window.height;
-            menuWidth = w - myOrderWidth;
-            return { width: w, height: h };
-        });
+    useEffect(() => {
+        function dimensionsChangeHandler({ window }: { window: ScaledSize }) {
+            _setWindowSize(size => {
+                const w = window.width;
+                const h = window.height;
+                menuWidth = w - myOrderWidth;
+                return { width: w, height: h };
+            });
+        };
+        Dimensions.addEventListener("change", dimensionsChangeHandler);
+
+        return () => {
+            Dimensions.removeEventListener("change", dimensionsChangeHandler);
+        }
     });
 
     const confirmHandler = useCallback(() => {
-        navigation.navigate(MainNavigationScreenTypes.CONFIRMATION_ORDER);
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 1,
+                routes: [
+                    { name: MainNavigationScreenTypes.CONFIRMATION_ORDER },
+                ],
+            })
+        );
     }, []);
 
     const cancelHandler = useCallback(() => {
-        navigation.navigate(MainNavigationScreenTypes.INTRO);
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 1,
+                routes: [
+                    { name: MainNavigationScreenTypes.INTRO },
+                ],
+            })
+        );
     }, []);
 
     return (
-        <View style={{ flex: 1, flexDirection: "row", width: "100%", height: "100%", backgroundColor: "#fff" }}>
+        <View style={{ flexDirection: "row", width: "100%", height: "100%", backgroundColor: "#fff" }}>
             <View style={{ position: "absolute", width: menuWidth, height: "100%", zIndex: 1 }}>
                 <Menu currency={_defaultCurrency} language={_language} menu={_menu} width={menuWidth} height={windowSize.height} positions={_orderPositions} cancelOrder={cancelHandler}
                     addPosition={_onAddOrderPosition} updatePosition={_onUpdateOrderPosition} removePosition={_onRemoveOrderPosition}

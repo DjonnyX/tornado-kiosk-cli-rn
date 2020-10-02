@@ -6,6 +6,7 @@ import { MainNavigationScreenTypes } from "../navigation";
 import { IAppState } from "../../store/state";
 import { connect } from "react-redux";
 import { CombinedDataSelectors } from "../../store/selectors";
+import { CommonActions } from "@react-navigation/native";
 
 interface ILoadingSelfProps {
   // store props
@@ -21,7 +22,14 @@ const LoadingScreenContainer = React.memo(({ _progress, _loaded, navigation }: I
   useEffect(() => {
     if (_loaded) {
       setTimeout(() => {
-        navigation.navigate(MainNavigationScreenTypes.INTRO);
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 1,
+            routes: [
+              { name: MainNavigationScreenTypes.INTRO },
+            ],
+          })
+        );
       });
     }
   });
