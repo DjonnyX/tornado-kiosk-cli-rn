@@ -44,16 +44,14 @@ public class MainActivity extends ReactActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     protected void setLockTask() {
-
-        startLockTask();
         // Проверка владельца устройства
-        /*if (mDevicePolicyManager.isLockTaskPermitted(packageName)) {
+        if (mDevicePolicyManager.isLockTaskPermitted(packageName)) {
             String[] packages = {packageName};
             mDevicePolicyManager.setLockTaskPackages(mAdminComponentName, packages);
-            startLockTask();
         } else {
             Toast.makeText(getApplicationContext(), "Not device owner", Toast.LENGTH_LONG).show();
-        }*/
+        }
+        startLockTask();
     }
 
     /**
