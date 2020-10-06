@@ -35,7 +35,7 @@ public class MainActivity extends ReactActivity {
         mAdminComponentName = new ComponentName(this, TornadoDeviceAdminReceiver.class);
 
         hideSystemUI();
-        startLockTask();
+        setLockTask();
         setAppAsDefault();
         setVolumeToMax();
         setDisableKeyguard();
