@@ -39,7 +39,7 @@ export const GridList = React.memo(({ data, renderItem, style, keyExtractor, spa
             // отложенное переопределение лэйаута
             timer = setTimeout(() => {
                 _setBound(prevBound => ({ x, y, width, height }));
-            }, 10);
+            }, 50);
         }
     }, []);
 
