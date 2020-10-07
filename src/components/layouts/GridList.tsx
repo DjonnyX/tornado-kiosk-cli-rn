@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { View, LayoutChangeEvent, StyleProp, ViewStyle } from "react-native";
 
 interface IGridListProps<T = any> {
@@ -13,6 +13,8 @@ interface IGridListProps<T = any> {
     keyExtractor: (item: T, index: number) => number;
 }
 
+const FPS = 1000 / 60;
+
 export const GridList = React.memo(({ data, renderItem, style, keyExtractor, spacing = 0, padding = 0, animationSkipFrames = 0, itemDimension }: IGridListProps) => {
     const [bound, _setBound] = useState({ x: 0, y: 0, width: 0, height: 0 });
 
@@ -22,25 +24,27 @@ export const GridList = React.memo(({ data, renderItem, style, keyExtractor, spa
     let frameCount = 0;
     let timer: NodeJS.Timer;
 
+    useEffect(() => {
+        clearTimeout(timer);
+    });
+
     const changeLayoutHandler = useCallback((event: LayoutChangeEvent) => {
         frameCount++;
 
         // остановка таймера
-        if (!!timer) {
-            clearTimeout(timer);
-        }
+        clearTimeout(timer);
 
         const { x, y, width, height } = event.nativeEvent.layout;
 
         // лэйаут переопределяется только при инициализации и если пропущено количество фреймов заданное с помощью "animationSkipFrames"
-        if (frameCount > animationSkipFrames || !(bound.width && bound.height)) {
+        /*if (frameCount > animationSkipFrames || !(bound.width && bound.height)) {
             _setBound(prevBound => ({ x, y, width, height }));
-        } else {
+        } else {*/
             // отложенное переопределение лэйаута
             timer = setTimeout(() => {
                 _setBound(prevBound => ({ x, y, width, height }));
-            }, 50);
-        }
+            }, animationSkipFrames);
+        //}
     }, []);
 
     return (
