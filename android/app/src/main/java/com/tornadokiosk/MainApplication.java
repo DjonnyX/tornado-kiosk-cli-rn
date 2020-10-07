@@ -16,6 +16,7 @@ import java.util.List;
 
 import com.horcrux.svg.SvgPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
+import com.tornadokiosk.utils.LogPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -32,6 +33,7 @@ public class MainApplication extends Application implements ReactApplication {
                     List<ReactPackage> packages = new PackageList(this).getPackages();
 
                     packages.add(new LinearGradientPackage());
+                    packages.add(new LogPackage());
                     packages.add(new ExternalStoragePackage());
                     // Packages that cannot be autolinked yet can be added manually here, for example:
                     // packages.add(new MyReactNativePackage());
