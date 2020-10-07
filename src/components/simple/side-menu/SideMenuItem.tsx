@@ -80,7 +80,7 @@ export const SideMenuItem = React.memo(({ depth = 0, height = 0, selected, langu
         subMenuSizeAnimation = Animated.timing(subMenuSize, {
             useNativeDriver: false,
             toValue: 1,
-            duration: 500,
+            duration: 250,
             easing: Easing.cubic,
             delay: 1,
         });
@@ -94,7 +94,7 @@ export const SideMenuItem = React.memo(({ depth = 0, height = 0, selected, langu
         subMenuSizeAnimation = Animated.timing(subMenuSize, {
             useNativeDriver: false,
             toValue: 0,
-            duration: 500,
+            duration: 250,
             easing: Easing.cubic,
             delay: 1,
         });
@@ -115,9 +115,10 @@ export const SideMenuItem = React.memo(({ depth = 0, height = 0, selected, langu
     const children = node.children.filter(child => child.type === NodeTypes.SELECTOR || child.type === NodeTypes.SELECTOR_NODE);
     const allChainOfChildren = getChainChildren(node, selected);
     const size = depth > 0 ? 1 : 0;
+    const invertSize = depth === 0 ? 1 : 0;
     const offset = 12 * size;
-    const subItemHwight = 104 - offset;
-    const mItemHeight = allChainOfChildren.length * subItemHwight;
+    const subItemHeight = 104 - offset;
+    const mItemHeight = allChainOfChildren.length * subItemHeight;
 
     if (itemHeight !== mItemHeight) {
         _setItemHeight((prevItemHeight) => {
@@ -129,15 +130,17 @@ export const SideMenuItem = React.memo(({ depth = 0, height = 0, selected, langu
     }
 
     return (
-        <View style={{ flex: 1, minHeight: height }}>
+        <View style={{ flex: 1, alignContent: "flex-start", alignItems: "stretch", minHeight: height }}>
             <View style={{
                 flex: 1,
-                margin: 8 * size, marginBottom: 4, marginTop: depth === 0 ? 5 : 0, padding: 8, borderRadius: 14,
-                backgroundColor: node === selected ? Color.rgb(color).alpha(0.15).toString() : Color.rgb(color).alpha(0.025).toString(),
                 overflow: "hidden"
             }}>
-                <TouchableOpacity style={{ flex: 1, justifyContent: "flex-start", alignItems: "center" }} onPress={pressHandler}>
-                    <FastImage style={{ width: "100%", height: 64 - offset, marginBottom: 5 }} source={{
+                <TouchableOpacity style={{
+                    flex: 1, justifyContent: "center", alignItems: "center",
+                    margin: 8 * size, marginBottom: 4, marginTop: depth === 0 ? 5 : 0, padding: 8, borderRadius: 14,
+                    backgroundColor: node === selected ? Color.rgb(color).alpha(0.15).toString() : Color.rgb(color).alpha(0.025).toString(),
+                }} onPress={pressHandler}>
+                    <FastImage style={{ width: "100%", height: 56 - offset, marginBottom: 5 }} source={{
                         uri: `file://${currentAdAsset?.mipmap.x128}`,
                     }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                     <Text style={{ fontSize: 11 }}>
@@ -162,7 +165,7 @@ export const SideMenuItem = React.memo(({ depth = 0, height = 0, selected, langu
                             {
                                 // onLayout={layoutChangeHandler}
                                 children.map(child =>
-                                    <SideMenuItem key={child.id} depth={depth + 1} height={subItemHwight * (getChainChildren(child, selected).length + 1)} node={child} selected={selected} language={language} onPress={onPress}></SideMenuItem>
+                                    <SideMenuItem key={child.id} depth={depth + 1} height={subItemHeight * (getChainChildren(child, selected).length + 1)} node={child} selected={selected} language={language} onPress={onPress}></SideMenuItem>
                                 )
                             }
                         </View>
