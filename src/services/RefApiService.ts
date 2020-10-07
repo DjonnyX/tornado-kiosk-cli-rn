@@ -1,4 +1,4 @@
-import { Observable, from } from "rxjs";
+import { Observable, from, throwError } from "rxjs";
 import { map, retry, retryWhen, switchMap } from "rxjs/operators";
 import { config } from "../Config";
 import { IRef, INode, ISelector, IProduct, ITag, IAsset, ILanguage, ITranslation, IBusinessPeriod, IOrderType, ICurrency, IAd, IStore, ITerminal } from "@djonnyx/tornado-types";
@@ -32,7 +32,17 @@ class RefApiService {
                     })
             )
         ).pipe(
-            switchMap(res => from(res.json())),
+            map(v => {
+                if (v.ok) {
+                    v.text().then((txt) => {
+                        Log.i("RefApiService", "> getRefs: " + txt);
+                    });
+                } else {
+                    Log.i("RefApiService", "> getRefs: " + v.statusText);
+                }
+                return v;
+            }),
+            switchMap(res => res.ok ? from(res.json()) : throwError(res.status)),
             map(resData => resData.data)
         );
     }
@@ -50,7 +60,7 @@ class RefApiService {
                     })
             ),
         ).pipe(
-            switchMap(res => from(res.json())),
+            switchMap(res => res.ok ? from(res.json()) : throwError(res.status)),
             map(resData => resData.data),
         );
     }
@@ -68,7 +78,7 @@ class RefApiService {
                     })
             ),
         ).pipe(
-            switchMap(res => from(res.json())),
+            switchMap(res => res.ok ? from(res.json()) : throwError(res.status)),
             map(resData => resData.data),
         );
     }
@@ -86,7 +96,7 @@ class RefApiService {
                     })
             ),
         ).pipe(
-            switchMap(res => from(res.json())),
+            switchMap(res => res.ok ? from(res.json()) : throwError(res.status)),
             map(resData => resData.data),
         );
     }
@@ -105,7 +115,7 @@ class RefApiService {
             ),
         ).pipe(
             retry(5),
-            switchMap(res => from(res.json())),
+            switchMap(res => res.ok ? from(res.json()) : throwError(res.status)),
             map(resData => resData.data),
         );
     }
@@ -123,7 +133,7 @@ class RefApiService {
                     })
             ),
         ).pipe(
-            switchMap(res => from(res.json())),
+            switchMap(res => res.ok ? from(res.json()) : throwError(res.status)),
             map(resData => resData.data),
         );
     }
@@ -141,7 +151,7 @@ class RefApiService {
                     })
             ),
         ).pipe(
-            switchMap(res => from(res.json())),
+            switchMap(res => res.ok ? from(res.json()) : throwError(res.status)),
             map(resData => resData.data),
         );
     }
@@ -159,7 +169,7 @@ class RefApiService {
                     })
             ),
         ).pipe(
-            switchMap(res => from(res.json())),
+            switchMap(res => res.ok ? from(res.json()) : throwError(res.status)),
             map(resData => resData.data),
         );
     }
@@ -177,7 +187,7 @@ class RefApiService {
                     })
             ),
         ).pipe(
-            switchMap(res => from(res.json())),
+            switchMap(res => res.ok ? from(res.json()) : throwError(res.status)),
             map(resData => resData.data),
         );
     }
@@ -195,7 +205,7 @@ class RefApiService {
                     })
             ),
         ).pipe(
-            switchMap(res => from(res.json())),
+            switchMap(res => res.ok ? from(res.json()) : throwError(res.status)),
             map(resData => resData.data),
         );
     }
@@ -213,7 +223,7 @@ class RefApiService {
                     })
             ),
         ).pipe(
-            switchMap(res => from(res.json())),
+            switchMap(res => res.ok ? from(res.json()) : throwError(res.status)),
             map(resData => resData.data),
         );
     }
@@ -231,7 +241,7 @@ class RefApiService {
                     })
             ),
         ).pipe(
-            switchMap(res => from(res.json())),
+            switchMap(res => res.ok ? from(res.json()) : throwError(res.status)),
             map(resData => resData.data),
         );
     }
@@ -249,7 +259,7 @@ class RefApiService {
                     })
             ),
         ).pipe(
-            switchMap(res => from(res.json())),
+            switchMap(res => res.ok ? from(res.json()) : throwError(res.status)),
             map(resData => resData.data),
         );
     }
@@ -267,7 +277,7 @@ class RefApiService {
                     })
             ),
         ).pipe(
-            switchMap(res => from(res.json())),
+            switchMap(res => res.ok ? from(res.json()) : throwError(res.status)),
             map(resData => resData.data),
         );
     }
