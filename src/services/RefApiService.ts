@@ -1,5 +1,5 @@
 import { Observable, from, throwError } from "rxjs";
-import { map, retry, retryWhen, switchMap } from "rxjs/operators";
+import { catchError, map, retry, retryWhen, switchMap } from "rxjs/operators";
 import { config } from "../Config";
 import { IRef, INode, ISelector, IProduct, ITag, IAsset, ILanguage, ITranslation, IBusinessPeriod, IOrderType, ICurrency, IAd, IStore, ITerminal } from "@djonnyx/tornado-types";
 import { genericRetryStrategy } from "../utils/request";
@@ -32,17 +32,11 @@ class RefApiService {
                     })
             )
         ).pipe(
-            map(v => {
-                if (v.ok) {
-                    v.text().then((txt) => {
-                        Log.i("RefApiService", "> getRefs: " + txt);
-                    });
-                } else {
-                    Log.i("RefApiService", "> getRefs: " + v.statusText);
-                }
-                return v;
-            }),
             switchMap(res => res.ok ? from(res.json()) : throwError(res.status)),
+            catchError(err => {
+                Log.i("RefApiService", "> getRefs: " + err);
+                return throwError(err);
+            }),
             map(resData => resData.data)
         );
     }
