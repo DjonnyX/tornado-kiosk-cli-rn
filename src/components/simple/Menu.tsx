@@ -100,7 +100,7 @@ export const Menu = React.memo(({
         menuAnimation = Animated.timing(menuPosition, {
             useNativeDriver: false,
             toValue: 1,
-            duration: 500,
+            duration: 250,
             easing: Easing.cubic,
             delay: 10,
         });
@@ -115,7 +115,7 @@ export const Menu = React.memo(({
         menuAnimation = Animated.timing(menuPosition, {
             useNativeDriver: false,
             toValue: 0,
-            duration: 500,
+            duration: 250,
             easing: Easing.cubic,
             delay: 10,
         });
@@ -131,7 +131,7 @@ export const Menu = React.memo(({
         screenAnimation = Animated.timing(screenPosition, {
             useNativeDriver: false,
             toValue: 0,
-            duration: 500,
+            duration: 250,
             easing: Easing.cubic,
             delay: 10,
         });
@@ -147,7 +147,7 @@ export const Menu = React.memo(({
         screenAnimation = Animated.timing(screenPosition, {
             useNativeDriver: false,
             toValue: 1,
-            duration: 500,
+            duration: 250,
             easing: Easing.cubic,
             delay: 10,
         });
