@@ -23,7 +23,7 @@ public class LogModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void i(String tag, String message, Promise promise) {
-        Log.i(tag, message);
+        Log.i("TornadoKiosk " + tag, message);
         promise.resolve(null);
     }
 }
