@@ -21,7 +21,7 @@ interface IMenuProps {
     removePosition: (position: ICompiledProduct) => void;
 }
 
-const sideMenuWidth = 152;
+const sideMenuWidth = 162;
 
 export const Menu = React.memo(({
     menu, language, currency, width, height, positions, cancelOrder,

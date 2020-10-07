@@ -4,6 +4,55 @@ import * as Color from "color";
 import FastImage from "react-native-fast-image";
 import { ICompiledMenuNode, NodeTypes, ICompiledLanguage } from "@djonnyx/tornado-types";
 
+const getSelectedDepth = (node: ICompiledMenuNode, selected: ICompiledMenuNode, depth: number = 0): number => {
+    let result = -1;
+    depth++;
+
+    for (const child of node.children) {
+        if (child.type === NodeTypes.SELECTOR || child.type === NodeTypes.SELECTOR_NODE) {
+            if (node === selected || child === selected) {
+                result = depth;
+                return result;
+            } else {
+                const selectedDepth = getSelectedDepth(child, selected);
+                if (selectedDepth > -1) {
+                    result = selectedDepth;
+                    return result;
+                }
+            }
+        }
+    }
+
+    return result;
+}
+
+const getAllChildren = (node: ICompiledMenuNode, selected: ICompiledMenuNode, selectedDepth: number, depth: number = 0): Array<ICompiledMenuNode> => {
+    const children = new Array<ICompiledMenuNode>();
+    depth++;
+
+    for (const child of node.children) {
+        if (child.type === NodeTypes.SELECTOR || child.type === NodeTypes.SELECTOR_NODE) {
+            if (selectedDepth >= depth || node === selected || child === selected) {
+                children.push(child);
+
+                if (selectedDepth > depth || child === selected) {
+                    const subChildren = getAllChildren(child, selected, selectedDepth, depth);
+                    children.push(...subChildren);
+                }
+            }
+        }
+    }
+
+    return children;
+}
+
+const getChainChildren = (node: ICompiledMenuNode, selected: ICompiledMenuNode): Array<ICompiledMenuNode> => {
+    const selectedDepth = getSelectedDepth(node, selected);
+    const chainOfChildren = getAllChildren(node, selected, selectedDepth);
+
+    return chainOfChildren;
+}
+
 interface ISideMenuItemProps {
     depth?: number;
     height?: number;
@@ -14,19 +63,9 @@ interface ISideMenuItemProps {
 }
 
 export const SideMenuItem = React.memo(({ depth = 0, height = 0, selected, language, node, onPress }: ISideMenuItemProps) => {
-    // const [bound, _setBound] = useState({ x: 0, y: 0, width: 0, height: 0 });
+    const [itemHeight, _setItemHeight] = useState(0);
     const [subMenuSize, _setSubMenuSize] = useState(new Animated.Value(1));
     let subMenuSizeAnimation: Animated.CompositeAnimation;
-
-    /*const layoutChangeHandler = useCallback((event: LayoutChangeEvent) => {
-        const { x, y, width, height } = event.nativeEvent.layout;
-
-        // выставляется только при инициализации
-        // если будут ещё вложенные элементы, то придется это отключить
-        if (!(width && height)) {
-            _setBound(prevBound => ({ x, y, width, height }));
-        }
-    }, []);*/
 
     const pressHandler = useCallback((e: GestureResponderEvent) => {
         if (!!onPress) {
@@ -74,18 +113,31 @@ export const SideMenuItem = React.memo(({ depth = 0, height = 0, selected, langu
     }
 
     const children = node.children.filter(child => child.type === NodeTypes.SELECTOR || child.type === NodeTypes.SELECTOR_NODE);
-    const subItemHwight = 92 - 12 * depth;
+    const allChainOfChildren = getChainChildren(node, selected);
+    const size = depth > 0 ? 1 : 0;
+    const offset = 12 * size;
+    const subItemHwight = 104 - offset;
+    const mItemHeight = allChainOfChildren.length * subItemHwight;
+
+    if (itemHeight !== mItemHeight) {
+        _setItemHeight((prevItemHeight) => {
+            const ratio = itemHeight / mItemHeight;
+            let normalizeRatio = mItemHeight === 0 ? 0 : ratio;
+            subMenuSize.setValue(normalizeRatio);
+            return mItemHeight;
+        });
+    }
 
     return (
-        <View style={{ flex: 1, minHeight: height }} renderToHardwareTextureAndroid={true}>
+        <View style={{ flex: 1, minHeight: height }}>
             <View style={{
                 flex: 1,
-                margin: 8 * depth, marginBottom: depth === 0 ? 5 : 4, marginTop: depth === 0 ? 5 : 0, padding: 8, borderRadius: 14,
+                margin: 8 * size, marginBottom: 4, marginTop: depth === 0 ? 5 : 0, padding: 8, borderRadius: 14,
                 backgroundColor: node === selected ? Color.rgb(color).alpha(0.15).toString() : Color.rgb(color).alpha(0.025).toString(),
                 overflow: "hidden"
             }}>
                 <TouchableOpacity style={{ flex: 1, justifyContent: "flex-start", alignItems: "center" }} onPress={pressHandler}>
-                    <FastImage style={{ width: "100%", height: 64 - 12 * depth, marginBottom: 5 }} source={{
+                    <FastImage style={{ width: "100%", height: 64 - offset, marginBottom: 5 }} source={{
                         uri: `file://${currentAdAsset?.mipmap.x128}`,
                     }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                     <Text style={{ fontSize: 11 }}>
@@ -102,7 +154,7 @@ export const SideMenuItem = React.memo(({ depth = 0, height = 0, selected, langu
                         width: "100%",
                         height: subMenuSize.interpolate({
                             inputRange: [0, 1],
-                            outputRange: [0, children.length * subItemHwight],
+                            outputRange: [0, itemHeight],
                         }),
                         overflow: "hidden"
                     }}>
@@ -110,7 +162,7 @@ export const SideMenuItem = React.memo(({ depth = 0, height = 0, selected, langu
                             {
                                 // onLayout={layoutChangeHandler}
                                 children.map(child =>
-                                    <SideMenuItem key={child.id} depth={depth + 1} height={subItemHwight} node={child} selected={selected} language={language} onPress={onPress}></SideMenuItem>
+                                    <SideMenuItem key={child.id} depth={depth + 1} height={subItemHwight * (getChainChildren(child, selected).length + 1)} node={child} selected={selected} language={language} onPress={onPress}></SideMenuItem>
                                 )
                             }
                         </View>
