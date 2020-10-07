@@ -3,6 +3,7 @@ import { map, retry, retryWhen, switchMap } from "rxjs/operators";
 import { config } from "../Config";
 import { IRef, INode, ISelector, IProduct, ITag, IAsset, ILanguage, ITranslation, IBusinessPeriod, IOrderType, ICurrency, IAd, IStore, ITerminal } from "@djonnyx/tornado-types";
 import { genericRetryStrategy } from "../utils/request";
+import { Log } from "./Log";
 
 const request = (observable: Observable<Response>): Observable<Response> => {
     return observable.pipe(
@@ -19,6 +20,7 @@ const request = (observable: Observable<Response>): Observable<Response> => {
 
 class RefApiService {
     getRefs(): Observable<Array<IRef>> {
+        Log.i("RefApiService", "getRefs");
         return request(
             from(
                 fetch(`${config.refServer.address}/api/v1/refs`,
@@ -36,6 +38,7 @@ class RefApiService {
     }
 
     getNodes(): Observable<Array<INode>> {
+        Log.i("RefApiService", "getNodes");
         return request(
             from(
                 fetch(`${config.refServer.address}/api/v1/nodes`,
@@ -53,6 +56,7 @@ class RefApiService {
     }
 
     getSelectors(): Observable<Array<ISelector>> {
+        Log.i("RefApiService", "getSelectors");
         return request(
             from(
                 fetch(`${config.refServer.address}/api/v1/selectors`,
@@ -70,6 +74,7 @@ class RefApiService {
     }
 
     getProducts(): Observable<Array<IProduct>> {
+        Log.i("RefApiService", "getProducts");
         return request(
             from(
                 fetch(`${config.refServer.address}/api/v1/products`,
@@ -87,6 +92,7 @@ class RefApiService {
     }
 
     getTags(): Observable<Array<ITag>> {
+        Log.i("RefApiService", "getTags");
         return request(
             from(
                 fetch(`${config.refServer.address}/api/v1/tags`,
@@ -105,6 +111,7 @@ class RefApiService {
     }
 
     getAssets(): Observable<Array<IAsset>> {
+        Log.i("RefApiService", "getAssets");
         return request(
             from(
                 fetch(`${config.refServer.address}/api/v1/assets`,
@@ -122,6 +129,7 @@ class RefApiService {
     }
 
     getLanguages(): Observable<Array<ILanguage>> {
+        Log.i("RefApiService", "getLanguages");
         return request(
             from(
                 fetch(`${config.refServer.address}/api/v1/languages`,
@@ -139,6 +147,7 @@ class RefApiService {
     }
 
     getTranslations(): Observable<Array<ITranslation>> {
+        Log.i("RefApiService", "getTranslations");
         return request(
             from(
                 fetch(`${config.refServer.address}/api/v1/translations`,
@@ -156,6 +165,7 @@ class RefApiService {
     }
 
     getBusinessPeriods(): Observable<Array<IBusinessPeriod>> {
+        Log.i("RefApiService", "getBusinessPeriods");
         return request(
             from(
                 fetch(`${config.refServer.address}/api/v1/business-periods`,
@@ -173,6 +183,7 @@ class RefApiService {
     }
 
     getOrderTypes(): Observable<Array<IOrderType>> {
+        Log.i("RefApiService", "getOrderTypes");
         return request(
             from(
                 fetch(`${config.refServer.address}/api/v1/order-types`,
@@ -190,6 +201,7 @@ class RefApiService {
     }
 
     getCurrencies(): Observable<Array<ICurrency>> {
+        Log.i("RefApiService", "getCurrencies");
         return request(
             from(
                 fetch(`${config.refServer.address}/api/v1/currencies`,
@@ -207,6 +219,7 @@ class RefApiService {
     }
 
     getAds(): Observable<Array<IAd>> {
+        Log.i("RefApiService", "getAds");
         return request(
             from(
                 fetch(`${config.refServer.address}/api/v1/ads`,
@@ -224,6 +237,7 @@ class RefApiService {
     }
 
     getStores(): Observable<Array<IStore>> {
+        Log.i("RefApiService", "getStores");
         return request(
             from(
                 fetch(`${config.refServer.address}/api/v1/stores`,
@@ -241,6 +255,7 @@ class RefApiService {
     }
 
     getTerminals(): Observable<Array<ITerminal>> {
+        Log.i("RefApiService", "getTerminals");
         return request(
             from(
                 fetch(`${config.refServer.address}/api/v1/terminals`,
