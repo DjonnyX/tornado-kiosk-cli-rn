@@ -13,8 +13,8 @@ const myOrderReducer: Reducer<IMyOrderState, TMyOrderActions> = (
 ) => {
     switch (action.type) {
         case MyOrderActionTypes.ADD_POSITION:
-            const existsAIndex = state.positions.findIndex(pos => pos.product.id === uPos.product.id);
-            
+            const existsAIndex = state.positions.findIndex(pos => pos.product.id === (action as any).product.id);
+
             // "слипание" продуктов
             if (existsAIndex > -1) {
                 const aPos = (action as any).position;
