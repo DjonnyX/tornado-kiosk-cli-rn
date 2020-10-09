@@ -18,6 +18,16 @@ export const theme: IKioskTheme = {
                         background: "#fff",
                         borderColor: "rgba(0,0,0,0.1)"
                     }
+                },
+                modalNotification: {
+                    background: "none",
+                    window: {
+                        background: "rgba(0,0,0,0.75)",
+                        borderColor: "rgba(0,0,0,0.1)",
+                    }
+                },
+                notificationAlert: {
+                    textColor: "rgba(255,255,255,0.75)",
                 }
             },
             languageModal: {
@@ -129,6 +139,16 @@ export const theme: IKioskTheme = {
                         background: "#000",
                         borderColor: "rgba(255,255,255,0.1)"
                     }
+                },
+                modalNotification: {
+                    background: "none",
+                    window: {
+                        background: "rgba(255,255,255,0.5)",
+                        borderColor: "rgba(255,255,255,0.1)",
+                    }
+                },
+                notificationAlert: {
+                    textColor: "rgba(0,0,0,0.75)",
                 }
             },
             languageModal: {

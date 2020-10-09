@@ -12,6 +12,7 @@ import { CapabilitiesActions, MyOrderActions } from "../../store/actions";
 import { MyOrderPanel } from "../simple/MyOrderPanel";
 import { Menu } from "../simple/Menu";
 import { theme } from "../../theme";
+import { NotificationAlert } from "../simple/NotificationAlert";
 
 interface IMenuSelfProps {
     // store props
@@ -43,6 +44,7 @@ const MenuScreenContainer = React.memo(({
     _onRemoveOrderPosition, navigation, route,
 }: IMenuProps) => {
     const [windowSize, _setWindowSize] = useState({ width: Dimensions.get("window").width, height: Dimensions.get("window").height });
+    const [showAddProductNotification, _setShowAddProductNotification] = useState<boolean>(false);
 
     const myOrderWidth = 170;
     let menuWidth = windowSize.width - myOrderWidth;
@@ -85,16 +87,36 @@ const MenuScreenContainer = React.memo(({
         );
     }, []);
 
+    const addProductHandler = (product: ICompiledProduct) => {
+        _onAddOrderPosition(product);
+        _setShowAddProductNotification(() => true);
+    };
+
+    const addProductNotificationComplete = useCallback(() => {
+        _setShowAddProductNotification(() => false);
+    }, [_setShowAddProductNotification, showAddProductNotification]);
+
     return (
         <View style={{ flexDirection: "row", width: "100%", height: "100%", backgroundColor: theme.themes[theme.name].menu.background }}>
+            {
+                !!_orderPositions[_orderPositions.length - 1]
+                    ?
+                    <NotificationAlert message={`"${_orderPositions[_orderPositions.length - 1].product.contents[_language.code].name}" добавлен в заказ!`}
+                        visible={showAddProductNotification}
+                        duration={2000}
+                        onComplete={addProductNotificationComplete}
+                    />
+                    :
+                    undefined
+            }
             <View style={{ position: "absolute", width: menuWidth, height: "100%", zIndex: 1 }}>
                 <Menu currency={_defaultCurrency} language={_language} menu={_menu} width={menuWidth} height={windowSize.height} positions={_orderPositions} cancelOrder={cancelHandler}
-                    addPosition={_onAddOrderPosition} updatePosition={_onUpdateOrderPosition} removePosition={_onRemoveOrderPosition}
+                    addPosition={addProductHandler} updatePosition={_onUpdateOrderPosition} removePosition={_onRemoveOrderPosition}
                 ></Menu>
             </View>
             <View style={{ position: "absolute", width: myOrderWidth, height: "100%", left: menuWidth, zIndex: 2 }}>
                 <MyOrderPanel currency={_defaultCurrency} sum={_orderSum} language={_language} languages={_languages} orderTypes={_orderTypes} positions={_orderPositions}
-                    addPosition={_onAddOrderPosition} updatePosition={_onUpdateOrderPosition} removePosition={_onRemoveOrderPosition}
+                    updatePosition={_onUpdateOrderPosition} removePosition={_onRemoveOrderPosition}
                     onChangeLanguage={_onChangeLanguage} onChangeOrderType={_onChangeOrderType} onConfirm={confirmHandler}></MyOrderPanel>
             </View>
         </View>

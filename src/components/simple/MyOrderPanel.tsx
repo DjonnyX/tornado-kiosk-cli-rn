@@ -15,7 +15,6 @@ interface IMyOrderPanelProps {
     positions: Array<IOrderPosition>;
     sum: number;
 
-    addPosition: (position: ICompiledProduct) => void;
     updatePosition: (position: IOrderPosition) => void;
     removePosition: (position: IOrderPosition) => void;
     onChangeLanguage: (lang: ICompiledLanguage) => void;
@@ -24,7 +23,7 @@ interface IMyOrderPanelProps {
 }
 
 export const MyOrderPanel = React.memo(({ currency, language, languages, orderTypes, positions, sum,
-    addPosition, updatePosition, removePosition, onChangeLanguage, onChangeOrderType, onConfirm,
+    updatePosition, removePosition, onChangeLanguage, onChangeOrderType, onConfirm,
 }: IMyOrderPanelProps) => {
     return (
         <View
