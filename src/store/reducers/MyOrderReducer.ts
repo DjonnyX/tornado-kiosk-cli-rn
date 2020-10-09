@@ -13,12 +13,30 @@ const myOrderReducer: Reducer<IMyOrderState, TMyOrderActions> = (
 ) => {
     switch (action.type) {
         case MyOrderActionTypes.ADD_POSITION:
-            const _nextPositionIndex = state._nextPositionIndex + 1;
-            return {
-                ...state,
-                _nextPositionIndex,
-                positions: [...state.positions, {id: _nextPositionIndex.toString(), product: (action as any).product, quantity: 1}],
-            };
+            const existsAIndex = state.positions.findIndex(pos => pos.product.id === uPos.product.id);
+            
+            // "слипание" продуктов
+            if (existsAIndex > -1) {
+                const aPos = (action as any).position;
+                let aPositions = [...state.positions];
+                if (existsAIndex > -1) {
+                    aPositions.splice(existsAIndex, 1);
+                    aPositions.splice(existsAIndex, 0, aPos);
+                }
+                return {
+                    ...state,
+                    positions: aPositions,
+                };
+            }
+            // добавление нового продукта
+            else {
+                const _nextPositionIndex = state._nextPositionIndex + 1;
+                return {
+                    ...state,
+                    _nextPositionIndex,
+                    positions: [...state.positions, {id: _nextPositionIndex.toString(), product: (action as any).product, quantity: 1}],
+                };
+            }
         case MyOrderActionTypes.REMOVE_POSITION:
             const rPos = (action as any).position;
             const existsRIndex = state.positions.findIndex(pos => pos.id === rPos.id);
