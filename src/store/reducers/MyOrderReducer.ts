@@ -17,7 +17,8 @@ const myOrderReducer: Reducer<IMyOrderState, TMyOrderActions> = (
 
             // "слипание" продуктов
             if (existsAIndex > -1) {
-                const aPos = (action as any).position;
+                const aPos = {...state.positions[existsAIndex]};
+                aPos.quantity ++;;
                 let aPositions = [...state.positions];
                 if (existsAIndex > -1) {
                     aPositions.splice(existsAIndex, 1);
