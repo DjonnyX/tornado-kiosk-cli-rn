@@ -10,6 +10,7 @@ import { CapabilitiesSelectors } from "../../store/selectors/CapabilitiesSelecto
 import { Ads } from "../simple";
 import { ICompiledLanguage } from "@djonnyx/tornado-types";
 import { CommonActions } from "@react-navigation/native";
+import { theme } from "../../theme";
 
 interface IIntroSelfProps {
     // store props
@@ -34,7 +35,7 @@ const IntroScreenContainer = React.memo(({ _language, _intros, navigation }: IIn
     }, []);
 
     return (
-        <View style={{ flex: 1, justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center", width: "100%", height: "100%", backgroundColor: theme.themes[theme.name].intro.background }}>
             <Ads ads={_intros} language={_language} onPress={pressHandler}></Ads>
         </View>
     );

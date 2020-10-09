@@ -1,8 +1,10 @@
 import React, { useState, useCallback } from "react";
-import { View, Text, Modal, TouchableOpacity } from "react-native";
+import { View, Text, Modal, TouchableOpacity, Dimensions } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import FastImage from "react-native-fast-image";
 import { ICompiledLanguage } from "@djonnyx/tornado-types";
+import Color from "color";
+import { theme } from "../../theme";
 
 interface ILanguagePickerProps {
     languages: Array<ICompiledLanguage>;
@@ -40,16 +42,22 @@ export const LanguagePicker = React.memo(({ language, languages, onSelect }: ILa
                 animationType="slide"
                 visible={modalVisible}
                 presentationStyle="fullScreen"
+                statusBarTranslucent={true}
             >
                 <View style={{
                     flex: 1,
                     justifyContent: "center",
                     alignItems: "center",
-                    backgroundColor: "rgba(0, 0, 0, 0.5)"
+                    position: "absolute",
+                    top: 0,
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    backgroundColor: theme.themes[theme.name].common.modal.background,
                 }}>
                     <View style={{
                         margin: 20,
-                        backgroundColor: "white",
+                        backgroundColor: theme.themes[theme.name].common.modal.window.background,
                         borderRadius: 8,
                         padding: 35,
                         alignItems: "center",

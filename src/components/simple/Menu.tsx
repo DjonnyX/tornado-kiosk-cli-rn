@@ -6,6 +6,7 @@ import { ICompiledMenuNode, ICompiledMenu, NodeTypes, ICompiledLanguage, ICurren
 import LinearGradient from "react-native-linear-gradient";
 import { MenuButton } from "./MenuButton";
 import { CtrlMenuButton } from "./CtrlMenuButton";
+import { theme } from "../../theme";
 
 interface IMenuProps {
     menu: ICompiledMenu;
@@ -21,7 +22,7 @@ interface IMenuProps {
     removePosition: (position: ICompiledProduct) => void;
 }
 
-const sideMenuWidth = 162;
+const sideMenuWidth = 180;
 
 export const Menu = React.memo(({
     menu, language, currency, width, height, positions, cancelOrder,
@@ -157,12 +158,14 @@ export const Menu = React.memo(({
     return (
         <View style={{ flex: 1, width, height: "100%" }}>
             <LinearGradient
-                colors={["rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 0)"]}
+                colors={theme.themes[theme.name].menu.header.background}
                 style={{ display: "flex", position: "absolute", width: "100%", height: 96, zIndex: 1 }}
             >
                 <View style={{ display: "flex", alignItems: "center", flexDirection: "row", width: "100%", height: "100%", padding: 16 }}>
                     <Animated.View style={{
-                        width: 132, justifyContent: "center", alignItems: "center",
+                        width: 162,
+                        justifyContent: "center",
+                        alignItems: "center",
                         top: 10,
                         left: menuPosition.interpolate({
                             inputRange: [0, 1],
@@ -172,7 +175,7 @@ export const Menu = React.memo(({
                         <MenuButton onPress={onBack}></MenuButton>
                     </Animated.View>
                     <View style={{ flex: 1 }}></View>
-                    <Text style={{ fontFamily: "RobotoSlab-Black", color: "rgba(0, 0, 0, 0.75)", fontSize: 32, marginRight: 24 }}>
+                    <Text style={{ textTransform: "uppercase", fontWeight: "bold", color: theme.themes[theme.name].menu.header.titleColor, fontSize: 32, marginRight: 24 }}>
                         {
                             selected?.current.content?.contents[language.code]?.name || "Меню"
                         }
@@ -194,7 +197,10 @@ export const Menu = React.memo(({
                         <SideMenu menu={menu} language={language} selected={selected.current} onPress={selectSideMenuCategoryHandler}></SideMenu>
                     </View>
                     <View style={{ flex: 0, width: "100%", height: 192, margin: "auto", padding: 24 }}>
-                        <CtrlMenuButton gradient={["rgb(240, 30, 26)", "rgb(242, 62, 26)"]} text="Отменить" onPress={cancelOrder}></CtrlMenuButton>
+                        <CtrlMenuButton
+                            gradient={theme.themes[theme.name].menu.ctrls.cancelButton.backgroundColor}
+                            gradientDisabled={theme.themes[theme.name].menu.ctrls.cancelButton.disabledBackgroundColor}
+                            text="Отменить" onPress={cancelOrder} />
                     </View>
                 </Animated.View>
                 <Animated.View style={{

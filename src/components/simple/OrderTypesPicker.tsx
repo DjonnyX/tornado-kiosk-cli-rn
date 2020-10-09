@@ -1,16 +1,19 @@
 import React, { useState, useCallback } from "react";
-import { View, Text, Modal, TouchableOpacity } from "react-native";
+import { View, Text, Modal, TouchableOpacity, StyleProp, ViewStyle, TextStyle } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import FastImage from "react-native-fast-image";
 import { ICompiledOrderType, ICompiledLanguage } from "@djonnyx/tornado-types";
+import { theme } from "../../theme";
 
 interface IOrderTypesPickerProps {
     orderTypes: Array<ICompiledOrderType>;
     language: ICompiledLanguage;
     onSelect: (orderType: ICompiledOrderType) => void;
+    style: StyleProp<ViewStyle>;
+    textStyle: StyleProp<TextStyle>;
 }
 
-export const OrderTypesPicker = React.memo(({ language, orderTypes, onSelect }: IOrderTypesPickerProps) => {
+export const OrderTypesPicker = React.memo(({ language, orderTypes, style, textStyle, onSelect }: IOrderTypesPickerProps) => {
     const [currentOrderType, _setCurrentOrderTypes] = useState(orderTypes[0]);
     const [modalVisible, _setModalVisible] = useState(false);
 
@@ -45,11 +48,16 @@ export const OrderTypesPicker = React.memo(({ language, orderTypes, onSelect }: 
                     flex: 1,
                     justifyContent: "center",
                     alignItems: "center",
-                    backgroundColor: "rgba(0, 0, 0, 0.5)"
+                    position: "absolute",
+                    top: 0,
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    backgroundColor: theme.themes[theme.name].common.modal.background,
                 }}>
                     <View style={{
                         margin: 20,
-                        backgroundColor: "white",
+                        backgroundColor: theme.themes[theme.name].common.modal.window.background,
                         borderRadius: 8,
                         padding: 35,
                         alignItems: "center",
@@ -83,7 +91,7 @@ export const OrderTypesPicker = React.memo(({ language, orderTypes, onSelect }: 
                 </View>
             </Modal>
             <TouchableOpacity style={{ flex: 1, justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }} onPress={pressHandler}>
-                <View style={{ flexDirection: "row", alignItems: "center", borderWidth: 0.5, borderColor: "rgba(0, 0, 0, 0.5)", borderRadius: 6, padding: 8 }}>
+                <View style={{ flexDirection: "row", alignItems: "center", borderWidth: 0.5, borderRadius: 6, padding: 8, ...style as any }}>
                     {
                         /*
                         <Image style={{ width: 32, height: 32, marginRight: 8 }} source={{
@@ -91,7 +99,7 @@ export const OrderTypesPicker = React.memo(({ language, orderTypes, onSelect }: 
                         }}></Image>
                         */
                     }
-                    <Text>
+                    <Text style={{textTransform: "uppercase", ...textStyle as any}}>
                         {
                             currentOrderType?.contents[language?.code]?.name
                         }

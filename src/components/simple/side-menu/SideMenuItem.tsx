@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, GestureResponderEvent, LayoutChangeEvent,
 import * as Color from "color";
 import FastImage from "react-native-fast-image";
 import { ICompiledMenuNode, NodeTypes, ICompiledLanguage } from "@djonnyx/tornado-types";
+import { theme } from "../../../theme";
 
 const getSelectedDepth = (node: ICompiledMenuNode, selected: ICompiledMenuNode, depth: number = 0): number => {
     let result = -1;
@@ -103,7 +104,7 @@ export const SideMenuItem = React.memo(({ depth = 0, height = 0, selected, langu
 
     const currentContent = node.content?.contents[language?.code];
     const currentAdAsset = currentContent?.resources?.icon;
-    const color = "rgba(0, 0, 0, 0)"; //currentContent.color;
+    const color = theme.themes[theme.name].menu.sideMenu.item.backgroundColor; //currentContent.color;
     const isExpanded = node === selected || node.children.filter(child => child === selected).length > 0;
 
     if (isExpanded) {
@@ -143,7 +144,7 @@ export const SideMenuItem = React.memo(({ depth = 0, height = 0, selected, langu
                     <FastImage style={{ width: "100%", height: 56 - offset, marginBottom: 5 }} source={{
                         uri: `file://${currentAdAsset?.mipmap.x128}`,
                     }} resizeMode={FastImage.resizeMode.contain}></FastImage>
-                    <Text style={{ fontSize: 11 }}>
+                    <Text style={{ fontSize: 12, color: theme.themes[theme.name].menu.sideMenu.item.nameColor, fontWeight: "bold", textTransform: "uppercase" }}>
                         {
                             currentContent.name
                         }

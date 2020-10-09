@@ -5,6 +5,7 @@ import { ICompiledLanguage, ICompiledOrderType, ICompiledProduct, ICurrency } fr
 import { OrderTypesPicker } from "./OrderTypesPicker";
 import { MyOrderList } from "./my-order-list";
 import { CtrlMenuButton } from "./CtrlMenuButton";
+import { theme } from "../../theme";
 
 interface IMyOrderPanelProps {
     currency: ICurrency;
@@ -34,13 +35,15 @@ export const MyOrderPanel = React.memo(({ currency, language, languages, orderTy
                     <LanguagePicker language={language} languages={languages} onSelect={onChangeLanguage}></LanguagePicker>
                 </View>
                 <View style={{ margin: "auto", marginBottom: 12, alignItems: "center" }}>
-                    <OrderTypesPicker language={language} orderTypes={orderTypes} onSelect={onChangeOrderType}></OrderTypesPicker>
+                    <OrderTypesPicker language={language} orderTypes={orderTypes} onSelect={onChangeOrderType}
+                        style={{ borderColor: theme.themes[theme.name].menu.orderType.borderColor }}
+                        textStyle={{ color: theme.themes[theme.name].menu.orderType.textColor }} />
                 </View>
                 <View style={{ margin: "auto", marginBottom: 20, alignItems: "center" }}>
-                    <Text style={{ textTransform: "lowercase", fontSize: 11, color: "rgba(0, 0, 0, 0.5)"}}>
+                    <Text style={{ textTransform: "uppercase", fontSize: 11, color: theme.themes[theme.name].menu.sum.description.textColor }}>
                         Сумма заказа
                     </Text>
-                    <Text style={{fontWeight: "bold", fontSize: 18, color: "rgba(0, 0, 0, 0.75)"}}>
+                    <Text style={{ fontWeight: "bold", fontSize: 18, color: theme.themes[theme.name].menu.sum.price.textColor }}>
                         {
                             `${(sum * 0.01).toFixed(2)} ${currency.symbol}`
                         }
@@ -53,7 +56,10 @@ export const MyOrderPanel = React.memo(({ currency, language, languages, orderTy
                 ></MyOrderList>
             </View>
             <View style={{ flex: 0, height: 144, margin: "auto", padding: 24 }}>
-                <CtrlMenuButton text="Заказать" disabled={positions.length === 0} onPress={onConfirm}></CtrlMenuButton>
+                <CtrlMenuButton text="Заказать" disabled={positions.length === 0}
+                    gradient={theme.themes[theme.name].menu.ctrls.confirmButton.backgroundColor}
+                    gradientDisabled={theme.themes[theme.name].menu.ctrls.confirmButton.disabledBackgroundColor}
+                    onPress={onConfirm}></CtrlMenuButton>
             </View>
         </View>
     )

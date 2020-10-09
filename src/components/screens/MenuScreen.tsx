@@ -1,5 +1,6 @@
 import React, { Dispatch, useState, useCallback, useEffect } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
+import { CommonActions } from "@react-navigation/native";
 import { View, Dimensions, ScaledSize } from "react-native";
 import { MainNavigationScreenTypes } from "../navigation";
 import { IAppState } from "../../store/state";
@@ -10,7 +11,7 @@ import { CapabilitiesSelectors } from "../../store/selectors/CapabilitiesSelecto
 import { CapabilitiesActions, MyOrderActions } from "../../store/actions";
 import { MyOrderPanel } from "../simple/MyOrderPanel";
 import { Menu } from "../simple/Menu";
-import { CommonActions } from "@react-navigation/native";
+import { theme } from "../../theme";
 
 interface IMenuSelfProps {
     // store props
@@ -43,7 +44,7 @@ const MenuScreenContainer = React.memo(({
 }: IMenuProps) => {
     const [windowSize, _setWindowSize] = useState({ width: Dimensions.get("window").width, height: Dimensions.get("window").height });
 
-    const myOrderWidth = 156;
+    const myOrderWidth = 170;
     let menuWidth = windowSize.width - myOrderWidth;
 
     useEffect(() => {
@@ -85,7 +86,7 @@ const MenuScreenContainer = React.memo(({
     }, []);
 
     return (
-        <View style={{ flexDirection: "row", width: "100%", height: "100%", backgroundColor: "#fff" }}>
+        <View style={{ flexDirection: "row", width: "100%", height: "100%", backgroundColor: theme.themes[theme.name].menu.background }}>
             <View style={{ position: "absolute", width: menuWidth, height: "100%", zIndex: 1 }}>
                 <Menu currency={_defaultCurrency} language={_language} menu={_menu} width={menuWidth} height={windowSize.height} positions={_orderPositions} cancelOrder={cancelHandler}
                     addPosition={_onAddOrderPosition} updatePosition={_onUpdateOrderPosition} removePosition={_onRemoveOrderPosition}

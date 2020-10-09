@@ -8,6 +8,7 @@ import { MainNavigationScreenTypes } from "../navigation";
 import { CombinedDataSelectors } from "../../store/selectors";
 import { CapabilitiesSelectors } from "../../store/selectors/CapabilitiesSelector";
 import { Ads } from "../simple";
+import { theme } from "../../theme";
 
 interface IConfirmationOrderScreenSelfProps {
     // store props
@@ -26,7 +27,7 @@ const ConfirmationOrderScreenContainer = React.memo(({ _language, _banners, navi
     }, []);
 
     return (
-        <View style={{ flex: 1, backgroundColor: "#fff" }}>
+        <View style={{ flex: 1, backgroundColor: theme.themes[theme.name].myOrder.background }}>
             {
                 _banners.length > 0
                     ?
