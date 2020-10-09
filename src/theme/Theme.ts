@@ -1,4 +1,5 @@
 import { IKioskTheme } from "@djonnyx/tornado-types";
+import { ModalTransparent } from "../components/simple";
 
 export const theme: IKioskTheme = {
     name: "dark",
@@ -9,6 +10,13 @@ export const theme: IKioskTheme = {
                     background: "#fff",
                     window: {
                         background: "#fff",
+                    }
+                },
+                modalTransparent: {
+                    background: "rgba(255,255,255,0.75)",
+                    window: {
+                        background: "#fff",
+                        borderColor: "rgba(0,0,0,0.1)"
                     }
                 }
             },
@@ -113,6 +121,13 @@ export const theme: IKioskTheme = {
                     background: "#000",
                     window: {
                         background: "#000",
+                    }
+                },
+                modalTransparent: {
+                    background: "rgba(0,0,0,0.75)",
+                    window: {
+                        background: "#000",
+                        borderColor: "rgba(255,255,255,0.1)"
                     }
                 }
             },
