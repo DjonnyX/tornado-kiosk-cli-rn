@@ -29,6 +29,7 @@ export const ModalTransparent = React.memo(({ children, visible }: IModalTranspa
             }}>
                 <View style={{
                     margin: 20,
+                    borderWidth: 1,
                     borderColor: theme.themes[theme.name].common.modalTransparent.window.borderColor,
                     backgroundColor: theme.themes[theme.name].common.modalTransparent.window.background,
                     borderRadius: 8,
