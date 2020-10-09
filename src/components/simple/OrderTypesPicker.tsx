@@ -43,6 +43,7 @@ export const OrderTypesPicker = React.memo(({ language, orderTypes, style, textS
                 animationType="slide"
                 visible={modalVisible}
                 presentationStyle="fullScreen"
+                statusBarTranslucent={true}
             >
                 <View style={{
                     flex: 1,
