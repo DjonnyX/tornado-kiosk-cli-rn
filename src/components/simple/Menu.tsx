@@ -35,67 +35,53 @@ export const Menu = React.memo(({
     let screenAnimation: Animated.CompositeAnimation;
 
     const setSelectedCategory = (category: ICompiledMenuNode) => {
-        if (category === selected.current) {
-            return;
-        }
-
         _setSelectedCategory(previouse => {
 
-            setTimeout(() => {
-                if (category.index > previouse.current.index) {
-                    screenFadeOut();
-                } else {
-                    screenFadeIn();
-                }
+            if (category.index > previouse.current.index) {
+                screenFadeOut();
+            } else {
+                screenFadeIn();
+            }
 
-                if (category === menu) {
-                    sideMenuFadeOut();
-                } else {
-                    sideMenuFadeIn();
-                }
-            });
-
+            if (category === menu) {
+                sideMenuFadeOut();
+            } else {
+                sideMenuFadeIn();
+            }
+            
             return { current: category, previouse: previouse.current };
         });
     };
 
     const selectSideMenuCategoryHandler = useCallback((node: ICompiledMenuNode) => {
-        if (node === selected.current) {
-            return;
-        }
-
         navigateTo(node);
-    }, []);
+    }, [selected]);
 
     const selectNavMenuCategoryHandler = useCallback((node: ICompiledMenuNode) => {
-        if (node === selected.current) {
-            return;
-        }
-
         navigateTo(node);
-    }, []);
+    }, [selected]);
 
     // навигация / добавление продукта
     const navigateTo = (node: ICompiledMenuNode) => {
-        setTimeout(() => {
-            if (node.type === NodeTypes.SELECTOR || node.type === NodeTypes.SELECTOR_NODE) {
+        /*if (node === selected.current) {
+            return;
+        }*/
 
-                // навигация по категории
-                setSelectedCategory(node);
-            } else if (node.type === NodeTypes.PRODUCT) {
+        if (node.type === NodeTypes.SELECTOR || node.type === NodeTypes.SELECTOR_NODE) {
 
-                // добавление позиции
-                addPosition(node.content as ICompiledProduct);
-            }
-        });
+            // навигация по категории
+            setSelectedCategory(node);
+        } else if (node.type === NodeTypes.PRODUCT) {
+
+            // добавление позиции
+            addPosition(node.content as ICompiledProduct);
+        }
     }
 
     // возврат к предидущей категории
     const onBack = useCallback(() => {
-        setTimeout(() => {
-            setSelectedCategory(selected.current.parent || menu);
-        });
-    }, []);
+        setSelectedCategory(selected.current.parent || menu);
+    }, [selected]);
 
     // анимация скрытия бокового меню
     const sideMenuFadeOut = useCallback(() => {
@@ -181,7 +167,7 @@ export const Menu = React.memo(({
                     <View style={{ flex: 1 }}></View>
                     <Text style={{ textTransform: "uppercase", fontWeight: "bold", color: theme.themes[theme.name].menu.header.titleColor, fontSize: 32, marginRight: 24 }}>
                         {
-                            selected?.current.content?.contents[language.code]?.name || "Меню"
+                            selected.current.content?.contents[language.code]?.name || "Меню"
                         }
                     </Text>
                 </View>

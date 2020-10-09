@@ -19,7 +19,7 @@ export const MyOrderList = React.memo(({ currency, language, positions, addPosit
 
     const contentSizeChangeHandler = useCallback(() => {
         scrollView.current?.scrollToEnd({ animated: true });
-    }, []);
+    }, [scrollView]);
 
     return (
         <SafeAreaView style={{ flex: 1, width: "100%" }}>

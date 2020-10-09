@@ -43,12 +43,12 @@ export const NumericStapper = React.memo(({ startWith = 0, iconDecrement = "-", 
     const decrementHandler = useCallback(() => {
         setValue(value - 1);
         onChange(value);
-    }, []);
+    }, [value]);
 
     const incrementHandler = useCallback(() => {
         setValue(value + 1);
         onChange(value);
-    }, []);
+    }, [value]);
 
     return (
         <View style={{ flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "center", ...containerStyle as any }}>
