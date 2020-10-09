@@ -44,7 +44,8 @@ const MenuScreenContainer = React.memo(({
     _onRemoveOrderPosition, navigation, route,
 }: IMenuProps) => {
     const [windowSize, _setWindowSize] = useState({ width: Dimensions.get("window").width, height: Dimensions.get("window").height });
-    const [showAddProductNotification, _setShowAddProductNotification] = useState<boolean>(false);
+    const [notifyLastAddedProduct, _setNotifyLastAddedProduct] = useState<ICompiledProduct>(undefined as any);
+    const [showNotificationOfLastAddedProduct, _setShowNotificationOfLastAddedProduct] = useState<boolean>(false);
 
     const myOrderWidth = 170;
     let menuWidth = windowSize.width - myOrderWidth;
@@ -89,21 +90,22 @@ const MenuScreenContainer = React.memo(({
 
     const addProductHandler = (product: ICompiledProduct) => {
         _onAddOrderPosition(product);
-        _setShowAddProductNotification(() => true);
+        _setNotifyLastAddedProduct(() => product);
+        _setShowNotificationOfLastAddedProduct(() => true);
     };
 
     const addProductNotificationComplete = useCallback(() => {
-        _setShowAddProductNotification(() => false);
-    }, [_setShowAddProductNotification, showAddProductNotification]);
+        _setShowNotificationOfLastAddedProduct(() => false);
+    }, [_setNotifyLastAddedProduct, notifyLastAddedProduct]);
 
     return (
         <View style={{ flexDirection: "row", width: "100%", height: "100%", backgroundColor: theme.themes[theme.name].menu.background }}>
             {
-                !!_orderPositions[_orderPositions.length - 1]
+                !!notifyLastAddedProduct
                     ?
-                    <NotificationAlert message={`"${_orderPositions[_orderPositions.length - 1].product.contents[_language.code].name}" добавлен в заказ!`}
-                        visible={showAddProductNotification}
-                        duration={2000}
+                    <NotificationAlert message={`"${notifyLastAddedProduct.contents[_language.code].name}" добавлен в заказ!`}
+                        visible={showNotificationOfLastAddedProduct}
+                        duration={5000}
                         onComplete={addProductNotificationComplete}
                     />
                     :

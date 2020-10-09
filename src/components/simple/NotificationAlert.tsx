@@ -19,10 +19,10 @@ export const NotificationAlert = React.memo(({ message, duration, visible, onCom
         return () => {
             clearTimeout(timeout);
         }
-    }, [visible]);
+    }, [visible, duration, message]);
     return (
         <NotificationModal visible={visible}>
-            <Text style={{ fontWeight: "bold", color: theme.themes[theme.name].common.notificationAlert.textColor }}>{message}</Text>
+            <Text style={{ fontSize: 20, fontWeight: "bold", color: theme.themes[theme.name].common.notificationAlert.textColor }}>{message}</Text>
         </NotificationModal>
     );
 })
