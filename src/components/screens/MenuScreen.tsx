@@ -2,10 +2,10 @@ import React, { Dispatch, useState, useCallback, useEffect } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
 import { CommonActions } from "@react-navigation/native";
 import { View, Dimensions, ScaledSize } from "react-native";
-import { MainNavigationScreenTypes } from "../navigation";
-import { IAppState } from "../../store/state";
 import { connect } from "react-redux";
 import { ICompiledMenu, ICurrency, ICompiledLanguage, ICompiledOrderType, ICompiledProduct, IOrderPosition } from "@djonnyx/tornado-types";
+import { MainNavigationScreenTypes } from "../navigation";
+import { IAppState } from "../../store/state";
 import { CombinedDataSelectors, MyOrderSelectors } from "../../store/selectors";
 import { CapabilitiesSelectors } from "../../store/selectors/CapabilitiesSelector";
 import { CapabilitiesActions, MyOrderActions } from "../../store/actions";
@@ -27,8 +27,8 @@ interface IMenuSelfProps {
     _onChangeLanguage: (language: ICompiledLanguage) => void;
     _onChangeOrderType: (orderType: ICompiledOrderType) => void;
     _onAddOrderPosition: (position: ICompiledProduct) => void;
-    _onUpdateOrderPosition: (position: ICompiledProduct) => void;
-    _onRemoveOrderPosition: (position: ICompiledProduct) => void;
+    _onUpdateOrderPosition: (position: IOrderPosition) => void;
+    _onRemoveOrderPosition: (position: IOrderPosition) => void;
 
     // self props
 }
@@ -122,13 +122,13 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
             dispatch(CapabilitiesActions.setOrderType(orderType));
         },
         _onAddOrderPosition: (product: ICompiledProduct) => {
-            dispatch(MyOrderActions.addPosition({id: "", product, quantity: 1}));
+            dispatch(MyOrderActions.addPosition(product));
         },
-        _onUpdateOrderPosition: (product: ICompiledProduct) => {
-            dispatch(MyOrderActions.updatePosition({id: "", product, quantity: 1}));
+        _onUpdateOrderPosition: (position: IOrderPosition) => {
+            dispatch(MyOrderActions.updatePosition(position));
         },
-        _onRemoveOrderPosition: (product: ICompiledProduct) => {
-            dispatch(MyOrderActions.removePosition({id: "", product, quantity: 1}));
+        _onRemoveOrderPosition: (position: IOrderPosition) => {
+            dispatch(MyOrderActions.removePosition(position));
         },
     };
 };

@@ -1,5 +1,5 @@
 import { Action } from "redux";
-import { IOrderPosition } from "@djonnyx/tornado-types";
+import { ICompiledProduct, IOrderPosition } from "@djonnyx/tornado-types";
 
 export enum MyOrderActionTypes {
     ADD_POSITION = "TORNADO/my-order/add-position",
@@ -8,7 +8,7 @@ export enum MyOrderActionTypes {
 }
 
 interface IMyOrderActionAddPosition extends Action<MyOrderActionTypes> {
-    position: IOrderPosition;
+    product: ICompiledProduct;
 }
 
 interface IMyOrderActionUpdatePosition extends Action<MyOrderActionTypes> {
@@ -20,9 +20,9 @@ interface IMyOrderActionRemovePosition extends Action<MyOrderActionTypes> {
 }
 
 export class MyOrderActions {
-    static addPosition = (position: IOrderPosition): IMyOrderActionAddPosition => ({
+    static addPosition = (product: ICompiledProduct): IMyOrderActionAddPosition => ({
         type: MyOrderActionTypes.ADD_POSITION,
-        position,
+        product,
     });
 
     static updatePosition = (position: IOrderPosition): IMyOrderActionUpdatePosition => ({

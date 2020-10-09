@@ -16,8 +16,8 @@ interface IMyOrderPanelProps {
     sum: number;
 
     addPosition: (position: ICompiledProduct) => void;
-    updatePosition: (position: ICompiledProduct) => void;
-    removePosition: (position: ICompiledProduct) => void;
+    updatePosition: (position: IOrderPosition) => void;
+    removePosition: (position: IOrderPosition) => void;
     onChangeLanguage: (lang: ICompiledLanguage) => void;
     onChangeOrderType: (lang: ICompiledOrderType) => void;
     onConfirm: () => void;
@@ -52,7 +52,7 @@ export const MyOrderPanel = React.memo(({ currency, language, languages, orderTy
             </View>
             <View style={{ flex: 1, flexGrow: 1, margin: "auto" }}>
                 <MyOrderList currency={currency} language={language} positions={positions}
-                    addPosition={addPosition} updatePosition={updatePosition} removePosition={removePosition}
+                    updatePosition={updatePosition} removePosition={removePosition}
                 ></MyOrderList>
             </View>
             <View style={{ flex: 0, height: 144, margin: "auto", padding: 24 }}>

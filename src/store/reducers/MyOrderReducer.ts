@@ -3,18 +3,21 @@ import { TMyOrderActions, MyOrderActionTypes } from "../actions";
 import { IMyOrderState } from "../state";
 
 const initialState: IMyOrderState = {
+    _nextPositionIndex: 0,
     positions: [],
 };
 
 const myOrderReducer: Reducer<IMyOrderState, TMyOrderActions> = (
     state = initialState,
-    action
+    action,
 ) => {
     switch (action.type) {
         case MyOrderActionTypes.ADD_POSITION:
+            const _nextPositionIndex = state._nextPositionIndex + 1;
             return {
                 ...state,
-                positions: [...state.positions, (action as any).position],
+                _nextPositionIndex,
+                positions: [...state.positions, {id: _nextPositionIndex.toString(), product: (action as any).product, quantity: 1}],
             };
         case MyOrderActionTypes.REMOVE_POSITION:
             const rPos = (action as any).position;

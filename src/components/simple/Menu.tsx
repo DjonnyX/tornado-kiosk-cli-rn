@@ -1,9 +1,9 @@
 import React, { useState, useCallback } from "react";
 import { View, Text, Animated, Easing } from "react-native";
+import LinearGradient from "react-native-linear-gradient";
+import { ICompiledMenuNode, ICompiledMenu, NodeTypes, ICompiledLanguage, ICurrency, ICompiledProduct, IOrderPosition } from "@djonnyx/tornado-types";
 import { SideMenu } from "./side-menu";
 import { NavMenu } from "./nav-menu";
-import { ICompiledMenuNode, ICompiledMenu, NodeTypes, ICompiledLanguage, ICurrency, ICompiledProduct, IOrderPosition } from "@djonnyx/tornado-types";
-import LinearGradient from "react-native-linear-gradient";
 import { MenuButton } from "./MenuButton";
 import { CtrlMenuButton } from "./CtrlMenuButton";
 import { theme } from "../../theme";
@@ -18,8 +18,8 @@ interface IMenuProps {
 
     cancelOrder: () => void;
     addPosition: (position: ICompiledProduct) => void;
-    updatePosition: (position: ICompiledProduct) => void;
-    removePosition: (position: ICompiledProduct) => void;
+    updatePosition: (position: IOrderPosition) => void;
+    removePosition: (position: IOrderPosition) => void;
 }
 
 const sideMenuWidth = 180;

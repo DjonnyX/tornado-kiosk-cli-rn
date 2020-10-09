@@ -10,15 +10,18 @@ interface IMyOrderListItemItemProps {
     position: IOrderPosition;
     currency: ICurrency;
     language: ICompiledLanguage;
+    onChange: (position: IOrderPosition) => void;
 }
 
-export const MyOrderListItem = React.memo(({ imageHeight, currency, language, position }: IMyOrderListItemItemProps) => {
+export const MyOrderListItem = React.memo(({ imageHeight, currency, language, position, onChange }: IMyOrderListItemItemProps) => {
     const currentContent = position.product.contents[language?.code];
     const currentAdAsset = currentContent?.resources?.icon;
 
     const changeQuantityHandler = useCallback((value: number) => {
-        // etc...
-    }, []);
+        const pos = {...position};
+        pos.quantity = value;
+        onChange(pos);
+    }, [position]);
 
     return (
         <View style={{ flex: 1, paddingLeft: 24, paddingRight: 24, marginBottom: 20 }}>
