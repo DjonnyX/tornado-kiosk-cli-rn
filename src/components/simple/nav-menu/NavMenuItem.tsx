@@ -1,22 +1,24 @@
-import React, { useState } from "react";
-import { View, Image, Text, TouchableOpacity, GestureResponderEvent } from "react-native";
-import { ICompiledMenuNode, NodeTypes, IProduct, ICompiledProduct, ICurrency, ICompiledLanguage } from "@djonnyx/tornado-types";
+import React, { useCallback } from "react";
+import { View, Text, TouchableOpacity, GestureResponderEvent } from "react-native";
+import FastImage from "react-native-fast-image";
+import { ICompiledMenuNode, NodeTypes, ICompiledProduct, ICurrency, ICompiledLanguage } from "@djonnyx/tornado-types";
+import { theme } from "../../../theme";
 
 interface INavMenuItemProps {
-    imageHeight: number;
+    thumbnailHeight: number;
     node: ICompiledMenuNode;
     currency: ICurrency;
     language: ICompiledLanguage;
     onPress: (node: ICompiledMenuNode) => void;
 }
 
-export const NavMenuItem = ({ imageHeight, currency, language, node, onPress }: INavMenuItemProps) => {
+export const NavMenuItem = React.memo(({ thumbnailHeight, currency, language, node, onPress }: INavMenuItemProps) => {
 
-    const pressHandler = (e: GestureResponderEvent) => {
+    const pressHandler = useCallback((e: GestureResponderEvent) => {
         if (!!onPress) {
             onPress(node);
         }
-    }
+    }, []);
 
     const currentContent = node.content?.contents[language?.code];
     const currentAdAsset = currentContent?.resources?.icon;
@@ -24,19 +26,19 @@ export const NavMenuItem = ({ imageHeight, currency, language, node, onPress }: 
     const tags = node.type === NodeTypes.PRODUCT && (node.content as ICompiledProduct).tags?.length > 0 ? (node.content as ICompiledProduct).tags : undefined;
 
     return (
-        <View style={{ flex: 1, /*backgroundColor: currentContent.color,*/ borderRadius: 16, padding: 22 }} renderToHardwareTextureAndroid={true}>
-            <TouchableOpacity style={{ flex: 1, alignItems: "center" }} onPress={pressHandler}>
-                <View style={{ flex: 1, width: "100%", height: imageHeight, marginBottom: 5 }}>
-                    <Image style={{ width: "100%", height: "100%" }} source={{
+        <View style={{ flex: 1, backgroundColor: theme.themes[theme.name].menu.navMenu.item.backgroundColor, /*backgroundColor: Color.rgb(currentContent.color).alpha(0.05).toString(),*/ borderRadius: 16, padding: 22 }}>
+            <TouchableOpacity style={{ alignItems: "center" }} onPress={pressHandler}>
+                <View style={{ width: "100%", height: thumbnailHeight, marginBottom: 5 }} renderToHardwareTextureAndroid={true}>
+                    <FastImage style={{ width: "100%", height: "100%" }} source={{
                         uri: `file://${currentAdAsset?.path}`,
-                    }} resizeMode="contain" resizeMethod="scale"></Image>
+                    }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                 </View>
-                <Text numberOfLines={2} ellipsizeMode="tail" style={{ textAlign: "center", fontFamily: "RobotoSlab-Black", fontSize: 20, marginBottom: 6, color: "rgba(0, 0, 0, 0.75)" }}>
+                <Text textBreakStrategy="simple" numberOfLines={2} ellipsizeMode="tail" style={{ textAlign: "center", fontSize: 20, marginBottom: 6, color: theme.themes[theme.name].menu.navMenu.item.nameColor, fontWeight: "bold", textTransform: "uppercase" }}>
                     {
                         currentContent.name
                     }
                 </Text>
-                <Text numberOfLines={3} ellipsizeMode="tail" style={{ textAlign: "center", fontSize: 10, color: "rgba(0, 0, 0, 0.5)", marginBottom: 12 }}>
+                <Text textBreakStrategy="simple" numberOfLines={2} ellipsizeMode="tail" style={{ textAlign: "center", fontSize: 10, color: theme.themes[theme.name].menu.navMenu.item.descriptionColor, textTransform: "uppercase", marginBottom: 12 }}>
                     {
                         currentContent.description
                     }
@@ -45,14 +47,15 @@ export const NavMenuItem = ({ imageHeight, currency, language, node, onPress }: 
 
                     node.type === NodeTypes.PRODUCT
                         ?
-                        <View style={{ borderStyle: "solid", borderWidth: 0.5, borderRadius: 6, alignItems: "center", justifyContent: "center", borderColor: "rgba(0, 0, 0, 0.5)", marginBottom: 12 }}>
-                            <Text style={{ textAlign: "center", fontSize: 18, fontWeight: "bold", paddingTop: 8, paddingBottom: 8, paddingLeft: 14, paddingRight: 14, color: "rgba(0, 0, 0, 0.75)" }}>
+                        <View style={{ borderStyle: "solid", borderWidth: 0.5, borderRadius: 5, alignItems: "center", justifyContent: "center", borderColor: theme.themes[theme.name].menu.navMenu.item.price.borderColor, marginBottom: 12 }}>
+                            <Text style={{ textAlign: "center", fontSize: 16, paddingTop: 6, paddingBottom: 6, paddingLeft: 14, paddingRight: 14, color: theme.themes[theme.name].menu.navMenu.item.price.textColor }}>
                                 {
                                     `${((node.content as ICompiledProduct).prices[currency.id as string]?.value * 0.01).toFixed(2)} ${currency.symbol}`
                                 }
                             </Text>
                         </View>
-                        : <View style={{ height: 56 }}></View>
+                        :
+                        undefined
                 }
                 {
                     /*<View style={{ position: "absolute", flexDirection: "row", flexWrap: "wrap" }}>
@@ -72,4 +75,4 @@ export const NavMenuItem = ({ imageHeight, currency, language, node, onPress }: 
             </TouchableOpacity>
         </View>
     );
-}
+});

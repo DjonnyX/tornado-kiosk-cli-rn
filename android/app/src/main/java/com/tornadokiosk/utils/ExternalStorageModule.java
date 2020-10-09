@@ -2,6 +2,7 @@ package com.tornadokiosk.utils;
 
 import android.os.Environment;
 import android.util.Base64;
+import android.util.Log;
 
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -56,7 +57,9 @@ public class ExternalStorageModule extends ReactContextBaseJavaModule {
         } catch (Exception e) {
             e.printStackTrace();
             promise.reject(e);
+            return;
         }
+
         promise.resolve(isExists);
     }
 
@@ -78,6 +81,7 @@ public class ExternalStorageModule extends ReactContextBaseJavaModule {
         } catch (Exception ex) {
             ex.printStackTrace();
             promise.reject(ex);
+            return;
         }
 
         promise.resolve(null);
@@ -102,9 +106,11 @@ public class ExternalStorageModule extends ReactContextBaseJavaModule {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             promise.reject(e);
+            return;
         } catch (IOException e) {
             e.printStackTrace();
             promise.reject(e);
+            return;
         }
 
         promise.resolve(base64);
@@ -121,12 +127,13 @@ public class ExternalStorageModule extends ReactContextBaseJavaModule {
             if (!file.exists()) throw new Exception("File does not exist");
 
             deleteRecursive(file);
-
-            promise.resolve(null);
         } catch (Exception e) {
             e.printStackTrace();
             promise.reject(e);
+            return;
         }
+
+        promise.resolve(null);
     }
 
     /**
@@ -143,6 +150,7 @@ public class ExternalStorageModule extends ReactContextBaseJavaModule {
         } catch (Exception e) {
             e.printStackTrace();
             promise.reject(e);
+            return;
         }
 
         promise.resolve(null);
@@ -216,6 +224,7 @@ public class ExternalStorageModule extends ReactContextBaseJavaModule {
         } catch (Exception e) {
             e.printStackTrace();
             promise.reject(e);
+            return;
         }
 
         promise.resolve(null);

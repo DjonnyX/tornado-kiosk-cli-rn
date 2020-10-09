@@ -5,6 +5,7 @@ import { map } from "rxjs/operators";
 import { Buffer } from "buffer";
 import { IAsset } from "@djonnyx/tornado-types";
 import { config } from "../Config";
+import { Log } from "./Log";
 
 class AssetsService implements IAssetStoreFileService {
 
@@ -18,14 +19,17 @@ class AssetsService implements IAssetStoreFileService {
     }
 
     readManifest(path: string): Promise<Array<IAsset>> {
+        Log.i("AssetsService", "readManifest");
         return this.readFile<Array<IAsset>>(`${path}/${this.manifestFileName}`);
     }
 
     writeManifest(path: string, data: Array<IAsset>): Promise<void> {
+        Log.i("AssetsService", "writeManifest");
         return this.writeFile(`${path}/${this.manifestFileName}`, data);
     }
 
     writeFile(path: string, data: any): Promise<void> {
+        Log.i("AssetsService", "writeFile \"" + path + "\"");
         return ExternalStorage.writeFile(
             this.normalizeFilePath(path),
             new Buffer(JSON.stringify(data), "utf8").toString("base64"),
@@ -33,6 +37,7 @@ class AssetsService implements IAssetStoreFileService {
     }
 
     readFile<T = any>(path: string): Promise<T> {
+        Log.i("AssetsService", "readFile \"" + path + "\"");
         return from(
             ExternalStorage.readFile(
                 this.normalizeFilePath(path)
@@ -46,6 +51,7 @@ class AssetsService implements IAssetStoreFileService {
     }
 
     downloadAsset(url: string, outputPath: string): Promise<void> {
+        Log.i("AssetsService", "downloadAsset \"" + url + "\"");
         return from(
             ExternalStorage.downloadFile(
                 `${config.refServer.address}/${url}`.replace("\\", "/"),
@@ -55,6 +61,7 @@ class AssetsService implements IAssetStoreFileService {
     }
 
     deleteAsset(filePath: string): Promise<void> {
+        Log.i("AssetsService", "deleteAsset \"" + filePath + "\"");
         return ExternalStorage.unlink(
             this.normalizeFilePath(filePath),
         );

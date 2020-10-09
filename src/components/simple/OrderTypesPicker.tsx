@@ -1,15 +1,19 @@
-import React, { useState } from "react";
-import { View, Image, Text, Modal, TouchableOpacity } from "react-native";
-import { ICompiledOrderType, ICompiledLanguage } from "@djonnyx/tornado-types";
+import React, { useState, useCallback } from "react";
+import { View, Text, Modal, TouchableOpacity, StyleProp, ViewStyle, TextStyle } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
+import FastImage from "react-native-fast-image";
+import { ICompiledOrderType, ICompiledLanguage } from "@djonnyx/tornado-types";
+import { theme } from "../../theme";
 
 interface IOrderTypesPickerProps {
     orderTypes: Array<ICompiledOrderType>;
     language: ICompiledLanguage;
     onSelect: (orderType: ICompiledOrderType) => void;
+    style: StyleProp<ViewStyle>;
+    textStyle: StyleProp<TextStyle>;
 }
 
-export const OrderTypesPicker = ({ language, orderTypes, onSelect }: IOrderTypesPickerProps) => {
+export const OrderTypesPicker = React.memo(({ language, orderTypes, style, textStyle, onSelect }: IOrderTypesPickerProps) => {
     const [currentOrderType, _setCurrentOrderTypes] = useState(orderTypes[0]);
     const [modalVisible, _setModalVisible] = useState(false);
 
@@ -23,15 +27,15 @@ export const OrderTypesPicker = ({ language, orderTypes, onSelect }: IOrderTypes
         _setModalVisible(prevVisibility => value);
     }
 
-    const pressHandler = () => {
+    const pressHandler = useCallback(() => {
         setModalVisible(true);
-    }
+    }, []);
 
-    const selectHandler = (orderType: ICompiledOrderType) => {
+    const selectHandler = useCallback((orderType: ICompiledOrderType) => {
         setCurrentOrderTypes(orderType);
         setModalVisible(false);
         onSelect(orderType);
-    }
+    }, []);
 
     return (
         <View style={{ justifyContent: "center", alignItems: "center", width: "100%", height: 48 }}>
@@ -44,11 +48,16 @@ export const OrderTypesPicker = ({ language, orderTypes, onSelect }: IOrderTypes
                     flex: 1,
                     justifyContent: "center",
                     alignItems: "center",
-                    backgroundColor: "rgba(0, 0, 0, 0.5)"
+                    position: "absolute",
+                    top: 0,
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    backgroundColor: theme.themes[theme.name].common.modal.background,
                 }}>
                     <View style={{
                         margin: 20,
-                        backgroundColor: "white",
+                        backgroundColor: theme.themes[theme.name].common.modal.window.background,
                         borderRadius: 8,
                         padding: 35,
                         alignItems: "center",
@@ -66,9 +75,9 @@ export const OrderTypesPicker = ({ language, orderTypes, onSelect }: IOrderTypes
                                 selectHandler(item);
                             }}>
                                 <View style={{ flexDirection: "column", alignItems: "center", justifyContent: "center", marginBottom: 32 }}>
-                                    <Image style={{ width: 128, height: 128, borderWidth: 1, borderColor: "rgba(0, 0, 0, 0.1)", marginBottom: 8 }} source={{
+                                    <FastImage style={{ width: 128, height: 128, borderWidth: 1, borderColor: "rgba(0, 0, 0, 0.1)", marginBottom: 8 }} source={{
                                         uri: `file://${item.contents[language?.code]?.resources?.main?.mipmap.x128}`,
-                                    }} resizeMode="cover"></Image>
+                                    }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                                     <Text style={{ fontSize: 16 }}>
                                         {
                                             item.contents[language?.code]?.name
@@ -82,7 +91,7 @@ export const OrderTypesPicker = ({ language, orderTypes, onSelect }: IOrderTypes
                 </View>
             </Modal>
             <TouchableOpacity style={{ flex: 1, justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }} onPress={pressHandler}>
-                <View style={{ flexDirection: "row", alignItems: "center", borderWidth: 0.5, borderColor: "rgba(0, 0, 0, 0.5)", borderRadius: 6, padding: 8 }}>
+                <View style={{ flexDirection: "row", alignItems: "center", borderWidth: 0.5, borderRadius: 6, padding: 8, ...style as any }}>
                     {
                         /*
                         <Image style={{ width: 32, height: 32, marginRight: 8 }} source={{
@@ -90,7 +99,7 @@ export const OrderTypesPicker = ({ language, orderTypes, onSelect }: IOrderTypes
                         }}></Image>
                         */
                     }
-                    <Text>
+                    <Text style={{textTransform: "uppercase", ...textStyle as any}}>
                         {
                             currentOrderType?.contents[language?.code]?.name
                         }
@@ -99,4 +108,4 @@ export const OrderTypesPicker = ({ language, orderTypes, onSelect }: IOrderTypes
             </TouchableOpacity>
         </View>
     );
-}
+})
