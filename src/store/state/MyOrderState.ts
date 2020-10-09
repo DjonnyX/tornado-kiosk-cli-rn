@@ -1,5 +1,5 @@
-import { ICompiledProduct } from "@djonnyx/tornado-types";
+import { IOrderPosition } from "@djonnyx/tornado-types";
 
 export interface IMyOrderState {
-    positions: Array<ICompiledProduct>;
+    positions: Array<IOrderPosition>;
 }

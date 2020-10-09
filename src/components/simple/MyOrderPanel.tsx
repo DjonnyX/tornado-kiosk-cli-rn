@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text } from "react-native";
 import { LanguagePicker } from "./LanguagePicker";
-import { ICompiledLanguage, ICompiledOrderType, ICompiledProduct, ICurrency } from "@djonnyx/tornado-types";
+import { ICompiledLanguage, ICompiledOrderType, ICompiledProduct, ICurrency, IOrderPosition } from "@djonnyx/tornado-types";
 import { OrderTypesPicker } from "./OrderTypesPicker";
 import { MyOrderList } from "./my-order-list";
 import { CtrlMenuButton } from "./CtrlMenuButton";
@@ -12,7 +12,7 @@ interface IMyOrderPanelProps {
     language: ICompiledLanguage;
     languages: Array<ICompiledLanguage>;
     orderTypes: Array<ICompiledOrderType>;
-    positions: Array<ICompiledProduct>;
+    positions: Array<IOrderPosition>;
     sum: number;
 
     addPosition: (position: ICompiledProduct) => void;

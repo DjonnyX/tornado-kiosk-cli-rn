@@ -1,19 +1,19 @@
 import React, { useCallback } from "react";
 import { View, Text } from "react-native";
 import FastImage from "react-native-fast-image";
-import { ICompiledProduct, ICurrency, ICompiledLanguage } from "@djonnyx/tornado-types";
+import { IOrderPosition, ICurrency, ICompiledLanguage } from "@djonnyx/tornado-types";
 import { NumericStapper } from "../NumericStapper";
 import { theme } from "../../../theme";
 
 interface IMyOrderListItemItemProps {
     imageHeight: number;
-    product: ICompiledProduct;
+    position: IOrderPosition;
     currency: ICurrency;
     language: ICompiledLanguage;
 }
 
-export const MyOrderListItem = React.memo(({ imageHeight, currency, language, product }: IMyOrderListItemItemProps) => {
-    const currentContent = product.contents[language?.code];
+export const MyOrderListItem = React.memo(({ imageHeight, currency, language, position }: IMyOrderListItemItemProps) => {
+    const currentContent = position.product.contents[language?.code];
     const currentAdAsset = currentContent?.resources?.icon;
 
     const changeQuantityHandler = useCallback((value: number) => {
@@ -35,11 +35,12 @@ export const MyOrderListItem = React.memo(({ imageHeight, currency, language, pr
             <View style={{ alignItems: "center", justifyContent: "center", marginBottom: 1 }}>
                 <Text style={{ textAlign: "center", fontSize: 12, paddingTop: 4, paddingBottom: 4, paddingLeft: 6, paddingRight: 6, color: theme.themes[theme.name].menu.draftOrder.item.price.textColor }}>
                     {
-                        `${(product.prices[currency.id as string]?.value * 0.01).toFixed(2)} ${currency.symbol}`
+                        `${(position.product.prices[currency.id as string]?.value * 0.01).toFixed(2)} ${currency.symbol}`
                     }
                 </Text>
             </View>
             <NumericStapper
+                startWith={position.quantity}
                 buttonStyle={{
                     borderStyle: "solid", borderWidth: 0.5, borderRadius: 3,
                     borderColor: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.borderColor,

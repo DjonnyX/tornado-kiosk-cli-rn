@@ -5,7 +5,7 @@ import { View, Dimensions, ScaledSize } from "react-native";
 import { MainNavigationScreenTypes } from "../navigation";
 import { IAppState } from "../../store/state";
 import { connect } from "react-redux";
-import { ICompiledMenu, ICurrency, ICompiledLanguage, ICompiledOrderType, ICompiledProduct } from "@djonnyx/tornado-types";
+import { ICompiledMenu, ICurrency, ICompiledLanguage, ICompiledOrderType, ICompiledProduct, IOrderPosition } from "@djonnyx/tornado-types";
 import { CombinedDataSelectors, MyOrderSelectors } from "../../store/selectors";
 import { CapabilitiesSelectors } from "../../store/selectors/CapabilitiesSelector";
 import { CapabilitiesActions, MyOrderActions } from "../../store/actions";
@@ -21,7 +21,7 @@ interface IMenuSelfProps {
     _defaultCurrency: ICurrency;
     _menu: ICompiledMenu;
     _language: ICompiledLanguage;
-    _orderPositions: Array<ICompiledProduct>;
+    _orderPositions: Array<IOrderPosition>;
 
     // store dispatches
     _onChangeLanguage: (language: ICompiledLanguage) => void;
@@ -121,14 +121,14 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
         _onChangeOrderType: (orderType: ICompiledOrderType) => {
             dispatch(CapabilitiesActions.setOrderType(orderType));
         },
-        _onAddOrderPosition: (position: ICompiledProduct) => {
-            dispatch(MyOrderActions.addPosition(position));
+        _onAddOrderPosition: (product: ICompiledProduct) => {
+            dispatch(MyOrderActions.addPosition({id: "", product, quantity: 1}));
         },
-        _onUpdateOrderPosition: (position: ICompiledProduct) => {
-            dispatch(MyOrderActions.updatePosition(position));
+        _onUpdateOrderPosition: (product: ICompiledProduct) => {
+            dispatch(MyOrderActions.updatePosition({id: "", product, quantity: 1}));
         },
-        _onRemoveOrderPosition: (position: ICompiledProduct) => {
-            dispatch(MyOrderActions.removePosition(position));
+        _onRemoveOrderPosition: (product: ICompiledProduct) => {
+            dispatch(MyOrderActions.removePosition({id: "", product, quantity: 1}));
         },
     };
 };

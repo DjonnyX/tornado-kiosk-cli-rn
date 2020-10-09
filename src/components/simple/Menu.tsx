@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 import { View, Text, Animated, Easing } from "react-native";
 import { SideMenu } from "./side-menu";
 import { NavMenu } from "./nav-menu";
-import { ICompiledMenuNode, ICompiledMenu, NodeTypes, ICompiledLanguage, ICurrency, ICompiledProduct } from "@djonnyx/tornado-types";
+import { ICompiledMenuNode, ICompiledMenu, NodeTypes, ICompiledLanguage, ICurrency, ICompiledProduct, IOrderPosition } from "@djonnyx/tornado-types";
 import LinearGradient from "react-native-linear-gradient";
 import { MenuButton } from "./MenuButton";
 import { CtrlMenuButton } from "./CtrlMenuButton";
@@ -14,7 +14,7 @@ interface IMenuProps {
     language: ICompiledLanguage;
     width: number;
     height: number;
-    positions: Array<ICompiledProduct>;
+    positions: Array<IOrderPosition>;
 
     cancelOrder: () => void;
     addPosition: (position: ICompiledProduct) => void;
