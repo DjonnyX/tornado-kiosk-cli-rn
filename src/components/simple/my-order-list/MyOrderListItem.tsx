@@ -1,9 +1,11 @@
-import React, { useCallback } from "react";
-import { View, Text } from "react-native";
+import React, { useCallback, useState } from "react";
+import { View, Text, Button } from "react-native";
 import FastImage from "react-native-fast-image";
 import { IOrderPosition, ICurrency, ICompiledLanguage } from "@djonnyx/tornado-types";
 import { NumericStapper } from "../NumericStapper";
 import { theme } from "../../../theme";
+import { ModalTransparent } from "../ModalTransparent";
+import { AlertContent } from "../AlertContent";
 
 interface IMyOrderListItemItemProps {
     imageHeight: number;
@@ -11,26 +13,65 @@ interface IMyOrderListItemItemProps {
     currency: ICurrency;
     language: ICompiledLanguage;
     onChange: (position: IOrderPosition) => void;
+    onRemove: (position: IOrderPosition) => void;
 }
 
-export const MyOrderListItem = React.memo(({ imageHeight, currency, language, position, onChange }: IMyOrderListItemItemProps) => {
+export const MyOrderListItem = React.memo(({ imageHeight, currency, language, position, onChange, onRemove }: IMyOrderListItemItemProps) => {
+    const [alertRemoveVisible, _setAlertRemoveVisible] = useState(false);
+
+    const setAlertRemoveVisible = (value: boolean) => {
+        _setAlertRemoveVisible(prevVisibility => value);
+    };
+
     const currentContent = position.product.contents[language?.code];
     const currentAdAsset = currentContent?.resources?.icon;
 
-    const changeQuantityHandler = useCallback((value: number) => {
-        const pos = {...position};
-        pos.quantity = value;
+    const setQuantity = (qnt: number) => {
+        const pos = { ...position };
+        pos.quantity = qnt;
         onChange(pos);
-    }, [position]);
+    }
+
+    const changeQuantityHandler = (value: number) => {
+        if (value < 1) {
+            setAlertRemoveVisible(true);
+            return;
+        }
+
+        setQuantity(value);
+    };
+
+    const cancelRemovePositionHandler = useCallback(() => {
+        setAlertRemoveVisible(false);
+
+        setQuantity(1);
+    }, []);
+
+    const removePositionHandler = useCallback(() => {
+        onRemove(position);
+    }, []);
 
     return (
         <View style={{ flex: 1, paddingLeft: 24, paddingRight: 24, marginBottom: 20 }}>
+            <ModalTransparent visible={alertRemoveVisible}>
+                <AlertContent
+                    title="Внимание"
+                    message="Удалить позицию из заказа?"
+                    cancelButtonTitle="Отменить"
+                    applyButtonTitle="Удалить"
+                    onCancel={cancelRemovePositionHandler}
+                    onApply={removePositionHandler}
+                />
+            </ModalTransparent>
             <View style={{ flex: 1, width: "100%", height: imageHeight, marginBottom: 2, justifyContent: "flex-end" }}>
                 <FastImage style={{ width: "100%", height: "100%" }} source={{
                     uri: `file://${currentAdAsset?.mipmap.x128}`,
                 }} resizeMode={FastImage.resizeMode.contain}></FastImage>
             </View>
-            <Text numberOfLines={3} ellipsizeMode="tail" style={{ textAlign: "center", fontSize: 12, color: theme.themes[theme.name].menu.draftOrder.item.nameColor, textTransform: "uppercase", fontWeight: "bold" }}>
+            <Text numberOfLines={3} ellipsizeMode="tail" style={{
+                textAlign: "center", fontSize: 12,
+                color: theme.themes[theme.name].menu.draftOrder.item.nameColor, textTransform: "uppercase", fontWeight: "bold"
+            }}>
                 {
                     currentContent.name
                 }
@@ -43,7 +84,7 @@ export const MyOrderListItem = React.memo(({ imageHeight, currency, language, po
                 </Text>
             </View>
             <NumericStapper
-                startWith={position.quantity}
+                value={position.quantity}
                 buttonStyle={{
                     borderStyle: "solid", borderWidth: 0.5, borderRadius: 3,
                     borderColor: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.borderColor,

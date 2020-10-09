@@ -24,12 +24,17 @@ export const MyOrderList = React.memo(({ currency, language, positions, updatePo
         updatePosition(position);
     }, []);
 
+    const removePositionHandler = useCallback((position) => {
+        removePosition(position);
+    }, []);
+
     return (
         <SafeAreaView style={{ flex: 1, width: "100%" }}>
             <ScrollView ref={scrollView} onContentSizeChange={contentSizeChangeHandler} style={{ flex: 1 }} horizontal={false}
             >
                 <FlatList updateCellsBatchingPeriod={10} style={{ flex: 1 }} data={positions} renderItem={({ item }) => {
-                    return <MyOrderListItem key={item.id} position={item} currency={currency} language={language} imageHeight={48} onChange={updatePositionHandler}></MyOrderListItem>
+                    return <MyOrderListItem key={item.id} position={item} currency={currency} language={language} imageHeight={48}
+                        onChange={updatePositionHandler} onRemove={removePositionHandler} />
                 }}
                     keyExtractor={(item, index) => index.toString()}>
                 </FlatList>
