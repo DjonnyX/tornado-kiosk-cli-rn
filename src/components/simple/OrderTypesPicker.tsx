@@ -76,10 +76,10 @@ export const OrderTypesPicker = React.memo(({ language, orderTypes, style, textS
                                 selectHandler(item);
                             }}>
                                 <View style={{ flexDirection: "column", alignItems: "center", justifyContent: "center", marginBottom: 32 }}>
-                                    <FastImage style={{ width: 128, height: 128, borderWidth: 1, borderColor: "rgba(0, 0, 0, 0.1)", marginBottom: 8 }} source={{
+                                    <FastImage style={{ width: 128, height: 128, borderWidth: 1, borderColor: theme.themes[theme.name].orderTypeModal.item.borderColor, marginBottom: 8 }} source={{
                                         uri: `file://${item.contents[language?.code]?.resources?.main?.mipmap.x128}`,
                                     }} resizeMode={FastImage.resizeMode.contain}></FastImage>
-                                    <Text style={{ fontSize: 16 }}>
+                                    <Text style={{ fontSize: 16, color: theme.themes[theme.name].orderTypeModal.item.textColor }}>
                                         {
                                             item.contents[language?.code]?.name
                                         }
