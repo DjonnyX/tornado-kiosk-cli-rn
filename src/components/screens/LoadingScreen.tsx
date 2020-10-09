@@ -1,4 +1,4 @@
-import React, { Dispatch } from "react";
+import React, { Dispatch, useEffect } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
 import { ProgressBar } from "@react-native-community/progress-bar-android";
 import { View, Text } from "react-native";
@@ -6,6 +6,8 @@ import { MainNavigationScreenTypes } from "../navigation";
 import { IAppState } from "../../store/state";
 import { connect } from "react-redux";
 import { CombinedDataSelectors } from "../../store/selectors";
+import { CommonActions } from "@react-navigation/native";
+import { theme } from "../../theme";
 
 interface ILoadingSelfProps {
   // store props
@@ -17,28 +19,42 @@ interface ILoadingSelfProps {
 
 interface ILoadingProps extends StackScreenProps<any, MainNavigationScreenTypes.LOADING>, ILoadingSelfProps { }
 
-const LoadingScreenContainer = ({ _progress, _loaded, navigation }: ILoadingProps) => {
-  if (_loaded) {
-    setTimeout(() => {
-      navigation.navigate(MainNavigationScreenTypes.INTRO);
-    });
-  }
+const LoadingScreenContainer = React.memo(({ _progress, _loaded, navigation }: ILoadingProps) => {
+  useEffect(() => {
+    if (_loaded) {
+      setTimeout(() => {
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 1,
+            routes: [
+              { name: MainNavigationScreenTypes.INTRO },
+            ],
+          })
+        );
+      });
+    }
+  });
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <ProgressBar style={{ width: "100%", maxWidth: 200, marginLeft: "10%", marginRight: "10%" }} styleAttr="Horizontal" progress={_progress / 100} indeterminate={false}></ProgressBar>
-      <Text>
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: theme.themes[theme.name].loading.background }}>
+      <ProgressBar
+        style={{ width: "100%", maxWidth: 200, marginLeft: "10%", marginRight: "10%", backgroundColor: theme.themes[theme.name].loading.progressBar.trackColor }}
+        styleAttr="Horizontal"
+        progress={_progress / 100}
+        indeterminate={false}
+        color={theme.themes[theme.name].loading.progressBar.trackColor}></ProgressBar>
+      <Text style={{ color: theme.themes[theme.name].loading.progressBar.textColor }}>
         {
           _progress > 0
-          ?
-          `${_progress}%`
-          :
-          "loading..."
+            ?
+            `${_progress}%`
+            :
+            "loading..."
         }
       </Text>
     </View>
   );
-}
+})
 
 const mapStateToProps = (state: IAppState, ownProps: ILoadingProps) => {
   return {

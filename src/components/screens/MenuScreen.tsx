@@ -1,16 +1,17 @@
-import React, { Dispatch, useState } from "react";
+import React, { Dispatch, useState, useCallback, useEffect } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
-import { View, Dimensions } from "react-native";
+import { CommonActions } from "@react-navigation/native";
+import { View, Dimensions, ScaledSize } from "react-native";
 import { MainNavigationScreenTypes } from "../navigation";
 import { IAppState } from "../../store/state";
 import { connect } from "react-redux";
-import { Ads } from "../simple";
-import { ICompiledAd, ICompiledMenu, ICurrency, ICompiledLanguage, ICompiledOrderType, ICompiledProduct } from "@djonnyx/tornado-types";
+import { ICompiledMenu, ICurrency, ICompiledLanguage, ICompiledOrderType, ICompiledProduct } from "@djonnyx/tornado-types";
 import { CombinedDataSelectors, MyOrderSelectors } from "../../store/selectors";
 import { CapabilitiesSelectors } from "../../store/selectors/CapabilitiesSelector";
 import { CapabilitiesActions, MyOrderActions } from "../../store/actions";
 import { MyOrderPanel } from "../simple/MyOrderPanel";
 import { Menu } from "../simple/Menu";
+import { theme } from "../../theme";
 
 interface IMenuSelfProps {
     // store props
@@ -34,7 +35,7 @@ interface IMenuSelfProps {
 
 interface IMenuProps extends StackScreenProps<any, MainNavigationScreenTypes.MENU>, IMenuSelfProps { }
 
-const MenuScreenContainer = ({
+const MenuScreenContainer = React.memo(({
     _languages, _orderTypes, _defaultCurrency,
     _menu, _language, _orderPositions, _orderSum,
     _onChangeLanguage, _onChangeOrderType,
@@ -43,28 +44,49 @@ const MenuScreenContainer = ({
 }: IMenuProps) => {
     const [windowSize, _setWindowSize] = useState({ width: Dimensions.get("window").width, height: Dimensions.get("window").height });
 
-    const myOrderWidth = 156;
+    const myOrderWidth = 170;
     let menuWidth = windowSize.width - myOrderWidth;
 
-    Dimensions.addEventListener("change", ({ window }) => {
-        _setWindowSize(size => {
-            const w = window.width;
-            const h = window.height;
-            menuWidth = w - myOrderWidth;
-            return { width: w, height: h };
-        });
+    useEffect(() => {
+        function dimensionsChangeHandler({ window }: { window: ScaledSize }) {
+            _setWindowSize(size => {
+                const w = window.width;
+                const h = window.height;
+                menuWidth = w - myOrderWidth;
+                return { width: w, height: h };
+            });
+        };
+        Dimensions.addEventListener("change", dimensionsChangeHandler);
+
+        return () => {
+            Dimensions.removeEventListener("change", dimensionsChangeHandler);
+        }
     });
 
-    const confirmHandler = () => {
-        navigation.navigate(MainNavigationScreenTypes.CONFIRMATION_ORDER);
-    };
+    const confirmHandler = useCallback(() => {
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 1,
+                routes: [
+                    { name: MainNavigationScreenTypes.CONFIRMATION_ORDER },
+                ],
+            })
+        );
+    }, []);
 
-    const cancelHandler = () => {
-        navigation.navigate(MainNavigationScreenTypes.INTRO);
-    };
+    const cancelHandler = useCallback(() => {
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 1,
+                routes: [
+                    { name: MainNavigationScreenTypes.INTRO },
+                ],
+            })
+        );
+    }, []);
 
     return (
-        <View style={{ flex: 1, flexDirection: "row", width: "100%", height: "100%", backgroundColor: "#fff" }}>
+        <View style={{ flexDirection: "row", width: "100%", height: "100%", backgroundColor: theme.themes[theme.name].menu.background }}>
             <View style={{ position: "absolute", width: menuWidth, height: "100%", zIndex: 1 }}>
                 <Menu currency={_defaultCurrency} language={_language} menu={_menu} width={menuWidth} height={windowSize.height} positions={_orderPositions} cancelOrder={cancelHandler}
                     addPosition={_onAddOrderPosition} updatePosition={_onUpdateOrderPosition} removePosition={_onRemoveOrderPosition}
@@ -77,7 +99,7 @@ const MenuScreenContainer = ({
             </View>
         </View>
     );
-}
+})
 
 const mapStateToProps = (state: IAppState, ownProps: IMenuProps) => {
     return {

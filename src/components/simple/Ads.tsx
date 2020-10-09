@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import { View, Image, TouchableOpacity, GestureResponderEvent } from "react-native";
-import { ICompiledAd } from "@djonnyx/tornado-types/dist/interfaces/ICompiledAd";
+import React, { useState, useCallback } from "react";
+import { View, TouchableOpacity, GestureResponderEvent } from "react-native";
+import FastImage from 'react-native-fast-image'
 import Video from "react-native-video";
+import { ICompiledAd } from "@djonnyx/tornado-types/dist/interfaces/ICompiledAd";
 import { ICompiledLanguage, AssetExtensions } from "@djonnyx/tornado-types";
 
 interface IAdsProps {
@@ -30,15 +31,15 @@ export const Ads = ({ language, ads, onPress }: IAdsProps) => {
         }
     };
 
-    const pressHandler = (e: GestureResponderEvent) => {
+    const pressHandler = useCallback((e: GestureResponderEvent) => {
         if (!!onPress) {
             onPress(ads[currentAdIndex]);
         }
-    }
+    }, []);
 
-    const endVideoHandler = () => {
+    const endVideoHandler = useCallback(() => {
         nextCurrentAdIndex();
-    }
+    }, []);
 
     const currentAdContent = !!ads && ads.length > 0 && !!ads[currentAdIndex] ? ads[currentAdIndex].contents[language?.code] : undefined;
     const currentAdAsset = currentAdContent?.resources?.main;
@@ -61,9 +62,9 @@ export const Ads = ({ language, ads, onPress }: IAdsProps) => {
                                 uri: `file://${currentAdAsset?.path}`,
                             }} controls={false} onEnd={endVideoHandler}></Video>
                             :
-                            <Image style={{ width: "100%", height: "100%" }} source={{
+                            <FastImage style={{ width: "100%", height: "100%" }} source={{
                                 uri: `file://${currentAdAsset?.path}`,
-                            }}></Image>
+                            }} resizeMode={FastImage.resizeMode.cover}></FastImage>
                         :
                         <></>
                 }

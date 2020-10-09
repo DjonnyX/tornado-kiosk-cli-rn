@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useCallback } from "react";
 import { SafeAreaView, ScrollView } from "react-native";
 import { ICompiledProduct, ICompiledLanguage, ICurrency } from "@djonnyx/tornado-types";
 import { FlatList } from "react-native-gesture-handler";
@@ -14,17 +14,23 @@ interface IMyOrderListProps {
     removePosition: (position: ICompiledProduct) => void;
 }
 
-export const MyOrderList = ({ currency, language, positions, addPosition, updatePosition, removePosition }: IMyOrderListProps) => {
+export const MyOrderList = React.memo(({ currency, language, positions, addPosition, updatePosition, removePosition }: IMyOrderListProps) => {
+    const scrollView = useRef<ScrollView>(null);
+
+    const contentSizeChangeHandler = useCallback(() => {
+        scrollView.current?.scrollToEnd({ animated: true });
+    }, []);
+
     return (
         <SafeAreaView style={{ flex: 1, width: "100%" }}>
-            <ScrollView style={{ flex: 1 }} horizontal={false}
+            <ScrollView ref={scrollView} onContentSizeChange={contentSizeChangeHandler} style={{ flex: 1 }} horizontal={false}
             >
-                <FlatList style={{ flex: 1 }} data={positions} renderItem={({ item }) => {
+                <FlatList updateCellsBatchingPeriod={10} style={{ flex: 1 }} data={positions} renderItem={({ item }) => {
                     return <MyOrderListItem key={item.id} product={item} currency={currency} language={language} imageHeight={48}></MyOrderListItem>
                 }}
-                    keyExtractor={(item, index) => item.id}>
+                    keyExtractor={(item, index) => index.toString()}>
                 </FlatList>
             </ScrollView>
         </SafeAreaView>
     )
-}
+})
