@@ -35,6 +35,10 @@ export const Menu = React.memo(({
     let screenAnimation: Animated.CompositeAnimation;
 
     const setSelectedCategory = (category: ICompiledMenuNode) => {
+        if (category === selected.current) {
+            return;
+        }
+
         _setSelectedCategory(previouse => {
 
             setTimeout(() => {
