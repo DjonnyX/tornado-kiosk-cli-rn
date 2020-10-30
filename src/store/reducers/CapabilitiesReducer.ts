@@ -26,7 +26,7 @@ const capabilitiesReducer: Reducer<ICapabilitiesState, TCapabilitiesActions> = (
         case CapabilitiesActionTypes.SET_CURRENT_SCREEN:
             return {
                 ...state,
-                currentScreen: (action as any).screen,
+                currentScreen: (action as any).currentScreen,
             };
         default:
             return state;
