@@ -68,6 +68,11 @@ const myOrderReducer: Reducer<IMyOrderState, TMyOrderActions> = (
                 positions: [],
                 isReseted: true,
             };
+        case MyOrderActionTypes.MARK_AS_NEW:
+            return {
+                ...state,
+                isReseted: false,
+            };
         default:
             return state;
     }
