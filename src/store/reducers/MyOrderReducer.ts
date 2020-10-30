@@ -5,6 +5,7 @@ import { IMyOrderState } from "../state";
 const initialState: IMyOrderState = {
     _nextPositionIndex: 0,
     positions: [],
+    isReseted: true,
 };
 
 const myOrderReducer: Reducer<IMyOrderState, TMyOrderActions> = (
@@ -17,8 +18,8 @@ const myOrderReducer: Reducer<IMyOrderState, TMyOrderActions> = (
 
             // "слипание" продуктов
             if (existsAIndex > -1) {
-                const aPos = {...state.positions[existsAIndex]};
-                aPos.quantity ++;;
+                const aPos = { ...state.positions[existsAIndex] };
+                aPos.quantity++;;
                 let aPositions = [...state.positions];
                 if (existsAIndex > -1) {
                     aPositions.splice(existsAIndex, 1);
@@ -35,7 +36,7 @@ const myOrderReducer: Reducer<IMyOrderState, TMyOrderActions> = (
                 return {
                     ...state,
                     _nextPositionIndex,
-                    positions: [...state.positions, {id: _nextPositionIndex.toString(), product: (action as any).product, quantity: 1}],
+                    positions: [...state.positions, { id: _nextPositionIndex.toString(), product: (action as any).product, quantity: 1 }],
                 };
             }
         case MyOrderActionTypes.REMOVE_POSITION:
@@ -60,6 +61,17 @@ const myOrderReducer: Reducer<IMyOrderState, TMyOrderActions> = (
             return {
                 ...state,
                 positions: uPositions,
+            };
+        case MyOrderActionTypes.RESET:
+            return {
+                ...state,
+                positions: [],
+                isReseted: true,
+            };
+        case MyOrderActionTypes.MARK_AS_NEW:
+            return {
+                ...state,
+                isReseted: false,
             };
         default:
             return state;

@@ -1,4 +1,4 @@
-import React, { Dispatch, useCallback } from "react";
+import React, { Dispatch, useCallback, useEffect } from "react";
 import { View } from "react-native";
 import { connect } from "react-redux";
 import { StackScreenProps } from "@react-navigation/stack";
@@ -9,18 +9,24 @@ import { CombinedDataSelectors } from "../../store/selectors";
 import { CapabilitiesSelectors } from "../../store/selectors/CapabilitiesSelector";
 import { Ads } from "../simple";
 import { theme } from "../../theme";
+import { CapabilitiesActions } from "../../store/actions";
 
 interface IConfirmationOrderScreenSelfProps {
     // store props
+    _onChangeScreen: () => void;
     _banners: Array<ICompiledAd>;
     _language: ICompiledLanguage;
+    _currentScreen: MainNavigationScreenTypes | undefined;
 
     // self props
 }
 
 interface IConfirmationOrderScreenProps extends StackScreenProps<any, MainNavigationScreenTypes.INTRO>, IConfirmationOrderScreenSelfProps { }
 
-const ConfirmationOrderScreenContainer = React.memo(({ _language, _banners, navigation }: IConfirmationOrderScreenProps) => {
+const ConfirmationOrderScreenContainer = React.memo(({ _language, _banners, navigation, _currentScreen, _onChangeScreen }: IConfirmationOrderScreenProps) => {
+    useEffect(() => {
+        _onChangeScreen();
+    }, [_currentScreen]);
 
     const selectAdHandler = useCallback((ad: ICompiledAd) => {
         // etc...
@@ -48,11 +54,16 @@ const mapStateToProps = (state: IAppState, ownProps: IConfirmationOrderScreenPro
     return {
         _banners: CombinedDataSelectors.selectBanners(state),
         _language: CapabilitiesSelectors.selectLanguage(state),
+        _currentScreen: CapabilitiesSelectors.selectCurrentScreen(state),
     };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
-    return {};
+    return {
+        _onChangeScreen: () => {
+            dispatch(CapabilitiesActions.setCurrentScreen(MainNavigationScreenTypes.CONFIRMATION_ORDER));
+        },
+    };
 };
 
 export const ConfirmationOrderScreen = connect(mapStateToProps, mapDispatchToProps)(ConfirmationOrderScreenContainer);
