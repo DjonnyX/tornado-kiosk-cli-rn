@@ -11,11 +11,12 @@ import { Ads } from "../simple";
 import { ICompiledLanguage } from "@djonnyx/tornado-types";
 import { CommonActions } from "@react-navigation/native";
 import { theme } from "../../theme";
-import { CapabilitiesActions } from "../../store/actions";
+import { CapabilitiesActions, MyOrderActions } from "../../store/actions";
 
 interface IIntroSelfProps {
     // store props
     _onChangeScreen: () => void;
+    _onMarkOrderAsNew: () => void;
     _intros: Array<ICompiledAd>;
     _language: ICompiledLanguage;
     _currentScreen: MainNavigationScreenTypes | undefined;
@@ -25,7 +26,7 @@ interface IIntroSelfProps {
 
 interface IIntroProps extends StackScreenProps<any, MainNavigationScreenTypes.INTRO>, IIntroSelfProps { }
 
-const IntroScreenContainer = React.memo(({ _language, _intros, navigation, _currentScreen, _onChangeScreen }: IIntroProps) => {
+const IntroScreenContainer = React.memo(({ _language, _intros, navigation, _currentScreen, _onMarkOrderAsNew, _onChangeScreen }: IIntroProps) => {
     useEffect(() => {
         _onChangeScreen();
     }, [_currentScreen]);
@@ -46,7 +47,7 @@ const IntroScreenContainer = React.memo(({ _language, _intros, navigation, _curr
             <Ads ads={_intros} language={_language} onPress={pressHandler}></Ads>
         </View>
     );
-})
+});
 
 const mapStateToProps = (state: IAppState, ownProps: IIntroProps) => {
     return {
@@ -60,6 +61,9 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
     return {
         _onChangeScreen: () => {
             dispatch(CapabilitiesActions.setCurrentScreen(MainNavigationScreenTypes.INTRO));
+        },
+        _onMarkOrderAsNew: () => {
+            dispatch(MyOrderActions.markAsNew());
         },
     };
 };

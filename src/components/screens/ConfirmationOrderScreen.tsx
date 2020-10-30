@@ -61,7 +61,7 @@ const mapStateToProps = (state: IAppState, ownProps: IConfirmationOrderScreenPro
 const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
     return {
         _onChangeScreen: () => {
-            dispatch(CapabilitiesActions.setCurrentScreen(MainNavigationScreenTypes.INTRO));
+            dispatch(CapabilitiesActions.setCurrentScreen(MainNavigationScreenTypes.CONFIRMATION_ORDER));
         },
     };
 };

@@ -74,7 +74,7 @@ const mapStateToProps = (state: IAppState, ownProps: ILoadingProps) => {
 const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
   return {
     _onChangeScreen: () => {
-        dispatch(CapabilitiesActions.setCurrentScreen(MainNavigationScreenTypes.INTRO));
+        dispatch(CapabilitiesActions.setCurrentScreen(MainNavigationScreenTypes.LOADING));
     },
   };
 };
