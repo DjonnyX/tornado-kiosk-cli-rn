@@ -5,6 +5,7 @@ import { ICapabilitiesState } from "../state";
 const initialState: ICapabilitiesState = {
     language: undefined,
     orderType: undefined,
+    currentScreen: undefined,
 };
 
 const capabilitiesReducer: Reducer<ICapabilitiesState, TCapabilitiesActions> = (
@@ -21,6 +22,11 @@ const capabilitiesReducer: Reducer<ICapabilitiesState, TCapabilitiesActions> = (
             return {
                 ...state,
                 orderType: (action as any).orderType,
+            };
+        case CapabilitiesActionTypes.SET_CURRENT_SCREEN:
+            return {
+                ...state,
+                currentScreen: (action as any).screen,
             };
         default:
             return state;

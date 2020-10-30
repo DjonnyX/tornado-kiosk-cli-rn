@@ -7,4 +7,8 @@ export namespace CapabilitiesSelectors {
     export const selectLanguage = createSelector(getCapabilities, (state) => {
         return state?.language;
     });
+
+    export const selectCurrentScreen = createSelector(getCapabilities, (state) => {
+        return state?.currentScreen;
+    });
 }
