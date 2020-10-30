@@ -9,6 +9,10 @@ class Config implements IConfig {
     license = {
         apiKey: "my-api-key",
     };
+
+    capabilities = {
+        userIdleTimeout: 5000,
+    };
 }
 
 export const config = new Config();

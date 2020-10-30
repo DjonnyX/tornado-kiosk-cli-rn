@@ -1,50 +1,70 @@
-import React, { Component, Dispatch } from "react";
+import React, { Dispatch, PureComponent } from "react";
+import { GestureResponderEvent, View } from "react-native";
 import { connect } from "react-redux";
-import { from, of, Subject } from "rxjs";
-import { take, takeUntil, filter } from "rxjs/operators";
-import { IAsset, ICompiledData, IRefs } from "@djonnyx/tornado-types";
-import { AssetsStore, IAssetsStoreResult } from "@djonnyx/tornado-assets-store";
-import { DataCombiner } from "@djonnyx/tornado-refs-processor";
-import { ExternalStorage } from "../native";
+import { ICompiledData } from "@djonnyx/tornado-types";
+import { IProgress } from "@djonnyx/tornado-refs-processor/dist/DataCombiner";
 import { config } from "../Config";
-import { assetsService, refApiService } from "../services";
 import { IAppState } from "../store/state";
 import { CombinedDataActions, CapabilitiesActions } from "../store/actions";
-import { IProgress } from "@djonnyx/tornado-refs-processor/dist/DataCombiner";
-import { GestureResponderEvent, TouchableWithoutFeedback } from "react-native";
+import { CapabilitiesSelectors } from "../store/selectors";
+import { MainNavigationScreenTypes } from "../components/navigation";
 
 interface IUserIdleServiceProps {
     // store
-    _onChange: (data: ICompiledData) => void;
-    _onProgress: (progress: IProgress) => void;
+    _currentScreen: MainNavigationScreenTypes | undefined;
 
     // self
+    onIdle: () => void;
     children: JSX.Element;
 }
 
 interface IUserIdleServiceState { }
 
-class UserIdleServiceContainer extends Component<IUserIdleServiceProps, IUserIdleServiceState> {
+class UserIdleServiceContainer extends PureComponent<IUserIdleServiceProps, IUserIdleServiceState> {
 
-    private _clickHandler = (e: GestureResponderEvent): void => {
-        console.warn("user click")
+    private _timer: NodeJS.Timer | undefined;
+
+    private _touchProcessHandler = (e: GestureResponderEvent): void => {
+        if (this._timer) {
+            clearTimeout(this._timer);
+        }
+
+        this.runTimer();
+    }
+
+    private _onIdle = () => {
+        switch (this.props._currentScreen) {
+            case MainNavigationScreenTypes.LOADING:
+            case MainNavigationScreenTypes.INTRO:
+                return;
+        }
+
+        this.props.onIdle();
     }
 
     constructor(props: IUserIdleServiceProps) {
         super(props);
     }
 
+    private runTimer(): void {
+        this._timer = setTimeout(this._onIdle,
+            config.capabilities.userIdleTimeout);
+    }
+
     render() {
-        return <TouchableWithoutFeedback onPress={this._clickHandler}>
+        return <View style={{ flex: 1, width: "100%", height: "100%" }} onTouchStart={this._touchProcessHandler} onTouchEnd={this._touchProcessHandler}>
             {
                 this.props.children
             }
-        </TouchableWithoutFeedback>;
+        </View>
     }
 }
 
 const mapStateToProps = (state: IAppState) => {
-    return {};
+    return {
+        _language: CapabilitiesSelectors.selectCurrentScreen(state),
+        _currentScreen: CapabilitiesSelectors.selectCurrentScreen(state),
+    };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => {
