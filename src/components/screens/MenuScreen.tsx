@@ -16,9 +16,6 @@ import { NotificationAlert } from "../simple/NotificationAlert";
 
 interface IMenuSelfProps {
     // store props
-    _onChangeScreen: () => void;
-    _onResetOrder: () => void;
-    _onMarkOrderAsNew: () => void;
     _languages: Array<ICompiledLanguage>;
     _orderSum: number;
     _orderTypes: Array<ICompiledOrderType>;
@@ -35,6 +32,9 @@ interface IMenuSelfProps {
     _onAddOrderPosition: (position: ICompiledProduct) => void;
     _onUpdateOrderPosition: (position: IOrderPosition) => void;
     _onRemoveOrderPosition: (position: IOrderPosition) => void;
+    _onChangeScreen: () => void;
+    _onResetOrder: () => void;
+    _onMarkOrderAsNew: () => void;
 
     // self props
 }
