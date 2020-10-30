@@ -5,6 +5,7 @@ export enum MyOrderActionTypes {
     ADD_POSITION = "TORNADO/my-order/add-position",
     UPDATE_POSITION = "TORNADO/my-order/update-position",
     REMOVE_POSITION = "TORNADO/my-order/remove-position",
+    RESET = "TORNADO/my-order/reset",
 }
 
 interface IMyOrderActionAddPosition extends Action<MyOrderActionTypes> {
@@ -18,6 +19,8 @@ interface IMyOrderActionUpdatePosition extends Action<MyOrderActionTypes> {
 interface IMyOrderActionRemovePosition extends Action<MyOrderActionTypes> {
     position: IOrderPosition;
 }
+
+interface IMyOrderActionReset extends Action<MyOrderActionTypes> { }
 
 export class MyOrderActions {
     static addPosition = (product: ICompiledProduct): IMyOrderActionAddPosition => ({
@@ -34,6 +37,10 @@ export class MyOrderActions {
         type: MyOrderActionTypes.REMOVE_POSITION,
         position,
     });
+
+    static reset = (): IMyOrderActionReset => ({
+        type: MyOrderActionTypes.RESET,
+    });
 }
 
-export type TMyOrderActions = IMyOrderActionAddPosition | IMyOrderActionUpdatePosition | IMyOrderActionRemovePosition;
+export type TMyOrderActions = IMyOrderActionAddPosition | IMyOrderActionUpdatePosition | IMyOrderActionRemovePosition | IMyOrderActionReset;
