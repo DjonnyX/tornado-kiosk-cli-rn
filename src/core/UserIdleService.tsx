@@ -1,49 +1,116 @@
 import React, { Dispatch, PureComponent } from "react";
 import { GestureResponderEvent, View } from "react-native";
 import { connect } from "react-redux";
-import { ICompiledData } from "@djonnyx/tornado-types";
-import { IProgress } from "@djonnyx/tornado-refs-processor/dist/DataCombiner";
 import { config } from "../Config";
 import { IAppState } from "../store/state";
-import { CombinedDataActions, CapabilitiesActions } from "../store/actions";
 import { CapabilitiesSelectors } from "../store/selectors";
 import { MainNavigationScreenTypes } from "../components/navigation";
+import { AlertContent, ModalTransparent } from "../components/simple";
 
 interface IUserIdleServiceProps {
     // store
-    _currentScreen: MainNavigationScreenTypes | undefined;
+    _currentScreen?: MainNavigationScreenTypes | undefined;
 
     // self
-    onIdle: () => void;
-    children: JSX.Element;
+    onIdle?: () => void;
+    children: Array<JSX.Element> | JSX.Element;
 }
 
-interface IUserIdleServiceState { }
+interface IUserIdleServiceState {
+    alertVisible: boolean;
+    countdown: number;
+}
 
 class UserIdleServiceContainer extends PureComponent<IUserIdleServiceProps, IUserIdleServiceState> {
 
-    private _timer: NodeJS.Timer | undefined;
+    private _timer: NodeJS.Timeout | undefined;
+
+    private _countdownTimer: NodeJS.Timeout | undefined;
 
     private _touchProcessHandler = (e: GestureResponderEvent): void => {
-        if (this._timer) {
-            clearTimeout(this._timer);
-        }
-
-        this.runTimer();
+        this.resetTimer();
     }
 
     private _onIdle = () => {
+        console.warn(this.props._currentScreen)
         switch (this.props._currentScreen) {
             case MainNavigationScreenTypes.LOADING:
             case MainNavigationScreenTypes.INTRO:
-                return;
+                this.resetTimer();
+                break;
+            default: {
+                if (this.props.onIdle) {
+                    this.props.onIdle();
+                }
+
+                this.runCountdown();
+            }
+        }
+    }
+
+    private _onCountdown = () => {
+        if (this.state.countdown <= 1) {
+            this.setState((state) => ({
+                ...state,
+                alertVisible: false,
+            }), () => {
+                this.resetCountdownTimer();
+                this.resetStore();
+            });
+            return;
         }
 
-        this.props.onIdle();
+        this.setState((state) => ({
+            ...state,
+            countdown: state.countdown - 1,
+        }));
     }
 
     constructor(props: IUserIdleServiceProps) {
         super(props);
+
+        this.state = {
+            alertVisible: false,
+            countdown: 0,
+        }
+    }
+
+    componentDidMount() {
+        this.resetTimer();
+    }
+
+    private runCountdown(): void {
+        this.stopTimer();
+
+        this.setState((state) => ({
+            ...state,
+            alertVisible: true,
+            countdown: 10,
+        }), () => {
+            this.runCoutndownTimer();
+        });
+    }
+
+    private runCoutndownTimer(): void {
+        this._countdownTimer = setInterval(this._onCountdown, 1000);
+    }
+
+    private resetTimer(): void {
+        this.stopTimer();
+
+        this.runTimer();
+    }
+
+    private resetCountdownTimer(): void {
+        if (this._countdownTimer) {
+            clearInterval(this._countdownTimer);
+        }
+    }
+
+    private stopTimer(): void {
+        if (this._timer) {
+            clearTimeout(this._timer);
+        }
     }
 
     private runTimer(): void {
@@ -51,11 +118,46 @@ class UserIdleServiceContainer extends PureComponent<IUserIdleServiceProps, IUse
             config.capabilities.userIdleTimeout);
     }
 
+    private cancelResetHandler = () => {
+        this.setState((state) => ({
+            ...state,
+            alertVisible: false,
+        }));
+        this.resetCountdownTimer();
+        this.resetTimer();
+    }
+
+    private resetHandler = () => {
+        this.setState((state) => ({
+            ...state,
+            alertVisible: false,
+        }));
+        this.resetStore();
+    }
+
+    private resetStore = () => {
+
+    }
+
     render() {
-        return <View style={{ flex: 1, width: "100%", height: "100%" }} onTouchStart={this._touchProcessHandler} onTouchEnd={this._touchProcessHandler}>
-            {
-                this.props.children
-            }
+        const { alertVisible, countdown } = this.state;
+
+        return <View style={{ flex: 1, width: "100%", height: "100%" }}>
+            <ModalTransparent visible={alertVisible}>
+                <AlertContent
+                    title="Внимание"
+                    message={`Заказ будет отменен через ${countdown} сек`}
+                    cancelButtonTitle="Отменить"
+                    applyButtonTitle="Удалить"
+                    onCancel={this.cancelResetHandler}
+                    onApply={this.resetHandler}
+                />
+            </ModalTransparent>
+            <View style={{ flex: 1, width: "100%", height: "100%" }} onTouchStart={this._touchProcessHandler} onTouchEnd={this._touchProcessHandler}>
+                {
+                    this.props.children
+                }
+            </View>
         </View>
     }
 }
@@ -68,16 +170,7 @@ const mapStateToProps = (state: IAppState) => {
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => {
-    return {
-        _onChange: (data: ICompiledData) => {
-            dispatch(CombinedDataActions.setData(data));
-            dispatch(CapabilitiesActions.setLanguage(data.refs.defaultLanguage));
-            dispatch(CapabilitiesActions.setOrderType(data.refs.orderTypes[0]));
-        },
-        _onProgress: (progress: IProgress) => {
-            dispatch(CombinedDataActions.setProgress(progress));
-        },
-    };
+    return {};
 };
 
 export const UserIdleService = connect(null, mapDispatchToProps)(UserIdleServiceContainer);
