@@ -34,7 +34,6 @@ class UserIdleServiceContainer extends PureComponent<IUserIdleServiceProps, IUse
     }
 
     private _onIdle = () => {
-        console.warn(this.props._currentScreen)
         switch (this.props._currentScreen) {
             case MainNavigationScreenTypes.LOADING:
             case MainNavigationScreenTypes.INTRO:
@@ -168,7 +167,6 @@ class UserIdleServiceContainer extends PureComponent<IUserIdleServiceProps, IUse
 
 const mapStateToProps = (state: IAppState) => {
     return {
-        _language: CapabilitiesSelectors.selectCurrentScreen(state),
         _currentScreen: CapabilitiesSelectors.selectCurrentScreen(state),
     };
 };
@@ -181,4 +179,4 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => {
     };
 };
 
-export const UserIdleService = connect(null, mapDispatchToProps)(UserIdleServiceContainer);
+export const UserIdleService = connect(mapStateToProps, mapDispatchToProps)(UserIdleServiceContainer);
