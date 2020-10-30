@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text } from "react-native";
 import { LanguagePicker } from "./LanguagePicker";
-import { ICompiledLanguage, ICompiledOrderType, ICompiledProduct, ICurrency } from "@djonnyx/tornado-types";
+import { ICompiledLanguage, ICompiledOrderType, ICompiledProduct, ICurrency, IOrderPosition } from "@djonnyx/tornado-types";
 import { OrderTypesPicker } from "./OrderTypesPicker";
 import { MyOrderList } from "./my-order-list";
 import { CtrlMenuButton } from "./CtrlMenuButton";
@@ -12,19 +12,18 @@ interface IMyOrderPanelProps {
     language: ICompiledLanguage;
     languages: Array<ICompiledLanguage>;
     orderTypes: Array<ICompiledOrderType>;
-    positions: Array<ICompiledProduct>;
+    positions: Array<IOrderPosition>;
     sum: number;
 
-    addPosition: (position: ICompiledProduct) => void;
-    updatePosition: (position: ICompiledProduct) => void;
-    removePosition: (position: ICompiledProduct) => void;
+    updatePosition: (position: IOrderPosition) => void;
+    removePosition: (position: IOrderPosition) => void;
     onChangeLanguage: (lang: ICompiledLanguage) => void;
     onChangeOrderType: (lang: ICompiledOrderType) => void;
     onConfirm: () => void;
 }
 
 export const MyOrderPanel = React.memo(({ currency, language, languages, orderTypes, positions, sum,
-    addPosition, updatePosition, removePosition, onChangeLanguage, onChangeOrderType, onConfirm,
+    updatePosition, removePosition, onChangeLanguage, onChangeOrderType, onConfirm,
 }: IMyOrderPanelProps) => {
     return (
         <View
@@ -52,7 +51,7 @@ export const MyOrderPanel = React.memo(({ currency, language, languages, orderTy
             </View>
             <View style={{ flex: 1, flexGrow: 1, margin: "auto" }}>
                 <MyOrderList currency={currency} language={language} positions={positions}
-                    addPosition={addPosition} updatePosition={updatePosition} removePosition={removePosition}
+                    updatePosition={updatePosition} removePosition={removePosition}
                 ></MyOrderList>
             </View>
             <View style={{ flex: 0, height: 144, margin: "auto", padding: 24 }}>

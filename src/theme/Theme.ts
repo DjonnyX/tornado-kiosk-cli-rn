@@ -1,4 +1,5 @@
 import { IKioskTheme } from "@djonnyx/tornado-types";
+import { ModalTransparent } from "../components/simple";
 
 export const theme: IKioskTheme = {
     name: "dark",
@@ -10,6 +11,23 @@ export const theme: IKioskTheme = {
                     window: {
                         background: "#fff",
                     }
+                },
+                modalTransparent: {
+                    background: "rgba(255,255,255,0.75)",
+                    window: {
+                        background: "#fff",
+                        borderColor: "rgba(0,0,0,0.1)"
+                    }
+                },
+                modalNotification: {
+                    background: "none",
+                    window: {
+                        background: "rgba(0,0,0,0.75)",
+                        borderColor: "rgba(0,0,0,0.1)",
+                    }
+                },
+                notificationAlert: {
+                    textColor: "rgba(255,255,255,0.75)",
                 }
             },
             languageModal: {
@@ -27,9 +45,9 @@ export const theme: IKioskTheme = {
             loading: {
                 background: "#fff",
                 progressBar: {
-                    thumbColor: "rgba(0,0,0,0.15)",
-                    trackColor: "rgba(0,0,0,0.05)",
-                    textColor: "rgba(0,0,0,0.15)",
+                    thumbColor: "rgba(0,0,0,0.85)",
+                    trackColor: "rgba(0,0,0,0.75)",
+                    textColor: "rgba(0,0,0,0.75)",
                 }
             },
             intro: {
@@ -114,6 +132,23 @@ export const theme: IKioskTheme = {
                     window: {
                         background: "#000",
                     }
+                },
+                modalTransparent: {
+                    background: "rgba(0,0,0,0.75)",
+                    window: {
+                        background: "#000",
+                        borderColor: "rgba(255,255,255,0.1)"
+                    }
+                },
+                modalNotification: {
+                    background: "none",
+                    window: {
+                        background: "rgba(255,255,255,0.75)",
+                        borderColor: "rgba(255,255,255,0.1)",
+                    }
+                },
+                notificationAlert: {
+                    textColor: "rgba(0,0,0,0.75)",
                 }
             },
             languageModal: {
@@ -131,9 +166,9 @@ export const theme: IKioskTheme = {
             loading: {
                 background: "#000",
                 progressBar: {
-                    thumbColor: "rgba(255,255,255,0.15)",
-                    trackColor: "rgba(255,255,255,0.05)",
-                    textColor: "rgba(255,255,255,0.15)",
+                    thumbColor: "rgba(255,255,255,0.85)",
+                    trackColor: "rgba(255,255,255,0.75)",
+                    textColor: "rgba(255,255,255,0.75)",
                 }
             },
             intro: {

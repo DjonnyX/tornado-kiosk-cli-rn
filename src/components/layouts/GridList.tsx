@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { View, LayoutChangeEvent, StyleProp, ViewStyle } from "react-native";
+import { View, LayoutChangeEvent, StyleProp, ViewStyle, Animated, Easing } from "react-native";
 
 interface IGridListProps<T = any> {
     children?: never[];
@@ -16,35 +16,33 @@ interface IGridListProps<T = any> {
 const FPS = 1000 / 60;
 
 export const GridList = React.memo(({ data, renderItem, style, keyExtractor, spacing = 0, padding = 0, animationSkipFrames = 0, itemDimension }: IGridListProps) => {
-    const [bound, _setBound] = useState({ x: 0, y: 0, width: 0, height: 0 });
+    const [cellWidth, _setCellWidth] = useState(new Animated.Value(1));
+    let cellAnimation: Animated.CompositeAnimation;
 
-    const numColumns = Math.floor(bound.width / itemDimension);
     const gap = spacing * 0.5;
-    const actualItemWidth = (bound.width - padding * 2) / numColumns - (numColumns) * gap
-    let frameCount = 0;
-    let timer: NodeJS.Timer;
 
-    useEffect(() => {
-        clearTimeout(timer);
+    cellAnimation = Animated.timing(cellWidth, {
+        useNativeDriver: false,
+        toValue: 0,
+        duration: 250,
+        easing: Easing.cubic,
     });
 
     const changeLayoutHandler = useCallback((event: LayoutChangeEvent) => {
-        frameCount++;
-
-        // остановка таймера
-        clearTimeout(timer);
-
         const { x, y, width, height } = event.nativeEvent.layout;
-
-        // лэйаут переопределяется только при инициализации и если пропущено количество фреймов заданное с помощью "animationSkipFrames"
-        /*if (frameCount > animationSkipFrames || !(bound.width && bound.height)) {
-            _setBound(prevBound => ({ x, y, width, height }));
-        } else {*/
-            // отложенное переопределение лэйаута
-            timer = setTimeout(() => {
-                _setBound(prevBound => ({ x, y, width, height }));
-            }, animationSkipFrames);
-        //}
+        const numColumns = Math.floor(width / itemDimension);
+        const gap = spacing * 0.5;
+        const actualItemWidth = (width - padding * 2) / numColumns - (numColumns) * gap
+        if (cellAnimation) {
+            cellAnimation.stop();
+        }
+        cellAnimation = Animated.timing(cellWidth, {
+            useNativeDriver: false,
+            toValue: actualItemWidth,
+            duration: 100,
+            easing: Easing.cubic,
+        });
+        cellAnimation.start();
     }, []);
 
     return (
@@ -54,17 +52,13 @@ export const GridList = React.memo(({ data, renderItem, style, keyExtractor, spa
         >
             <View style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
                 {
-                    bound.width && bound.height
-                        ?
-                        data.map((item, index) =>
-                            <View key={(keyExtractor(item, index))} style={{ width: actualItemWidth, margin: gap, justifyContent: "center", overflow: "hidden" }}>
-                                {
-                                    renderItem({ item, index })
-                                }
-                            </View>
-                        )
-                        :
-                        undefined
+                    data.map((item, index) =>
+                        <Animated.View key={(keyExtractor(item, index))} style={{ width: cellWidth, margin: gap, justifyContent: "center", overflow: "hidden" }}>
+                            {
+                                renderItem({ item, index })
+                            }
+                        </Animated.View>
+                    )
                 }
             </View>
         </View>
