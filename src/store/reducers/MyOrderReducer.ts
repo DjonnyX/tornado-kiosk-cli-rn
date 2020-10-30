@@ -3,19 +3,41 @@ import { TMyOrderActions, MyOrderActionTypes } from "../actions";
 import { IMyOrderState } from "../state";
 
 const initialState: IMyOrderState = {
+    _nextPositionIndex: 0,
     positions: [],
 };
 
 const myOrderReducer: Reducer<IMyOrderState, TMyOrderActions> = (
     state = initialState,
-    action
+    action,
 ) => {
     switch (action.type) {
         case MyOrderActionTypes.ADD_POSITION:
-            return {
-                ...state,
-                positions: [...state.positions, (action as any).position],
-            };
+            const existsAIndex = state.positions.findIndex(pos => pos.product.id === (action as any).product.id);
+
+            // "слипание" продуктов
+            if (existsAIndex > -1) {
+                const aPos = {...state.positions[existsAIndex]};
+                aPos.quantity ++;;
+                let aPositions = [...state.positions];
+                if (existsAIndex > -1) {
+                    aPositions.splice(existsAIndex, 1);
+                    aPositions.splice(existsAIndex, 0, aPos);
+                }
+                return {
+                    ...state,
+                    positions: aPositions,
+                };
+            }
+            // добавление нового продукта
+            else {
+                const _nextPositionIndex = state._nextPositionIndex + 1;
+                return {
+                    ...state,
+                    _nextPositionIndex,
+                    positions: [...state.positions, {id: _nextPositionIndex.toString(), product: (action as any).product, quantity: 1}],
+                };
+            }
         case MyOrderActionTypes.REMOVE_POSITION:
             const rPos = (action as any).position;
             const existsRIndex = state.positions.findIndex(pos => pos.id === rPos.id);

@@ -35,11 +35,11 @@ export const Ads = ({ language, ads, onPress }: IAdsProps) => {
         if (!!onPress) {
             onPress(ads[currentAdIndex]);
         }
-    }, []);
+    }, [currentAdIndex]);
 
     const endVideoHandler = useCallback(() => {
         nextCurrentAdIndex();
-    }, []);
+    }, [currentAdIndex]);
 
     const currentAdContent = !!ads && ads.length > 0 && !!ads[currentAdIndex] ? ads[currentAdIndex].contents[language?.code] : undefined;
     const currentAdAsset = currentAdContent?.resources?.main;
