@@ -2,16 +2,17 @@ import React, { Dispatch, useState, useCallback, useEffect } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
 import { CommonActions } from "@react-navigation/native";
 import { View, Dimensions, ScaledSize } from "react-native";
+import { connect } from "react-redux";
+import { ICompiledMenu, ICurrency, ICompiledLanguage, ICompiledOrderType, ICompiledProduct, IOrderPosition } from "@djonnyx/tornado-types";
 import { MainNavigationScreenTypes } from "../navigation";
 import { IAppState } from "../../store/state";
-import { connect } from "react-redux";
-import { ICompiledMenu, ICurrency, ICompiledLanguage, ICompiledOrderType, ICompiledProduct } from "@djonnyx/tornado-types";
 import { CombinedDataSelectors, MyOrderSelectors } from "../../store/selectors";
 import { CapabilitiesSelectors } from "../../store/selectors/CapabilitiesSelector";
 import { CapabilitiesActions, MyOrderActions } from "../../store/actions";
 import { MyOrderPanel } from "../simple/MyOrderPanel";
 import { Menu } from "../simple/Menu";
 import { theme } from "../../theme";
+import { NotificationAlert } from "../simple/NotificationAlert";
 
 interface IMenuSelfProps {
     // store props
@@ -21,14 +22,14 @@ interface IMenuSelfProps {
     _defaultCurrency: ICurrency;
     _menu: ICompiledMenu;
     _language: ICompiledLanguage;
-    _orderPositions: Array<ICompiledProduct>;
+    _orderPositions: Array<IOrderPosition>;
 
     // store dispatches
     _onChangeLanguage: (language: ICompiledLanguage) => void;
     _onChangeOrderType: (orderType: ICompiledOrderType) => void;
     _onAddOrderPosition: (position: ICompiledProduct) => void;
-    _onUpdateOrderPosition: (position: ICompiledProduct) => void;
-    _onRemoveOrderPosition: (position: ICompiledProduct) => void;
+    _onUpdateOrderPosition: (position: IOrderPosition) => void;
+    _onRemoveOrderPosition: (position: IOrderPosition) => void;
 
     // self props
 }
@@ -43,6 +44,8 @@ const MenuScreenContainer = React.memo(({
     _onRemoveOrderPosition, navigation, route,
 }: IMenuProps) => {
     const [windowSize, _setWindowSize] = useState({ width: Dimensions.get("window").width, height: Dimensions.get("window").height });
+    const [notifyLastAddedProduct, _setNotifyLastAddedProduct] = useState<ICompiledProduct>(undefined as any);
+    const [showNotificationOfLastAddedProduct, _setShowNotificationOfLastAddedProduct] = useState<boolean>(false);
 
     const myOrderWidth = 170;
     let menuWidth = windowSize.width - myOrderWidth;
@@ -64,14 +67,14 @@ const MenuScreenContainer = React.memo(({
     });
 
     const confirmHandler = useCallback(() => {
-        navigation.dispatch(
+        /*navigation.dispatch(
             CommonActions.reset({
                 index: 1,
                 routes: [
                     { name: MainNavigationScreenTypes.CONFIRMATION_ORDER },
                 ],
             })
-        );
+        );*/
     }, []);
 
     const cancelHandler = useCallback(() => {
@@ -85,16 +88,37 @@ const MenuScreenContainer = React.memo(({
         );
     }, []);
 
+    const addProductHandler = (product: ICompiledProduct) => {
+        _onAddOrderPosition(product);
+        _setNotifyLastAddedProduct(() => product);
+        _setShowNotificationOfLastAddedProduct(() => true);
+    };
+
+    const addProductNotificationComplete = useCallback(() => {
+        _setShowNotificationOfLastAddedProduct(() => false);
+    }, [_setNotifyLastAddedProduct, notifyLastAddedProduct]);
+
     return (
         <View style={{ flexDirection: "row", width: "100%", height: "100%", backgroundColor: theme.themes[theme.name].menu.background }}>
+            {
+                !!notifyLastAddedProduct
+                    ?
+                    <NotificationAlert message={`"${notifyLastAddedProduct.contents[_language.code].name}" добавлен в заказ!`}
+                        visible={showNotificationOfLastAddedProduct}
+                        duration={5000}
+                        onComplete={addProductNotificationComplete}
+                    />
+                    :
+                    undefined
+            }
             <View style={{ position: "absolute", width: menuWidth, height: "100%", zIndex: 1 }}>
                 <Menu currency={_defaultCurrency} language={_language} menu={_menu} width={menuWidth} height={windowSize.height} positions={_orderPositions} cancelOrder={cancelHandler}
-                    addPosition={_onAddOrderPosition} updatePosition={_onUpdateOrderPosition} removePosition={_onRemoveOrderPosition}
+                    addPosition={addProductHandler} updatePosition={_onUpdateOrderPosition} removePosition={_onRemoveOrderPosition}
                 ></Menu>
             </View>
             <View style={{ position: "absolute", width: myOrderWidth, height: "100%", left: menuWidth, zIndex: 2 }}>
                 <MyOrderPanel currency={_defaultCurrency} sum={_orderSum} language={_language} languages={_languages} orderTypes={_orderTypes} positions={_orderPositions}
-                    addPosition={_onAddOrderPosition} updatePosition={_onUpdateOrderPosition} removePosition={_onRemoveOrderPosition}
+                    updatePosition={_onUpdateOrderPosition} removePosition={_onRemoveOrderPosition}
                     onChangeLanguage={_onChangeLanguage} onChangeOrderType={_onChangeOrderType} onConfirm={confirmHandler}></MyOrderPanel>
             </View>
         </View>
@@ -121,13 +145,13 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
         _onChangeOrderType: (orderType: ICompiledOrderType) => {
             dispatch(CapabilitiesActions.setOrderType(orderType));
         },
-        _onAddOrderPosition: (position: ICompiledProduct) => {
-            dispatch(MyOrderActions.addPosition(position));
+        _onAddOrderPosition: (product: ICompiledProduct) => {
+            dispatch(MyOrderActions.addPosition(product));
         },
-        _onUpdateOrderPosition: (position: ICompiledProduct) => {
+        _onUpdateOrderPosition: (position: IOrderPosition) => {
             dispatch(MyOrderActions.updatePosition(position));
         },
-        _onRemoveOrderPosition: (position: ICompiledProduct) => {
+        _onRemoveOrderPosition: (position: IOrderPosition) => {
             dispatch(MyOrderActions.removePosition(position));
         },
     };

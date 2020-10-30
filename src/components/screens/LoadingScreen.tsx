@@ -38,7 +38,7 @@ const LoadingScreenContainer = React.memo(({ _progress, _loaded, navigation }: I
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: theme.themes[theme.name].loading.background }}>
       <ProgressBar
-        style={{ width: "100%", maxWidth: 200, marginLeft: "10%", marginRight: "10%", backgroundColor: theme.themes[theme.name].loading.progressBar.trackColor }}
+        style={{ width: "100%", maxWidth: 200, marginLeft: "10%", marginRight: "10%" }}
         styleAttr="Horizontal"
         progress={_progress / 100}
         indeterminate={false}

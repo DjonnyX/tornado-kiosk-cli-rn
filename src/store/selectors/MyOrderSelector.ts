@@ -12,7 +12,7 @@ export namespace MyOrderSelectors {
         let sum = 0;
         const currency = state.combinedData.data?.refs.defaultCurrency;
         for (const pos of state.myOrder.positions) {
-            sum += pos.prices[currency?.id as any]?.value | 0;
+            sum += pos.product.prices[currency?.id as any]?.value | 0;
         }
         return sum;
     });
