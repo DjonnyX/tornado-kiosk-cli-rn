@@ -17,12 +17,10 @@ const App = () => {
 
         {/** components */}
         <UserIdleService>
-          <>
-            <StatusBar hidden={true} />
-            <NavigationContainer>
-              <MainNavigationStack />
-            </NavigationContainer>
-          </>
+          <StatusBar hidden={true} />
+          <NavigationContainer>
+            <MainNavigationStack />
+          </NavigationContainer>
         </UserIdleService>
       </Provider>
     </>
