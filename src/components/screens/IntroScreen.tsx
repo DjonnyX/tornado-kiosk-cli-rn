@@ -11,18 +11,25 @@ import { Ads } from "../simple";
 import { ICompiledLanguage } from "@djonnyx/tornado-types";
 import { CommonActions } from "@react-navigation/native";
 import { theme } from "../../theme";
+import { CapabilitiesActions } from "../../store/actions";
 
 interface IIntroSelfProps {
     // store props
+    _onChangeScreen: () => void;
     _intros: Array<ICompiledAd>;
     _language: ICompiledLanguage;
+    _currentScreen: MainNavigationScreenTypes | undefined;
 
     // self props
 }
 
 interface IIntroProps extends StackScreenProps<any, MainNavigationScreenTypes.INTRO>, IIntroSelfProps { }
 
-const IntroScreenContainer = React.memo(({ _language, _intros, navigation }: IIntroProps) => {
+const IntroScreenContainer = React.memo(({ _language, _intros, navigation, _currentScreen, _onChangeScreen }: IIntroProps) => {
+    useEffect(() => {
+        _onChangeScreen();
+    }, [_currentScreen]);
+
     const pressHandler = useCallback((ad: ICompiledAd) => {
         navigation.dispatch(
             CommonActions.reset({
@@ -45,11 +52,16 @@ const mapStateToProps = (state: IAppState, ownProps: IIntroProps) => {
     return {
         _intros: CombinedDataSelectors.selectIntros(state),
         _language: CapabilitiesSelectors.selectLanguage(state),
+        _currentScreen: CapabilitiesSelectors.selectCurrentScreen(state),
     };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
-    return {};
+    return {
+        _onChangeScreen: () => {
+            dispatch(CapabilitiesActions.setCurrentScreen(MainNavigationScreenTypes.INTRO));
+        },
+    };
 };
 
 export const IntroScreen = connect(mapStateToProps, mapDispatchToProps)(IntroScreenContainer);

@@ -16,6 +16,7 @@ import { NotificationAlert } from "../simple/NotificationAlert";
 
 interface IMenuSelfProps {
     // store props
+    _onChangeScreen: () => void;
     _languages: Array<ICompiledLanguage>;
     _orderSum: number;
     _orderTypes: Array<ICompiledOrderType>;
@@ -23,6 +24,7 @@ interface IMenuSelfProps {
     _menu: ICompiledMenu;
     _language: ICompiledLanguage;
     _orderPositions: Array<IOrderPosition>;
+    _currentScreen: MainNavigationScreenTypes | undefined;
 
     // store dispatches
     _onChangeLanguage: (language: ICompiledLanguage) => void;
@@ -39,6 +41,7 @@ interface IMenuProps extends StackScreenProps<any, MainNavigationScreenTypes.MEN
 const MenuScreenContainer = React.memo(({
     _languages, _orderTypes, _defaultCurrency,
     _menu, _language, _orderPositions, _orderSum,
+    _currentScreen, _onChangeScreen,
     _onChangeLanguage, _onChangeOrderType,
     _onAddOrderPosition, _onUpdateOrderPosition,
     _onRemoveOrderPosition, navigation, route,
@@ -49,6 +52,10 @@ const MenuScreenContainer = React.memo(({
 
     const myOrderWidth = 170;
     let menuWidth = windowSize.width - myOrderWidth;
+    
+    useEffect(() => {
+        _onChangeScreen();
+    }, [_currentScreen]);
 
     useEffect(() => {
         function dimensionsChangeHandler({ window }: { window: ScaledSize }) {
@@ -134,6 +141,7 @@ const mapStateToProps = (state: IAppState, ownProps: IMenuProps) => {
         _language: CapabilitiesSelectors.selectLanguage(state),
         _orderPositions: MyOrderSelectors.selectPositions(state),
         _orderSum: MyOrderSelectors.selectSum(state),
+        _currentScreen: CapabilitiesSelectors.selectCurrentScreen(state),
     };
 };
 
@@ -153,6 +161,9 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
         },
         _onRemoveOrderPosition: (position: IOrderPosition) => {
             dispatch(MyOrderActions.removePosition(position));
+        },
+        _onChangeScreen: () => {
+            dispatch(CapabilitiesActions.setCurrentScreen(MainNavigationScreenTypes.INTRO));
         },
     };
 };
