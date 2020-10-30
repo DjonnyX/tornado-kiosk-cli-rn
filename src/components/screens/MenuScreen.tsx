@@ -17,6 +17,7 @@ import { NotificationAlert } from "../simple/NotificationAlert";
 interface IMenuSelfProps {
     // store props
     _onChangeScreen: () => void;
+    _onResetOrder: () => void;
     _onMarkOrderAsNew: () => void;
     _languages: Array<ICompiledLanguage>;
     _orderSum: number;
@@ -44,7 +45,7 @@ const MenuScreenContainer = React.memo(({
     _languages, _orderTypes, _defaultCurrency,
     _menu, _language, _orderPositions, _orderSum,
     _isOrderReseted, _currentScreen, _onChangeScreen,
-    _onMarkOrderAsNew,
+    _onMarkOrderAsNew, _onResetOrder,
     _onChangeLanguage, _onChangeOrderType,
     _onAddOrderPosition, _onUpdateOrderPosition,
     _onRemoveOrderPosition, navigation, route,
@@ -108,7 +109,7 @@ const MenuScreenContainer = React.memo(({
     }, []);
 
     const cancelHandler = useCallback(() => {
-        navigateToIntro();
+        _onResetOrder();
     }, []);
 
     const addProductHandler = (product: ICompiledProduct) => {
@@ -184,6 +185,9 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
         },
         _onMarkOrderAsNew: () => {
             dispatch(MyOrderActions.markAsNew());
+        },
+        _onResetOrder: () => {
+            dispatch(MyOrderActions.reset());
         },
     };
 };
