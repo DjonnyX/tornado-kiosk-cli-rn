@@ -5,7 +5,7 @@ import {
 import { NavigationContainer } from "@react-navigation/native";
 import { Provider } from "react-redux";
 import { MainNavigationStack } from "./src/components/navigation/MainNavigationStack";
-import { DataCollectorService } from "./src/core";
+import { DataCollectorService, UserIdleService } from "./src/core";
 import { store } from "./src/store";
 
 const App = () => {
@@ -16,10 +16,12 @@ const App = () => {
         <DataCollectorService />
 
         {/** components */}
+        <UserIdleService>
           <StatusBar hidden={true} />
           <NavigationContainer>
             <MainNavigationStack />
           </NavigationContainer>
+        </UserIdleService>
       </Provider>
     </>
   );

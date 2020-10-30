@@ -16,4 +16,8 @@ export namespace MyOrderSelectors {
         }
         return sum;
     });
+
+    export const selectIsReseted = createSelector(getMyOrder, (state) => {
+        return state.isReseted;
+    });
 }
