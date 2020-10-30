@@ -6,9 +6,11 @@ import { IAppState } from "../store/state";
 import { CapabilitiesSelectors } from "../store/selectors";
 import { MainNavigationScreenTypes } from "../components/navigation";
 import { AlertContent, ModalTransparent } from "../components/simple";
+import { MyOrderActions } from "../store/actions";
 
 interface IUserIdleServiceProps {
     // store
+    _onReset?: () => void;
     _currentScreen?: MainNavigationScreenTypes | undefined;
 
     // self
@@ -136,7 +138,9 @@ class UserIdleServiceContainer extends PureComponent<IUserIdleServiceProps, IUse
     }
 
     private resetStore = () => {
-
+        if (this.props._onReset) {
+            this.props._onReset();
+        }
     }
 
     render() {
@@ -170,7 +174,11 @@ const mapStateToProps = (state: IAppState) => {
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => {
-    return {};
+    return {
+        _onReset: () => {
+            dispatch(MyOrderActions.reset());
+        },
+    };
 };
 
 export const UserIdleService = connect(null, mapDispatchToProps)(UserIdleServiceContainer);
