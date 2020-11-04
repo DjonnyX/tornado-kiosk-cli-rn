@@ -98,14 +98,14 @@ const MenuScreenContainer = React.memo(({
     });
 
     const confirmHandler = useCallback(() => {
-        /*navigation.dispatch(
+        navigation.dispatch(
             CommonActions.reset({
                 index: 1,
                 routes: [
                     { name: MainNavigationScreenTypes.CONFIRMATION_ORDER },
                 ],
             })
-        );*/
+        );
     }, []);
 
     const cancelHandler = useCallback(() => {

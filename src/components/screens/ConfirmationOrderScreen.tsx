@@ -1,35 +1,50 @@
 import React, { Dispatch, useCallback, useEffect } from "react";
-import { View } from "react-native";
+import { FlatList, SafeAreaView, ScrollView, View } from "react-native";
 import { connect } from "react-redux";
 import { StackScreenProps } from "@react-navigation/stack";
-import { ICompiledLanguage, ICompiledAd } from "@djonnyx/tornado-types";
+import { ICompiledLanguage, ICompiledAd, IOrderPosition, ICurrency, ICompiledProduct } from "@djonnyx/tornado-types";
 import { IAppState } from "../../store/state";
 import { MainNavigationScreenTypes } from "../navigation";
-import { CombinedDataSelectors } from "../../store/selectors";
+import { CombinedDataSelectors, MyOrderSelectors } from "../../store/selectors";
 import { CapabilitiesSelectors } from "../../store/selectors/CapabilitiesSelector";
 import { Ads } from "../simple";
 import { theme } from "../../theme";
-import { CapabilitiesActions } from "../../store/actions";
+import { CapabilitiesActions, MyOrderActions } from "../../store/actions";
+import { ConfirmationOrderListItem } from "../simple/confirmation-order-list";
 
 interface IConfirmationOrderScreenSelfProps {
     // store props
     _onChangeScreen: () => void;
+    _onAddOrderPosition: (position: ICompiledProduct) => void;
+    _onUpdateOrderPosition: (position: IOrderPosition) => void;
+    _onRemoveOrderPosition: (position: IOrderPosition) => void;
     _banners: Array<ICompiledAd>;
     _language: ICompiledLanguage;
     _currentScreen: MainNavigationScreenTypes | undefined;
+    _positions: Array<IOrderPosition>;
+    _currency: ICurrency;
 
     // self props
 }
 
 interface IConfirmationOrderScreenProps extends StackScreenProps<any, MainNavigationScreenTypes.INTRO>, IConfirmationOrderScreenSelfProps { }
 
-const ConfirmationOrderScreenContainer = React.memo(({ _language, _banners, navigation, _currentScreen, _onChangeScreen }: IConfirmationOrderScreenProps) => {
+const ConfirmationOrderScreenContainer = React.memo(({ _language, _banners, _currency, _currentScreen, _positions, navigation,
+    _onChangeScreen, _onAddOrderPosition, _onUpdateOrderPosition, _onRemoveOrderPosition }: IConfirmationOrderScreenProps) => {
     useEffect(() => {
         _onChangeScreen();
     }, [_currentScreen]);
 
     const selectAdHandler = useCallback((ad: ICompiledAd) => {
         // etc...
+    }, []);
+
+    const updatePositionHandler = useCallback((position: IOrderPosition) => {
+        _onUpdateOrderPosition(position);
+    }, []);
+
+    const removePositionHandler = useCallback((position: IOrderPosition) => {
+        _onRemoveOrderPosition(position);
     }, []);
 
     return (
@@ -44,7 +59,16 @@ const ConfirmationOrderScreenContainer = React.memo(({ _language, _banners, navi
                     undefined
             }
             <View style={{ flex: 1, flexDirection: "row", width: "100%", height: "100%", maxHeight: _banners.length > 0 ? "90%" : "100%" }}>
-
+                <SafeAreaView style={{ flex: 1, width: "100%" }}>
+                    <ScrollView style={{ flex: 1 }} horizontal={false}>
+                        <FlatList updateCellsBatchingPeriod={10} style={{ flex: 1 }} data={_positions} renderItem={({ item }) => {
+                            return <ConfirmationOrderListItem key={item.id} position={item} currency={_currency} language={_language} imageHeight={48}
+                                onChange={updatePositionHandler} onRemove={removePositionHandler} />
+                        }}
+                            keyExtractor={(item, index) => index.toString()}>
+                        </FlatList>
+                    </ScrollView>
+                </SafeAreaView>
             </View>
         </View>
     );
@@ -54,12 +78,23 @@ const mapStateToProps = (state: IAppState, ownProps: IConfirmationOrderScreenPro
     return {
         _banners: CombinedDataSelectors.selectBanners(state),
         _language: CapabilitiesSelectors.selectLanguage(state),
+        _currency: CombinedDataSelectors.selectDefaultCurrency(state),
+        _positions: MyOrderSelectors.selectPositions(state),
         _currentScreen: CapabilitiesSelectors.selectCurrentScreen(state),
     };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
     return {
+        _onAddOrderPosition: (product: ICompiledProduct) => {
+            dispatch(MyOrderActions.addPosition(product));
+        },
+        _onUpdateOrderPosition: (position: IOrderPosition) => {
+            dispatch(MyOrderActions.updatePosition(position));
+        },
+        _onRemoveOrderPosition: (position: IOrderPosition) => {
+            dispatch(MyOrderActions.removePosition(position));
+        },
         _onChangeScreen: () => {
             dispatch(CapabilitiesActions.setCurrentScreen(MainNavigationScreenTypes.CONFIRMATION_ORDER));
         },
