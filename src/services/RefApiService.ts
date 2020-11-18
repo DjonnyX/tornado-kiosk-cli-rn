@@ -27,7 +27,7 @@ class RefApiService {
                     {
                         method: "GET",
                         headers: {
-                            "x-authorization": config.license.apiKey,
+                            "x-access-token": config.license.apiKey,
                         }
                     })
             )
@@ -49,7 +49,7 @@ class RefApiService {
                     {
                         method: "GET",
                         headers: {
-                            "x-authorization": config.license.apiKey,
+                            "x-access-token": config.license.apiKey,
                         }
                     })
             ),
@@ -67,7 +67,7 @@ class RefApiService {
                     {
                         method: "GET",
                         headers: {
-                            "x-authorization": config.license.apiKey,
+                            "x-access-token": config.license.apiKey,
                         }
                     })
             ),
@@ -85,7 +85,7 @@ class RefApiService {
                     {
                         method: "GET",
                         headers: {
-                            "x-authorization": config.license.apiKey,
+                            "x-access-token": config.license.apiKey,
                         }
                     })
             ),
@@ -103,7 +103,7 @@ class RefApiService {
                     {
                         method: "GET",
                         headers: {
-                            "x-authorization": config.license.apiKey,
+                            "x-access-token": config.license.apiKey,
                         }
                     })
             ),
@@ -122,7 +122,7 @@ class RefApiService {
                     {
                         method: "GET",
                         headers: {
-                            "x-authorization": config.license.apiKey,
+                            "x-access-token": config.license.apiKey,
                         }
                     })
             ),
@@ -140,7 +140,7 @@ class RefApiService {
                     {
                         method: "GET",
                         headers: {
-                            "x-authorization": config.license.apiKey,
+                            "x-access-token": config.license.apiKey,
                         }
                     })
             ),
@@ -158,7 +158,7 @@ class RefApiService {
                     {
                         method: "GET",
                         headers: {
-                            "x-authorization": config.license.apiKey,
+                            "x-access-token": config.license.apiKey,
                         }
                     })
             ),
@@ -176,7 +176,7 @@ class RefApiService {
                     {
                         method: "GET",
                         headers: {
-                            "x-authorization": config.license.apiKey,
+                            "x-access-token": config.license.apiKey,
                         }
                     })
             ),
@@ -194,7 +194,7 @@ class RefApiService {
                     {
                         method: "GET",
                         headers: {
-                            "x-authorization": config.license.apiKey,
+                            "x-access-token": config.license.apiKey,
                         }
                     })
             ),
@@ -212,7 +212,7 @@ class RefApiService {
                     {
                         method: "GET",
                         headers: {
-                            "x-authorization": config.license.apiKey,
+                            "x-access-token": config.license.apiKey,
                         }
                     })
             ),
@@ -230,7 +230,7 @@ class RefApiService {
                     {
                         method: "GET",
                         headers: {
-                            "x-authorization": config.license.apiKey,
+                            "x-access-token": config.license.apiKey,
                         }
                     })
             ),
@@ -248,7 +248,7 @@ class RefApiService {
                     {
                         method: "GET",
                         headers: {
-                            "x-authorization": config.license.apiKey,
+                            "x-access-token": config.license.apiKey,
                         }
                     })
             ),
@@ -266,7 +266,7 @@ class RefApiService {
                     {
                         method: "GET",
                         headers: {
-                            "x-authorization": config.license.apiKey,
+                            "x-access-token": config.license.apiKey,
                         }
                     })
             ),
