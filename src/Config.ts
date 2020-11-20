@@ -7,7 +7,7 @@ class Config implements IConfig {
     };
 
     license = {
-        apiKey: "my-api-key",
+        apiKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmFiZGRhMmMwNzcwMjUwNTBlOTlhMmMiLCJlbWFpbCI6ImRqb25ueXhAZ21haWwuY29tIiwiaWF0IjoxNjA1NzA2NDczfQ.ySYmVO50XcgzE99IbyT-mAQRUvbl98JHVlty34FzFWI",
     };
 
     capabilities = {
