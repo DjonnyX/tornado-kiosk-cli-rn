@@ -12,7 +12,7 @@ import { CapabilitiesActions } from "../../store/actions";
 
 interface ILoadingSelfProps {
   // store props
-    _onChangeScreen: () => void;
+  _onChangeScreen: () => void;
   _progress: number;
   _loaded: boolean;
   _currentScreen: MainNavigationScreenTypes | undefined;
@@ -24,7 +24,7 @@ interface ILoadingProps extends StackScreenProps<any, MainNavigationScreenTypes.
 
 const LoadingScreenContainer = React.memo(({ _progress, _loaded, navigation, _currentScreen, _onChangeScreen }: ILoadingProps) => {
   useEffect(() => {
-      _onChangeScreen();
+    _onChangeScreen();
   }, [_currentScreen]);
 
   useEffect(() => {
@@ -74,7 +74,7 @@ const mapStateToProps = (state: IAppState, ownProps: ILoadingProps) => {
 const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
   return {
     _onChangeScreen: () => {
-        dispatch(CapabilitiesActions.setCurrentScreen(MainNavigationScreenTypes.LOADING));
+      dispatch(CapabilitiesActions.setCurrentScreen(MainNavigationScreenTypes.LOADING));
     },
   };
 };

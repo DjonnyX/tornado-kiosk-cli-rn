@@ -1,6 +1,6 @@
 {
   "name": "TornadoKiosk",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -18,9 +18,9 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
-    "@djonnyx/tornado-assets-store": "0.1.0",
-    "@djonnyx/tornado-refs-processor": "^1.1.15",
-    "@djonnyx/tornado-types": "^1.3.35",
+    "@djonnyx/tornado-assets-store": "0.1.1",
+    "@djonnyx/tornado-refs-processor": "^1.1.16",
+    "@djonnyx/tornado-types": "^1.3.36",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-community/progress-bar-android": "^1.0.3",
     "@react-navigation/native": "^5.7.3",
