@@ -5,25 +5,54 @@ import { IRef, INode, ISelector, IProduct, ITag, IAsset, ILanguage, ITranslation
 import { genericRetryStrategy } from "../utils/request";
 import { Log } from "./Log";
 import { AuthStore } from "../native";
+import { extractError } from "../utils/error";
 
-const request = (observable: Observable<Response>): Observable<Response> => {
-    return observable.pipe(
-        retryWhen(
-            genericRetryStrategy({
-                rejectShortAttempts: 5, // 5 последовательных попыток
-                rejectShortTimeout: 5000, // Раз в 5 сек
-                rejectLongTimeout: 60000, // Раз в минуту переобновление
-                excludedStatusCodes: [],
-            }),
-        ),
+interface IRequestOptions {
+    useAttempts?: boolean;
+    breakAfter?: number;
+}
+
+const request = (observable: Observable<Response>, options?: IRequestOptions): Observable<Response> => {
+    if (options?.useAttempts) {
+        return observable.pipe(
+            retryWhen(
+                genericRetryStrategy({
+                    rejectShortAttempts: 5, // 5 последовательных попыток
+                    rejectShortTimeout: 5000, // Раз в 5 сек
+                    rejectLongTimeout: 60000, // Раз в минуту переобновление
+                    excludedStatusCodes: [],
+                }),
+            ),
+        );
+    }
+
+    return observable;
+}
+
+const parseResponse = (res: Response) => {
+    let result: Observable<any>;
+    result = from(res.json());
+
+    if (res.ok) {
+        return result;
+    }
+
+    return result.pipe(
+        switchMap(data => {
+            const err = extractError(data.error);
+            if (err) {
+                console.warn(err)
+                return throwError(err);
+            }
+
+            return throwError(res.statusText);
+        }),
     );
 }
 
-const TOKEN_SALT = "qahtERQsPUI9O1FxnS8askPQ8lWmXlzwKIzWcXLtgBveAcorE7rGHMyXypQfvMwxk0HOHtHqKvWVmRGhQ3mL9sx8GYh9rzTg64c5loZlvG0eFEmfxRFGw6mBIGDnAT9voByVvR5i4Ei5jMeoh8bgJUcK15A4NDp7lytsrBtJ6Gt1Fpvggk07DOBbs92z6aMRemeK49pfnqUdPZNQW7RjqWNjzpKdMJHZqsJo3q8rnRI1AOprMH9HRTSSZIW78tvR4k19pQJ14mwqjDNgvmGzypk8Wwa8pOdDd8TuaTQs4YRmf6Fx1mLe87Ua35Hvc9q3k7MF8kKPRJFLuAa12bcQ";
-
 class RefApiService {
     private _serial: string | undefined;
-    
+
     public set serial(v: string) {
         if (this._serial === v) {
             return;
@@ -33,13 +62,13 @@ class RefApiService {
     }
 
     async getAccessToken(): Promise<string> {
-        return AuthStore.getToken(config.license.apiKey, TOKEN_SALT);
+        return AuthStore.getToken(config.license.apiKey, config.refServer.apiKeyTokenSalt);
     }
 
     terminalLicenseVerify(serial: string): Observable<Array<any>> {
         Log.i("RefApiService", "terminalLicenseVerify");
         return request(
-            from(AuthStore.getToken(serial, TOKEN_SALT)).pipe(
+            from(AuthStore.getToken(serial, config.refServer.apiKeyTokenSalt)).pipe(
                 switchMap(token => {
                     return from(
                         fetch(`${config.refServer.address}/api/v1/terminal/license-verify`,
@@ -52,9 +81,9 @@ class RefApiService {
                         )
                     );
                 }),
-            )
+            ),
         ).pipe(
-            switchMap(res => res.ok ? from(res.json()) : throwError(res.status)),
+            switchMap(res => parseResponse(res)),
             catchError(err => {
                 Log.i("RefApiService", "> terminalLicenseVerify: " + err);
                 return throwError(err);
@@ -63,12 +92,12 @@ class RefApiService {
         );
     }
 
-    terminalRegistry(serial: string, name: string): Observable<Array<any>> { // ILicense
+    terminalRegistration(serial: string, terminalName: string): Observable<Array<any>> { // ILicense
         Log.i("RefApiService", "terminalRegistry");
         return request(
-            from(AuthStore.getToken(serial, TOKEN_SALT)).pipe(
+            from(AuthStore.getToken(serial, config.refServer.apiKeyTokenSalt)).pipe(
                 switchMap(token => {
-                    console.warn(token, name)
+                    console.warn(token, terminalName)
                     return from(
                         fetch(`${config.refServer.address}/api/v1/terminal/registration`,
                             {
@@ -78,45 +107,17 @@ class RefApiService {
                                 },
                                 body: {
                                     type: TerminalTypes.KIOSK,
-                                    name,
+                                    terminalName,
                                 }
                             }
                         )
                     );
                 }),
-            )
+            ),
         ).pipe(
-            switchMap(res => res.ok ? from(res.json()) : throwError(res.status)),
+            switchMap(res => parseResponse(res)),
             catchError(err => {
                 Log.i("RefApiService", "> terminalRegistry: " + err);
-                return throwError(err);
-            }),
-            map(resData => resData.data)
-        );
-    }
-
-    registerTerminal(serial: string, params: ITerminal | any): Observable<Array<ITerminal>> {
-        Log.i("RefApiService", "registerTerminal");
-        return request(
-            from(AuthStore.getToken(serial, TOKEN_SALT)).pipe(
-                switchMap(token => {
-                    return from(
-                        fetch(`${config.refServer.address}/api/v1/terminals`,
-                            {
-                                method: "POST",
-                                headers: {
-                                    "x-access-token": token,
-                                },
-                                body: params,
-                            }
-                        )
-                    );
-                }),
-            )
-        ).pipe(
-            switchMap(res => res.ok ? from(res.json()) : throwError(res.status)),
-            catchError(err => {
-                Log.i("RefApiService", "> getRefs: " + err);
                 return throwError(err);
             }),
             map(resData => resData.data)
@@ -139,9 +140,9 @@ class RefApiService {
                         )
                     );
                 }),
-            )
+            ),
         ).pipe(
-            switchMap(res => res.ok ? from(res.json()) : throwError(res.status)),
+            switchMap(res => parseResponse(res)),
             catchError(err => {
                 Log.i("RefApiService", "> getRefs: " + err);
                 return throwError(err);
@@ -168,7 +169,7 @@ class RefApiService {
                 })
             ),
         ).pipe(
-            switchMap(res => res.ok ? from(res.json()) : throwError(res.status)),
+            switchMap(res => parseResponse(res)),
             map(resData => resData.data),
         );
     }
@@ -191,7 +192,7 @@ class RefApiService {
                 }),
             ),
         ).pipe(
-            switchMap(res => res.ok ? from(res.json()) : throwError(res.status)),
+            switchMap(res => parseResponse(res)),
             map(resData => resData.data),
         );
     }
@@ -213,7 +214,7 @@ class RefApiService {
                 }),
             ),
         ).pipe(
-            switchMap(res => res.ok ? from(res.json()) : throwError(res.status)),
+            switchMap(res => parseResponse(res)),
             map(resData => resData.data),
         );
     }
@@ -237,7 +238,7 @@ class RefApiService {
             ),
         ).pipe(
             retry(5),
-            switchMap(res => res.ok ? from(res.json()) : throwError(res.status)),
+            switchMap(res => parseResponse(res)),
             map(resData => resData.data),
         );
     }
@@ -260,7 +261,7 @@ class RefApiService {
                 })
             ),
         ).pipe(
-            switchMap(res => res.ok ? from(res.json()) : throwError(res.status)),
+            switchMap(res => parseResponse(res)),
             map(resData => resData.data),
         );
     }
@@ -283,7 +284,7 @@ class RefApiService {
                 })
             ),
         ).pipe(
-            switchMap(res => res.ok ? from(res.json()) : throwError(res.status)),
+            switchMap(res => parseResponse(res)),
             map(resData => resData.data),
         );
     }
@@ -306,7 +307,7 @@ class RefApiService {
                 })
             ),
         ).pipe(
-            switchMap(res => res.ok ? from(res.json()) : throwError(res.status)),
+            switchMap(res => parseResponse(res)),
             map(resData => resData.data),
         );
     }
@@ -329,7 +330,7 @@ class RefApiService {
                 })
             ),
         ).pipe(
-            switchMap(res => res.ok ? from(res.json()) : throwError(res.status)),
+            switchMap(res => parseResponse(res)),
             map(resData => resData.data),
         );
     }
@@ -352,7 +353,7 @@ class RefApiService {
                 })
             ),
         ).pipe(
-            switchMap(res => res.ok ? from(res.json()) : throwError(res.status)),
+            switchMap(res => parseResponse(res)),
             map(resData => resData.data),
         );
     }
@@ -375,7 +376,7 @@ class RefApiService {
                 })
             ),
         ).pipe(
-            switchMap(res => res.ok ? from(res.json()) : throwError(res.status)),
+            switchMap(res => parseResponse(res)),
             map(resData => resData.data),
         );
     }
@@ -398,7 +399,7 @@ class RefApiService {
                 })
             ),
         ).pipe(
-            switchMap(res => res.ok ? from(res.json()) : throwError(res.status)),
+            switchMap(res => parseResponse(res)),
             map(resData => resData.data),
         );
     }
@@ -421,7 +422,7 @@ class RefApiService {
                 })
             ),
         ).pipe(
-            switchMap(res => res.ok ? from(res.json()) : throwError(res.status)),
+            switchMap(res => parseResponse(res)),
             map(resData => resData.data),
         );
     }
@@ -444,7 +445,7 @@ class RefApiService {
                 })
             ),
         ).pipe(
-            switchMap(res => res.ok ? from(res.json()) : throwError(res.status)),
+            switchMap(res => parseResponse(res)),
             map(resData => resData.data),
         );
     }
