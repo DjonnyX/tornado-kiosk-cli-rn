@@ -67,6 +67,7 @@ public class AuthStoreModule extends ReactContextBaseJavaModule {
         String token = Jwts.builder()
                 .claim("imei", imei)
                 .claim("key", keyHash)
+                .claim("serial", serial)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 300000)) // 5 minutes
                 .signWith(SignatureAlgorithm.HS256, privateKey)
