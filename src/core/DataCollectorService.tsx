@@ -1,6 +1,6 @@
 import React, { Component, Dispatch } from "react";
 import { connect } from "react-redux";
-import { from, of, Subject } from "rxjs";
+import { BehaviorSubject, from, forkJoin, of, Subject } from "rxjs";
 import { take, takeUntil, filter } from "rxjs/operators";
 import { IAsset, ICompiledData, IRefs } from "@djonnyx/tornado-types";
 import { AssetsStore, IAssetsStoreResult } from "@djonnyx/tornado-assets-store";
@@ -11,6 +11,7 @@ import { assetsService, refApiService } from "../services";
 import { IAppState } from "../store/state";
 import { CombinedDataActions, CapabilitiesActions } from "../store/actions";
 import { IProgress } from "@djonnyx/tornado-refs-processor/dist/DataCombiner";
+import { SystemSelectors } from "../store/selectors";
 
 interface IDataCollectorServiceProps {
     // store
@@ -18,7 +19,7 @@ interface IDataCollectorServiceProps {
     _onProgress: (progress: IProgress) => void;
 
     // self
-
+    _serialNumber?: string | undefined;
 }
 
 interface IDataCollectorServiceState { }
@@ -31,6 +32,9 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
     private _assetsStore: AssetsStore | null = null;
 
     private _dataCombiner: DataCombiner | null = null;
+
+    private _serialNumber$ = new BehaviorSubject<string | undefined>(undefined);
+    public readonly serialNumber$ = this._serialNumber$.asObservable();
 
     constructor(props: IDataCollectorServiceProps) {
         super(props);
@@ -94,14 +98,29 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
             },
         );
 
-        from(
-            this._assetsStore.init(),
-        ).pipe(
+        forkJoin([
+            from(
+                this._assetsStore.init(),
+            ),
+            this._serialNumber$.pipe(
+                filter(s => s !== undefined),
+                take(1), // Если серийник поменяется, нужно чистить базу
+            )
+        ]).pipe(
             take(1),
             takeUntil(this._unsubscribe$ as any),
         ).subscribe(() => {
             this._dataCombiner?.init(savedData);
         });
+    }
+
+    shouldComponentUpdate(nextProps: Readonly<IDataCollectorServiceProps>, nextState: Readonly<IDataCollectorServiceState>, nextContext: any) {
+        if (this.props._serialNumber !== nextProps._serialNumber) {
+            this._serialNumber$.next(this.props._serialNumber);
+        }
+
+        if (super.shouldComponentUpdate) return super.shouldComponentUpdate(nextProps, nextState, nextContext);
+        return true;
     }
 
     componentWillUnmount() {
@@ -128,7 +147,9 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
 }
 
 const mapStateToProps = (state: IAppState) => {
-    return {};
+    return {
+        _serialNumber: SystemSelectors.selectDeviceInfo(state)?.serialNumber,
+    };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => {
@@ -144,4 +165,4 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => {
     };
 };
 
-export const DataCollectorService = connect(null, mapDispatchToProps)(DataCollectorServiceContainer);
+export const DataCollectorService = connect(mapStateToProps, mapDispatchToProps)(DataCollectorServiceContainer);
