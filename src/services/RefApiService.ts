@@ -1,6 +1,5 @@
 import { Observable, from, throwError } from "rxjs";
 import { catchError, map, retry, retryWhen, switchMap } from "rxjs/operators";
-import md5 from 'md5';
 import { config } from "../Config";
 import { IRef, INode, ISelector, IProduct, ITag, IAsset, ILanguage, ITranslation, IBusinessPeriod, IOrderType, ICurrency, IAd, IStore, ITerminal, TerminalTypes } from "@djonnyx/tornado-types";
 import { genericRetryStrategy } from "../utils/request";
