@@ -37,6 +37,7 @@ class UserIdleServiceContainer extends PureComponent<IUserIdleServiceProps, IUse
         switch (this.props._currentScreen) {
             case MainNavigationScreenTypes.LOADING:
             case MainNavigationScreenTypes.INTRO:
+            case MainNavigationScreenTypes.AUTH:
                 this.resetTimer();
                 break;
             default: {
