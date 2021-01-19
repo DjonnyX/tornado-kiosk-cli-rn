@@ -41,7 +41,6 @@ const parseResponse = (res: Response) => {
         switchMap(data => {
             const err = extractError(data.error);
             if (err) {
-                console.warn(err)
                 return throwError(err);
             }
 
@@ -92,12 +91,11 @@ class RefApiService {
         );
     }
 
-    terminalRegistration(serial: string, terminalName: string): Observable<Array<any>> { // ILicense
+    terminalRegistration(serial: string): Observable<Array<any>> { // ILicense
         Log.i("RefApiService", "terminalRegistry");
         return request(
             from(AuthStore.getToken(serial, config.refServer.apiKeyTokenSalt)).pipe(
                 switchMap(token => {
-                    console.warn(token, terminalName)
                     return from(
                         fetch(`${config.refServer.address}/api/v1/terminal/registration`,
                             {
@@ -107,7 +105,6 @@ class RefApiService {
                                 },
                                 body: {
                                     type: TerminalTypes.KIOSK,
-                                    terminalName,
                                 }
                             }
                         )
