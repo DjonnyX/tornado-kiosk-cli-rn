@@ -27,6 +27,13 @@ export const MainNavigationStack = () => {
         }}
       />
       <Stack.Screen
+        name={MainNavigationScreenTypes.LOADING}
+        component={LoadingScreen}
+        options={{
+          gestureEnabled: false,
+        }}
+      />
+      <Stack.Screen
         name={MainNavigationScreenTypes.INTRO}
         component={IntroScreen}
         options={{

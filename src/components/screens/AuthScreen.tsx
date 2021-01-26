@@ -137,6 +137,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
             dispatch(CapabilitiesActions.setCurrentScreen(MainNavigationScreenTypes.AUTH));
         },
         _onChangeSerialNumber: (serialNumber: string) => {
+            console.warn("set serial", serialNumber)
             dispatch(SystemActions.setSerialNumber(serialNumber));
         },
         _alertOpen: (alert: { title: string, message: string }) => {

@@ -46,9 +46,10 @@ class AuthServiceContainer extends Component<IAuthServiceProps, IAuthServiceStat
     }
 
     componentWillReceiveProps(nextProps: IAuthServiceProps): void {
-        if (this.props._name !== nextProps._name) {
+        /*if (this.props._name !== nextProps._name) {
             this.saveDeviceInfo({ ...this._deviceInfo, name: nextProps._name });
-        }
+        }*/
+        console.warn(this.props._serialNumber, nextProps._serialNumber)
         if (this.props._serialNumber !== nextProps._serialNumber) {
             this.saveDeviceInfo({...this._deviceInfo, name: nextProps._serialNumber});
         }
@@ -96,7 +97,7 @@ class AuthServiceContainer extends Component<IAuthServiceProps, IAuthServiceStat
 
 const mapStateToProps = (state: IAppState) => {
     return {
-        _serialNumber: SystemSelectors.selectDeviceInfo(state)?.serialNumber,
+        _serialNumber: SystemSelectors.selectSerialNumber(state),
         _name: SystemSelectors.selectDeviceInfo(state)?.name,
     };
 };

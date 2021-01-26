@@ -1,7 +1,7 @@
 import { Observable, from, throwError } from "rxjs";
 import { catchError, map, retry, retryWhen, switchMap } from "rxjs/operators";
 import { config } from "../Config";
-import { IRef, INode, ISelector, IProduct, ITag, IAsset, ILanguage, ITranslation, IBusinessPeriod, IOrderType, ICurrency, IAd, IStore, ITerminal, TerminalTypes } from "@djonnyx/tornado-types";
+import { IRef, INode, ISelector, IProduct, ITag, IAsset, ILanguage, ITranslation, IBusinessPeriod, IOrderType, ICurrency, IAd, IStore, ITerminal, TerminalTypes, ILicense } from "@djonnyx/tornado-types";
 import { genericRetryStrategy } from "../utils/request";
 import { Log } from "./Log";
 import { AuthStore } from "../native";
@@ -64,7 +64,7 @@ class RefApiService {
         return AuthStore.getToken(config.license.apiKey, config.refServer.apiKeyTokenSalt);
     }
 
-    terminalLicenseVerify(serial: string): Observable<Array<any>> {
+    terminalLicenseVerify(serial: string): Observable<ILicense> {
         Log.i("RefApiService", "terminalLicenseVerify");
         return request(
             from(AuthStore.getToken(serial, config.refServer.apiKeyTokenSalt)).pipe(
@@ -91,7 +91,7 @@ class RefApiService {
         );
     }
 
-    terminalRegistration(serial: string): Observable<Array<any>> { // ILicense
+    terminalRegistration(serial: string): Observable<ILicense> {
         Log.i("RefApiService", "terminalRegistry");
         return request(
             from(AuthStore.getToken(serial, config.refServer.apiKeyTokenSalt)).pipe(
@@ -102,10 +102,11 @@ class RefApiService {
                                 method: "POST",
                                 headers: {
                                     "x-access-token": token,
+                                    "content-type": "application/json",
                                 },
-                                body: {
+                                body: JSON.stringify({
                                     type: TerminalTypes.KIOSK,
-                                }
+                                }),
                             }
                         )
                     );

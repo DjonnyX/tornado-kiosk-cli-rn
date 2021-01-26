@@ -7,4 +7,8 @@ export namespace SystemSelectors {
     export const selectDeviceInfo = createSelector(getSystem, (state) => {
         return state.deviceInfo;
     });
+    
+    export const selectSerialNumber = createSelector(getSystem, (state) => {
+        return state.deviceInfo?.serialNumber;
+    });
 }
