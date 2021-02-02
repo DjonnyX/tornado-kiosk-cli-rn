@@ -3,10 +3,8 @@ import { SystemActionTypes, TSystemActions } from "../actions/SystemAction";
 import { ISystemState } from "../state";
 
 const initialState: ISystemState = {
-    deviceInfo: {
-        serialNumber: undefined,
-        name: undefined,
-    },
+    serialNumber: undefined,
+    terminalName: undefined,
 };
 
 const systemReducer: Reducer<ISystemState, TSystemActions> = (
@@ -22,7 +20,7 @@ const systemReducer: Reducer<ISystemState, TSystemActions> = (
         case SystemActionTypes.SET_NAME:
             return {
                 ...state,
-                name: action.name,
+                terminalName: action.name,
             };
         default:
             return state;

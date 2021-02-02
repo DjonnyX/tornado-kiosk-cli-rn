@@ -56,6 +56,14 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
         }
 
         const storePath = `${userDataPath}/assets`;
+        
+        try {
+            if (!await assetsService.exists(storePath)) {
+                await assetsService.mkdir(storePath);
+            }
+        } catch (err) {
+            console.warn(err, storePath);
+        }
 
         let savedData: IRefs | undefined;
         try {
@@ -148,7 +156,7 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
 
 const mapStateToProps = (state: IAppState) => {
     return {
-        _serialNumber: SystemSelectors.selectDeviceInfo(state)?.serialNumber,
+        _serialNumber: SystemSelectors.selectSerialNumber(state),
     };
 };
 

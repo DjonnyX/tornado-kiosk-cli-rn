@@ -1,20 +1,18 @@
 import React, { Component, Dispatch } from "react";
 import { connect } from "react-redux";
 import { Subject } from "rxjs";
-import { AssetsStore } from "@djonnyx/tornado-assets-store";
-import { DataCombiner } from "@djonnyx/tornado-refs-processor";
 import { ExternalStorage } from "../native";
 import { assetsService } from "../services";
 import { IAppState } from "../store/state";
 import { CombinedDataActions } from "../store/actions";
 import { IProgress } from "@djonnyx/tornado-refs-processor/dist/DataCombiner";
-import { IDeviceInfo } from "./interfaces";
 import { SystemActions } from "../store/actions/SystemAction";
 import { SystemSelectors } from "../store/selectors";
+import { IDeviceInfo } from "./interfaces";
 
 interface IAuthServiceProps {
     // store
-    _onChangeDeviceInfo: (data: IDeviceInfo | null) => void;
+    _onChangeDeviceInfo: (deviceInfo: IDeviceInfo | null) => void;
     // _onProgress: (progress: IProgress) => void;
 
     // self
@@ -45,14 +43,13 @@ class AuthServiceContainer extends Component<IAuthServiceProps, IAuthServiceStat
         }
     }
 
-    componentWillReceiveProps(nextProps: IAuthServiceProps): void {
-        /*if (this.props._name !== nextProps._name) {
-            this.saveDeviceInfo({ ...this._deviceInfo, name: nextProps._name });
-        }*/
-        console.warn(this.props._serialNumber, nextProps._serialNumber)
+    shouldComponentUpdate(nextProps: Readonly<IAuthServiceProps>, nextState: Readonly<IAuthServiceState>, nextContext: any) {
         if (this.props._serialNumber !== nextProps._serialNumber) {
-            this.saveDeviceInfo({...this._deviceInfo, name: nextProps._serialNumber});
+            this.saveDeviceInfo({ ...this._deviceInfo, serialNumber: nextProps._serialNumber });
         }
+
+        if (super.shouldComponentUpdate) return super.shouldComponentUpdate(nextProps, nextState, nextContext);
+        return true;
     }
 
     async componentDidMount() {
@@ -71,6 +68,14 @@ class AuthServiceContainer extends Component<IAuthServiceProps, IAuthServiceStat
         }
 
         this._storePath = `${userDataPath}/system`;
+
+        try {
+            if (!await assetsService.exists(this._storePath)) {
+                await assetsService.mkdir(this._storePath);
+            }
+        } catch (err) {
+            console.warn(err, this._storePath);
+        }
 
         try {
             this._deviceInfo = await assetsService.readFile(`${this._storePath}/${DEVICE_INFO}`);
@@ -98,7 +103,7 @@ class AuthServiceContainer extends Component<IAuthServiceProps, IAuthServiceStat
 const mapStateToProps = (state: IAppState) => {
     return {
         _serialNumber: SystemSelectors.selectSerialNumber(state),
-        _name: SystemSelectors.selectDeviceInfo(state)?.name,
+        _name: SystemSelectors.selectTerminalName(state),
     };
 };
 

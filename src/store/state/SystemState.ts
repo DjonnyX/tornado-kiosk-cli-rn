@@ -1,5 +1,4 @@
-import { IDeviceInfo } from "../../core/interfaces";
-
 export interface ISystemState {
-    deviceInfo: IDeviceInfo | null;
+    serialNumber: string | undefined;
+    terminalName: string | undefined;
 }

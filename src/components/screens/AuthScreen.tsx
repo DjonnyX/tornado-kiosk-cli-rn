@@ -38,9 +38,14 @@ const AuthScreenContainer = React.memo(({ _serialNumber, navigation, _currentScr
     useEffect(() => {
         _onChangeScreen();
     }, [_currentScreen]);
+    
+    useEffect(() => {
+        console.warn('eeserialNumber', serialNumber)
+    }, [_serialNumber]);
 
     useEffect(() => {
-        if (serialNumber) {
+        if (!!serialNumber) {
+
             setShowProgressBar(true);
             refApiService.terminalLicenseVerify(serialNumber).pipe(
                 take(1),
@@ -105,12 +110,12 @@ const AuthScreenContainer = React.memo(({ _serialNumber, navigation, _currentScr
                 !isLicenseValid &&
                 <>
                     <TextInput placeholderTextColor="#fff7009c" selectionColor="#fff700" underlineColorAndroid="#fff700"
-                    style={{ textAlign: "center", color: "#ffffff", minWidth: 140, marginBottom: 12 }} editable={!showProgressBar}
-                    placeholder="Серийный ключ" onChangeText={changeSerialNumHandler} value={serialNumber}></TextInput>
+                        style={{ textAlign: "center", color: "#ffffff", minWidth: 140, marginBottom: 12 }} editable={!showProgressBar}
+                        placeholder="Серийный ключ" onChangeText={changeSerialNumHandler} value={serialNumber}></TextInput>
                 </>
             }
             <SimpleButton style={{ backgroundColor: "#fff700", minWidth: 140 }} textStyle={{ color: "#000000" }}
-            onPress={authHandler} title="Зарегистрировать" disabled={showProgressBar}></SimpleButton>
+                onPress={authHandler} title="Зарегистрировать" disabled={showProgressBar}></SimpleButton>
             {
                 !!showProgressBar &&
                 <ProgressBar
@@ -121,12 +126,12 @@ const AuthScreenContainer = React.memo(({ _serialNumber, navigation, _currentScr
             }
         </View>
     );
-})
+});
 
 const mapStateToProps = (state: IAppState, ownProps: IAuthProps) => {
     return {
         _progress: CombinedDataSelectors.selectProgress(state),
-        _serialNumber: SystemSelectors.selectDeviceInfo(state)?.serialNumber,
+        _serialNumber: SystemSelectors.selectSerialNumber(state),
         _currentScreen: CapabilitiesSelectors.selectCurrentScreen(state),
     };
 };
@@ -137,7 +142,6 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
             dispatch(CapabilitiesActions.setCurrentScreen(MainNavigationScreenTypes.AUTH));
         },
         _onChangeSerialNumber: (serialNumber: string) => {
-            console.warn("set serial", serialNumber)
             dispatch(SystemActions.setSerialNumber(serialNumber));
         },
         _alertOpen: (alert: { title: string, message: string }) => {
