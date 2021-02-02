@@ -38,16 +38,12 @@ const AuthScreenContainer = React.memo(({ _serialNumber, navigation, _currentScr
     useEffect(() => {
         _onChangeScreen();
     }, [_currentScreen]);
-    
-    useEffect(() => {
-        console.warn('eeserialNumber', serialNumber)
-    }, [_serialNumber]);
 
     useEffect(() => {
-        if (!!serialNumber) {
+        if (!!_serialNumber) {
 
             setShowProgressBar(true);
-            refApiService.terminalLicenseVerify(serialNumber).pipe(
+            refApiService.terminalLicenseVerify(_serialNumber).pipe(
                 take(1),
             ).subscribe(
                 v => {
@@ -64,6 +60,7 @@ const AuthScreenContainer = React.memo(({ _serialNumber, navigation, _currentScr
                     );
                 },
                 err => {
+                    console.warn(err)
                     // License invalid
                     setShowProgressBar(false);
                     setLicenseValid(false);
@@ -72,7 +69,7 @@ const AuthScreenContainer = React.memo(({ _serialNumber, navigation, _currentScr
         } else {
             setLicenseValid(false);
         }
-    }, []);
+    }, [_serialNumber]);
 
     const changeSerialNumHandler = (val: string) => {
         setSerialNumber(val);

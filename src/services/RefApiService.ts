@@ -70,7 +70,7 @@ class RefApiService {
             from(AuthStore.getToken(serial, config.refServer.apiKeyTokenSalt)).pipe(
                 switchMap(token => {
                     return from(
-                        fetch(`${config.refServer.address}/api/v1/terminal/license-verify`,
+                        fetch(`${config.refServer.address}/api/v1/device/license-verify`,
                             {
                                 method: "GET",
                                 headers: {
@@ -97,7 +97,7 @@ class RefApiService {
             from(AuthStore.getToken(serial, config.refServer.apiKeyTokenSalt)).pipe(
                 switchMap(token => {
                     return from(
-                        fetch(`${config.refServer.address}/api/v1/terminal/registration`,
+                        fetch(`${config.refServer.address}/api/v1/device/registration`,
                             {
                                 method: "POST",
                                 headers: {
