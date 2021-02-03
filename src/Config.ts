@@ -8,7 +8,7 @@ class Config implements IConfig {
     };
 
     capabilities = {
-        userIdleTimeout: 5000,
+        userIdleTimeout: 30000,
     };
 }
 

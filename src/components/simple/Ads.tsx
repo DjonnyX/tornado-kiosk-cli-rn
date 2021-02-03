@@ -16,10 +16,12 @@ export const Ads = ({ language, ads, onPress }: IAdsProps) => {
 
     const nextCurrentAdIndex = () => {
         _setCurrentAdIndex(prevAdIndex => {
-            if (prevAdIndex + 1 > ads.length - 1) {
-                prevAdIndex = 0;
-            } else {
-                prevAdIndex += 1;
+            if (ads.length > 1) {
+                if (prevAdIndex + 1 > ads.length - 1) {
+                    prevAdIndex = 0;
+                } else {
+                    prevAdIndex += 1;
+                }
             }
             return prevAdIndex;
         });
@@ -35,10 +37,6 @@ export const Ads = ({ language, ads, onPress }: IAdsProps) => {
         if (!!onPress) {
             onPress(ads[currentAdIndex]);
         }
-    }, [currentAdIndex]);
-
-    const endVideoHandler = useCallback(() => {
-        nextCurrentAdIndex();
     }, [currentAdIndex]);
 
     const currentAdContent = !!ads && ads.length > 0 && !!ads[currentAdIndex] ? ads[currentAdIndex].contents[language?.code] : undefined;
@@ -60,7 +58,7 @@ export const Ads = ({ language, ads, onPress }: IAdsProps) => {
                             ?
                             <Video style={{ width: "100%", height: "100%" }} resizeMode={"cover"} source={{
                                 uri: `file://${currentAdAsset?.path}`,
-                            }} controls={false} onEnd={endVideoHandler}></Video>
+                            }} controls={false} repeat={true}></Video>
                             :
                             <FastImage style={{ width: "100%", height: "100%" }} source={{
                                 uri: `file://${currentAdAsset?.path}`,
