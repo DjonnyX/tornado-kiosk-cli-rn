@@ -61,7 +61,7 @@ class RefApiService {
     }
 
     async getAccessToken(): Promise<string> {
-        return AuthStore.getToken(config.license.apiKey, config.refServer.apiKeyTokenSalt);
+        return AuthStore.getToken(this._serial || "", config.refServer.apiKeyTokenSalt);
     }
 
     terminalLicenseVerify(serial: string): Observable<ILicense> {

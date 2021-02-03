@@ -9,10 +9,12 @@ import { CapabilitiesSelectors, CombinedDataSelectors, SystemSelectors } from ".
 import { CommonActions } from "@react-navigation/native";
 import { theme } from "../../theme";
 import { CapabilitiesActions, NotificationActions } from "../../store/actions";
-import { refApiService } from "../../services";
-import { take } from "rxjs/operators";
+import { assetsService, refApiService } from "../../services";
+import { map, switchMap, take } from "rxjs/operators";
 import { SystemActions } from "../../store/actions/SystemAction";
 import { SimpleButton } from "../simple";
+import { ExternalStorage } from "../../native";
+import { from, of } from "rxjs";
 
 interface IAuthSelfProps {
     // store props
@@ -24,6 +26,43 @@ interface IAuthSelfProps {
     _currentScreen: MainNavigationScreenTypes | undefined;
 
     // self props
+}
+
+const getStorageAssetsPath = async (): Promise<string> => {
+    let userDataPath: string | undefined = undefined;
+
+    const isStorageAvailable = await ExternalStorage.isStorageAvailable();
+    const isStorageWritable = await ExternalStorage.isStorageWritable();
+
+    if (isStorageAvailable && !isStorageWritable) {
+        userDataPath = await ExternalStorage.getPath();
+    }
+
+    return `${userDataPath}/assets`;
+}
+
+const mkdir = async (path: string): Promise<void> => {
+    try {
+        if (!await assetsService.exists(path)) {
+            await assetsService.mkdir(path);
+        }
+    } catch (err) {
+        console.warn(err, path);
+    }
+}
+
+function createAssetsClientDir<T extends { clientId: string }>(v: T) {
+    return of(v).pipe(
+        switchMap(_ => {
+            return from(getStorageAssetsPath()).pipe(
+                switchMap(path => {
+                    return from(mkdir(`${path}/${v.clientId}`)).pipe(
+                        map(_ => v),
+                    )
+                })
+            )
+        }),
+    );
 }
 
 interface IAuthProps extends StackScreenProps<any, MainNavigationScreenTypes.LOADING>, IAuthSelfProps { }
@@ -41,13 +80,15 @@ const AuthScreenContainer = React.memo(({ _serialNumber, navigation, _currentScr
 
     useEffect(() => {
         if (!!_serialNumber) {
-
             setShowProgressBar(true);
             refApiService.terminalLicenseVerify(_serialNumber).pipe(
                 take(1),
+                switchMap(l => createAssetsClientDir(l)),
             ).subscribe(
-                v => {
+                l => {
                     setShowProgressBar(false);
+
+                    refApiService.serial = _serialNumber;
 
                     // License valid!
                     navigation.dispatch(
@@ -79,10 +120,13 @@ const AuthScreenContainer = React.memo(({ _serialNumber, navigation, _currentScr
         setShowProgressBar(true);
         refApiService.terminalRegistration(serialNumber).pipe(
             take(1),
+            switchMap(l => createAssetsClientDir(l)),
         ).subscribe(
-            v => {
+            l => {
                 _onChangeSerialNumber(serialNumber);
                 setShowProgressBar(false);
+
+                refApiService.serial = serialNumber;
 
                 // Goto loading screen
                 navigation.dispatch(

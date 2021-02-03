@@ -11,7 +11,8 @@ import { assetsService, refApiService } from "../services";
 import { IAppState } from "../store/state";
 import { CombinedDataActions, CapabilitiesActions } from "../store/actions";
 import { IProgress } from "@djonnyx/tornado-refs-processor/dist/DataCombiner";
-import { SystemSelectors } from "../store/selectors";
+import { CapabilitiesSelectors, SystemSelectors } from "../store/selectors";
+import { MainNavigationScreenTypes } from "../components/navigation";
 
 interface IDataCollectorServiceProps {
     // store
@@ -20,6 +21,7 @@ interface IDataCollectorServiceProps {
 
     // self
     _serialNumber?: string | undefined;
+    _currentScreen?: string | undefined;
 }
 
 interface IDataCollectorServiceState { }
@@ -32,6 +34,10 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
     private _assetsStore: AssetsStore | null = null;
 
     private _dataCombiner: DataCombiner | null = null;
+
+    private _savedData: IRefs | undefined;
+
+    private _isLoadingStarted = false;
 
     private _serialNumber$ = new BehaviorSubject<string | undefined>(undefined);
     public readonly serialNumber$ = this._serialNumber$.asObservable();
@@ -65,9 +71,8 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
             console.warn(err, storePath);
         }
 
-        let savedData: IRefs | undefined;
         try {
-            savedData = await assetsService.readFile(`${storePath}/${COMPILED_DATA_FILE_NAME}`);
+            this._savedData = await assetsService.readFile(`${storePath}/${COMPILED_DATA_FILE_NAME}`);
         } catch (err) {
             console.warn("Saved data not found.");
         }
@@ -105,26 +110,42 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
                 this.props._onProgress(progress);
             },
         );
+    }
+
+    load(): void {
+        if (this._isLoadingStarted) {
+            return;
+        }
+
+        if (!this._assetsStore) {
+            return;
+        }
+
+        this._isLoadingStarted = true;
 
         forkJoin([
             from(
                 this._assetsStore.init(),
             ),
             this._serialNumber$.pipe(
-                filter(s => s !== undefined),
+                // filter(s => s !== undefined),
                 take(1), // Если серийник поменяется, нужно чистить базу
-            )
+            ),
         ]).pipe(
             take(1),
             takeUntil(this._unsubscribe$ as any),
         ).subscribe(() => {
-            this._dataCombiner?.init(savedData);
+            this._dataCombiner?.init(this._savedData as any);
         });
     }
 
     shouldComponentUpdate(nextProps: Readonly<IDataCollectorServiceProps>, nextState: Readonly<IDataCollectorServiceState>, nextContext: any) {
         if (this.props._serialNumber !== nextProps._serialNumber) {
             this._serialNumber$.next(this.props._serialNumber);
+        }
+
+        if (nextProps._currentScreen === MainNavigationScreenTypes.LOADING) {
+            this.load();
         }
 
         if (super.shouldComponentUpdate) return super.shouldComponentUpdate(nextProps, nextState, nextContext);
@@ -157,6 +178,7 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
 const mapStateToProps = (state: IAppState) => {
     return {
         _serialNumber: SystemSelectors.selectSerialNumber(state),
+        _currentScreen: CapabilitiesSelectors.selectCurrentScreen(state),
     };
 };
 

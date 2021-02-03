@@ -2,7 +2,7 @@ import React, { Component, Dispatch } from "react";
 import { connect } from "react-redux";
 import { Subject } from "rxjs";
 import { ExternalStorage } from "../native";
-import { assetsService } from "../services";
+import { assetsService, refApiService } from "../services";
 import { IAppState } from "../store/state";
 import { CombinedDataActions } from "../store/actions";
 import { IProgress } from "@djonnyx/tornado-refs-processor/dist/DataCombiner";
@@ -13,7 +13,6 @@ import { IDeviceInfo } from "./interfaces";
 interface IAuthServiceProps {
     // store
     _onChangeDeviceInfo: (deviceInfo: IDeviceInfo | null) => void;
-    // _onProgress: (progress: IProgress) => void;
 
     // self
     _serialNumber: string | undefined;
@@ -79,7 +78,6 @@ class AuthServiceContainer extends Component<IAuthServiceProps, IAuthServiceStat
 
         try {
             this._deviceInfo = await assetsService.readFile(`${this._storePath}/${DEVICE_INFO}`);
-            console.warn(this._deviceInfo);
         } catch (err) {
             console.warn("DeviceInfo not found.");
         }
