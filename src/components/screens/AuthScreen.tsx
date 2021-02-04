@@ -218,7 +218,7 @@ const AuthScreenContainer = React.memo(({ _serialNumber, _setupStep, _terminalId
                                 placeholder="Имя терминала" onChangeText={changeTerminalNameHandler} value={terminalName}></TextInput>
                             <Picker
                                 selectedValue={storeId}
-                                style={{ height: 50, minWidth: 140 }}
+                                style={{ textAlign: "center", minWidth: 140, color: "#fff7009c", borderWidth: 2, borderColor: "#fff7009c", borderRadius: 4 }}
                                 onValueChange={(itemValue, itemIndex) => setStoreId(String(itemValue))}
                             >
                                 {
