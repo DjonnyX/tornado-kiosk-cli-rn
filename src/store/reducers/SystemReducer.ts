@@ -4,7 +4,8 @@ import { ISystemState } from "../state";
 
 const initialState: ISystemState = {
     serialNumber: undefined,
-    terminalName: undefined,
+    terminalId: undefined,
+    setupStep: 0,
 };
 
 const systemReducer: Reducer<ISystemState, TSystemActions> = (
@@ -17,10 +18,15 @@ const systemReducer: Reducer<ISystemState, TSystemActions> = (
                 ...state,
                 serialNumber: action.serialNumber,
             };
-        case SystemActionTypes.SET_NAME:
+        case SystemActionTypes.SET_TERMINAL_ID:
             return {
                 ...state,
-                terminalName: action.name,
+                terminalId: action.terminalId,
+            };
+        case SystemActionTypes.SET_SETUP_STEP:
+            return {
+                ...state,
+                setupStep: action.setupStep,
             };
         default:
             return state;

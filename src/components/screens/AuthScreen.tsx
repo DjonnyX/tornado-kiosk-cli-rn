@@ -1,4 +1,4 @@
-import React, { Dispatch, useCallback, useEffect, useRef, useState } from "react";
+import React, { Dispatch, useCallback, useEffect, useState } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
 import { ProgressBar } from "@react-native-community/progress-bar-android";
 import { Picker } from '@react-native-community/picker';
@@ -16,15 +16,19 @@ import { SystemActions } from "../../store/actions/SystemAction";
 import { SimpleButton } from "../simple";
 import { ExternalStorage } from "../../native";
 import { from, of } from "rxjs";
-import { IStore, ITerminal } from "@djonnyx/tornado-types";
+import { IStore } from "@djonnyx/tornado-types";
 
 interface IAuthSelfProps {
     // store props
     _onChangeScreen: () => void;
     _onChangeSerialNumber: (serialNumber: string) => void;
+    _onChangeSetupStep: (setupStep: number) => void;
+    _onChangeTerminalId: (terminalId: string) => void;
     _alertOpen: (alert: { title: string, message: string }) => void;
     _progress: number;
     _serialNumber: string;
+    _setupStep: number;
+    _terminalId: string;
     _currentScreen: MainNavigationScreenTypes | undefined;
 
     // self props
@@ -69,16 +73,15 @@ function createAssetsClientDir<T extends { clientId: string }>(v: T) {
 
 interface IAuthProps extends StackScreenProps<any, MainNavigationScreenTypes.LOADING>, IAuthSelfProps { }
 
-const AuthScreenContainer = React.memo(({ _serialNumber, navigation, _currentScreen,
-    _alertOpen, _onChangeScreen, _onChangeSerialNumber,
+const AuthScreenContainer = React.memo(({ _serialNumber, _setupStep, _terminalId, navigation, _currentScreen,
+    _alertOpen, _onChangeScreen, _onChangeSerialNumber, _onChangeSetupStep, _onChangeTerminalId,
 }: IAuthProps) => {
-    const [step, setStep] = useState<number>(0);
-    const [terminal, setTerminal] = useState<ITerminal | null>(null);
+    // const [step, setStep] = useState<number>(_setupStep);
     const [stores, setStores] = useState<Array<IStore>>([]);
     const [serialNumber, setSerialNumber] = useState<string>(_serialNumber);
     const [terminalName, setTerminalName] = useState<string>("");
     const [storeId, setStoreId] = useState<string>("");
-    const [isLicenseValid, setLicenseValid] = useState<boolean>(true);
+    const [isLicenseValid, setLicenseValid] = useState<boolean>(false);
     const [showProgressBar, setShowProgressBar] = useState<boolean>(false);
 
     useEffect(() => {
@@ -86,7 +89,8 @@ const AuthScreenContainer = React.memo(({ _serialNumber, navigation, _currentScr
     }, [_currentScreen]);
 
     useEffect(() => {
-        if (step === 0) {
+        console.warn(_setupStep)
+        if (_setupStep === 2) {
             if (!!_serialNumber) {
                 setShowProgressBar(true);
                 refApiService.terminalLicenseVerify(_serialNumber).pipe(
@@ -94,6 +98,8 @@ const AuthScreenContainer = React.memo(({ _serialNumber, navigation, _currentScr
                     switchMap(l => createAssetsClientDir(l)),
                 ).subscribe(
                     l => {
+                        setLicenseValid(true);
+
                         setShowProgressBar(false);
 
                         refApiService.serial = _serialNumber;
@@ -119,10 +125,10 @@ const AuthScreenContainer = React.memo(({ _serialNumber, navigation, _currentScr
                 setLicenseValid(false);
             }
         }
-    }, [_serialNumber, step]);
+    }, [_serialNumber, _setupStep]);
 
     useEffect(() => {
-        if (step === 1) {
+        if (_setupStep === 1) {
             refApiService.getStores({
                 serial: serialNumber,
             }).subscribe(
@@ -131,7 +137,7 @@ const AuthScreenContainer = React.memo(({ _serialNumber, navigation, _currentScr
                 }
             );
         }
-    }, [step]);
+    }, [_setupStep]);
 
     const changeSerialNumHandler = (val: string) => {
         setSerialNumber(val);
@@ -148,14 +154,12 @@ const AuthScreenContainer = React.memo(({ _serialNumber, navigation, _currentScr
             switchMap(l => createAssetsClientDir(l)),
         ).subscribe(
             t => {
-                setTerminal(t);
+                _onChangeTerminalId(t.id || "");
 
-                setStep(1);
+                _onChangeSetupStep(1);
 
                 _onChangeSerialNumber(serialNumber);
                 setShowProgressBar(false);
-
-                refApiService.serial = serialNumber;
             },
             err => {
                 _alertOpen({ title: "Ошибка", message: err.message ? err.message : err });
@@ -165,42 +169,38 @@ const AuthScreenContainer = React.memo(({ _serialNumber, navigation, _currentScr
     }, [serialNumber]);
 
     const saveParamsHandler = useCallback(() => {
-        if (!terminal?.id) {
+        if (!_terminalId) {
             return;
         }
 
         setShowProgressBar(true);
-        refApiService.terminalSetParams(terminal?.id, { name: terminalName, storeId }).pipe(
+        refApiService.terminalSetParams(_terminalId, { name: terminalName, storeId }).pipe(
             take(1),
         ).subscribe(
             t => {
                 setShowProgressBar(false);
 
-                // Goto loading screen
-                navigation.dispatch(
-                    CommonActions.reset({
-                        index: 1,
-                        routes: [
-                            { name: MainNavigationScreenTypes.LOADING },
-                        ],
-                    })
-                );
+                _onChangeTerminalId(_terminalId);
+
+                _onChangeSetupStep(2);
             },
             err => {
                 _alertOpen({ title: "Ошибка", message: err.message ? err.message : err });
                 setShowProgressBar(false);
             }
         );
-    }, [terminalName, storeId]);
+    }, [terminalName, storeId, _terminalId]);
 
     return (
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: theme.themes[theme.name].loading.background }}>
             {
+                console.warn(isLicenseValid)
+            }{
                 !isLicenseValid &&
                 <>
                     {
                         // Enter serial number
-                        step === 0 &&
+                        _setupStep === 0 &&
                         <>
                             <TextInput placeholderTextColor="#fff7009c" selectionColor="#fff700" underlineColorAndroid="#fff700"
                                 style={{ textAlign: "center", color: "#ffffff", minWidth: 140, marginBottom: 12 }} editable={!showProgressBar}
@@ -211,7 +211,7 @@ const AuthScreenContainer = React.memo(({ _serialNumber, navigation, _currentScr
                     }
                     {
                         // Enter terminal name and store
-                        step === 1 &&
+                        _setupStep === 1 &&
                         <>
                             <TextInput placeholderTextColor="#fff7009c" selectionColor="#fff700" underlineColorAndroid="#fff700"
                                 style={{ textAlign: "center", color: "#ffffff", minWidth: 140, marginBottom: 12 }} editable={!showProgressBar}
@@ -248,6 +248,8 @@ const mapStateToProps = (state: IAppState, ownProps: IAuthProps) => {
     return {
         _progress: CombinedDataSelectors.selectProgress(state),
         _serialNumber: SystemSelectors.selectSerialNumber(state),
+        _setupStep: SystemSelectors.selectSetupStep(state),
+        _terminalId: SystemSelectors.selectTerminalId(state),
         _currentScreen: CapabilitiesSelectors.selectCurrentScreen(state),
     };
 };
@@ -259,6 +261,12 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
         },
         _onChangeSerialNumber: (serialNumber: string) => {
             dispatch(SystemActions.setSerialNumber(serialNumber));
+        },
+        _onChangeSetupStep: (setupStep: number) => {
+            dispatch(SystemActions.setSetupStep(setupStep));
+        },
+        _onChangeTerminalId: (terminalId: string) => {
+            dispatch(SystemActions.setTerminalId(terminalId));
         },
         _alertOpen: (alert: { title: string, message: string }) => {
             dispatch(NotificationActions.alertOpen(alert));

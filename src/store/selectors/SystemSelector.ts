@@ -8,7 +8,11 @@ export namespace SystemSelectors {
         return state.serialNumber;
     });
     
-    export const selectTerminalName = createSelector(getSystem, (state) => {
-        return state.terminalName;
+    export const selectSetupStep = createSelector(getSystem, (state) => {
+        return state.setupStep;
+    });
+    
+    export const selectTerminalId = createSelector(getSystem, (state) => {
+        return state.terminalId;
     });
 }

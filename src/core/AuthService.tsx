@@ -16,7 +16,8 @@ interface IAuthServiceProps {
 
     // self
     _serialNumber: string | undefined;
-    _name: string | undefined;
+    _terminalId: string | undefined;
+    _setupStep: number;
 }
 
 interface IAuthServiceState { }
@@ -43,8 +44,18 @@ class AuthServiceContainer extends Component<IAuthServiceProps, IAuthServiceStat
     }
 
     shouldComponentUpdate(nextProps: Readonly<IAuthServiceProps>, nextState: Readonly<IAuthServiceState>, nextContext: any) {
-        if (this.props._serialNumber !== nextProps._serialNumber) {
-            this.saveDeviceInfo({ ...this._deviceInfo, serialNumber: nextProps._serialNumber });
+        if (this.props._serialNumber !== nextProps._serialNumber
+            || this.props._setupStep !== nextProps._setupStep
+            || this.props._terminalId !== nextProps._terminalId) {
+
+            refApiService.serial = nextProps._serialNumber || "";
+
+            this.saveDeviceInfo({
+                ...this._deviceInfo,
+                serialNumber: nextProps._serialNumber,
+                terminalId: nextProps._terminalId,
+                setupStep: nextProps._setupStep,
+            });
         }
 
         if (super.shouldComponentUpdate) return super.shouldComponentUpdate(nextProps, nextState, nextContext);
@@ -101,7 +112,8 @@ class AuthServiceContainer extends Component<IAuthServiceProps, IAuthServiceStat
 const mapStateToProps = (state: IAppState) => {
     return {
         _serialNumber: SystemSelectors.selectSerialNumber(state),
-        _name: SystemSelectors.selectTerminalName(state),
+        _terminalId: SystemSelectors.selectTerminalId(state),
+        _setupStep: SystemSelectors.selectSetupStep(state),
     };
 };
 
@@ -109,7 +121,8 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => {
     return {
         _onChangeDeviceInfo: (data: IDeviceInfo | null) => {
             dispatch(SystemActions.setSerialNumber(data?.serialNumber));
-            dispatch(SystemActions.setName(data?.name));
+            dispatch(SystemActions.setSetupStep(data?.setupStep || 0));
+            dispatch(SystemActions.setTerminalId(data?.terminalId));
         },
         _onProgress: (progress: IProgress) => {
             dispatch(CombinedDataActions.setProgress(progress));

@@ -2,15 +2,20 @@ import { Action } from "redux";
 
 export enum SystemActionTypes {
     SET_SERIAL_NUMBER = "TORNADO/system/set-serial-number",
-    SET_NAME = "TORNADO/system/set-name",
+    SET_TERMINAL_ID = "TORNADO/system/set-terminal-id",
+    SET_SETUP_STEP = "TORNADO/system/set-setup-step",
 }
 
 interface ISystemSetSerialNumber extends Action<SystemActionTypes.SET_SERIAL_NUMBER> {
     serialNumber: string | undefined;
 }
 
-interface ISystemSetTerminalName extends Action<SystemActionTypes.SET_NAME> {
-    name: string | undefined;
+interface ISystemSetTerminalId extends Action<SystemActionTypes.SET_TERMINAL_ID> {
+    terminalId: string | undefined;
+}
+
+interface ISystemSetupStep extends Action<SystemActionTypes.SET_SETUP_STEP> {
+    setupStep: number;
 }
 
 export class SystemActions {
@@ -19,10 +24,15 @@ export class SystemActions {
         serialNumber,
     });
     
-    static setName = (name: string | undefined): ISystemSetTerminalName => ({
-        type: SystemActionTypes.SET_NAME,
-        name,
+    static setTerminalId = (terminalId: string | undefined): ISystemSetTerminalId => ({
+        type: SystemActionTypes.SET_TERMINAL_ID,
+        terminalId,
+    });
+    
+    static setSetupStep = (setupStep: number): ISystemSetupStep => ({
+        type: SystemActionTypes.SET_SETUP_STEP,
+        setupStep,
     });
 }
 
-export type TSystemActions = ISystemSetSerialNumber | ISystemSetTerminalName;
+export type TSystemActions = ISystemSetSerialNumber | ISystemSetTerminalId | ISystemSetupStep;

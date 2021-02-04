@@ -1,4 +1,5 @@
 export interface ISystemState {
     serialNumber: string | undefined;
-    terminalName: string | undefined;
+    terminalId: string | undefined;
+    setupStep: number;
 }
