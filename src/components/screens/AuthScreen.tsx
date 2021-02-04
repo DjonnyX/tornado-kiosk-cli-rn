@@ -76,7 +76,6 @@ interface IAuthProps extends StackScreenProps<any, MainNavigationScreenTypes.LOA
 const AuthScreenContainer = React.memo(({ _serialNumber, _setupStep, _terminalId, navigation, _currentScreen,
     _alertOpen, _onChangeScreen, _onChangeSerialNumber, _onChangeSetupStep, _onChangeTerminalId,
 }: IAuthProps) => {
-    // const [step, setStep] = useState<number>(_setupStep);
     const [stores, setStores] = useState<Array<IStore>>([]);
     const [serialNumber, setSerialNumber] = useState<string>(_serialNumber);
     const [terminalName, setTerminalName] = useState<string>("");
@@ -89,7 +88,6 @@ const AuthScreenContainer = React.memo(({ _serialNumber, _setupStep, _terminalId
     }, [_currentScreen]);
 
     useEffect(() => {
-        console.warn(_setupStep)
         if (_setupStep === 2) {
             if (!!_serialNumber) {
                 setShowProgressBar(true);
@@ -194,8 +192,6 @@ const AuthScreenContainer = React.memo(({ _serialNumber, _setupStep, _terminalId
     return (
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: theme.themes[theme.name].loading.background }}>
             {
-                console.warn(isLicenseValid)
-            }{
                 !isLicenseValid &&
                 <>
                     {
