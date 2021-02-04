@@ -1,6 +1,7 @@
 import React, { Dispatch, useCallback, useEffect, useRef, useState } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
 import { ProgressBar } from "@react-native-community/progress-bar-android";
+import { Picker } from '@react-native-community/picker';
 import { View, TextInput } from "react-native";
 import { MainNavigationScreenTypes } from "../navigation";
 import { IAppState } from "../../store/state";
@@ -15,6 +16,7 @@ import { SystemActions } from "../../store/actions/SystemAction";
 import { SimpleButton } from "../simple";
 import { ExternalStorage } from "../../native";
 import { from, of } from "rxjs";
+import { IStore, ITerminal } from "@djonnyx/tornado-types";
 
 interface IAuthSelfProps {
     // store props
@@ -70,51 +72,74 @@ interface IAuthProps extends StackScreenProps<any, MainNavigationScreenTypes.LOA
 const AuthScreenContainer = React.memo(({ _serialNumber, navigation, _currentScreen,
     _alertOpen, _onChangeScreen, _onChangeSerialNumber,
 }: IAuthProps) => {
-    const [serialNumber, setSerialNumber] = useState(_serialNumber);
-    const [isLicenseValid, setLicenseValid] = useState(true);
-    const [showProgressBar, setShowProgressBar] = useState(false);
+    const [step, setStep] = useState<number>(0);
+    const [terminal, setTerminal] = useState<ITerminal | null>(null);
+    const [stores, setStores] = useState<Array<IStore>>([]);
+    const [serialNumber, setSerialNumber] = useState<string>(_serialNumber);
+    const [terminalName, setTerminalName] = useState<string>("");
+    const [storeId, setStoreId] = useState<string>("");
+    const [isLicenseValid, setLicenseValid] = useState<boolean>(true);
+    const [showProgressBar, setShowProgressBar] = useState<boolean>(false);
 
     useEffect(() => {
         _onChangeScreen();
     }, [_currentScreen]);
 
     useEffect(() => {
-        if (!!_serialNumber) {
-            setShowProgressBar(true);
-            refApiService.terminalLicenseVerify(_serialNumber).pipe(
-                take(1),
-                switchMap(l => createAssetsClientDir(l)),
-            ).subscribe(
-                l => {
-                    setShowProgressBar(false);
+        if (step === 0) {
+            if (!!_serialNumber) {
+                setShowProgressBar(true);
+                refApiService.terminalLicenseVerify(_serialNumber).pipe(
+                    take(1),
+                    switchMap(l => createAssetsClientDir(l)),
+                ).subscribe(
+                    l => {
+                        setShowProgressBar(false);
 
-                    refApiService.serial = _serialNumber;
+                        refApiService.serial = _serialNumber;
 
-                    // License valid!
-                    navigation.dispatch(
-                        CommonActions.reset({
-                            index: 1,
-                            routes: [
-                                { name: MainNavigationScreenTypes.LOADING },
-                            ],
-                        })
-                    );
-                },
-                err => {
-                    console.warn(err)
-                    // License invalid
-                    setShowProgressBar(false);
-                    setLicenseValid(false);
-                },
-            );
-        } else {
-            setLicenseValid(false);
+                        // License valid!
+                        navigation.dispatch(
+                            CommonActions.reset({
+                                index: 1,
+                                routes: [
+                                    { name: MainNavigationScreenTypes.LOADING },
+                                ],
+                            })
+                        );
+                    },
+                    err => {
+                        console.warn(err)
+                        // License invalid
+                        setShowProgressBar(false);
+                        setLicenseValid(false);
+                    },
+                );
+            } else {
+                setLicenseValid(false);
+            }
         }
-    }, [_serialNumber]);
+    }, [_serialNumber, step]);
+
+    useEffect(() => {
+        if (step === 1) {
+            refApiService.getStores({
+                serial: serialNumber,
+            }).subscribe(
+                v => {
+                    setStores(v);
+                }
+            );
+        }
+    }, [step]);
 
     const changeSerialNumHandler = (val: string) => {
         setSerialNumber(val);
     };
+
+    const changeTerminalNameHandler = (val: string) => {
+        setTerminalName(val);
+    }
 
     const authHandler = useCallback(() => {
         setShowProgressBar(true);
@@ -122,11 +147,34 @@ const AuthScreenContainer = React.memo(({ _serialNumber, navigation, _currentScr
             take(1),
             switchMap(l => createAssetsClientDir(l)),
         ).subscribe(
-            l => {
+            t => {
+                setTerminal(t);
+
+                setStep(1);
+
                 _onChangeSerialNumber(serialNumber);
                 setShowProgressBar(false);
 
                 refApiService.serial = serialNumber;
+            },
+            err => {
+                _alertOpen({ title: "Ошибка", message: err.message ? err.message : err });
+                setShowProgressBar(false);
+            }
+        );
+    }, [serialNumber]);
+
+    const saveParamsHandler = useCallback(() => {
+        if (!terminal?.id) {
+            return;
+        }
+
+        setShowProgressBar(true);
+        refApiService.terminalSetParams(terminal?.id, { name: terminalName, storeId }).pipe(
+            take(1),
+        ).subscribe(
+            t => {
+                setShowProgressBar(false);
 
                 // Goto loading screen
                 navigation.dispatch(
@@ -143,20 +191,47 @@ const AuthScreenContainer = React.memo(({ _serialNumber, navigation, _currentScr
                 setShowProgressBar(false);
             }
         );
-    }, [serialNumber]);
+    }, [terminalName, storeId]);
 
     return (
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: theme.themes[theme.name].loading.background }}>
             {
                 !isLicenseValid &&
                 <>
-                    <TextInput placeholderTextColor="#fff7009c" selectionColor="#fff700" underlineColorAndroid="#fff700"
-                        style={{ textAlign: "center", color: "#ffffff", minWidth: 140, marginBottom: 12 }} editable={!showProgressBar}
-                        placeholder="Серийный ключ" onChangeText={changeSerialNumHandler} value={serialNumber}></TextInput>
+                    {
+                        // Enter serial number
+                        step === 0 &&
+                        <>
+                            <TextInput placeholderTextColor="#fff7009c" selectionColor="#fff700" underlineColorAndroid="#fff700"
+                                style={{ textAlign: "center", color: "#ffffff", minWidth: 140, marginBottom: 12 }} editable={!showProgressBar}
+                                placeholder="Серийный ключ" onChangeText={changeSerialNumHandler} value={serialNumber}></TextInput>
+                            <SimpleButton style={{ backgroundColor: "#fff700", minWidth: 140 }} textStyle={{ color: "#000000" }}
+                                onPress={authHandler} title="Зарегистрировать" disabled={showProgressBar}></SimpleButton>
+                        </>
+                    }
+                    {
+                        // Enter terminal name and store
+                        step === 1 &&
+                        <>
+                            <TextInput placeholderTextColor="#fff7009c" selectionColor="#fff700" underlineColorAndroid="#fff700"
+                                style={{ textAlign: "center", color: "#ffffff", minWidth: 140, marginBottom: 12 }} editable={!showProgressBar}
+                                placeholder="Имя терминала" onChangeText={changeTerminalNameHandler} value={terminalName}></TextInput>
+                            <Picker
+                                selectedValue={storeId}
+                                style={{ height: 50, minWidth: 140 }}
+                                onValueChange={(itemValue, itemIndex) => setStoreId(String(itemValue))}
+                            >
+                                {
+                                    stores.map(store => <Picker.Item label={store.name} value={store.id || ""} />)
+
+                                }
+                            </Picker>
+                            <SimpleButton style={{ backgroundColor: "#fff700", minWidth: 140 }} textStyle={{ color: "#000000" }}
+                                onPress={saveParamsHandler} title="Сохранить" disabled={showProgressBar}></SimpleButton>
+                        </>
+                    }
                 </>
             }
-            <SimpleButton style={{ backgroundColor: "#fff700", minWidth: 140 }} textStyle={{ color: "#000000" }}
-                onPress={authHandler} title="Зарегистрировать" disabled={showProgressBar}></SimpleButton>
             {
                 !!showProgressBar &&
                 <ProgressBar

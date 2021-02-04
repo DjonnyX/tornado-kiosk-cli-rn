@@ -12,6 +12,10 @@ interface IRequestOptions {
     breakAfter?: number;
 }
 
+interface IApiRequestOptions {
+    serial?: string;
+}
+
 const request = (observable: Observable<Response>, options?: IRequestOptions): Observable<Response> => {
     if (options?.useAttempts) {
         return observable.pipe(
@@ -60,8 +64,8 @@ class RefApiService {
         this._serial = v;
     }
 
-    async getAccessToken(): Promise<string> {
-        return AuthStore.getToken(this._serial || "", config.refServer.apiKeyTokenSalt);
+    async getAccessToken(options?: IApiRequestOptions): Promise<string> {
+        return AuthStore.getToken(options?.serial || this._serial || "", config.refServer.apiKeyTokenSalt);
     }
 
     terminalLicenseVerify(serial: string): Observable<ILicense> {
@@ -91,7 +95,7 @@ class RefApiService {
         );
     }
 
-    terminalRegistration(serial: string): Observable<ILicense> {
+    terminalRegistration(serial: string): Observable<ITerminal> {
         Log.i("RefApiService", "terminalRegistry");
         return request(
             from(AuthStore.getToken(serial, config.refServer.apiKeyTokenSalt)).pipe(
@@ -116,6 +120,35 @@ class RefApiService {
             switchMap(res => parseResponse(res)),
             catchError(err => {
                 Log.i("RefApiService", "> terminalRegistry: " + err);
+                return throwError(err);
+            }),
+            map(resData => resData.data)
+        );
+    }
+
+    terminalSetParams(id: string, params: { name: string, storeId: string }): Observable<ITerminal> {
+        Log.i("RefApiService", "terminalSetParams");
+        return request(
+            from(this.getAccessToken()).pipe(
+                switchMap(token => {
+                    return from(
+                        fetch(`${config.refServer.address}/api/v1/terminal/${id}`,
+                            {
+                                method: "PUT",
+                                headers: {
+                                    "x-access-token": token,
+                                    "content-type": "application/json",
+                                },
+                                body: JSON.stringify(params),
+                            }
+                        )
+                    );
+                }),
+            ),
+        ).pipe(
+            switchMap(res => parseResponse(res)),
+            catchError(err => {
+                Log.i("RefApiService", "> terminalSetParams: " + err);
                 return throwError(err);
             }),
             map(resData => resData.data)
@@ -402,10 +435,10 @@ class RefApiService {
         );
     }
 
-    getStores(): Observable<Array<IStore>> {
+    getStores(options?: IApiRequestOptions): Observable<Array<IStore>> {
         Log.i("RefApiService", "getStores");
         return request(
-            from(this.getAccessToken()).pipe(
+            from(this.getAccessToken(options)).pipe(
                 switchMap(token => {
                     return from(
                         fetch(`${config.refServer.address}/api/v1/stores`,
@@ -420,6 +453,10 @@ class RefApiService {
                 })
             ),
         ).pipe(
+            catchError(err => {
+                console.warn(err)
+                return throwError(err);
+            }),
             switchMap(res => parseResponse(res)),
             map(resData => resData.data),
         );
