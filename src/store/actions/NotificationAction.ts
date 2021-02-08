@@ -10,10 +10,7 @@ interface INotificationSetAlert extends Action<NotificationActionTypes.SET_ALERT
 }
 
 export class NotificationActions {
-    static alertOpen = (alert: {
-        title: string,
-        message: string,
-    }): INotificationSetAlert => ({
+    static alertOpen = (alert: IAlertState): INotificationSetAlert => ({
         type: NotificationActionTypes.SET_ALERT,
         alert: { ...alert, visible: true },
     });
@@ -24,6 +21,8 @@ export class NotificationActions {
             visible: false,
             title: "",
             message: "",
+            closeButtonTitle: "Закрыть",
+            onClose: undefined,
         },
     });
 }
