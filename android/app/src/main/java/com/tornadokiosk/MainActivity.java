@@ -22,15 +22,15 @@ import com.facebook.react.ReactActivity;
 public class MainActivity extends ReactActivity {
 
     String packageName;
-    ComponentName mAdminComponentName;
-    DevicePolicyManager mDevicePolicyManager;
+    /*ComponentName mAdminComponentName;
+    DevicePolicyManager mDevicePolicyManager;*/
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        packageName = this.getPackageName();
+        /*packageName = this.getPackageName();
         mDevicePolicyManager = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
         mAdminComponentName = new ComponentName(this, TornadoDeviceAdminReceiver.class);
 
@@ -39,10 +39,10 @@ public class MainActivity extends ReactActivity {
         setAppAsDefault();
         setVolumeToMax();
         setDisableKeyguard();
-        setKeepScreenOn();
+        setKeepScreenOn();*/
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
+    /*@RequiresApi(api = Build.VERSION_CODES.M)
     protected void setLockTask() {
         // Проверка владельца устройства
         if (mDevicePolicyManager.isLockTaskPermitted(packageName)) {
@@ -52,12 +52,12 @@ public class MainActivity extends ReactActivity {
             Toast.makeText(getApplicationContext(), "Not device owner", Toast.LENGTH_LONG).show();
         }
         startLockTask();
-    }
+    }*/
 
     /**
      * Задание приложению статус дефолтового
      */
-    protected void setAppAsDefault() {
+    /*protected void setAppAsDefault() {
         if (mDevicePolicyManager.isLockTaskPermitted(packageName)) {
             IntentFilter intentFilter = new IntentFilter(Intent.ACTION_MAIN);
             intentFilter.addCategory(Intent.CATEGORY_HOME);
@@ -65,19 +65,19 @@ public class MainActivity extends ReactActivity {
             mDevicePolicyManager.addPersistentPreferredActivity(mAdminComponentName,
                     intentFilter, new ComponentName(packageName, MainActivity.class.getName()));
         }
-    }
+    }*/
 
     /**
      * Для того чтобы после перезагрузки не отображался экран блокировки
      */
-    @RequiresApi(api = Build.VERSION_CODES.M)
+    /*@RequiresApi(api = Build.VERSION_CODES.M)
     protected void setDisableKeyguard() {
         if (mDevicePolicyManager.isLockTaskPermitted(packageName)) {
             mDevicePolicyManager.setKeyguardDisabled(mAdminComponentName, true);
         }
-    }
+    }*/
 
-    protected void setKeepScreenOn() {
+    /*protected void setKeepScreenOn() {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         if (mDevicePolicyManager.isLockTaskPermitted(packageName)) {
@@ -87,7 +87,7 @@ public class MainActivity extends ReactActivity {
                             | BatteryManager.BATTERY_PLUGGED_USB
                             | BatteryManager.BATTERY_PLUGGED_WIRELESS));
         }
-    }
+    }*/
 
     /**
      * Возвращает имя основного компонента (react-native).
@@ -100,11 +100,10 @@ public class MainActivity extends ReactActivity {
     /**
      * Скрывает системный UI
      */
-    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
+    /*@RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
     protected void hideSystemUI() {
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
@@ -116,12 +115,12 @@ public class MainActivity extends ReactActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             getSupportActionBar().setHomeButtonEnabled(false);
         }
-    }
+    }*/
 
     /**
      * Блокировка кнопок громкости
      */
-    @Override
+    /*@Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         // Блокировка кнопки "назад"
         if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -144,16 +143,16 @@ public class MainActivity extends ReactActivity {
         Toast.makeText(getApplicationContext(), keyCode, Toast.LENGTH_SHORT).show();
 
         return super.onKeyDown(keyCode, event);
-    }
+    }*/
 
     /**
      * Устанавливает максимальную громкость
      */
-    private void setVolumeToMax() {
+    /*private void setVolumeToMax() {
         AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         am.setStreamVolume(
                 AudioManager.STREAM_SYSTEM,
                 am.getStreamMaxVolume(AudioManager.STREAM_SYSTEM),
                 0);
-    }
+    }*/
 }

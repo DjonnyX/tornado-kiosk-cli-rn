@@ -3,9 +3,6 @@ export interface IConfig {
         address: string;
         updateTimeout: number;
     };
-    license: {
-        apiKey: string;
-    };
     capabilities: {
         userIdleTimeout: number;
     };

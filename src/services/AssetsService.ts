@@ -7,6 +7,23 @@ import { IAsset } from "@djonnyx/tornado-types";
 import { config } from "../Config";
 import { Log } from "./Log";
 
+const FOLDER_PATTERN = /^.*\//;
+
+const createFolderIfEmpty = async (path: string) => {
+    const folderSegments = path.match(FOLDER_PATTERN);
+    if (!!folderSegments && folderSegments.length > 0) {
+        const f = folderSegments[0];
+        try {
+            if (!await assetsService.exists(f)) {
+                console.warn("mkdir", f);
+                await assetsService.mkdir(f);
+            }
+        } catch (err) {
+            console.warn(err);
+        }
+    }
+}
+
 class AssetsService implements IAssetStoreFileService {
 
     public readonly manifestFileName = "manifest.json";
@@ -28,7 +45,7 @@ class AssetsService implements IAssetStoreFileService {
         return this.writeFile(`${path}/${this.manifestFileName}`, data);
     }
 
-    writeFile(path: string, data: any): Promise<void> {
+    async writeFile(path: string, data: any): Promise<void> {
         Log.i("AssetsService", "writeFile \"" + path + "\"");
         return ExternalStorage.writeFile(
             this.normalizeFilePath(path),
@@ -51,7 +68,7 @@ class AssetsService implements IAssetStoreFileService {
     }
 
     downloadAsset(url: string, outputPath: string): Promise<void> {
-        Log.i("AssetsService", "downloadAsset \"" + url + "\"");
+        Log.i("AssetsService", "downloadAsset \"" + url + "\" to \"" + outputPath + "\"");
         return from(
             ExternalStorage.downloadFile(
                 `${config.refServer.address}/${url}`.replace("\\", "/"),

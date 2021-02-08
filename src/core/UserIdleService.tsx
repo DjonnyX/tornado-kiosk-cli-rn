@@ -37,6 +37,7 @@ class UserIdleServiceContainer extends PureComponent<IUserIdleServiceProps, IUse
         switch (this.props._currentScreen) {
             case MainNavigationScreenTypes.LOADING:
             case MainNavigationScreenTypes.INTRO:
+            case MainNavigationScreenTypes.AUTH:
                 this.resetTimer();
                 break;
             default: {
@@ -156,7 +157,7 @@ class UserIdleServiceContainer extends PureComponent<IUserIdleServiceProps, IUse
                     onApply={this.resetHandler}
                 />
             </ModalTransparent>
-            <View style={{ flex: 1, width: "100%", height: "100%" }} onTouchStart={this._touchProcessHandler} onTouchEnd={this._touchProcessHandler}>
+            <View style={{ flex: 1, width: "100%", height: "100%" }} onTouchStart={this._touchProcessHandler} onTouchEnd={this._touchProcessHandler} onTouchMove={this._touchProcessHandler}>
                 {
                     this.props.children
                 }
