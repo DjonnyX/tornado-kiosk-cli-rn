@@ -5,17 +5,20 @@ import {
 import { NavigationContainer } from "@react-navigation/native";
 import { Provider } from "react-redux";
 import { MainNavigationStack } from "./src/components/navigation/MainNavigationStack";
-import { DataCollectorService, UserIdleService } from "./src/core";
+import { AuthService, DataCollectorService, UserIdleService } from "./src/core";
 import { store } from "./src/store";
+import { AlertService } from "./src/core/AlertService";
 
 const App = () => {
   return (
     <>
       <Provider store={store}>
         {/** services */}
+        <AuthService />
         <DataCollectorService />
 
         {/** components */}
+        <AlertService />
         <UserIdleService>
           <StatusBar hidden={true} />
           <NavigationContainer>

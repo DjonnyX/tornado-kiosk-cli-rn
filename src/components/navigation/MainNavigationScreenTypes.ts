@@ -1,4 +1,5 @@
 export enum MainNavigationScreenTypes {
+    AUTH = "auth",
     LOADING = "loading",
     INTRO = "intro",
     MENU = "menu",
