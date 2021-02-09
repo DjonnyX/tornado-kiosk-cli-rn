@@ -63,7 +63,7 @@ function createAssetsClientDir<T extends { clientId: string }>(v: T) {
         switchMap(_ => {
             return from(getStorageAssetsPath()).pipe(
                 switchMap(path => {
-                    return from(mkdir(`${path}/${v.clientId}`)).pipe(
+                    return from(mkdir(`${path}/${v?.clientId}`)).pipe(
                         map(_ => v),
                     )
                 })
@@ -84,6 +84,7 @@ const AuthScreenContainer = React.memo(({ _serialNumber, _setupStep, _terminalId
     const [isLicenseValid, setLicenseValid] = useState<boolean>(false);
     const [showProgressBar, setShowProgressBar] = useState<boolean>(false);
     const [retryVerificationId, setRetryVerificationId] = useState<number>(0);
+    const [retryGetStores, setRetryGetStores] = useState<number>(0);
 
     useEffect(() => {
         _onChangeScreen();
@@ -96,10 +97,9 @@ const AuthScreenContainer = React.memo(({ _serialNumber, _setupStep, _terminalId
 
                 refApiService.terminalLicenseVerify(_serialNumber).pipe(
                     take(1),
+                    switchMap(l => createAssetsClientDir(l)),
                 ).subscribe(
                     l => {
-                        createAssetsClientDir(l);
-
                         setLicenseValid(true);
 
                         setShowProgressBar(false);
@@ -119,7 +119,7 @@ const AuthScreenContainer = React.memo(({ _serialNumber, _setupStep, _terminalId
                     err => {
                         _alertOpen({
                             title: "Ошибка", message: err.message ? err.message : err,
-                            closeButtonTitle: "Повторить", onClose: retryVerification
+                            closeButtonTitle: "Повторить", onClose: retryVerificationHandler
                         });
 
                         // License invalid
@@ -142,13 +142,20 @@ const AuthScreenContainer = React.memo(({ _serialNumber, _setupStep, _terminalId
                     setStores(v);
                 },
                 err => {
-                    _alertOpen({ title: "Ошибка", message: err.message ? err.message : err });
+                    _alertOpen({
+                        title: "Ошибка", message: err.message ? err.message : err,
+                        closeButtonTitle: "Повторить", onClose: retryGetStoresHandler
+                    });
                 }
             );
         }
-    }, [_setupStep]);
+    }, [_setupStep, retryGetStores]);
 
-    const retryVerification = () => {
+    const retryGetStoresHandler = () => {
+        setRetryGetStores(() => retryGetStores + 1);
+    };
+
+    const retryVerificationHandler = () => {
         setRetryVerificationId(() => retryVerificationId + 1);
     };
 
@@ -164,10 +171,9 @@ const AuthScreenContainer = React.memo(({ _serialNumber, _setupStep, _terminalId
         setShowProgressBar(true);
         refApiService.terminalRegistration(serialNumber).pipe(
             take(1),
+            switchMap(t => createAssetsClientDir(t)),
         ).subscribe(
             t => {
-                createAssetsClientDir(t);
-
                 _onChangeTerminalId(t.id || "");
 
                 _onChangeSetupStep(1);
