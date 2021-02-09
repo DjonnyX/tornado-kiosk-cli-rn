@@ -1,4 +1,4 @@
-import { Observable, from, throwError } from "rxjs";
+import { Observable, from, throwError, of } from "rxjs";
 import { catchError, map, retry, retryWhen, switchMap } from "rxjs/operators";
 import { config } from "../Config";
 import { IRef, INode, ISelector, IProduct, ITag, IAsset, ILanguage, ITranslation, IBusinessPeriod, IOrderType, ICurrency, IAd, IStore, ITerminal, TerminalTypes, ILicense } from "@djonnyx/tornado-types";
@@ -41,15 +41,31 @@ const parseResponse = (res: Response) => {
         return result;
     }
 
-    return result.pipe(
-        switchMap(data => {
-            const err = extractError(data.error);
-            if (err) {
-                return throwError(err);
-            }
+    return of(res).pipe(
+        switchMap(res => from(res.json()).pipe(
+            catchError(err => {
+                return of(null)
+            }),
+            switchMap(data => {
+                if (!data) {
+                    switch (res.status) {
+                        case 401:
+                            return throwError("Некорректная лицензия.");
+                        case 504:
+                            return throwError("Ошибка в соединении.");
+                        default:
+                            return from(res.text()).pipe(switchMap(e => throwError(e)));
+                    }
+                }
 
-            return throwError(res.statusText);
-        }),
+                const err = extractError(data.error);
+                if (err) {
+                    return throwError(err);
+                }
+
+                return throwError(res.statusText);
+            }),
+        )),
     );
 }
 
@@ -454,7 +470,6 @@ class RefApiService {
             ),
         ).pipe(
             catchError(err => {
-                console.warn(err)
                 return throwError(err);
             }),
             switchMap(res => parseResponse(res)),
