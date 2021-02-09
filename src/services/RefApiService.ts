@@ -48,7 +48,7 @@ const parseResponse = (res: Response) => {
             }),
             switchMap(data => {
                 if (!data) {
-                    return from(res.text());
+                    return res.status === 401 ? "Wrong license." : from(res.text());
                 }
 
                 const err = extractError(data.error);
