@@ -17,6 +17,7 @@ import { SimpleButton } from "../simple";
 import { ExternalStorage } from "../../native";
 import { from, of } from "rxjs";
 import { IStore } from "@djonnyx/tornado-types";
+import { IAlertState } from "../../interfaces";
 
 interface IAuthSelfProps {
     // store props
@@ -24,7 +25,7 @@ interface IAuthSelfProps {
     _onChangeSerialNumber: (serialNumber: string) => void;
     _onChangeSetupStep: (setupStep: number) => void;
     _onChangeTerminalId: (terminalId: string) => void;
-    _alertOpen: (alert: { title: string, message: string }) => void;
+    _alertOpen: (alert: IAlertState) => void;
     _progress: number;
     _serialNumber: string;
     _setupStep: number;
@@ -82,6 +83,7 @@ const AuthScreenContainer = React.memo(({ _serialNumber, _setupStep, _terminalId
     const [storeId, setStoreId] = useState<string>("");
     const [isLicenseValid, setLicenseValid] = useState<boolean>(false);
     const [showProgressBar, setShowProgressBar] = useState<boolean>(false);
+    const [retryVerificationId, setRetryVerificationId] = useState<number>(0);
 
     useEffect(() => {
         _onChangeScreen();
@@ -91,11 +93,13 @@ const AuthScreenContainer = React.memo(({ _serialNumber, _setupStep, _terminalId
         if (_setupStep === 2) {
             if (!!_serialNumber) {
                 setShowProgressBar(true);
+
                 refApiService.terminalLicenseVerify(_serialNumber).pipe(
                     take(1),
-                    switchMap(l => createAssetsClientDir(l)),
                 ).subscribe(
                     l => {
+                        createAssetsClientDir(l);
+
                         setLicenseValid(true);
 
                         setShowProgressBar(false);
@@ -113,7 +117,11 @@ const AuthScreenContainer = React.memo(({ _serialNumber, _setupStep, _terminalId
                         );
                     },
                     err => {
-                        console.warn(err)
+                        _alertOpen({
+                            title: "Ошибка", message: err.message ? err.message : err,
+                            closeButtonTitle: "Повторить", onClose: retryVerification
+                        });
+
                         // License invalid
                         setShowProgressBar(false);
                         setLicenseValid(false);
@@ -123,7 +131,7 @@ const AuthScreenContainer = React.memo(({ _serialNumber, _setupStep, _terminalId
                 setLicenseValid(false);
             }
         }
-    }, [_serialNumber, _setupStep]);
+    }, [_serialNumber, _setupStep, retryVerificationId]);
 
     useEffect(() => {
         if (_setupStep === 1) {
@@ -132,10 +140,17 @@ const AuthScreenContainer = React.memo(({ _serialNumber, _setupStep, _terminalId
             }).subscribe(
                 v => {
                     setStores(v);
+                },
+                err => {
+                    _alertOpen({ title: "Ошибка", message: err.message ? err.message : err });
                 }
             );
         }
     }, [_setupStep]);
+
+    const retryVerification = () => {
+        setRetryVerificationId(() => retryVerificationId + 1);
+    };
 
     const changeSerialNumHandler = (val: string) => {
         setSerialNumber(val);
@@ -149,9 +164,10 @@ const AuthScreenContainer = React.memo(({ _serialNumber, _setupStep, _terminalId
         setShowProgressBar(true);
         refApiService.terminalRegistration(serialNumber).pipe(
             take(1),
-            switchMap(l => createAssetsClientDir(l)),
         ).subscribe(
             t => {
+                createAssetsClientDir(t);
+
                 _onChangeTerminalId(t.id || "");
 
                 _onChangeSetupStep(1);
@@ -264,7 +280,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
         _onChangeTerminalId: (terminalId: string) => {
             dispatch(SystemActions.setTerminalId(terminalId));
         },
-        _alertOpen: (alert: { title: string, message: string }) => {
+        _alertOpen: (alert: IAlertState) => {
             dispatch(NotificationActions.alertOpen(alert));
         },
     };
