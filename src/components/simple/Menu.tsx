@@ -7,6 +7,7 @@ import { NavMenu } from "./nav-menu";
 import { MenuButton } from "./MenuButton";
 import { CtrlMenuButton } from "./CtrlMenuButton";
 import { theme } from "../../theme";
+import { ModifiersEditor } from "./modifiers";
 
 interface IMenuProps {
     menu: ICompiledMenu;
@@ -48,7 +49,7 @@ export const Menu = React.memo(({
             } else {
                 sideMenuFadeIn();
             }
-            
+
             return { current: category, previouse: previouse.current };
         });
     };
@@ -72,9 +73,14 @@ export const Menu = React.memo(({
             // навигация по категории
             setSelectedCategory(node);
         } else if (node.type === NodeTypes.PRODUCT) {
+            const product = node.content as ICompiledProduct;
 
-            // добавление позиции
-            addPosition(node.content as ICompiledProduct);
+            if (true) {
+
+            } else {
+                // добавление позиции
+                addPosition(product);
+            }
         }
     }
 
@@ -146,93 +152,98 @@ export const Menu = React.memo(({
     }, []);
 
     return (
-        <View style={{ flex: 1, width, height: "100%" }}>
-            <LinearGradient
-                colors={theme.themes[theme.name].menu.header.background}
-                style={{ display: "flex", position: "absolute", width: "100%", height: 96, zIndex: 1 }}
-            >
-                <View style={{ display: "flex", alignItems: "center", flexDirection: "row", width: "100%", height: "100%", padding: 16 }}>
+        <>
+            <ModifiersEditor visible={true}></ModifiersEditor>
+            <View style={{ flex: 1, width, height: "100%" }}>
+                <LinearGradient
+                    colors={theme.themes[theme.name].menu.header.background}
+                    style={{ display: "flex", position: "absolute", width: "100%", height: 96, zIndex: 1 }}
+                >
+                    <View style={{ display: "flex", alignItems: "center", flexDirection: "row", width: "100%", height: "100%", padding: 16 }}>
+                        <Animated.View style={{
+                            width: 162,
+                            justifyContent: "center",
+                            alignItems: "center",
+                            top: 10,
+                            left: menuPosition.interpolate({
+                                inputRange: [0, 1],
+                                outputRange: [-10, -sideMenuWidth],
+                            }),
+                        }}>
+                            <MenuButton onPress={onBack}></MenuButton>
+                        </Animated.View>
+                        <View style={{ flex: 1 }}></View>
+                        <Text style={{ textTransform: "uppercase", fontWeight: "bold", color: theme.themes[theme.name].menu.header.titleColor, fontSize: 32, marginRight: 24 }}>
+                            {
+                                selected.current.content?.contents[language.code]?.name || "Меню"
+                            }
+                        </Text>
+                    </View>
+                </LinearGradient>
+                <View style={{ position: "absolute", overflow: "hidden", flexDirection: "row", width: "100%", height: "100%" }}>
                     <Animated.View style={{
-                        width: 162,
-                        justifyContent: "center",
-                        alignItems: "center",
-                        top: 10,
+                        position: "absolute",
+                        width: sideMenuWidth,
+                        height: "100%",
+                        marginTop: 48,
                         left: menuPosition.interpolate({
                             inputRange: [0, 1],
-                            outputRange: [-10, -sideMenuWidth],
+                            outputRange: [0, -sideMenuWidth],
                         }),
                     }}>
-                        <MenuButton onPress={onBack}></MenuButton>
+                        <View style={{ flex: 1, flexGrow: 1, margin: "auto" }}>
+                            <SideMenu menu={menu} language={language} selected={selected.current} onPress={selectSideMenuCategoryHandler}></SideMenu>
+                        </View>
+                        <View style={{ flex: 0, width: "100%", height: 192, margin: "auto", padding: 24 }}>
+                            <CtrlMenuButton
+                                gradient={theme.themes[theme.name].menu.ctrls.cancelButton.backgroundColor}
+                                gradientDisabled={theme.themes[theme.name].menu.ctrls.cancelButton.disabledBackgroundColor}
+                                text="Отменить" onPress={cancelOrder} />
+                        </View>
                     </Animated.View>
-                    <View style={{ flex: 1 }}></View>
-                    <Text style={{ textTransform: "uppercase", fontWeight: "bold", color: theme.themes[theme.name].menu.header.titleColor, fontSize: 32, marginRight: 24 }}>
-                        {
-                            selected.current.content?.contents[language.code]?.name || "Меню"
-                        }
-                    </Text>
+                    <Animated.View style={{
+                        position: "absolute",
+                        height: "100%",
+                        zIndex: 0,
+                        left: menuPosition.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: [sideMenuWidth, 0],
+                        }),
+                        width: menuPosition.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: [width - sideMenuWidth, width],
+                            easing: Easing.linear,
+                        }),
+                    }}>
+
+                        <Animated.View style={{
+                            position: "absolute",
+                            height: "100%",
+                            width: "100%",
+                            top: screenPosition.interpolate({
+                                inputRange: [0, 1],
+                                outputRange: [0, height],
+                            }),
+                        }}>
+                            <NavMenu node={selected.previouse.index <= selected.current.index ? selected.current : selected.previouse}
+                                language={language} currency={currency} onPress={selectNavMenuCategoryHandler}></NavMenu>
+                        </Animated.View>
+
+                        <Animated.View style={{
+                            position: "absolute",
+                            height: "100%",
+                            width: "100%",
+                            top: screenPosition.interpolate({
+                                inputRange: [0, 1],
+                                outputRange: [-height, 0],
+                            }),
+                        }}>
+                            <NavMenu node={selected.previouse.index > selected.current.index ? selected.current : selected.previouse}
+                                language={language} currency={currency} onPress={selectNavMenuCategoryHandler}></NavMenu>
+                        </Animated.View>
+                    </Animated.View>
                 </View>
-            </LinearGradient>
-            <View style={{ position: "absolute", overflow: "hidden", flexDirection: "row", width: "100%", height: "100%" }}>
-                <Animated.View style={{
-                    position: "absolute",
-                    width: sideMenuWidth,
-                    height: "100%",
-                    marginTop: 48,
-                    left: menuPosition.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [0, -sideMenuWidth],
-                    }),
-                }}>
-                    <View style={{ flex: 1, flexGrow: 1, margin: "auto" }}>
-                        <SideMenu menu={menu} language={language} selected={selected.current} onPress={selectSideMenuCategoryHandler}></SideMenu>
-                    </View>
-                    <View style={{ flex: 0, width: "100%", height: 192, margin: "auto", padding: 24 }}>
-                        <CtrlMenuButton
-                            gradient={theme.themes[theme.name].menu.ctrls.cancelButton.backgroundColor}
-                            gradientDisabled={theme.themes[theme.name].menu.ctrls.cancelButton.disabledBackgroundColor}
-                            text="Отменить" onPress={cancelOrder} />
-                    </View>
-                </Animated.View>
-                <Animated.View style={{
-                    position: "absolute",
-                    height: "100%",
-                    zIndex: 0,
-                    left: menuPosition.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [sideMenuWidth, 0],
-                    }),
-                    width: menuPosition.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [width - sideMenuWidth, width],
-                        easing: Easing.linear,
-                    }),
-                }}>
-
-                    <Animated.View style={{
-                        position: "absolute",
-                        height: "100%",
-                        width: "100%",
-                        top: screenPosition.interpolate({
-                            inputRange: [0, 1],
-                            outputRange: [0, height],
-                        }),
-                    }}>
-                        <NavMenu node={selected.previouse.index <= selected.current.index ? selected.current : selected.previouse} language={language} currency={currency} onPress={selectNavMenuCategoryHandler}></NavMenu>
-                    </Animated.View>
-
-                    <Animated.View style={{
-                        position: "absolute",
-                        height: "100%",
-                        width: "100%",
-                        top: screenPosition.interpolate({
-                            inputRange: [0, 1],
-                            outputRange: [-height, 0],
-                        }),
-                    }}>
-                        <NavMenu node={selected.previouse.index > selected.current.index ? selected.current : selected.previouse} language={language} currency={currency} onPress={selectNavMenuCategoryHandler}></NavMenu>
-                    </Animated.View>
-                </Animated.View>
-            </View>
-        </View >
+            </View >
+        </>
     )
 })
