@@ -1,5 +1,5 @@
 import React, { Dispatch, useCallback, useEffect, useState } from "react";
-import { StackScreenProps } from "@react-navigation/stack";
+import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
 import { ProgressBar } from "@react-native-community/progress-bar-android";
 import { Picker } from '@react-native-community/picker';
 import { View, TextInput } from "react-native";
@@ -21,7 +21,7 @@ import { IAlertState } from "../../interfaces";
 
 interface IAuthSelfProps {
     // store props
-    _onChangeScreen: () => void;
+    _onChangeScreen: (navigator: StackNavigationProp<any, MainNavigationScreenTypes>) => void;
     _onChangeSerialNumber: (serialNumber: string) => void;
     _onChangeSetupStep: (setupStep: number) => void;
     _onChangeTerminalId: (terminalId: string) => void;
@@ -87,7 +87,7 @@ const AuthScreenContainer = React.memo(({ _serialNumber, _setupStep, _terminalId
     const [retryGetStores, setRetryGetStores] = useState<number>(0);
 
     useEffect(() => {
-        _onChangeScreen();
+        _onChangeScreen(navigation);
     }, [_currentScreen]);
 
     useEffect(() => {
@@ -274,8 +274,8 @@ const mapStateToProps = (state: IAppState, ownProps: IAuthProps) => {
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
     return {
-        _onChangeScreen: () => {
-            dispatch(CapabilitiesActions.setCurrentScreen(MainNavigationScreenTypes.AUTH));
+        _onChangeScreen: (navigator: StackNavigationProp<any, MainNavigationScreenTypes>) => {
+            dispatch(CapabilitiesActions.setCurrentScreen(navigator, MainNavigationScreenTypes.AUTH));
         },
         _onChangeSerialNumber: (serialNumber: string) => {
             dispatch(SystemActions.setSerialNumber(serialNumber));

@@ -13,6 +13,7 @@ export interface IOrderWizard extends EventEmitter {
     findPosition: (position: IPositionWizard) => IPositionWizard | undefined;
     add: (position: IPositionWizard) => void;
     remove: (position: IPositionWizard) => void;
+    reset: () => void;
     getFormatedSum: (withCurrency?: boolean) => string;
     dispose: () => void;
 }

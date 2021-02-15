@@ -24,8 +24,8 @@ const myOrderReducer: Reducer<IMyOrderState, TMyOrderActions> = (
         case MyOrderActionTypes.REMOVE:
             OrderWizard.current.remove(action.position);
             return state;
-        case MyOrderActionTypes.CLEAR:
-            OrderWizard.current.clear();
+        case MyOrderActionTypes.RESET:
+            OrderWizard.current.reset();
             return state;
         case MyOrderActionTypes.UPDATE_STATE_ID:
             return {

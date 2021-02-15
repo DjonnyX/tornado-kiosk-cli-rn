@@ -8,7 +8,7 @@ export enum MyOrderActionTypes {
     ADD = "TORNADO/my-order/add",
     UPDATE = "TORNADO/my-order/update",
     REMOVE = "TORNADO/my-order/remove",
-    CLEAR = "TORNADO/my-order/clear",
+    RESET = "TORNADO/my-order/reset",
     UPDATE_STATE_ID = "TORNADO/my-order/update-state-id",
 }
 
@@ -32,7 +32,7 @@ interface IMyOrderActionRemove extends Action<MyOrderActionTypes.REMOVE> {
     position: IPositionWizard;
 }
 
-interface IMyOrderActionClear extends Action<MyOrderActionTypes.CLEAR> { }
+interface IMyOrderActionReset extends Action<MyOrderActionTypes.RESET> { }
 
 interface IMyOrderActionUpdateStateId extends Action<MyOrderActionTypes.UPDATE_STATE_ID> {
     stateId: number;
@@ -64,10 +64,10 @@ export class MyOrderActions {
         position,
     });
 
-    static reset = (): IMyOrderActionClear => ({
-        type: MyOrderActionTypes.CLEAR,
+    static reset = (): IMyOrderActionReset => ({
+        type: MyOrderActionTypes.RESET,
     });
 }
 
 export type TMyOrderActions = IMyOrderActionEdit | IMyOrderActionEditCancel | IMyOrderActionAdd | IMyOrderActionRemove
-    | IMyOrderActionUpdateStateId | IMyOrderActionClear;
+    | IMyOrderActionUpdateStateId | IMyOrderActionReset;

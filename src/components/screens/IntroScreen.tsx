@@ -1,5 +1,5 @@
 import React, { Dispatch, useCallback, useState, useEffect } from "react";
-import { StackScreenProps } from "@react-navigation/stack";
+import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
 import { View } from "react-native";
 import { connect } from "react-redux";
 import { ICompiledAd } from "@djonnyx/tornado-types/dist/interfaces/ICompiledAd";
@@ -15,8 +15,7 @@ import { CapabilitiesActions, MyOrderActions } from "../../store/actions";
 
 interface IIntroSelfProps {
     // store props
-    _onChangeScreen: () => void;
-    _onMarkOrderAsNew: () => void;
+    _onChangeScreen: (navigator: StackNavigationProp<any, MainNavigationScreenTypes>) => void;
     _intros: Array<ICompiledAd>;
     _language: ICompiledLanguage;
     _currentScreen: MainNavigationScreenTypes | undefined;
@@ -26,9 +25,9 @@ interface IIntroSelfProps {
 
 interface IIntroProps extends StackScreenProps<any, MainNavigationScreenTypes.INTRO>, IIntroSelfProps { }
 
-const IntroScreenContainer = React.memo(({ _language, _intros, navigation, _currentScreen, _onMarkOrderAsNew, _onChangeScreen }: IIntroProps) => {
+const IntroScreenContainer = React.memo(({ _language, _intros, navigation, _currentScreen, _onChangeScreen }: IIntroProps) => {
     useEffect(() => {
-        _onChangeScreen();
+        _onChangeScreen(navigation);
     }, [_currentScreen]);
 
     const pressHandler = useCallback((ad: ICompiledAd) => {
@@ -59,11 +58,8 @@ const mapStateToProps = (state: IAppState, ownProps: IIntroProps) => {
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
     return {
-        _onChangeScreen: () => {
-            dispatch(CapabilitiesActions.setCurrentScreen(MainNavigationScreenTypes.INTRO));
-        },
-        _onMarkOrderAsNew: () => {
-            dispatch(MyOrderActions.markAsNew());
+        _onChangeScreen: (navigator: StackNavigationProp<any, MainNavigationScreenTypes>) => {
+            dispatch(CapabilitiesActions.setCurrentScreen(navigator, MainNavigationScreenTypes.INTRO));
         },
     };
 };

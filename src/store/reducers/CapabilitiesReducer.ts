@@ -6,6 +6,7 @@ const initialState: ICapabilitiesState = {
     language: undefined,
     orderType: undefined,
     currentScreen: undefined,
+    navigator: undefined,
 };
 
 const capabilitiesReducer: Reducer<ICapabilitiesState, TCapabilitiesActions> = (
@@ -16,17 +17,18 @@ const capabilitiesReducer: Reducer<ICapabilitiesState, TCapabilitiesActions> = (
         case CapabilitiesActionTypes.SET_LANGUAGE:
             return {
                 ...state,
-                language: (action as any).language,
+                language: action.language,
             };
         case CapabilitiesActionTypes.SET_ORDER_TYPE:
             return {
                 ...state,
-                orderType: (action as any).orderType,
+                orderType: action.orderType,
             };
         case CapabilitiesActionTypes.SET_CURRENT_SCREEN:
             return {
                 ...state,
-                currentScreen: (action as any).currentScreen,
+                navigator: action.navigator,
+                currentScreen: action.currentScreen,
             };
         default:
             return state;

@@ -1,9 +1,9 @@
 import React, { Dispatch, useState, useCallback, useEffect } from "react";
-import { StackScreenProps } from "@react-navigation/stack";
+import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
 import { CommonActions } from "@react-navigation/native";
 import { View, Dimensions, ScaledSize } from "react-native";
 import { connect } from "react-redux";
-import { ICompiledMenu, ICurrency, ICompiledLanguage, ICompiledOrderType, ICompiledProduct, IOrderPosition } from "@djonnyx/tornado-types";
+import { ICompiledMenu, ICurrency, ICompiledLanguage, ICompiledOrderType, ICompiledProduct } from "@djonnyx/tornado-types";
 import { MainNavigationScreenTypes } from "../navigation";
 import { IAppState } from "../../store/state";
 import { CombinedDataSelectors, MyOrderSelectors } from "../../store/selectors";
@@ -13,18 +13,14 @@ import { MyOrderPanel } from "../simple/MyOrderPanel";
 import { Menu } from "../simple/Menu";
 import { theme } from "../../theme";
 import { NotificationAlert } from "../simple/NotificationAlert";
-import { IPositionWizard } from "../../core/interfaces";
 
 interface IMenuSelfProps {
     // store props
     _languages: Array<ICompiledLanguage>;
-    _orderSum: number;
     _orderTypes: Array<ICompiledOrderType>;
     _defaultCurrency: ICurrency;
     _menu: ICompiledMenu;
     _language: ICompiledLanguage;
-    _orderPositions: Array<IOrderPosition>;
-    _customProduct: ICompiledProduct;
     _currentScreen: MainNavigationScreenTypes | undefined;
     _orderStateId: number;
 
@@ -32,11 +28,8 @@ interface IMenuSelfProps {
     _onChangeLanguage: (language: ICompiledLanguage) => void;
     _onChangeOrderType: (orderType: ICompiledOrderType) => void;
     _onAddOrderPosition: (position: ICompiledProduct) => void;
-    _onUpdateOrderPosition: (position: IOrderPosition) => void;
-    _onRemoveOrderPosition: (position: IOrderPosition) => void;
-    _onChangeScreen: () => void;
+    _onChangeScreen: (navigator: StackNavigationProp<any, MainNavigationScreenTypes>) => void;
     _onResetOrder: () => void;
-    _onMarkOrderAsNew: () => void;
 
     // self props
 }
@@ -45,11 +38,9 @@ interface IMenuProps extends StackScreenProps<any, MainNavigationScreenTypes.MEN
 
 const MenuScreenContainer = React.memo(({
     _languages, _orderTypes, _defaultCurrency,
-    _menu, _language, _orderPositions, _orderSum,
-    _customProduct, _orderStateId, _currentScreen,
-    _onChangeScreen, _onMarkOrderAsNew, _onResetOrder,
-    _onChangeLanguage, _onChangeOrderType, _onAddOrderPosition,
-    _onUpdateOrderPosition, _onRemoveOrderPosition, navigation, route,
+    _menu, _language, _orderStateId, _currentScreen,
+    _onChangeScreen, _onResetOrder,
+    _onChangeLanguage, _onChangeOrderType, _onAddOrderPosition, navigation,
 }: IMenuProps) => {
     const [windowSize, _setWindowSize] = useState({ width: Dimensions.get("window").width, height: Dimensions.get("window").height });
     const [notifyLastAddedProduct, _setNotifyLastAddedProduct] = useState<ICompiledProduct>(undefined as any);
@@ -58,29 +49,9 @@ const MenuScreenContainer = React.memo(({
     const myOrderWidth = 170;
     let menuWidth = windowSize.width - myOrderWidth;
 
-    const navigateToIntro = () => {
-        navigation.dispatch(
-            CommonActions.reset({
-                index: 1,
-                routes: [
-                    { name: MainNavigationScreenTypes.INTRO },
-                ],
-            })
-        );
-    }
-
     useEffect(() => {
-        _onMarkOrderAsNew();
-        _onChangeScreen();
+        _onChangeScreen(navigation);
     }, [_currentScreen]);
-
-    useEffect(() => {
-        if (_currentScreen === MainNavigationScreenTypes.MENU) {
-            if (_orderStateId === 0) {
-                navigateToIntro();
-            }
-        }
-    }, [_orderStateId]);
 
     useEffect(() => {
         function dimensionsChangeHandler({ window }: { window: ScaledSize }) {
@@ -156,7 +127,6 @@ const mapStateToProps = (state: IAppState, ownProps: IMenuProps) => {
         _languages: CombinedDataSelectors.selectLangages(state),
         _orderTypes: CombinedDataSelectors.selectOrderTypes(state),
         _language: CapabilitiesSelectors.selectLanguage(state),
-        _orderSum: MyOrderSelectors.selectSum(state),
         _currentScreen: CapabilitiesSelectors.selectCurrentScreen(state),
         _orderStateId: MyOrderSelectors.selectStateId(state),
     };
@@ -173,17 +143,8 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
         _onAddOrderPosition: (product: ICompiledProduct) => {
             dispatch(MyOrderActions.edit(product));
         },
-        _onUpdateOrderPosition: (position: IOrderPosition) => {
-            // dispatch(MyOrderActions.updatePosition(position));
-        },
-        _onRemoveOrderPosition: (position: IPositionWizard) => {
-            dispatch(MyOrderActions.remove(position));
-        },
-        _onChangeScreen: () => {
-            dispatch(CapabilitiesActions.setCurrentScreen(MainNavigationScreenTypes.MENU));
-        },
-        _onMarkOrderAsNew: () => {
-            dispatch(MyOrderActions.reset());
+        _onChangeScreen: (navigator: StackNavigationProp<any, MainNavigationScreenTypes>) => {
+            dispatch(CapabilitiesActions.setCurrentScreen(navigator, MainNavigationScreenTypes.MENU));
         },
         _onResetOrder: () => {
             dispatch(MyOrderActions.reset());

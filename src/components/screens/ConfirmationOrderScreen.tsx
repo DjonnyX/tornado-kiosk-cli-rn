@@ -1,7 +1,7 @@
 import React, { Dispatch, useCallback, useEffect } from "react";
 import { FlatList, SafeAreaView, ScrollView, View } from "react-native";
 import { connect } from "react-redux";
-import { StackScreenProps } from "@react-navigation/stack";
+import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
 import { ICompiledLanguage, ICompiledAd, IOrderPosition, ICurrency, ICompiledProduct } from "@djonnyx/tornado-types";
 import { IAppState } from "../../store/state";
 import { MainNavigationScreenTypes } from "../navigation";
@@ -14,7 +14,7 @@ import { ConfirmationOrderListItem } from "../simple/confirmation-order-list";
 
 interface IConfirmationOrderScreenSelfProps {
     // store props
-    _onChangeScreen: () => void;
+    _onChangeScreen: (navigator: StackNavigationProp<any, MainNavigationScreenTypes>) => void;
     _onAddOrderPosition: (position: ICompiledProduct) => void;
     _onUpdateOrderPosition: (position: IOrderPosition) => void;
     _onRemoveOrderPosition: (position: IOrderPosition) => void;
@@ -32,7 +32,7 @@ interface IConfirmationOrderScreenProps extends StackScreenProps<any, MainNaviga
 const ConfirmationOrderScreenContainer = React.memo(({ _language, _banners, _currency, _currentScreen, _positions, navigation,
     _onChangeScreen, _onAddOrderPosition, _onUpdateOrderPosition, _onRemoveOrderPosition }: IConfirmationOrderScreenProps) => {
     useEffect(() => {
-        _onChangeScreen();
+        _onChangeScreen(navigation);
     }, [_currentScreen]);
 
     const selectAdHandler = useCallback((ad: ICompiledAd) => {
@@ -87,16 +87,13 @@ const mapStateToProps = (state: IAppState, ownProps: IConfirmationOrderScreenPro
 const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
     return {
         _onAddOrderPosition: (product: ICompiledProduct) => {
-            dispatch(MyOrderActions.addPosition(product));
         },
         _onUpdateOrderPosition: (position: IOrderPosition) => {
-            dispatch(MyOrderActions.updatePosition(position));
         },
         _onRemoveOrderPosition: (position: IOrderPosition) => {
-            dispatch(MyOrderActions.removePosition(position));
         },
-        _onChangeScreen: () => {
-            dispatch(CapabilitiesActions.setCurrentScreen(MainNavigationScreenTypes.CONFIRMATION_ORDER));
+        _onChangeScreen: (navigator: StackNavigationProp<any, MainNavigationScreenTypes>) => {
+            dispatch(CapabilitiesActions.setCurrentScreen(navigator, MainNavigationScreenTypes.CONFIRMATION_ORDER));
         },
     };
 };

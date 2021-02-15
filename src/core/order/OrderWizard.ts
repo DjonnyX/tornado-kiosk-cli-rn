@@ -159,7 +159,7 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
         this.emit(OrderWizardEventTypes.CHANGE);
     }
 
-    clear(): void {
+    reset(): void {
         this._positions.forEach(p => {
             p.removeAllListeners();
             p.dispose();

@@ -48,7 +48,7 @@ export const MyOrderPanel = React.memo(({ orderStateId, currency, language, lang
                 </View>
             </View>
             <View style={{ flex: 1, flexGrow: 1, margin: "auto" }}>
-                <MyOrderList/>
+                <MyOrderList />
             </View>
             <View style={{ flex: 0, height: 144, margin: "auto", padding: 24 }}>
                 <CtrlMenuButton text="Заказать" disabled={OrderWizard.current.positions.length === 0}

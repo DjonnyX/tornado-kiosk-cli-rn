@@ -7,11 +7,11 @@ export enum CombinedDataActionTypes {
     SET_PROGRESS = "TORNADO/combined-data/set-progress",
 }
 
-interface ICombinedDataActionSetData extends Action<CombinedDataActionTypes> {
+interface ICombinedDataActionSetData extends Action<CombinedDataActionTypes.SET_DATA> {
     data: ICompiledData | null;
 }
 
-interface ICombinedDataActionSetProgress extends Action<CombinedDataActionTypes> {
+interface ICombinedDataActionSetProgress extends Action<CombinedDataActionTypes.SET_PROGRESS> {
     progress: IProgress;
 }
 

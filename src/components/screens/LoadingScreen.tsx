@@ -1,5 +1,5 @@
 import React, { Dispatch, useEffect } from "react";
-import { StackScreenProps } from "@react-navigation/stack";
+import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
 import { ProgressBar } from "@react-native-community/progress-bar-android";
 import { View, Text } from "react-native";
 import { MainNavigationScreenTypes } from "../navigation";
@@ -12,7 +12,7 @@ import { CapabilitiesActions } from "../../store/actions";
 
 interface ILoadingSelfProps {
   // store props
-  _onChangeScreen: () => void;
+  _onChangeScreen: (navigator: StackNavigationProp<any, MainNavigationScreenTypes>) => void;
   _progress: number;
   _loaded: boolean;
   _currentScreen: MainNavigationScreenTypes | undefined;
@@ -24,7 +24,7 @@ interface ILoadingProps extends StackScreenProps<any, MainNavigationScreenTypes.
 
 const LoadingScreenContainer = React.memo(({ _progress, _loaded, navigation, _currentScreen, _onChangeScreen }: ILoadingProps) => {
   useEffect(() => {
-    _onChangeScreen();
+    _onChangeScreen(navigation);
   }, [_currentScreen]);
 
   useEffect(() => {
@@ -73,8 +73,8 @@ const mapStateToProps = (state: IAppState, ownProps: ILoadingProps) => {
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
   return {
-    _onChangeScreen: () => {
-      dispatch(CapabilitiesActions.setCurrentScreen(MainNavigationScreenTypes.LOADING));
+    _onChangeScreen: (navigator: StackNavigationProp<any, MainNavigationScreenTypes>) => {
+      dispatch(CapabilitiesActions.setCurrentScreen(navigator, MainNavigationScreenTypes.LOADING));
     },
   };
 };
