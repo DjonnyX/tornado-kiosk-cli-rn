@@ -164,6 +164,7 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
             p.removeAllListeners();
             p.dispose();
         });
+        this._positions = [];
 
         this._stateId = 0;
         this._sum = 0;
