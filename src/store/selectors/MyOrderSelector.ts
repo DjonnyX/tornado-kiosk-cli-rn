@@ -1,23 +1,23 @@
 import { createSelector } from "reselect";
+import { OrderWizard } from "../../core/order/OrderWizard";
 import { IAppState } from "../state";
 
 const getMyOrder = (state: IAppState) => state.myOrder;
 
 export namespace MyOrderSelectors {
+    export const selectStateId = createSelector(getMyOrder, (state) => {
+        return state.stateId;
+    });
+
+    export const selectSum = createSelector(getMyOrder, (state) => {
+        return OrderWizard.current.sum;
+    });
+
     export const selectPositions = createSelector(getMyOrder, (state) => {
-        return state.positions;
+        return OrderWizard.current.positions;
     });
 
-    export const selectSum = createSelector((state: IAppState) => { return state }, (state) => {
-        let sum = 0;
-        const currency = state.combinedData.data?.refs.defaultCurrency;
-        for (const pos of state.myOrder.positions) {
-            sum += pos.product.prices[currency?.id as any]?.value | 0;
-        }
-        return sum;
-    });
-
-    export const selectIsReseted = createSelector(getMyOrder, (state) => {
-        return state.isReseted;
+    export const selectEditedPosition = createSelector(getMyOrder, (state) => {
+        return OrderWizard.current.currentPosition;
     });
 }
