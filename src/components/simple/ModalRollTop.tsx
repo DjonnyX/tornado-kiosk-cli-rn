@@ -32,10 +32,7 @@ export const ModalRollTop = React.memo(({ children, visible }: IModalRollTopProp
                     height: "100%",
                     //borderWidth: 1,
                     //borderColor: theme.themes[theme.name].common.modalTransparent.window.borderColor,
-                    backgroundColor: "#ffffff",//theme.themes[theme.name].common.modalTransparent.window.background,
-                    borderTopLeftRadius: 8,
-                    borderTopRightRadius: 8,
-                    padding: 35,
+                    backgroundColor: theme.themes[theme.name].common.modalTransparent.window.background,
                     alignItems: "center",
                     shadowColor: "#000",
                     shadowOffset: {

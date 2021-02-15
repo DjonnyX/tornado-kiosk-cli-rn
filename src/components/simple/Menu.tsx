@@ -15,19 +15,16 @@ interface IMenuProps {
     language: ICompiledLanguage;
     width: number;
     height: number;
-    positions: Array<IOrderPosition>;
 
     cancelOrder: () => void;
     addPosition: (position: ICompiledProduct) => void;
-    updatePosition: (position: IOrderPosition) => void;
-    removePosition: (position: IOrderPosition) => void;
 }
 
 const sideMenuWidth = 180;
 
 export const Menu = React.memo(({
-    menu, language, currency, width, height, positions, cancelOrder,
-    addPosition, updatePosition, removePosition,
+    menu, language, currency, width, height,
+    cancelOrder, addPosition,
 }: IMenuProps) => {
     const [selected, _setSelectedCategory] = useState({ current: menu, previouse: menu });
     const [menuPosition, _setMenuPosition] = useState(new Animated.Value(1));
@@ -75,12 +72,8 @@ export const Menu = React.memo(({
         } else if (node.type === NodeTypes.PRODUCT) {
             const product = node.content as ICompiledProduct;
 
-            if (true) {
-
-            } else {
-                // добавление позиции
-                addPosition(product);
-            }
+            // добавление позиции
+            addPosition(product);
         }
     }
 
@@ -153,7 +146,7 @@ export const Menu = React.memo(({
 
     return (
         <>
-            <ModifiersEditor visible={true}></ModifiersEditor>
+            <ModifiersEditor></ModifiersEditor>
             <View style={{ flex: 1, width, height: "100%" }}>
                 <LinearGradient
                     colors={theme.themes[theme.name].menu.header.background}

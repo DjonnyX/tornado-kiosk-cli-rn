@@ -1,35 +1,34 @@
 import React, { useCallback, useState } from "react";
 import { View, Text, Button } from "react-native";
 import FastImage from "react-native-fast-image";
-import { IOrderPosition, ICurrency, ICompiledLanguage } from "@djonnyx/tornado-types";
+import { ICurrency, ICompiledLanguage } from "@djonnyx/tornado-types";
 import { NumericStapper } from "../NumericStapper";
 import { theme } from "../../../theme";
 import { ModalTransparent } from "../ModalTransparent";
 import { AlertContent } from "../AlertContent";
+import { IPositionWizard } from "../../../core/interfaces";
+import { OrderWizard } from "../../../core/order/OrderWizard";
 
 interface IMyOrderListItemItemProps {
+    stateId: number;
     imageHeight: number;
-    position: IOrderPosition;
+    position: IPositionWizard;
     currency: ICurrency;
     language: ICompiledLanguage;
-    onChange: (position: IOrderPosition) => void;
-    onRemove: (position: IOrderPosition) => void;
 }
 
-export const MyOrderListItem = React.memo(({ imageHeight, currency, language, position, onChange, onRemove }: IMyOrderListItemItemProps) => {
+export const MyOrderListItem = React.memo(({ stateId, imageHeight, currency, language, position }: IMyOrderListItemItemProps) => {
     const [alertRemoveVisible, _setAlertRemoveVisible] = useState(false);
 
     const setAlertRemoveVisible = (value: boolean) => {
         _setAlertRemoveVisible(prevVisibility => value);
     };
 
-    const currentContent = position.product.contents[language?.code];
+    const currentContent = position.__product__?.contents[language?.code];
     const currentAdAsset = currentContent?.resources?.icon;
 
     const setQuantity = (qnt: number) => {
-        const pos = { ...position };
-        pos.quantity = qnt;
-        onChange(pos);
+        position.quantity = qnt;
     }
 
     const changeQuantityHandler = (value: number) => {
@@ -48,7 +47,7 @@ export const MyOrderListItem = React.memo(({ imageHeight, currency, language, po
     }, []);
 
     const removePositionHandler = useCallback(() => {
-        onRemove(position);
+        OrderWizard.current.remove(position);
     }, []);
 
     return (
@@ -73,13 +72,13 @@ export const MyOrderListItem = React.memo(({ imageHeight, currency, language, po
                 color: theme.themes[theme.name].menu.draftOrder.item.nameColor, textTransform: "uppercase", fontWeight: "bold"
             }}>
                 {
-                    currentContent.name
+                    currentContent?.name
                 }
             </Text>
             <View style={{ alignItems: "center", justifyContent: "center", marginBottom: 1 }}>
                 <Text style={{ textAlign: "center", fontSize: 12, paddingTop: 4, paddingBottom: 4, paddingLeft: 6, paddingRight: 6, color: theme.themes[theme.name].menu.draftOrder.item.price.textColor }}>
                     {
-                        `${(position.product.prices[currency.id as string]?.value * 0.01).toFixed(2)} ${currency.symbol}`
+                        position.getFormatedSum(true)
                     }
                 </Text>
             </View>

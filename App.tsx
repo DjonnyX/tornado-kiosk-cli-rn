@@ -8,17 +8,19 @@ import { MainNavigationStack } from "./src/components/navigation/MainNavigationS
 import { AuthService, DataCollectorService, UserIdleService } from "./src/core";
 import { store } from "./src/store";
 import { AlertService } from "./src/core/AlertService";
+import { OrderService } from "./src/core/OrderService";
 
 const App = () => {
   return (
     <>
       <Provider store={store}>
         {/** services */}
+        <AlertService />
         <AuthService />
         <DataCollectorService />
+        <OrderService />
 
         {/** components */}
-        <AlertService />
         <UserIdleService>
           <StatusBar hidden={true} />
           <NavigationContainer>

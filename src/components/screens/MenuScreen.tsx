@@ -13,6 +13,7 @@ import { MyOrderPanel } from "../simple/MyOrderPanel";
 import { Menu } from "../simple/Menu";
 import { theme } from "../../theme";
 import { NotificationAlert } from "../simple/NotificationAlert";
+import { IPositionWizard } from "../../core/interfaces";
 
 interface IMenuSelfProps {
     // store props
@@ -23,8 +24,9 @@ interface IMenuSelfProps {
     _menu: ICompiledMenu;
     _language: ICompiledLanguage;
     _orderPositions: Array<IOrderPosition>;
+    _customProduct: ICompiledProduct;
     _currentScreen: MainNavigationScreenTypes | undefined;
-    _isOrderReseted: boolean;
+    _orderStateId: number;
 
     // store dispatches
     _onChangeLanguage: (language: ICompiledLanguage) => void;
@@ -44,11 +46,10 @@ interface IMenuProps extends StackScreenProps<any, MainNavigationScreenTypes.MEN
 const MenuScreenContainer = React.memo(({
     _languages, _orderTypes, _defaultCurrency,
     _menu, _language, _orderPositions, _orderSum,
-    _isOrderReseted, _currentScreen, _onChangeScreen,
-    _onMarkOrderAsNew, _onResetOrder,
-    _onChangeLanguage, _onChangeOrderType,
-    _onAddOrderPosition, _onUpdateOrderPosition,
-    _onRemoveOrderPosition, navigation, route,
+    _customProduct, _orderStateId, _currentScreen,
+    _onChangeScreen, _onMarkOrderAsNew, _onResetOrder,
+    _onChangeLanguage, _onChangeOrderType, _onAddOrderPosition,
+    _onUpdateOrderPosition, _onRemoveOrderPosition, navigation, route,
 }: IMenuProps) => {
     const [windowSize, _setWindowSize] = useState({ width: Dimensions.get("window").width, height: Dimensions.get("window").height });
     const [notifyLastAddedProduct, _setNotifyLastAddedProduct] = useState<ICompiledProduct>(undefined as any);
@@ -75,11 +76,11 @@ const MenuScreenContainer = React.memo(({
 
     useEffect(() => {
         if (_currentScreen === MainNavigationScreenTypes.MENU) {
-            if (_isOrderReseted) {
+            if (_orderStateId === 0) {
                 navigateToIntro();
             }
         }
-    }, [_isOrderReseted]);
+    }, [_orderStateId]);
 
     useEffect(() => {
         function dimensionsChangeHandler({ window }: { window: ScaledSize }) {
@@ -136,13 +137,12 @@ const MenuScreenContainer = React.memo(({
                     undefined
             }
             <View style={{ position: "absolute", width: menuWidth, height: "100%", zIndex: 1 }}>
-                <Menu currency={_defaultCurrency} language={_language} menu={_menu} width={menuWidth} height={windowSize.height} positions={_orderPositions} cancelOrder={cancelHandler}
-                    addPosition={addProductHandler} updatePosition={_onUpdateOrderPosition} removePosition={_onRemoveOrderPosition}
+                <Menu currency={_defaultCurrency} language={_language} menu={_menu} width={menuWidth} height={windowSize.height}
+                    cancelOrder={cancelHandler} addPosition={addProductHandler}
                 ></Menu>
             </View>
             <View style={{ position: "absolute", width: myOrderWidth, height: "100%", left: menuWidth, zIndex: 2 }}>
-                <MyOrderPanel currency={_defaultCurrency} sum={_orderSum} language={_language} languages={_languages} orderTypes={_orderTypes} positions={_orderPositions}
-                    updatePosition={_onUpdateOrderPosition} removePosition={_onRemoveOrderPosition}
+                <MyOrderPanel orderStateId={_orderStateId} currency={_defaultCurrency} language={_language} languages={_languages} orderTypes={_orderTypes}
                     onChangeLanguage={_onChangeLanguage} onChangeOrderType={_onChangeOrderType} onConfirm={confirmHandler}></MyOrderPanel>
             </View>
         </View>
@@ -156,10 +156,9 @@ const mapStateToProps = (state: IAppState, ownProps: IMenuProps) => {
         _languages: CombinedDataSelectors.selectLangages(state),
         _orderTypes: CombinedDataSelectors.selectOrderTypes(state),
         _language: CapabilitiesSelectors.selectLanguage(state),
-        _orderPositions: MyOrderSelectors.selectPositions(state),
         _orderSum: MyOrderSelectors.selectSum(state),
         _currentScreen: CapabilitiesSelectors.selectCurrentScreen(state),
-        _isOrderReseted: MyOrderSelectors.selectIsReseted(state),
+        _orderStateId: MyOrderSelectors.selectStateId(state),
     };
 };
 
@@ -172,19 +171,19 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
             dispatch(CapabilitiesActions.setOrderType(orderType));
         },
         _onAddOrderPosition: (product: ICompiledProduct) => {
-            dispatch(MyOrderActions.addPosition(product));
+            dispatch(MyOrderActions.edit(product));
         },
         _onUpdateOrderPosition: (position: IOrderPosition) => {
-            dispatch(MyOrderActions.updatePosition(position));
+            // dispatch(MyOrderActions.updatePosition(position));
         },
-        _onRemoveOrderPosition: (position: IOrderPosition) => {
-            dispatch(MyOrderActions.removePosition(position));
+        _onRemoveOrderPosition: (position: IPositionWizard) => {
+            dispatch(MyOrderActions.remove(position));
         },
         _onChangeScreen: () => {
             dispatch(CapabilitiesActions.setCurrentScreen(MainNavigationScreenTypes.MENU));
         },
         _onMarkOrderAsNew: () => {
-            dispatch(MyOrderActions.markAsNew());
+            dispatch(MyOrderActions.reset());
         },
         _onResetOrder: () => {
             dispatch(MyOrderActions.reset());
