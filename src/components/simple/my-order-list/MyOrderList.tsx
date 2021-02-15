@@ -7,15 +7,19 @@ import { CapabilitiesSelectors, CombinedDataSelectors, MyOrderSelectors } from "
 import { IAppState } from "../../../store/state";
 import { connect } from "react-redux";
 import { OrderWizard } from "../../../core/order/OrderWizard";
+import { IAlertState } from "../../../interfaces";
+import { NotificationActions } from "../../../store/actions";
 
 interface IMyOrderListProps {
     // store
     _currency?: ICurrency;
     _language?: ICompiledLanguage;
     _orderStateId?: number;
+    _alertOpen?: (alert: IAlertState) => void;
+    _alertClose?: () => void;
 }
 
-export const MyOrderListContainer = React.memo(({ _currency, _language, _orderStateId }: IMyOrderListProps) => {
+export const MyOrderListContainer = React.memo(({ _currency, _language, _alertOpen, _alertClose, _orderStateId }: IMyOrderListProps) => {
     const scrollView = useRef<ScrollView>(null);
 
     const contentSizeChangeHandler = useCallback(() => {
@@ -28,7 +32,8 @@ export const MyOrderListContainer = React.memo(({ _currency, _language, _orderSt
             >
                 <FlatList updateCellsBatchingPeriod={10} style={{ flex: 1 }} data={OrderWizard.current.positions} renderItem={({ item }) => {
                     return <MyOrderListItem key={item.id} position={item} currency={_currency as ICurrency}
-                        language={_language as ICompiledLanguage} imageHeight={48} stateId={item.stateId}/>
+                        language={_language as ICompiledLanguage} imageHeight={48} stateId={item.stateId}
+                        alertOpen={_alertOpen as any} alertClose={_alertClose as any} />
                 }}
                     keyExtractor={(item, index) => index.toString()}>
                 </FlatList>
@@ -47,7 +52,12 @@ const mapStateToProps = (state: IAppState, ownProps: IMyOrderListProps) => {
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
     return {
-
+        _alertOpen: (alert: IAlertState) => {
+            dispatch(NotificationActions.alertOpen(alert));
+        },
+        _alertClose: (alert: IAlertState) => {
+            dispatch(NotificationActions.alertClose());
+        },
     };
 };
 

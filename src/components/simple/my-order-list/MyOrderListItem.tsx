@@ -1,13 +1,12 @@
-import React, { useCallback, useState } from "react";
-import { View, Text, Button } from "react-native";
+import React from "react";
+import { View, Text } from "react-native";
 import FastImage from "react-native-fast-image";
 import { ICurrency, ICompiledLanguage } from "@djonnyx/tornado-types";
 import { NumericStapper } from "../NumericStapper";
 import { theme } from "../../../theme";
-import { ModalTransparent } from "../ModalTransparent";
-import { AlertContent } from "../AlertContent";
 import { IPositionWizard } from "../../../core/interfaces";
 import { OrderWizard } from "../../../core/order/OrderWizard";
+import { IAlertState } from "../../../interfaces";
 
 interface IMyOrderListItemItemProps {
     stateId: number;
@@ -15,15 +14,11 @@ interface IMyOrderListItemItemProps {
     position: IPositionWizard;
     currency: ICurrency;
     language: ICompiledLanguage;
+    alertOpen: (alert: IAlertState) => void;
+    alertClose: () => void;
 }
 
-export const MyOrderListItem = React.memo(({ stateId, imageHeight, currency, language, position }: IMyOrderListItemItemProps) => {
-    const [alertRemoveVisible, _setAlertRemoveVisible] = useState(false);
-
-    const setAlertRemoveVisible = (value: boolean) => {
-        _setAlertRemoveVisible(prevVisibility => value);
-    };
-
+export const MyOrderListItem = React.memo(({ stateId, imageHeight, currency, language, position, alertOpen, alertClose }: IMyOrderListItemItemProps) => {
     const currentContent = position.__product__?.contents[language?.code];
     const currentAdAsset = currentContent?.resources?.icon;
 
@@ -33,35 +28,33 @@ export const MyOrderListItem = React.memo(({ stateId, imageHeight, currency, lan
 
     const changeQuantityHandler = (value: number) => {
         if (value < 1) {
-            setAlertRemoveVisible(true);
+            alertOpen({
+                title: "Внимание!", message: "Вы действительно хотите удалить позицию?", buttons: [
+                    {
+                        title: "Удалить",
+                        action: () => {
+                            OrderWizard.current.remove(position);
+                            alertClose();
+                        }
+                    },
+                    {
+                        title: "Отмена",
+                        action: () => {
+                            setQuantity(1);
+                            alertClose();
+                        }
+                    }
+                ]
+            });
+
             return;
         }
 
         setQuantity(value);
     };
 
-    const cancelRemovePositionHandler = useCallback(() => {
-        setAlertRemoveVisible(false);
-
-        setQuantity(1);
-    }, []);
-
-    const removePositionHandler = useCallback(() => {
-        OrderWizard.current.remove(position);
-    }, []);
-
     return (
         <View style={{ flex: 1, paddingLeft: 24, paddingRight: 24, marginBottom: 20 }}>
-            <ModalTransparent visible={alertRemoveVisible}>
-                <AlertContent
-                    title="Внимание"
-                    message="Удалить позицию из заказа?"
-                    cancelButtonTitle="Отменить"
-                    applyButtonTitle="Удалить"
-                    onCancel={cancelRemovePositionHandler}
-                    onApply={removePositionHandler}
-                />
-            </ModalTransparent>
             <View style={{ flex: 1, width: "100%", height: imageHeight, marginBottom: 2, justifyContent: "flex-end" }}>
                 <FastImage style={{ width: "100%", height: "100%" }} source={{
                     uri: `file://${currentAdAsset?.mipmap.x128}`,

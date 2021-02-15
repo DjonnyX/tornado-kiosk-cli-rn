@@ -8,11 +8,12 @@ import { MainNavigationScreenTypes } from "../navigation";
 import { IAppState } from "../../store/state";
 import { CombinedDataSelectors, MyOrderSelectors } from "../../store/selectors";
 import { CapabilitiesSelectors } from "../../store/selectors/CapabilitiesSelector";
-import { CapabilitiesActions, MyOrderActions } from "../../store/actions";
+import { CapabilitiesActions, MyOrderActions, NotificationActions } from "../../store/actions";
 import { MyOrderPanel } from "../simple/MyOrderPanel";
 import { Menu } from "../simple/Menu";
 import { theme } from "../../theme";
 import { NotificationAlert } from "../simple/NotificationAlert";
+import { IAlertState } from "../../interfaces";
 
 interface IMenuSelfProps {
     // store props
@@ -23,6 +24,8 @@ interface IMenuSelfProps {
     _language: ICompiledLanguage;
     _currentScreen: MainNavigationScreenTypes | undefined;
     _orderStateId: number;
+    _alertOpen: (alert: IAlertState) => void;
+    _alertClose: () => void;
 
     // store dispatches
     _onChangeLanguage: (language: ICompiledLanguage) => void;
@@ -39,7 +42,7 @@ interface IMenuProps extends StackScreenProps<any, MainNavigationScreenTypes.MEN
 const MenuScreenContainer = React.memo(({
     _languages, _orderTypes, _defaultCurrency,
     _menu, _language, _orderStateId, _currentScreen,
-    _onChangeScreen, _onResetOrder,
+    _onChangeScreen, _onResetOrder, _alertOpen, _alertClose,
     _onChangeLanguage, _onChangeOrderType, _onAddOrderPosition, navigation,
 }: IMenuProps) => {
     const [windowSize, _setWindowSize] = useState({ width: Dimensions.get("window").width, height: Dimensions.get("window").height });
@@ -80,8 +83,28 @@ const MenuScreenContainer = React.memo(({
         );
     }, []);
 
-    const cancelHandler = useCallback(() => {
+    const cancelOrderConfirm = () => {
         _onResetOrder();
+    };
+
+    const cancelHandler = useCallback(() => {
+        _alertOpen({
+            title: "Внимание!", message: "Вы действительно хотите удалить заказ?", buttons: [
+                {
+                    title: "Удалить",
+                    action: () => {
+                        cancelOrderConfirm();
+                        _alertClose();
+                    }
+                },
+                {
+                    title: "Отмена",
+                    action: () => {
+                        _alertClose();
+                    }
+                }
+            ]
+        });
     }, []);
 
     const addProductHandler = (product: ICompiledProduct) => {
@@ -148,6 +171,12 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
         },
         _onResetOrder: () => {
             dispatch(MyOrderActions.reset());
+        },
+        _alertOpen: (alert: IAlertState) => {
+            dispatch(NotificationActions.alertOpen(alert));
+        },
+        _alertClose: (alert: IAlertState) => {
+            dispatch(NotificationActions.alertClose());
         },
     };
 };
