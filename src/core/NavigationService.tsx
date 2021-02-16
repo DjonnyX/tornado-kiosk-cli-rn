@@ -5,9 +5,13 @@ import { CapabilitiesSelectors, MyOrderSelectors } from "../store/selectors";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { MainNavigationScreenTypes } from "../components/navigation";
 import { CommonActions } from "@react-navigation/native";
+import { NotificationActions } from "../store/actions";
 
 interface INavigationServiceProps {
     // store
+    _snackClose: () => void;
+    _alertClose: () => void;
+
     _orderStateId: number;
     _currentScreen: MainNavigationScreenTypes;
     _navigator: StackNavigationProp<any, MainNavigationScreenTypes>;
@@ -33,6 +37,9 @@ class NavigationServiceContainer extends Component<INavigationServiceProps, INav
                             ],
                         })
                     );
+
+                    this.props._alertClose();
+                    this.props._snackClose();
                 });
             } else
                 if (nextProps._orderStateId === 1 && nextProps._currentScreen !== MainNavigationScreenTypes.MENU) {
@@ -66,7 +73,12 @@ const mapStateToProps = (state: IAppState) => {
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => {
     return {
-
+        _snackClose: () => {
+            dispatch(NotificationActions.snackClose());
+        },
+        _alertClose: () => {
+            dispatch(NotificationActions.alertClose());
+        },
     };
 };
 
