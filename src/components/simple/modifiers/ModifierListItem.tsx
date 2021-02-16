@@ -80,6 +80,8 @@ export const ModifierListItem = React.memo(({ thumbnailHeight, currency, languag
                             ? `${String(value)}x${position.getFormatedPrice(true)}`
                             : String(position.getFormatedPrice(true));
                     }}
+                    min={0}
+                    max={Math.min(position.availableQuantitiy, 99)}
                 />
             </TouchableOpacity>
         </View>

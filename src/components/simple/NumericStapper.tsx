@@ -12,7 +12,7 @@ const NumericStepperButton = ({ icon, style, textStyle, onPress }: INumericStepp
     return (
         <TouchableOpacity onPress={onPress}>
             <View style={{ flex: 1, alignItems: "center", justifyContent: "center", ...style as any }}>
-                <Text style={{...textStyle as any}}>
+                <Text style={{ ...textStyle as any }}>
                     {
                         icon
                     }
@@ -32,21 +32,27 @@ interface INumericStapperProps {
     containerStyle?: StyleProp<ViewStyle>;
     iconDecrement?: string;
     iconIncrement?: string;
+    min?: number;
+    max?: number;
 }
 
 export const NumericStapper = React.memo(({ value = 0, iconDecrement = "-", iconIncrement = "+", buttonStyle, buttonTextStyle,
-containerStyle, textStyle, formatValueFunction, onChange }: INumericStapperProps) => {
+    containerStyle, textStyle, min, max, formatValueFunction, onChange }: INumericStapperProps) => {
 
     const setValue = (value: number) => {
         onChange(value);
     }
 
     const decrementHandler = useCallback(() => {
-        setValue(value - 1);
+        if (min === undefined || value > min) {
+            setValue(value - 1);
+        }
     }, [value]);
 
     const incrementHandler = useCallback(() => {
-        setValue(value + 1);
+        if (max === undefined || value < max) {
+            setValue(value + 1);
+        }
     }, [value]);
 
     return (
@@ -55,8 +61,8 @@ containerStyle, textStyle, formatValueFunction, onChange }: INumericStapperProps
             <Text style={{ flex: 1, textAlign: "center", ...textStyle as any }}>
                 {
                     !!formatValueFunction
-                    ? formatValueFunction(value)
-                    : value.toString()
+                        ? formatValueFunction(value)
+                        : value.toString()
                 }
             </Text>
             <NumericStepperButton style={buttonStyle} textStyle={buttonTextStyle} icon={iconIncrement} onPress={incrementHandler} />

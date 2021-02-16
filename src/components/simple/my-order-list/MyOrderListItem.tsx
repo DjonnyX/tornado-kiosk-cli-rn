@@ -85,6 +85,8 @@ export const MyOrderListItem = React.memo(({ stateId, imageHeight, currency, lan
                 textStyle={{ width: 44, color: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.indicator.textColor }}
                 iconDecrement="-"
                 iconIncrement="+"
+                min={0}
+                max={Math.min(position.rests, 99)}
                 onChange={changeQuantityHandler}
             />
         </View>
