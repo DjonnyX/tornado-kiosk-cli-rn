@@ -10,7 +10,7 @@ interface INumericStepperButtonProps {
 
 const NumericStepperButton = ({ icon, style, textStyle, onPress }: INumericStepperButtonProps) => {
     return (
-        <TouchableOpacity style={{ flex: 1 }} onPress={onPress}>
+        <TouchableOpacity onPress={onPress}>
             <View style={{ flex: 1, alignItems: "center", justifyContent: "center", ...style as any }}>
                 <Text style={{...textStyle as any}}>
                     {
@@ -25,6 +25,7 @@ const NumericStepperButton = ({ icon, style, textStyle, onPress }: INumericStepp
 interface INumericStapperProps {
     onChange: (value: number) => void;
     value?: number;
+    formatValueFunction?: (value: number) => string;
     textStyle?: StyleProp<TextStyle>;
     buttonStyle?: StyleProp<ViewStyle | TextStyle>;
     buttonTextStyle: StyleProp<TextStyle>;
@@ -33,7 +34,8 @@ interface INumericStapperProps {
     iconIncrement?: string;
 }
 
-export const NumericStapper = React.memo(({ value = 0, iconDecrement = "-", iconIncrement = "+", buttonStyle, buttonTextStyle, containerStyle, textStyle, onChange }: INumericStapperProps) => {
+export const NumericStapper = React.memo(({ value = 0, iconDecrement = "-", iconIncrement = "+", buttonStyle, buttonTextStyle,
+containerStyle, textStyle, formatValueFunction, onChange }: INumericStapperProps) => {
 
     const setValue = (value: number) => {
         onChange(value);
@@ -50,9 +52,11 @@ export const NumericStapper = React.memo(({ value = 0, iconDecrement = "-", icon
     return (
         <View style={{ flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "center", ...containerStyle as any }}>
             <NumericStepperButton style={buttonStyle} textStyle={buttonTextStyle} icon={iconDecrement} onPress={decrementHandler} />
-            <Text style={{ textAlign: "center", ...textStyle as any }}>
+            <Text style={{ flex: 1, textAlign: "center", ...textStyle as any }}>
                 {
-                    value.toString()
+                    !!formatValueFunction
+                    ? formatValueFunction(value)
+                    : value.toString()
                 }
             </Text>
             <NumericStepperButton style={buttonStyle} textStyle={buttonTextStyle} icon={iconIncrement} onPress={incrementHandler} />

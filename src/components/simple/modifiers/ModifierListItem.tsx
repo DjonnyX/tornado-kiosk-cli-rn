@@ -64,17 +64,22 @@ export const ModifierListItem = React.memo(({ thumbnailHeight, currency, languag
                 <NumericStapper
                     value={position.quantity}
                     buttonStyle={{
-                        borderStyle: "solid", borderWidth: 0.5, borderRadius: 3,
+                        width: 48, height: 48, borderStyle: "solid", borderWidth: 0.5, borderRadius: 3,
                         borderColor: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.borderColor,
                         padding: 6
                     }}
                     buttonTextStyle={{
                         color: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.textColor as any,
                     }}
-                    textStyle={{ width: 44, color: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.indicator.textColor }}
+                    textStyle={{ color: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.indicator.textColor }}
                     iconDecrement="-"
                     iconIncrement="+"
                     onChange={changeQuantityHandler}
+                    formatValueFunction={(value: number) => {
+                        return position.sum > 0
+                            ? `${String(value)}x${position.getFormatedPrice(true)}`
+                            : String(position.getFormatedPrice(true));
+                    }}
                 />
             </TouchableOpacity>
         </View>

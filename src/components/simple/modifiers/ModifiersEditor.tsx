@@ -127,7 +127,7 @@ export const ModifiersEditorContainer = React.memo(({ _orderStateId, _language, 
                             }}>
                                 <ScrollView style={{ flex: 1, marginTop: 68 }} horizontal={false}>
                                     <GridList style={{ flex: 1 }} padding={10} spacing={6} data={OrderWizard.current.currentPosition.groups[OrderWizard.current.currentPosition.currentGroup].positions}
-                                        itemDimension={196} animationSkipFrames={10} renderItem={({ item }) => {
+                                        itemDimension={218} animationSkipFrames={10} renderItem={({ item }) => {
                                             return <ModifierListItem key={item.id} position={item} currency={_currency} language={_language}
                                                 thumbnailHeight={128} onPress={onPress} stateId={item.stateId}></ModifierListItem>
                                         }}
