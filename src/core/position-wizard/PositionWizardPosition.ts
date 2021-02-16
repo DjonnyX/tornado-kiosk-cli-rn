@@ -4,9 +4,23 @@ import { IPositionWizardPosition } from "../interfaces";
 import { PositionWizardPositionEventTypes } from "./events";
 
 export class PositionWizardPosition extends EventEmitter implements IPositionWizardPosition {
+    protected static __id = 0;
+
     get index() { return this._index; }
 
-    get id() { return this._productNode.content.id; }
+    protected _id: number = 0;
+
+    get id() {
+        return this._id;
+    }
+
+    protected _stateId: number = 0;
+
+    get stateId() {
+        return this._stateId;
+    }
+
+    get productId() { return this._productNode.content.id; }
 
     get __productNode__() { return this._productNode; }
 
@@ -16,6 +30,8 @@ export class PositionWizardPosition extends EventEmitter implements IPositionWiz
             this._quantity = v;
 
             this.recalculate();
+            this.update();
+
             this.emit(PositionWizardPositionEventTypes.CHANGE_QUANTITY);
         }
     }
@@ -35,11 +51,18 @@ export class PositionWizardPosition extends EventEmitter implements IPositionWiz
     ) {
         super();
 
+        PositionWizardPosition.__id++;
+        this._id = PositionWizardPosition.__id;
+
         this.recalculate();
     }
 
     protected recalculate(): void {
         this._sum = this.price * this._quantity;
+    }
+
+    protected update(): void {
+        this._stateId++;
     }
 
     getFormatedPrice(withCurrency: boolean = false): string {

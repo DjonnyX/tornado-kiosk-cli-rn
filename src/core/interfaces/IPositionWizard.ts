@@ -28,7 +28,8 @@ export interface IPositionWizardGroup extends EventEmitter {
 }
 
 export interface IPositionWizardPosition extends EventEmitter {
-    readonly id: string;
+    readonly id: number;
+    readonly productId: string;
     readonly index: number;
     readonly currency: ICurrency;
     quantity: number;
