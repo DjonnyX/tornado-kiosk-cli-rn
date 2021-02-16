@@ -15,10 +15,9 @@ interface IMyOrderListItemItemProps {
     currency: ICurrency;
     language: ICompiledLanguage;
     alertOpen: (alert: IAlertState) => void;
-    alertClose: () => void;
 }
 
-export const MyOrderListItem = React.memo(({ stateId, imageHeight, currency, language, position, alertOpen, alertClose }: IMyOrderListItemItemProps) => {
+export const MyOrderListItem = React.memo(({ stateId, imageHeight, currency, language, position, alertOpen }: IMyOrderListItemItemProps) => {
     const currentContent = position.__product__?.contents[language?.code];
     const currentAdAsset = currentContent?.resources?.icon;
 
@@ -34,14 +33,12 @@ export const MyOrderListItem = React.memo(({ stateId, imageHeight, currency, lan
                         title: "Удалить",
                         action: () => {
                             OrderWizard.current.remove(position);
-                            alertClose();
                         }
                     },
                     {
                         title: "Отмена",
                         action: () => {
                             setQuantity(1);
-                            alertClose();
                         }
                     }
                 ]

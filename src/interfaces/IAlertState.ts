@@ -1,6 +1,6 @@
 export interface IAlertButton {
     title: string;
-    action: () => void;
+    action?: () => void;
 }
 
 export interface IAlertState {

@@ -16,10 +16,9 @@ interface IMyOrderListProps {
     _language?: ICompiledLanguage;
     _orderStateId?: number;
     _alertOpen?: (alert: IAlertState) => void;
-    _alertClose?: () => void;
 }
 
-export const MyOrderListContainer = React.memo(({ _currency, _language, _alertOpen, _alertClose, _orderStateId }: IMyOrderListProps) => {
+export const MyOrderListContainer = React.memo(({ _currency, _language, _alertOpen, _orderStateId }: IMyOrderListProps) => {
     const scrollView = useRef<ScrollView>(null);
 
     const contentSizeChangeHandler = useCallback(() => {
@@ -33,7 +32,7 @@ export const MyOrderListContainer = React.memo(({ _currency, _language, _alertOp
                 <FlatList updateCellsBatchingPeriod={10} style={{ flex: 1 }} data={OrderWizard.current.positions} renderItem={({ item }) => {
                     return <MyOrderListItem key={item.id} position={item} currency={_currency as ICurrency}
                         language={_language as ICompiledLanguage} imageHeight={48} stateId={item.stateId}
-                        alertOpen={_alertOpen as any} alertClose={_alertClose as any} />
+                        alertOpen={_alertOpen as any}/>
                 }}
                     keyExtractor={(item, index) => index.toString()}>
                 </FlatList>
@@ -54,9 +53,6 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
     return {
         _alertOpen: (alert: IAlertState) => {
             dispatch(NotificationActions.alertOpen(alert));
-        },
-        _alertClose: (alert: IAlertState) => {
-            dispatch(NotificationActions.alertClose());
         },
     };
 };

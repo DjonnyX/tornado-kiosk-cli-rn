@@ -12,8 +12,7 @@ import { CapabilitiesActions, MyOrderActions, NotificationActions } from "../../
 import { MyOrderPanel } from "../simple/MyOrderPanel";
 import { Menu } from "../simple/Menu";
 import { theme } from "../../theme";
-import { NotificationAlert } from "../simple/NotificationAlert";
-import { IAlertState } from "../../interfaces";
+import { IAlertState, ISnackState } from "../../interfaces";
 
 interface IMenuSelfProps {
     // store props
@@ -25,7 +24,6 @@ interface IMenuSelfProps {
     _currentScreen: MainNavigationScreenTypes | undefined;
     _orderStateId: number;
     _alertOpen: (alert: IAlertState) => void;
-    _alertClose: () => void;
 
     // store dispatches
     _onChangeLanguage: (language: ICompiledLanguage) => void;
@@ -42,12 +40,10 @@ interface IMenuProps extends StackScreenProps<any, MainNavigationScreenTypes.MEN
 const MenuScreenContainer = React.memo(({
     _languages, _orderTypes, _defaultCurrency,
     _menu, _language, _orderStateId, _currentScreen,
-    _onChangeScreen, _onResetOrder, _alertOpen, _alertClose,
+    _onChangeScreen, _onResetOrder, _alertOpen,
     _onChangeLanguage, _onChangeOrderType, _onAddOrderPosition, navigation,
 }: IMenuProps) => {
     const [windowSize, _setWindowSize] = useState({ width: Dimensions.get("window").width, height: Dimensions.get("window").height });
-    const [notifyLastAddedProduct, _setNotifyLastAddedProduct] = useState<ICompiledProduct>(undefined as any);
-    const [showNotificationOfLastAddedProduct, _setShowNotificationOfLastAddedProduct] = useState<boolean>(false);
 
     const myOrderWidth = 170;
     let menuWidth = windowSize.width - myOrderWidth;
@@ -94,14 +90,10 @@ const MenuScreenContainer = React.memo(({
                     title: "Удалить",
                     action: () => {
                         cancelOrderConfirm();
-                        _alertClose();
                     }
                 },
                 {
                     title: "Отмена",
-                    action: () => {
-                        _alertClose();
-                    }
                 }
             ]
         });
@@ -109,27 +101,10 @@ const MenuScreenContainer = React.memo(({
 
     const addProductHandler = (product: ICompiledProduct) => {
         _onAddOrderPosition(product);
-        _setNotifyLastAddedProduct(() => product);
-        _setShowNotificationOfLastAddedProduct(() => true);
     };
-
-    const addProductNotificationComplete = useCallback(() => {
-        _setShowNotificationOfLastAddedProduct(() => false);
-    }, [_setNotifyLastAddedProduct, notifyLastAddedProduct]);
 
     return (
         <View style={{ flexDirection: "row", width: "100%", height: "100%", backgroundColor: theme.themes[theme.name].menu.background }}>
-            {
-                !!notifyLastAddedProduct
-                    ?
-                    <NotificationAlert message={`"${notifyLastAddedProduct.contents[_language.code].name}" добавлен в заказ!`}
-                        visible={showNotificationOfLastAddedProduct}
-                        duration={5000}
-                        onComplete={addProductNotificationComplete}
-                    />
-                    :
-                    undefined
-            }
             <View style={{ position: "absolute", width: menuWidth, height: "100%", zIndex: 1 }}>
                 <Menu currency={_defaultCurrency} language={_language} menu={_menu} width={menuWidth} height={windowSize.height}
                     cancelOrder={cancelHandler} addPosition={addProductHandler}
@@ -174,9 +149,6 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
         },
         _alertOpen: (alert: IAlertState) => {
             dispatch(NotificationActions.alertOpen(alert));
-        },
-        _alertClose: (alert: IAlertState) => {
-            dispatch(NotificationActions.alertClose());
         },
     };
 };

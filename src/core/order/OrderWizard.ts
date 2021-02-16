@@ -18,6 +18,9 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
     protected _currentPosition: IPositionWizard | null = null;
     get currentPosition() { return this._currentPosition; }
 
+    protected _lastPosition: IPositionWizard | null = null;
+    get lastPosition() { return this._lastPosition; }
+
     set currency(v: ICurrency) {
         if (this._currency !== v) {
             this._currency = v;
@@ -150,6 +153,8 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
         this._positions.push(editedPosition);
         editedPosition.addListener(PositionWizardEventTypes.CHANGE, this.onChangePosition);
 
+        this._lastPosition = editedPosition;
+
         this.update();
 
         this.emit(OrderWizardEventTypes.CHANGE);
@@ -173,6 +178,9 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
         });
         this._positions = [];
 
+        this._currentPosition = null;
+        this._lastPosition = null;
+
         this._stateId = 0;
         this._sum = 0;
 
@@ -192,5 +200,8 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
             p.removeAllListeners();
             p.dispose();
         });
+
+        this._currentPosition = null;
+        this._lastPosition = null;
     }
 }

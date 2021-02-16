@@ -3,13 +3,15 @@ import { View } from "react-native";
 import { connect } from "react-redux";
 import { IAppState } from "../store/state";
 import { AlertContent, ModalTransparent } from "../components/simple";
-import { NotificationActions } from "../store/actions";
-import { NotificationSelectors } from "../store/selectors/NotificationSelector";
 import { IAlertState } from "../interfaces";
+import { Snack } from "../components/simple/Snack";
+import { NotificationSelectors } from "../store/selectors";
+import { NotificationActions } from "../store/actions";
 
 interface IAlertServiceProps {
     // store
     _alertParams: IAlertState;
+    _alertClose: () => void;
 }
 
 interface IAlertServiceState { }
@@ -20,7 +22,7 @@ class AlertServiceContainer extends PureComponent<IAlertServiceProps, IAlertServ
     }
 
     render() {
-        const { _alertParams } = this.props;
+        const { _alertParams, _alertClose } = this.props;
 
         return <View style={{ position: "absolute", left: 0, top: 0, right: 0, bottom: 0, }}>
             <View style={{ flex: 1, width: "100%", height: "100%" }}>
@@ -28,7 +30,16 @@ class AlertServiceContainer extends PureComponent<IAlertServiceProps, IAlertServ
                     <AlertContent
                         title={_alertParams.title || ""}
                         message={_alertParams.message || ""}
-                        buttons={_alertParams.buttons || []}
+                        buttons={_alertParams.buttons.map(b => ({
+                            ...b,
+                            action: () => {
+                                if (!!b.action) {
+                                    b.action();
+                                }
+
+                                _alertClose();
+                            }
+                        }))}
                     />
                 </ModalTransparent>
                 <View style={{ flex: 1, width: "100%", height: "100%" }}>
@@ -49,7 +60,7 @@ const mapStateToProps = (state: IAppState) => {
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => {
     return {
-        _onClose: () => {
+        _alertClose: () => {
             dispatch(NotificationActions.alertClose());
         },
     };

@@ -20,7 +20,11 @@ export const AlertContent = React.memo(({ title, message, buttons }: IAlertConte
                 {
                     buttons.map((b, i) =>
                         <SimpleButton key={i} style={{ backgroundColor: "yellow", marginLeft: i > 0 ? 10 : 0 }}
-                            textStyle={{ color: "rgba(0,0,0,0.75)" }} onPress={b.action} title={b.title} />
+                            textStyle={{ color: "rgba(0,0,0,0.75)" }} onPress={() => {
+                                if (!!b.action) {
+                                    b.action();
+                                }
+                            }} title={b.title} />
                     )
                 }
             </View>

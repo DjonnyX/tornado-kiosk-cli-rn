@@ -26,7 +26,6 @@ interface IAuthSelfProps {
     _onChangeSetupStep: (setupStep: number) => void;
     _onChangeTerminalId: (terminalId: string) => void;
     _alertOpen: (alert: IAlertState) => void;
-    _alertClose: () => void;
     _progress: number;
     _serialNumber: string;
     _setupStep: number;
@@ -76,7 +75,7 @@ function createAssetsClientDir<T extends { clientId: string }>(v: T) {
 interface IAuthProps extends StackScreenProps<any, MainNavigationScreenTypes.LOADING>, IAuthSelfProps { }
 
 const AuthScreenContainer = React.memo(({ _serialNumber, _setupStep, _terminalId, navigation, _currentScreen,
-    _alertOpen, _alertClose, _onChangeScreen, _onChangeSerialNumber, _onChangeSetupStep, _onChangeTerminalId,
+    _alertOpen, _onChangeScreen, _onChangeSerialNumber, _onChangeSetupStep, _onChangeTerminalId,
 }: IAuthProps) => {
     const [stores, setStores] = useState<Array<IStore>>([]);
     const [serialNumber, setSerialNumber] = useState<string>(_serialNumber);
@@ -124,7 +123,6 @@ const AuthScreenContainer = React.memo(({ _serialNumber, _setupStep, _terminalId
                                     title: "Повторить",
                                     action: () => {
                                         retryVerificationHandler();
-                                        _alertClose();
                                     }
                                 }
                             ]
@@ -156,7 +154,6 @@ const AuthScreenContainer = React.memo(({ _serialNumber, _setupStep, _terminalId
                                 title: "Повторить",
                                 action: () => {
                                     retryGetStoresHandler();
-                                    _alertClose();
                                 }
                             }
                         ]
@@ -201,7 +198,6 @@ const AuthScreenContainer = React.memo(({ _serialNumber, _setupStep, _terminalId
                     title: "Ошибка", message: err.message ? err.message : err, buttons: [
                         {
                             title: "Закрыть",
-                            action: () => { _alertClose(); }
                         }
                     ]
                 });
@@ -231,7 +227,6 @@ const AuthScreenContainer = React.memo(({ _serialNumber, _setupStep, _terminalId
                     title: "Ошибка", message: err.message ? err.message : err, buttons: [
                         {
                             title: "Закрыть",
-                            action: () => { _alertClose }
                         }
                     ]
                 });
@@ -317,9 +312,6 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
         },
         _alertOpen: (alert: IAlertState) => {
             dispatch(NotificationActions.alertOpen(alert));
-        },
-        _alertClose: (alert: IAlertState) => {
-            dispatch(NotificationActions.alertClose());
         },
     };
 };

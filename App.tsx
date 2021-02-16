@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   StatusBar,
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { Provider } from "react-redux";
 import { MainNavigationStack } from "./src/components/navigation/MainNavigationStack";
-import { AlertService, AuthService, DataCollectorService, NavigationService, OrderService, UserIdleService } from "./src/core";
+import { SnackService, AlertService, AuthService, DataCollectorService, NavigationService, OrderService, UserIdleService } from "./src/core";
 import { store } from "./src/store";
 
 const App = () => {
@@ -13,11 +13,11 @@ const App = () => {
     <>
       <Provider store={store}>
         {/** services */}
-        <AlertService />
+        <OrderService />
         <AuthService />
         <DataCollectorService />
-        <OrderService />
         <NavigationService />
+        <AlertService />
 
         {/** components */}
         <UserIdleService>
@@ -26,6 +26,8 @@ const App = () => {
             <MainNavigationStack />
           </NavigationContainer>
         </UserIdleService>
+        {/** snack */}
+        <SnackService />
       </Provider>
     </>
   );
