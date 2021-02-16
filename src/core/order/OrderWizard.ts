@@ -97,6 +97,13 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
         return this._positions.find(p => p.id === position.id);
     }
 
+    new(): void {
+        this._stateId = 1;
+        this._sum = 0;
+
+        this.emit(OrderWizardEventTypes.CHANGE);
+    }
+
     edit(product: ICompiledProduct) {
         const position = new PositionWizard(PositionWizardModes.NEW, product, this._currency);
         position.quantity = 1;

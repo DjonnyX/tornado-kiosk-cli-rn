@@ -1,4 +1,4 @@
-import React, { Dispatch, useCallback, useState, useEffect } from "react";
+import React, { Dispatch, useCallback, useEffect } from "react";
 import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
 import { View } from "react-native";
 import { connect } from "react-redux";
@@ -9,9 +9,9 @@ import { CombinedDataSelectors } from "../../store/selectors";
 import { CapabilitiesSelectors } from "../../store/selectors/CapabilitiesSelector";
 import { Ads } from "../simple";
 import { ICompiledLanguage } from "@djonnyx/tornado-types";
-import { CommonActions } from "@react-navigation/native";
 import { theme } from "../../theme";
-import { CapabilitiesActions, MyOrderActions } from "../../store/actions";
+import { CapabilitiesActions } from "../../store/actions";
+import { OrderWizard } from "../../core/order/OrderWizard";
 
 interface IIntroSelfProps {
     // store props
@@ -31,14 +31,7 @@ const IntroScreenContainer = React.memo(({ _language, _intros, navigation, _curr
     }, [_currentScreen]);
 
     const pressHandler = useCallback((ad: ICompiledAd) => {
-        navigation.dispatch(
-            CommonActions.reset({
-                index: 1,
-                routes: [
-                    { name: MainNavigationScreenTypes.MENU },
-                ],
-            })
-        );
+        OrderWizard.current.new();
     }, []);
 
     return (

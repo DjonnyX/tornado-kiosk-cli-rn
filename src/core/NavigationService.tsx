@@ -21,20 +21,30 @@ class NavigationServiceContainer extends Component<INavigationServiceProps, INav
     }
 
     shouldComponentUpdate(nextProps: Readonly<INavigationServiceProps>, nextState: Readonly<INavigationServiceState>, nextContext: any) {
-        if (nextProps._navigator && this.props._orderStateId !== nextProps._orderStateId
-            && nextProps._orderStateId === 0
-            && (nextProps._currentScreen === MainNavigationScreenTypes.MENU
+        if (nextProps._navigator && this.props._orderStateId !== nextProps._orderStateId) {
+            if (nextProps._orderStateId === 0 && (nextProps._currentScreen === MainNavigationScreenTypes.MENU
                 || nextProps._currentScreen === MainNavigationScreenTypes.CONFIRMATION_ORDER)) {
-            setTimeout(() => {
-                nextProps._navigator.dispatch(
-                    CommonActions.reset({
-                        index: 1,
-                        routes: [
-                            { name: MainNavigationScreenTypes.INTRO },
-                        ],
-                    })
-                );
-            });
+                setTimeout(() => {
+                    nextProps._navigator.dispatch(
+                        CommonActions.reset({
+                            index: 1,
+                            routes: [
+                                { name: MainNavigationScreenTypes.INTRO },
+                            ],
+                        })
+                    );
+                });
+            } else
+                if (nextProps._orderStateId === 1 && nextProps._currentScreen !== MainNavigationScreenTypes.MENU) {
+                    nextProps._navigator.dispatch(
+                        CommonActions.reset({
+                            index: 1,
+                            routes: [
+                                { name: MainNavigationScreenTypes.MENU },
+                            ],
+                        })
+                    );
+                }
         }
 
         if (super.shouldComponentUpdate) return super.shouldComponentUpdate(nextProps, nextState, nextContext);

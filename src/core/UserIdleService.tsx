@@ -62,8 +62,20 @@ class UserIdleServiceContainer extends PureComponent<IUserIdleServiceProps, IUse
         this.setState((state) => ({
             ...state,
             countdown: state.countdown - 1,
-        }));
+        }), () => {
+            this.showAlert();
+        });
     }
+    
+    private _alertResetAction = () => {
+        this.resetHandler();
+        this.props._alertClose();
+    };
+    
+    private _alertCancelAction = () => {
+        this.cancelResetHandler();
+        this.props._alertClose();
+    };
 
     constructor(props: any) {
         super(props);
@@ -77,6 +89,21 @@ class UserIdleServiceContainer extends PureComponent<IUserIdleServiceProps, IUse
         this.resetTimer();
     }
 
+    private showAlert(): void {
+        this.props._alertOpen({
+            title: "Внимание!", message: `Заказ будет отменен через ${this.state.countdown} сек`, buttons: [
+                {
+                    title: "Удалить",
+                    action: this._alertResetAction,
+                },
+                {
+                    title: "Отмена",
+                    action: this._alertCancelAction,
+                }
+            ]
+        });
+    }
+
     private runCountdown(): void {
         this.stopTimer();
 
@@ -84,25 +111,8 @@ class UserIdleServiceContainer extends PureComponent<IUserIdleServiceProps, IUse
             ...state,
             countdown: 10,
         }), () => {
-            this.props._alertOpen({
-                title: "Внимание!", message: `Заказ будет отменен через ${this.state.countdown} сек`, buttons: [
-                    {
-                        title: "Удалить",
-                        action: () => {
-                            this.resetHandler();
-                            this.props._alertClose();
-                        }
-                    },
-                    {
-                        title: "Отмена",
-                        action: () => {
-                            this.cancelResetHandler
-                            this.props._alertClose();
-                        }
-                    }
-                ]
-            });
             this.runCoutndownTimer();
+            this.showAlert();
         });
     }
 
@@ -145,6 +155,8 @@ class UserIdleServiceContainer extends PureComponent<IUserIdleServiceProps, IUse
     }
 
     private resetStore = () => {
+        this.resetCountdownTimer();
+        this.resetTimer();
         if (this.props._onReset) {
             this.props._onReset();
         }

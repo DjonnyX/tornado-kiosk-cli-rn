@@ -1,7 +1,6 @@
-import React, { useState, useCallback } from "react";
+import React from "react";
 import { View, Text } from "react-native";
 import { IAlertButton } from "../../interfaces";
-import { theme } from "../../theme";
 import { SimpleButton } from "./SimpleButton";
 
 interface IAlertContentProps {
@@ -20,7 +19,7 @@ export const AlertContent = React.memo(({ title, message, buttons }: IAlertConte
             <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
                 {
                     buttons.map((b, i) =>
-                        <SimpleButton style={{ backgroundColor: "yellow", marginLeft: i > 0 ? 10 : 0 }}
+                        <SimpleButton key={i} style={{ backgroundColor: "yellow", marginLeft: i > 0 ? 10 : 0 }}
                             textStyle={{ color: "rgba(0,0,0,0.75)" }} onPress={b.action} title={b.title} />
                     )
                 }
