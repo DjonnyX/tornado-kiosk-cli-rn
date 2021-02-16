@@ -1,12 +1,12 @@
-import { ICompiledLanguage, ICompiledMenuNode, ICompiledProduct, ICurrency, IOrderPosition } from "@djonnyx/tornado-types";
-import React, { Dispatch, useCallback, useState } from "react";
-import { View, Modal, Text, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
+import { ICompiledLanguage, ICurrency } from "@djonnyx/tornado-types";
+import React, { Dispatch, useCallback, useEffect, useState } from "react";
+import { View, Text, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
 import FastImage from "react-native-fast-image";
 import { connect } from "react-redux";
 import { PositionWizardModes } from "../../../core/enums";
-import { IPositionWizardGroup } from "../../../core/interfaces";
+import { IPositionWizard, IPositionWizardPosition } from "../../../core/interfaces";
 import { OrderWizard } from "../../../core/order/OrderWizard";
-import { MyOrderActions } from "../../../store/actions";
+import { PositionWizardEventTypes } from "../../../core/position-wizard/events";
 import { CapabilitiesSelectors, CombinedDataSelectors, MyOrderSelectors } from "../../../store/selectors";
 import { IAppState } from "../../../store/state";
 import { Icons, theme } from "../../../theme";
@@ -22,6 +22,18 @@ interface IModifiersEditorProps {
 }
 
 export const ModifiersEditorContainer = React.memo(({ _orderStateId, _language, _currency }: IModifiersEditorProps) => {
+    const [stateId, setStateId] = useState<number>(OrderWizard.current.currentPosition?.stateId || 0);
+    const [position, setPosition] = useState<IPositionWizard | null>(OrderWizard.current.currentPosition);
+
+    const changeProductHandler = useCallback(() => {
+        setStateId(OrderWizard.current.currentPosition?.stateId || 0);
+    }, []);
+
+    useEffect(() => {
+        if (OrderWizard.current.currentPosition?.mode === PositionWizardModes.NEW) {
+            OrderWizard.current.currentPosition.addListener(PositionWizardEventTypes.CHANGE, changeProductHandler);
+        }
+    });
 
     const onPreviousGroup = useCallback(() => {
         OrderWizard.current.gotoPreviousGroup();
@@ -35,7 +47,7 @@ export const ModifiersEditorContainer = React.memo(({ _orderStateId, _language, 
         OrderWizard.current.editCancel(true);
     }, []);
 
-    const onPress = (node: ICompiledMenuNode) => {
+    const onPress = (position: IPositionWizardPosition) => {
 
     }
 
@@ -114,10 +126,10 @@ export const ModifiersEditorContainer = React.memo(({ _orderStateId, _language, 
                                 flex: 1, width: "100%",
                             }}>
                                 <ScrollView style={{ flex: 1, marginTop: 68 }} horizontal={false}>
-                                    <GridList style={{ flex: 1 }} padding={10} spacing={6} data={OrderWizard.current.currentPosition.groups[OrderWizard.current.currentPosition.currentGroup].__groupNode__.children}
-                                        itemDimension={196} animationSkipFrames={10} renderItem={({ item }: { item: ICompiledMenuNode }) => {
-                                            return <ModifierListItem key={item.id} node={item} currency={_currency} language={_language} thumbnailHeight={128}
-                                                onPress={onPress}></ModifierListItem>
+                                    <GridList style={{ flex: 1 }} padding={10} spacing={6} data={OrderWizard.current.currentPosition.groups[OrderWizard.current.currentPosition.currentGroup].positions}
+                                        itemDimension={196} animationSkipFrames={10} renderItem={({ item }) => {
+                                            return <ModifierListItem key={item.id} position={item} currency={_currency} language={_language}
+                                                thumbnailHeight={128} onPress={onPress} stateId={item.stateId}></ModifierListItem>
                                         }}
                                         keyExtractor={(item, index) => item.id}>
                                     </GridList>

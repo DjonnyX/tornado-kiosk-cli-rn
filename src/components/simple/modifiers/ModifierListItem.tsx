@@ -3,27 +3,37 @@ import { View, Text, TouchableOpacity, GestureResponderEvent } from "react-nativ
 import FastImage from "react-native-fast-image";
 import { ICompiledMenuNode, NodeTypes, ICompiledProduct, ICurrency, ICompiledLanguage } from "@djonnyx/tornado-types";
 import { theme } from "../../../theme";
+import { NumericStapper } from "../NumericStapper";
+import { IPositionWizardPosition } from "../../../core/interfaces";
 
 interface IModifierListItemProps {
+    stateId: number;
     thumbnailHeight: number;
-    node: ICompiledMenuNode;
+    position: IPositionWizardPosition;
     currency: ICurrency;
     language: ICompiledLanguage;
-    onPress: (node: ICompiledMenuNode) => void;
+    onPress: (position: IPositionWizardPosition) => void;
 }
 
-export const ModifierListItem = React.memo(({ thumbnailHeight, currency, language, node, onPress }: IModifierListItemProps) => {
+export const ModifierListItem = React.memo(({ thumbnailHeight, currency, language, position, stateId,
+    onPress }: IModifierListItemProps) => {
 
     const pressHandler = useCallback((e: GestureResponderEvent) => {
         if (!!onPress) {
-            onPress(node);
+            onPress(position);
         }
     }, []);
 
-    const currentContent = node.content?.contents[language?.code];
+    const changeQuantityHandler = (qnt: number) => {
+        position.quantity = qnt;
+    }
+
+    const currentContent = position.__productNode__.content?.contents[language?.code];
     const currentAdAsset = currentContent?.resources?.icon;
 
-    const tags = node.type === NodeTypes.PRODUCT && (node.content as ICompiledProduct).tags?.length > 0 ? (node.content as ICompiledProduct).tags : undefined;
+    const tags = position.__productNode__.type === NodeTypes.PRODUCT && position.__productNode__.content.tags?.length > 0
+        ? position.__productNode__.content.tags
+        : undefined;
 
     return (
         <View style={{ flex: 1, backgroundColor: theme.themes[theme.name].menu.navMenu.item.backgroundColor, /*backgroundColor: Color.rgb(currentContent.color).alpha(0.05).toString(),*/ borderRadius: 16, padding: 22 }}>
@@ -33,45 +43,39 @@ export const ModifierListItem = React.memo(({ thumbnailHeight, currency, languag
                         uri: `file://${currentAdAsset?.path}`,
                     }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                 </View>
-                <Text textBreakStrategy="simple" numberOfLines={2} ellipsizeMode="tail" style={{ textAlign: "center", fontSize: 20, marginBottom: 6, color: theme.themes[theme.name].menu.navMenu.item.nameColor, fontWeight: "bold", textTransform: "uppercase" }}>
+                <Text textBreakStrategy="simple" numberOfLines={2} ellipsizeMode="tail"
+                    style={{
+                        textAlign: "center", fontSize: 20, marginBottom: 6, color: theme.themes[theme.name].menu.navMenu.item.nameColor,
+                        fontWeight: "bold", textTransform: "uppercase"
+                    }}>
                     {
                         currentContent.name
                     }
                 </Text>
-                <Text textBreakStrategy="simple" numberOfLines={2} ellipsizeMode="tail" style={{ textAlign: "center", fontSize: 10, color: theme.themes[theme.name].menu.navMenu.item.descriptionColor, textTransform: "uppercase", marginBottom: 12 }}>
+                <Text textBreakStrategy="simple" numberOfLines={2} ellipsizeMode="tail" style={{
+                    textAlign: "center", fontSize: 10,
+                    color: theme.themes[theme.name].menu.navMenu.item.descriptionColor, textTransform: "uppercase",
+                    marginBottom: 12
+                }}>
                     {
                         currentContent.description
                     }
                 </Text>
-                {
-
-                    node.type === NodeTypes.PRODUCT
-                        ?
-                        <View style={{ borderStyle: "solid", borderWidth: 0.5, borderRadius: 5, alignItems: "center", justifyContent: "center", borderColor: theme.themes[theme.name].menu.navMenu.item.price.borderColor, marginBottom: 12 }}>
-                            <Text style={{ textAlign: "center", fontSize: 16, paddingTop: 6, paddingBottom: 6, paddingLeft: 14, paddingRight: 14, color: theme.themes[theme.name].menu.navMenu.item.price.textColor }}>
-                                {
-                                    `${((node.content as ICompiledProduct).prices[currency.id as string]?.value * 0.01).toFixed(2)} ${currency.symbol}`
-                                }
-                            </Text>
-                        </View>
-                        :
-                        undefined
-                }
-                {
-                    /*<View style={{ position: "absolute", flexDirection: "row", flexWrap: "wrap" }}>
-                        {
-                            tags?.map(tag =>
-                                tag?.contents[language.code]?.resources?.main?.mipmap?.x32
-                                    ?
-                                    <Image style={{ width: 16, height: 16 }} source={{
-                                        uri: `file://${tag?.contents[language.code]?.resources?.main?.mipmap?.x32}`,
-                                    }} resizeMode="contain" resizeMethod="scale"></Image>
-                                    :
-                                <View key={tag.id} style={{ width: 8, height: 8, marginRight: 2, backgroundColor: tag?.contents[language.code]?.color, borderRadius: 4 }}></View>
-                            )
-                        }
-                    </View>*/
-                }
+                <NumericStapper
+                    value={position.quantity}
+                    buttonStyle={{
+                        borderStyle: "solid", borderWidth: 0.5, borderRadius: 3,
+                        borderColor: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.borderColor,
+                        padding: 6
+                    }}
+                    buttonTextStyle={{
+                        color: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.textColor as any,
+                    }}
+                    textStyle={{ width: 44, color: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.indicator.textColor }}
+                    iconDecrement="-"
+                    iconIncrement="+"
+                    onChange={changeQuantityHandler}
+                />
             </TouchableOpacity>
         </View>
     );
