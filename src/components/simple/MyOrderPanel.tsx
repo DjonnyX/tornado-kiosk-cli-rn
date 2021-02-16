@@ -6,24 +6,22 @@ import { OrderTypesPicker } from "./OrderTypesPicker";
 import { MyOrderList } from "./my-order-list";
 import { CtrlMenuButton } from "./CtrlMenuButton";
 import { theme } from "../../theme";
+import { OrderWizard } from "../../core/order/OrderWizard";
 
 interface IMyOrderPanelProps {
+    orderStateId: number;
     currency: ICurrency;
     language: ICompiledLanguage;
     languages: Array<ICompiledLanguage>;
     orderTypes: Array<ICompiledOrderType>;
-    positions: Array<IOrderPosition>;
-    sum: number;
 
-    updatePosition: (position: IOrderPosition) => void;
-    removePosition: (position: IOrderPosition) => void;
     onChangeLanguage: (lang: ICompiledLanguage) => void;
     onChangeOrderType: (lang: ICompiledOrderType) => void;
     onConfirm: () => void;
 }
 
-export const MyOrderPanel = React.memo(({ currency, language, languages, orderTypes, positions, sum,
-    updatePosition, removePosition, onChangeLanguage, onChangeOrderType, onConfirm,
+export const MyOrderPanel = React.memo(({ orderStateId, currency, language, languages, orderTypes,
+    onChangeLanguage, onChangeOrderType, onConfirm,
 }: IMyOrderPanelProps) => {
     return (
         <View
@@ -44,18 +42,16 @@ export const MyOrderPanel = React.memo(({ currency, language, languages, orderTy
                     </Text>
                     <Text style={{ fontWeight: "bold", fontSize: 18, color: theme.themes[theme.name].menu.sum.price.textColor }}>
                         {
-                            `${(sum * 0.01).toFixed(2)} ${currency.symbol}`
+                            OrderWizard.current.getFormatedSum(true)
                         }
                     </Text>
                 </View>
             </View>
             <View style={{ flex: 1, flexGrow: 1, margin: "auto" }}>
-                <MyOrderList currency={currency} language={language} positions={positions}
-                    updatePosition={updatePosition} removePosition={removePosition}
-                ></MyOrderList>
+                <MyOrderList />
             </View>
             <View style={{ flex: 0, height: 144, margin: "auto", padding: 24 }}>
-                <CtrlMenuButton text="Заказать" disabled={positions.length === 0}
+                <CtrlMenuButton text="Заказать" disabled={OrderWizard.current.positions.length === 0}
                     gradient={theme.themes[theme.name].menu.ctrls.confirmButton.backgroundColor}
                     gradientDisabled={theme.themes[theme.name].menu.ctrls.confirmButton.disabledBackgroundColor}
                     onPress={onConfirm}></CtrlMenuButton>

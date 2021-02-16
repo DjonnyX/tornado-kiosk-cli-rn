@@ -1,40 +1,38 @@
-import React, { useRef, useCallback } from "react";
+import React, { useRef, useCallback, Dispatch } from "react";
 import { SafeAreaView, ScrollView } from "react-native";
-import { ICompiledLanguage, ICurrency, IOrderPosition } from "@djonnyx/tornado-types";
+import { ICompiledLanguage, ICurrency } from "@djonnyx/tornado-types";
 import { FlatList } from "react-native-gesture-handler";
 import { MyOrderListItem } from "./MyOrderListItem";
+import { CapabilitiesSelectors, CombinedDataSelectors, MyOrderSelectors } from "../../../store/selectors";
+import { IAppState } from "../../../store/state";
+import { connect } from "react-redux";
+import { OrderWizard } from "../../../core/order/OrderWizard";
+import { IAlertState } from "../../../interfaces";
+import { NotificationActions } from "../../../store/actions";
 
 interface IMyOrderListProps {
-    positions: Array<IOrderPosition>;
-    currency: ICurrency;
-    language: ICompiledLanguage;
-
-    updatePosition: (position: IOrderPosition) => void;
-    removePosition: (position: IOrderPosition) => void;
+    // store
+    _currency?: ICurrency;
+    _language?: ICompiledLanguage;
+    _orderStateId?: number;
+    _alertOpen?: (alert: IAlertState) => void;
 }
 
-export const MyOrderList = React.memo(({ currency, language, positions, updatePosition, removePosition }: IMyOrderListProps) => {
+export const MyOrderListContainer = React.memo(({ _currency, _language, _alertOpen, _orderStateId }: IMyOrderListProps) => {
     const scrollView = useRef<ScrollView>(null);
 
     const contentSizeChangeHandler = useCallback(() => {
         scrollView.current?.scrollToEnd({ animated: true });
     }, [scrollView]);
 
-    const updatePositionHandler = useCallback((position) => {
-        updatePosition(position);
-    }, []);
-
-    const removePositionHandler = useCallback((position) => {
-        removePosition(position);
-    }, []);
-
     return (
         <SafeAreaView style={{ flex: 1, width: "100%" }}>
             <ScrollView ref={scrollView} onContentSizeChange={contentSizeChangeHandler} style={{ flex: 1 }} horizontal={false}
             >
-                <FlatList updateCellsBatchingPeriod={10} style={{ flex: 1 }} data={positions} renderItem={({ item }) => {
-                    return <MyOrderListItem key={item.id} position={item} currency={currency} language={language} imageHeight={48}
-                        onChange={updatePositionHandler} onRemove={removePositionHandler} />
+                <FlatList updateCellsBatchingPeriod={10} style={{ flex: 1 }} data={OrderWizard.current.positions} renderItem={({ item }) => {
+                    return <MyOrderListItem key={item.id} position={item} currency={_currency as ICurrency}
+                        language={_language as ICompiledLanguage} imageHeight={48} stateId={item.stateId}
+                        alertOpen={_alertOpen as any}/>
                 }}
                     keyExtractor={(item, index) => index.toString()}>
                 </FlatList>
@@ -42,3 +40,21 @@ export const MyOrderList = React.memo(({ currency, language, positions, updatePo
         </SafeAreaView>
     )
 })
+
+const mapStateToProps = (state: IAppState, ownProps: IMyOrderListProps) => {
+    return {
+        _currency: CombinedDataSelectors.selectDefaultCurrency(state),
+        _language: CapabilitiesSelectors.selectLanguage(state),
+        _orderStateId: MyOrderSelectors.selectStateId(state),
+    };
+};
+
+const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
+    return {
+        _alertOpen: (alert: IAlertState) => {
+            dispatch(NotificationActions.alertOpen(alert));
+        },
+    };
+};
+
+export const MyOrderList = connect(mapStateToProps, mapDispatchToProps)(MyOrderListContainer);

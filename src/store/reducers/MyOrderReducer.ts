@@ -1,11 +1,10 @@
 import { Reducer } from "redux";
+import { OrderWizard } from "../../core/order/OrderWizard";
 import { TMyOrderActions, MyOrderActionTypes } from "../actions";
 import { IMyOrderState } from "../state";
 
 const initialState: IMyOrderState = {
-    _nextPositionIndex: 0,
-    positions: [],
-    isReseted: true,
+    stateId: -1,
 };
 
 const myOrderReducer: Reducer<IMyOrderState, TMyOrderActions> = (
@@ -13,65 +12,25 @@ const myOrderReducer: Reducer<IMyOrderState, TMyOrderActions> = (
     action,
 ) => {
     switch (action.type) {
-        case MyOrderActionTypes.ADD_POSITION:
-            const existsAIndex = state.positions.findIndex(pos => pos.product.id === (action as any).product.id);
-
-            // "слипание" продуктов
-            if (existsAIndex > -1) {
-                const aPos = { ...state.positions[existsAIndex] };
-                aPos.quantity++;;
-                let aPositions = [...state.positions];
-                if (existsAIndex > -1) {
-                    aPositions.splice(existsAIndex, 1);
-                    aPositions.splice(existsAIndex, 0, aPos);
-                }
-                return {
-                    ...state,
-                    positions: aPositions,
-                };
-            }
-            // добавление нового продукта
-            else {
-                const _nextPositionIndex = state._nextPositionIndex + 1;
-                return {
-                    ...state,
-                    _nextPositionIndex,
-                    positions: [...state.positions, { id: _nextPositionIndex.toString(), product: (action as any).product, quantity: 1 }],
-                };
-            }
-        case MyOrderActionTypes.REMOVE_POSITION:
-            const rPos = (action as any).position;
-            const existsRIndex = state.positions.findIndex(pos => pos.id === rPos.id);
-            let rPositions = [...state.positions];
-            if (existsRIndex > -1) {
-                rPositions.splice(existsRIndex, 1);
-            }
-            return {
-                ...state,
-                positions: rPositions,
-            };
-        case MyOrderActionTypes.UPDATE_POSITION:
-            const uPos = (action as any).position;
-            const existsUIndex = state.positions.findIndex(pos => pos.id === uPos.id);
-            let uPositions = [...state.positions];
-            if (existsUIndex > -1) {
-                uPositions.splice(existsUIndex, 1);
-                uPositions.splice(existsUIndex, 0, uPos);
-            }
-            return {
-                ...state,
-                positions: uPositions,
-            };
+        case MyOrderActionTypes.EDIT:
+            OrderWizard.current.edit(action.product);
+            return state;
+        case MyOrderActionTypes.EDIT_CANCEL:
+            OrderWizard.current.editCancel(action.remove);
+            return state;
+        case MyOrderActionTypes.ADD:
+            OrderWizard.current.add(action.position);
+            return state;
+        case MyOrderActionTypes.REMOVE:
+            OrderWizard.current.remove(action.position);
+            return state;
         case MyOrderActionTypes.RESET:
+            OrderWizard.current.reset();
+            return state;
+        case MyOrderActionTypes.UPDATE_STATE_ID:
             return {
                 ...state,
-                positions: [],
-                isReseted: true,
-            };
-        case MyOrderActionTypes.MARK_AS_NEW:
-            return {
-                ...state,
-                isReseted: false,
+                stateId: action.stateId,
             };
         default:
             return state;

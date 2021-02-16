@@ -1,5 +1,4 @@
 import { IKioskTheme } from "@djonnyx/tornado-types";
-import { ModalTransparent } from "../components/simple";
 
 export const theme: IKioskTheme = {
     name: "dark",

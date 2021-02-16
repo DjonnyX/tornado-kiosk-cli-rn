@@ -1,53 +1,73 @@
 import { Action } from "redux";
 import { ICompiledProduct, IOrderPosition } from "@djonnyx/tornado-types";
+import { IPositionWizard } from "../../core/interfaces";
 
 export enum MyOrderActionTypes {
-    ADD_POSITION = "TORNADO/my-order/add-position",
-    UPDATE_POSITION = "TORNADO/my-order/update-position",
-    REMOVE_POSITION = "TORNADO/my-order/remove-position",
+    EDIT = "TORNADO/my-order/edit",
+    EDIT_CANCEL = "TORNADO/my-order/edit-cancel",
+    ADD = "TORNADO/my-order/add",
+    UPDATE = "TORNADO/my-order/update",
+    REMOVE = "TORNADO/my-order/remove",
     RESET = "TORNADO/my-order/reset",
-    MARK_AS_NEW = "TORNADO/my-order/mark-as-new",
+    UPDATE_STATE_ID = "TORNADO/my-order/update-state-id",
 }
 
-interface IMyOrderActionAddPosition extends Action<MyOrderActionTypes> {
+interface IMyOrderActionEdit extends Action<MyOrderActionTypes.EDIT> {
     product: ICompiledProduct;
 }
 
-interface IMyOrderActionUpdatePosition extends Action<MyOrderActionTypes> {
-    position: IOrderPosition;
+interface IMyOrderActionEditCancel extends Action<MyOrderActionTypes.EDIT_CANCEL> {
+    remove?: boolean;
 }
 
-interface IMyOrderActionRemovePosition extends Action<MyOrderActionTypes> {
-    position: IOrderPosition;
+interface IMyOrderActionAdd extends Action<MyOrderActionTypes.ADD> {
+    position: IPositionWizard;
 }
 
-interface IMyOrderActionReset extends Action<MyOrderActionTypes> { }
+interface IMyOrderActionUpdate extends Action<MyOrderActionTypes.UPDATE> {
+    position: IPositionWizard;
+}
 
-interface IMyOrderActionMarkAsNew extends Action<MyOrderActionTypes> { }
+interface IMyOrderActionRemove extends Action<MyOrderActionTypes.REMOVE> {
+    position: IPositionWizard;
+}
+
+interface IMyOrderActionReset extends Action<MyOrderActionTypes.RESET> { }
+
+interface IMyOrderActionUpdateStateId extends Action<MyOrderActionTypes.UPDATE_STATE_ID> {
+    stateId: number;
+}
 
 export class MyOrderActions {
-    static addPosition = (product: ICompiledProduct): IMyOrderActionAddPosition => ({
-        type: MyOrderActionTypes.ADD_POSITION,
+    static updateStateId = (stateId: number): IMyOrderActionUpdateStateId => ({
+        type: MyOrderActionTypes.UPDATE_STATE_ID,
+        stateId,
+    });
+
+    static edit = (product: ICompiledProduct): IMyOrderActionEdit => ({
+        type: MyOrderActionTypes.EDIT,
         product,
     });
 
-    static updatePosition = (position: IOrderPosition): IMyOrderActionUpdatePosition => ({
-        type: MyOrderActionTypes.UPDATE_POSITION,
+    static editCancel = (remove: boolean = false): IMyOrderActionEditCancel => ({
+        type: MyOrderActionTypes.EDIT_CANCEL,
+        remove,
+    });
+
+    static add = (position: IPositionWizard): IMyOrderActionAdd => ({
+        type: MyOrderActionTypes.ADD,
         position,
     });
 
-    static removePosition = (position: IOrderPosition): IMyOrderActionRemovePosition => ({
-        type: MyOrderActionTypes.REMOVE_POSITION,
+    static remove = (position: IPositionWizard): IMyOrderActionRemove => ({
+        type: MyOrderActionTypes.REMOVE,
         position,
     });
 
     static reset = (): IMyOrderActionReset => ({
         type: MyOrderActionTypes.RESET,
     });
-
-    static markAsNew = (): IMyOrderActionMarkAsNew => ({
-        type: MyOrderActionTypes.MARK_AS_NEW,
-    });
 }
 
-export type TMyOrderActions = IMyOrderActionAddPosition | IMyOrderActionUpdatePosition | IMyOrderActionRemovePosition | IMyOrderActionMarkAsNew | IMyOrderActionReset;
+export type TMyOrderActions = IMyOrderActionEdit | IMyOrderActionEditCancel | IMyOrderActionAdd | IMyOrderActionRemove
+    | IMyOrderActionUpdateStateId | IMyOrderActionReset;

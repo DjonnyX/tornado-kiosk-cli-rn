@@ -1,5 +1,5 @@
-import React, { Dispatch, useCallback, useState, useEffect } from "react";
-import { StackScreenProps } from "@react-navigation/stack";
+import React, { Dispatch, useCallback, useEffect } from "react";
+import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
 import { View } from "react-native";
 import { connect } from "react-redux";
 import { ICompiledAd } from "@djonnyx/tornado-types/dist/interfaces/ICompiledAd";
@@ -9,14 +9,13 @@ import { CombinedDataSelectors } from "../../store/selectors";
 import { CapabilitiesSelectors } from "../../store/selectors/CapabilitiesSelector";
 import { Ads } from "../simple";
 import { ICompiledLanguage } from "@djonnyx/tornado-types";
-import { CommonActions } from "@react-navigation/native";
 import { theme } from "../../theme";
-import { CapabilitiesActions, MyOrderActions } from "../../store/actions";
+import { CapabilitiesActions } from "../../store/actions";
+import { OrderWizard } from "../../core/order/OrderWizard";
 
 interface IIntroSelfProps {
     // store props
-    _onChangeScreen: () => void;
-    _onMarkOrderAsNew: () => void;
+    _onChangeScreen: (navigator: StackNavigationProp<any, MainNavigationScreenTypes>) => void;
     _intros: Array<ICompiledAd>;
     _language: ICompiledLanguage;
     _currentScreen: MainNavigationScreenTypes | undefined;
@@ -26,24 +25,20 @@ interface IIntroSelfProps {
 
 interface IIntroProps extends StackScreenProps<any, MainNavigationScreenTypes.INTRO>, IIntroSelfProps { }
 
-const IntroScreenContainer = React.memo(({ _language, _intros, navigation, _currentScreen, _onMarkOrderAsNew, _onChangeScreen }: IIntroProps) => {
+const IntroScreenContainer = React.memo(({ _language, _intros, navigation, _currentScreen, _onChangeScreen }: IIntroProps) => {
     useEffect(() => {
-        _onChangeScreen();
+        _onChangeScreen(navigation);
     }, [_currentScreen]);
 
     const pressHandler = useCallback((ad: ICompiledAd) => {
-        navigation.dispatch(
-            CommonActions.reset({
-                index: 1,
-                routes: [
-                    { name: MainNavigationScreenTypes.MENU },
-                ],
-            })
-        );
+        OrderWizard.current.new();
     }, []);
 
     return (
-        <View style={{ flex: 1, justifyContent: "center", alignItems: "center", width: "100%", height: "100%", backgroundColor: theme.themes[theme.name].intro.background }}>
+        <View style={{
+            flex: 1, justifyContent: "center", alignItems: "center", width: "100%", height: "100%",
+            backgroundColor: theme.themes[theme.name].intro.background
+        }}>
             <Ads ads={_intros} language={_language} onPress={pressHandler}></Ads>
         </View>
     );
@@ -59,11 +54,8 @@ const mapStateToProps = (state: IAppState, ownProps: IIntroProps) => {
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
     return {
-        _onChangeScreen: () => {
-            dispatch(CapabilitiesActions.setCurrentScreen(MainNavigationScreenTypes.INTRO));
-        },
-        _onMarkOrderAsNew: () => {
-            dispatch(MyOrderActions.markAsNew());
+        _onChangeScreen: (navigator: StackNavigationProp<any, MainNavigationScreenTypes>) => {
+            dispatch(CapabilitiesActions.setCurrentScreen(navigator, MainNavigationScreenTypes.INTRO));
         },
     };
 };

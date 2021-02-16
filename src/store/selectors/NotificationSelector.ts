@@ -7,4 +7,8 @@ export namespace NotificationSelectors {
     export const selectAlert = createSelector(getNotification, (state) => {
         return state.alert;
     });
+
+    export const selectSnack = createSelector(getNotification, (state) => {
+        return state.snack;
+    });
 }

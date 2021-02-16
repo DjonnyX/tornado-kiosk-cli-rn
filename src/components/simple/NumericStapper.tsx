@@ -10,9 +10,9 @@ interface INumericStepperButtonProps {
 
 const NumericStepperButton = ({ icon, style, textStyle, onPress }: INumericStepperButtonProps) => {
     return (
-        <TouchableOpacity style={{ flex: 1 }} onPress={onPress}>
+        <TouchableOpacity onPress={onPress}>
             <View style={{ flex: 1, alignItems: "center", justifyContent: "center", ...style as any }}>
-                <Text style={{...textStyle as any}}>
+                <Text style={{ ...textStyle as any }}>
                     {
                         icon
                     }
@@ -25,34 +25,44 @@ const NumericStepperButton = ({ icon, style, textStyle, onPress }: INumericStepp
 interface INumericStapperProps {
     onChange: (value: number) => void;
     value?: number;
+    formatValueFunction?: (value: number) => string;
     textStyle?: StyleProp<TextStyle>;
     buttonStyle?: StyleProp<ViewStyle | TextStyle>;
     buttonTextStyle: StyleProp<TextStyle>;
     containerStyle?: StyleProp<ViewStyle>;
     iconDecrement?: string;
     iconIncrement?: string;
+    min?: number;
+    max?: number;
 }
 
-export const NumericStapper = React.memo(({ value = 0, iconDecrement = "-", iconIncrement = "+", buttonStyle, buttonTextStyle, containerStyle, textStyle, onChange }: INumericStapperProps) => {
+export const NumericStapper = React.memo(({ value = 0, iconDecrement = "-", iconIncrement = "+", buttonStyle, buttonTextStyle,
+    containerStyle, textStyle, min, max, formatValueFunction, onChange }: INumericStapperProps) => {
 
     const setValue = (value: number) => {
         onChange(value);
     }
 
     const decrementHandler = useCallback(() => {
-        setValue(value - 1);
+        if (min === undefined || value > min) {
+            setValue(value - 1);
+        }
     }, [value]);
 
     const incrementHandler = useCallback(() => {
-        setValue(value + 1);
+        if (max === undefined || value < max) {
+            setValue(value + 1);
+        }
     }, [value]);
 
     return (
         <View style={{ flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "center", ...containerStyle as any }}>
             <NumericStepperButton style={buttonStyle} textStyle={buttonTextStyle} icon={iconDecrement} onPress={decrementHandler} />
-            <Text style={{ textAlign: "center", ...textStyle as any }}>
+            <Text style={{ flex: 1, textAlign: "center", ...textStyle as any }}>
                 {
-                    value.toString()
+                    !!formatValueFunction
+                        ? formatValueFunction(value)
+                        : value.toString()
                 }
             </Text>
             <NumericStepperButton style={buttonStyle} textStyle={buttonTextStyle} icon={iconIncrement} onPress={incrementHandler} />

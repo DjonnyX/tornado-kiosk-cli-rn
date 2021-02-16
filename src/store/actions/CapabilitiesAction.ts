@@ -1,6 +1,7 @@
 import { Action } from "redux";
 import { ICompiledOrderType, ICompiledLanguage } from "@djonnyx/tornado-types";
 import { MainNavigationScreenTypes } from "../../components/navigation";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 export enum CapabilitiesActionTypes {
     SET_LANGUAGE = "TORNADO/capabilities/set-language",
@@ -8,16 +9,17 @@ export enum CapabilitiesActionTypes {
     SET_CURRENT_SCREEN = "TORNADO/capabilities/set-current-screen",
 }
 
-interface ICapabilitiesActionSetLanguage extends Action<CapabilitiesActionTypes> {
+interface ICapabilitiesActionSetLanguage extends Action<CapabilitiesActionTypes.SET_LANGUAGE> {
     language: ICompiledLanguage;
 }
 
-interface ICapabilitiesActionSetOrderType extends Action<CapabilitiesActionTypes> {
+interface ICapabilitiesActionSetOrderType extends Action<CapabilitiesActionTypes.SET_ORDER_TYPE> {
     orderType: ICompiledOrderType;
 }
 
-interface ICapabilitiesActionSetCurrentScreen extends Action<CapabilitiesActionTypes> {
+interface ICapabilitiesActionSetCurrentScreen extends Action<CapabilitiesActionTypes.SET_CURRENT_SCREEN> {
     currentScreen: MainNavigationScreenTypes;
+    navigator: StackNavigationProp<any, MainNavigationScreenTypes>;
 }
 
 export class CapabilitiesActions {
@@ -31,9 +33,10 @@ export class CapabilitiesActions {
         orderType,
     });
 
-    static setCurrentScreen = (currentScreen: MainNavigationScreenTypes): ICapabilitiesActionSetCurrentScreen => ({
+    static setCurrentScreen = (navigator: StackNavigationProp<any, MainNavigationScreenTypes>, currentScreen: MainNavigationScreenTypes): ICapabilitiesActionSetCurrentScreen => ({
         type: CapabilitiesActionTypes.SET_CURRENT_SCREEN,
         currentScreen,
+        navigator,
     });
 }
 
