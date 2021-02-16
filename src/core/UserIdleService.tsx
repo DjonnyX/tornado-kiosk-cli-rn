@@ -5,13 +5,15 @@ import { config } from "../Config";
 import { IAppState } from "../store/state";
 import { CapabilitiesSelectors } from "../store/selectors";
 import { MainNavigationScreenTypes } from "../components/navigation";
-import { AlertContent, ModalTransparent } from "../components/simple";
-import { MyOrderActions } from "../store/actions";
+import { MyOrderActions, NotificationActions } from "../store/actions";
+import { IAlertState } from "../interfaces";
 
 interface IUserIdleServiceProps {
     // store
-    _onReset?: () => void;
-    _currentScreen?: MainNavigationScreenTypes | undefined;
+    _onReset: () => void;
+    _currentScreen: MainNavigationScreenTypes | undefined;
+    _alertOpen: (alert: IAlertState) => void;
+    _alertClose: () => void;
 
     // self
     onIdle?: () => void;
@@ -19,7 +21,6 @@ interface IUserIdleServiceProps {
 }
 
 interface IUserIdleServiceState {
-    alertVisible: boolean;
     countdown: number;
 }
 
@@ -52,27 +53,34 @@ class UserIdleServiceContainer extends PureComponent<IUserIdleServiceProps, IUse
 
     private _onCountdown = () => {
         if (this.state.countdown <= 1) {
-            this.setState((state) => ({
-                ...state,
-                alertVisible: false,
-            }), () => {
-                this.resetCountdownTimer();
-                this.resetStore();
-            });
+            this.props._alertClose();
+            this.resetCountdownTimer();
+            this.resetStore();
             return;
         }
 
         this.setState((state) => ({
             ...state,
             countdown: state.countdown - 1,
-        }));
+        }), () => {
+            this.showAlert();
+        });
     }
+    
+    private _alertResetAction = () => {
+        this.resetHandler();
+        this.props._alertClose();
+    };
+    
+    private _alertCancelAction = () => {
+        this.cancelResetHandler();
+        this.props._alertClose();
+    };
 
-    constructor(props: IUserIdleServiceProps) {
+    constructor(props: any) {
         super(props);
 
         this.state = {
-            alertVisible: false,
             countdown: 0,
         }
     }
@@ -81,15 +89,30 @@ class UserIdleServiceContainer extends PureComponent<IUserIdleServiceProps, IUse
         this.resetTimer();
     }
 
+    private showAlert(): void {
+        this.props._alertOpen({
+            title: "Внимание!", message: `Заказ будет отменен через ${this.state.countdown} сек`, buttons: [
+                {
+                    title: "Удалить",
+                    action: this._alertResetAction,
+                },
+                {
+                    title: "Отмена",
+                    action: this._alertCancelAction,
+                }
+            ]
+        });
+    }
+
     private runCountdown(): void {
         this.stopTimer();
 
         this.setState((state) => ({
             ...state,
-            alertVisible: true,
             countdown: 10,
         }), () => {
             this.runCoutndownTimer();
+            this.showAlert();
         });
     }
 
@@ -121,42 +144,28 @@ class UserIdleServiceContainer extends PureComponent<IUserIdleServiceProps, IUse
     }
 
     private cancelResetHandler = () => {
-        this.setState((state) => ({
-            ...state,
-            alertVisible: false,
-        }));
+        this.props._alertClose();
         this.resetCountdownTimer();
         this.resetTimer();
     }
 
     private resetHandler = () => {
-        this.setState((state) => ({
-            ...state,
-            alertVisible: false,
-        }));
+        this.props._alertClose();
         this.resetStore();
     }
 
     private resetStore = () => {
+        this.resetCountdownTimer();
+        this.resetTimer();
         if (this.props._onReset) {
             this.props._onReset();
         }
     }
 
     render() {
-        const { alertVisible, countdown } = this.state;
+        const { countdown } = this.state;
 
         return <View style={{ flex: 1, width: "100%", height: "100%" }}>
-            <ModalTransparent visible={alertVisible}>
-                <AlertContent
-                    title="Внимание"
-                    message={`Заказ будет отменен через ${countdown} сек`}
-                    cancelButtonTitle="Отменить"
-                    applyButtonTitle="Удалить"
-                    onCancel={this.cancelResetHandler}
-                    onApply={this.resetHandler}
-                />
-            </ModalTransparent>
             <View style={{ flex: 1, width: "100%", height: "100%" }} onTouchStart={this._touchProcessHandler} onTouchEnd={this._touchProcessHandler} onTouchMove={this._touchProcessHandler}>
                 {
                     this.props.children
@@ -176,6 +185,12 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => {
     return {
         _onReset: () => {
             dispatch(MyOrderActions.reset());
+        },
+        _alertOpen: (alert: IAlertState) => {
+            dispatch(NotificationActions.alertOpen(alert));
+        },
+        _alertClose: (alert: IAlertState) => {
+            dispatch(NotificationActions.alertClose());
         },
     };
 };

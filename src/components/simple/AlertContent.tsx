@@ -1,18 +1,15 @@
-import React, { useState, useCallback } from "react";
+import React from "react";
 import { View, Text } from "react-native";
-import { theme } from "../../theme";
+import { IAlertButton } from "../../interfaces";
 import { SimpleButton } from "./SimpleButton";
 
 interface IAlertContentProps {
     title: string;
     message: string;
-    cancelButtonTitle?: string;
-    applyButtonTitle?: string;
-    onCancel?: () => void;
-    onApply?: () => void;
+    buttons: Array<IAlertButton>;
 }
 
-export const AlertContent = React.memo(({ title, message, cancelButtonTitle, applyButtonTitle, onCancel, onApply }: IAlertContentProps) => {
+export const AlertContent = React.memo(({ title, message, buttons }: IAlertContentProps) => {
     return (
         <View style={{ flexDirection: "column" }}>
             <View style={{ flexDirection: "column", marginBottom: 20 }}>
@@ -21,12 +18,14 @@ export const AlertContent = React.memo(({ title, message, cancelButtonTitle, app
             </View>
             <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
                 {
-                    !!cancelButtonTitle && onCancel !== undefined &&
-                    <SimpleButton style={{ backgroundColor: "yellow", marginRight: 10 }} textStyle={{ color: "rgba(0,0,0,0.75)" }} onPress={onCancel} title={cancelButtonTitle} />
-                }
-                {
-                    !!applyButtonTitle && onApply !== undefined &&
-                    <SimpleButton style={{ backgroundColor: "yellow", }} textStyle={{ color: "rgba(0,0,0,0.75)" }} onPress={onApply} title={applyButtonTitle} />
+                    buttons.map((b, i) =>
+                        <SimpleButton key={i} style={{ backgroundColor: "yellow", marginLeft: i > 0 ? 10 : 0 }}
+                            textStyle={{ color: "rgba(0,0,0,0.75)" }} onPress={() => {
+                                if (!!b.action) {
+                                    b.action();
+                                }
+                            }} title={b.title} />
+                    )
                 }
             </View>
         </View>

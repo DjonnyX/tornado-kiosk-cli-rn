@@ -47,7 +47,7 @@ export const GridList = React.memo(({ data, renderItem, style, keyExtractor, spa
 
     return (
         <View
-            style={{ height: "100%", ...style as any, padding }}
+            style={{ width: "100%", height: "100%", ...style as any, padding }}
             onLayout={changeLayoutHandler}
         >
             <View style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>

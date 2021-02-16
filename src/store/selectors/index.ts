@@ -2,3 +2,4 @@ export * from "./CombinedDataSelector";
 export * from "./CapabilitiesSelector";
 export * from "./MyOrderSelector";
 export * from "./SystemSelector";
+export * from "./NotificationSelector";

@@ -8,7 +8,8 @@ class Config implements IConfig {
     };
 
     capabilities = {
-        userIdleTimeout: 30000,
+        userIdleTimeout: 6000,
+        priceDigest: 0,
     };
 }
 

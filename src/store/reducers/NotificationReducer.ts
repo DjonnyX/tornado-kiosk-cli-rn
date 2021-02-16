@@ -7,7 +7,14 @@ const initialState: INotificationState = {
         visible: false,
         title: "",
         message: "",
+        buttons: [],
     },
+    snack: {
+        visible: false,
+        message: "",
+        duration: undefined,
+        onComplete: undefined,
+    }
 };
 
 const notificationReducer: Reducer<INotificationState, TNotificationActions> = (
@@ -19,6 +26,11 @@ const notificationReducer: Reducer<INotificationState, TNotificationActions> = (
             return {
                 ...state,
                 alert: action.alert,
+            };
+        case NotificationActionTypes.SET_SNACK:
+            return {
+                ...state,
+                snack: action.snack,
             };
         default:
             return state;

@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, GestureResponderEvent } from "react-nativ
 import FastImage from "react-native-fast-image";
 import { ICompiledMenuNode, NodeTypes, ICompiledProduct, ICurrency, ICompiledLanguage } from "@djonnyx/tornado-types";
 import { theme } from "../../../theme";
+import { priceFormatter } from "../../../utils/price";
 
 interface INavMenuItemProps {
     thumbnailHeight: number;
@@ -44,13 +45,12 @@ export const NavMenuItem = React.memo(({ thumbnailHeight, currency, language, no
                     }
                 </Text>
                 {
-
                     node.type === NodeTypes.PRODUCT
                         ?
                         <View style={{ borderStyle: "solid", borderWidth: 0.5, borderRadius: 5, alignItems: "center", justifyContent: "center", borderColor: theme.themes[theme.name].menu.navMenu.item.price.borderColor, marginBottom: 12 }}>
                             <Text style={{ textAlign: "center", fontSize: 16, paddingTop: 6, paddingBottom: 6, paddingLeft: 14, paddingRight: 14, color: theme.themes[theme.name].menu.navMenu.item.price.textColor }}>
                                 {
-                                    `${((node.content as ICompiledProduct).prices[currency.id as string]?.value * 0.01).toFixed(2)} ${currency.symbol}`
+                                    `${priceFormatter((node.content as ICompiledProduct).prices[currency.id as string]?.value)} ${currency.symbol}`
                                 }
                             </Text>
                         </View>

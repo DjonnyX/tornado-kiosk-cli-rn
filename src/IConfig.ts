@@ -5,5 +5,6 @@ export interface IConfig {
     };
     capabilities: {
         userIdleTimeout: number;
+        priceDigest: number;
     };
 }

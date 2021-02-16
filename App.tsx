@@ -1,30 +1,33 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   StatusBar,
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { Provider } from "react-redux";
 import { MainNavigationStack } from "./src/components/navigation/MainNavigationStack";
-import { AuthService, DataCollectorService, UserIdleService } from "./src/core";
+import { SnackService, AlertService, AuthService, DataCollectorService, NavigationService, OrderService, UserIdleService } from "./src/core";
 import { store } from "./src/store";
-import { AlertService } from "./src/core/AlertService";
 
 const App = () => {
   return (
     <>
       <Provider store={store}>
         {/** services */}
+        <OrderService />
         <AuthService />
         <DataCollectorService />
+        <NavigationService />
+        <AlertService />
 
         {/** components */}
-        <AlertService />
         <UserIdleService>
           <StatusBar hidden={true} />
           <NavigationContainer>
             <MainNavigationStack />
           </NavigationContainer>
         </UserIdleService>
+        {/** snack */}
+        <SnackService />
       </Provider>
     </>
   );

@@ -18,12 +18,12 @@ const combinedDataReducer: Reducer<ICombinedDataState, TCombinedDataActions> = (
         case CombinedDataActionTypes.SET_DATA:
             return {
                 ...state,
-                data: (action as any).data,
+                data: action.data,
             };
         case CombinedDataActionTypes.SET_PROGRESS:
             return {
                 ...state,
-                progress: (action as any).progress,
+                progress: action.progress,
             };
         default:
             return state;

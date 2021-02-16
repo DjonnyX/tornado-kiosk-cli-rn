@@ -53,7 +53,8 @@ export const NotificationModal = React.memo(({ children, visible }: INotificatio
             justifyContent: "center",
             alignItems: "center",
             position: "absolute",
-            width: "100%",
+            left: 0,
+            right: 0,
             bottom: position.interpolate({
                 inputRange: [0, 1],
                 outputRange: [-Dimensions.get("window").height, 32],
