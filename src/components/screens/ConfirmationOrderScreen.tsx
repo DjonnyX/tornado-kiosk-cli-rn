@@ -9,15 +9,15 @@ import { CombinedDataSelectors, MyOrderSelectors } from "../../store/selectors";
 import { CapabilitiesSelectors } from "../../store/selectors/CapabilitiesSelector";
 import { Ads } from "../simple";
 import { theme } from "../../theme";
-import { CapabilitiesActions, MyOrderActions } from "../../store/actions";
+import { CapabilitiesActions, MyOrderActions, NotificationActions } from "../../store/actions";
 import { ConfirmationOrderListItem } from "../simple/confirmation-order-list";
+import { OrderWizard } from "../../core/order/OrderWizard";
+import { IAlertState } from "../../interfaces";
 
 interface IConfirmationOrderScreenSelfProps {
     // store props
     _onChangeScreen: (navigator: StackNavigationProp<any, MainNavigationScreenTypes>) => void;
-    _onAddOrderPosition: (position: ICompiledProduct) => void;
-    _onUpdateOrderPosition: (position: IOrderPosition) => void;
-    _onRemoveOrderPosition: (position: IOrderPosition) => void;
+    _alertOpen: (alert: IAlertState) => void;
     _orderStateId: number;
     _banners: Array<ICompiledAd>;
     _language: ICompiledLanguage;
@@ -30,21 +30,13 @@ interface IConfirmationOrderScreenSelfProps {
 interface IConfirmationOrderScreenProps extends StackScreenProps<any, MainNavigationScreenTypes.INTRO>, IConfirmationOrderScreenSelfProps { }
 
 const ConfirmationOrderScreenContainer = React.memo(({ _language, _banners, _currency, _currentScreen, _orderStateId, navigation,
-    _onChangeScreen, _onAddOrderPosition, _onUpdateOrderPosition, _onRemoveOrderPosition }: IConfirmationOrderScreenProps) => {
+    _onChangeScreen, _alertOpen }: IConfirmationOrderScreenProps) => {
     useEffect(() => {
         _onChangeScreen(navigation);
     }, [_currentScreen]);
 
     const selectAdHandler = useCallback((ad: ICompiledAd) => {
         // etc...
-    }, []);
-
-    const updatePositionHandler = useCallback((position: IOrderPosition) => {
-        _onUpdateOrderPosition(position);
-    }, []);
-
-    const removePositionHandler = useCallback((position: IOrderPosition) => {
-        _onRemoveOrderPosition(position);
     }, []);
 
     return (
@@ -61,9 +53,9 @@ const ConfirmationOrderScreenContainer = React.memo(({ _language, _banners, _cur
             <View style={{ flex: 1, flexDirection: "row", width: "100%", height: "100%", maxHeight: _banners.length > 0 ? "90%" : "100%" }}>
                 <SafeAreaView style={{ flex: 1, width: "100%" }}>
                     <ScrollView style={{ flex: 1 }} horizontal={false}>
-                        <FlatList updateCellsBatchingPeriod={10} style={{ flex: 1 }} data={_positions} renderItem={({ item }) => {
-                            return <ConfirmationOrderListItem key={item.id} position={item} currency={_currency} language={_language}
-                                imageHeight={48} onChange={updatePositionHandler} onRemove={removePositionHandler} />
+                        <FlatList updateCellsBatchingPeriod={10} style={{ flex: 1 }} data={OrderWizard.current.positions} renderItem={({ item }) => {
+                            return <ConfirmationOrderListItem key={item.id} stateId={item.stateId} position={item} currency={_currency} language={_language}
+                                imageHeight={48} alertOpen={_alertOpen}/>
                         }}
                             keyExtractor={(item, index) => index.toString()}>
                         </FlatList>
@@ -86,11 +78,8 @@ const mapStateToProps = (state: IAppState, ownProps: IConfirmationOrderScreenPro
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
     return {
-        _onAddOrderPosition: (product: ICompiledProduct) => {
-        },
-        _onUpdateOrderPosition: (position: IOrderPosition) => {
-        },
-        _onRemoveOrderPosition: (position: IOrderPosition) => {
+        _alertOpen: (alert: IAlertState) => {
+            dispatch(NotificationActions.alertOpen(alert));
         },
         _onChangeScreen: (navigator: StackNavigationProp<any, MainNavigationScreenTypes>) => {
             dispatch(CapabilitiesActions.setCurrentScreen(navigator, MainNavigationScreenTypes.CONFIRMATION_ORDER));
