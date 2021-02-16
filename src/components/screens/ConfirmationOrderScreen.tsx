@@ -18,10 +18,10 @@ interface IConfirmationOrderScreenSelfProps {
     _onAddOrderPosition: (position: ICompiledProduct) => void;
     _onUpdateOrderPosition: (position: IOrderPosition) => void;
     _onRemoveOrderPosition: (position: IOrderPosition) => void;
+    _orderStateId: number;
     _banners: Array<ICompiledAd>;
     _language: ICompiledLanguage;
     _currentScreen: MainNavigationScreenTypes | undefined;
-    _positions: Array<IOrderPosition>;
     _currency: ICurrency;
 
     // self props
@@ -29,7 +29,7 @@ interface IConfirmationOrderScreenSelfProps {
 
 interface IConfirmationOrderScreenProps extends StackScreenProps<any, MainNavigationScreenTypes.INTRO>, IConfirmationOrderScreenSelfProps { }
 
-const ConfirmationOrderScreenContainer = React.memo(({ _language, _banners, _currency, _currentScreen, _positions, navigation,
+const ConfirmationOrderScreenContainer = React.memo(({ _language, _banners, _currency, _currentScreen, _orderStateId, navigation,
     _onChangeScreen, _onAddOrderPosition, _onUpdateOrderPosition, _onRemoveOrderPosition }: IConfirmationOrderScreenProps) => {
     useEffect(() => {
         _onChangeScreen(navigation);
@@ -62,8 +62,8 @@ const ConfirmationOrderScreenContainer = React.memo(({ _language, _banners, _cur
                 <SafeAreaView style={{ flex: 1, width: "100%" }}>
                     <ScrollView style={{ flex: 1 }} horizontal={false}>
                         <FlatList updateCellsBatchingPeriod={10} style={{ flex: 1 }} data={_positions} renderItem={({ item }) => {
-                            return <ConfirmationOrderListItem key={item.id} position={item} currency={_currency} language={_language} imageHeight={48}
-                                onChange={updatePositionHandler} onRemove={removePositionHandler} />
+                            return <ConfirmationOrderListItem key={item.id} position={item} currency={_currency} language={_language}
+                                imageHeight={48} onChange={updatePositionHandler} onRemove={removePositionHandler} />
                         }}
                             keyExtractor={(item, index) => index.toString()}>
                         </FlatList>
@@ -79,7 +79,7 @@ const mapStateToProps = (state: IAppState, ownProps: IConfirmationOrderScreenPro
         _banners: CombinedDataSelectors.selectBanners(state),
         _language: CapabilitiesSelectors.selectLanguage(state),
         _currency: CombinedDataSelectors.selectDefaultCurrency(state),
-        _positions: MyOrderSelectors.selectPositions(state),
+        _orderStateId: MyOrderSelectors.selectStateId(state),
         _currentScreen: CapabilitiesSelectors.selectCurrentScreen(state),
     };
 };
