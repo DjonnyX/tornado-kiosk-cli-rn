@@ -45,7 +45,6 @@ export const NavMenuItem = React.memo(({ thumbnailHeight, currency, language, no
                     }
                 </Text>
                 {
-
                     node.type === NodeTypes.PRODUCT
                         ?
                         <View style={{ borderStyle: "solid", borderWidth: 0.5, borderRadius: 5, alignItems: "center", justifyContent: "center", borderColor: theme.themes[theme.name].menu.navMenu.item.price.borderColor, marginBottom: 12 }}>
