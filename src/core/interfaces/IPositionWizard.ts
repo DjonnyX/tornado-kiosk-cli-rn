@@ -5,6 +5,7 @@ import { PositionWizardModes } from "../enums";
 export interface IPositionWizard extends EventEmitter {
     readonly id: number;
     readonly stateId: number;
+    readonly rests: number;
     readonly mode: PositionWizardModes;
     readonly __product__: ICompiledProduct | null;
     readonly currency: ICurrency;
@@ -32,6 +33,8 @@ export interface IPositionWizardPosition extends EventEmitter {
     readonly productId: string;
     readonly index: number;
     readonly currency: ICurrency;
+    readonly rests: number;
+    readonly availableQuantitiy: number;
     quantity: number;
     readonly price: number;
     readonly sum: number;

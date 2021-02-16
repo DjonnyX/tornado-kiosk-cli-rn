@@ -35,6 +35,10 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
         return this._stateId;
     }
 
+    get rests() {
+        return 10; // нужно сделать rests у продукта
+    }
+
     get mode() { return this._mode; }
 
     get __product__() { return this._product; }

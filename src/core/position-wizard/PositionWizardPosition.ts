@@ -21,6 +21,14 @@ export class PositionWizardPosition extends EventEmitter implements IPositionWiz
         return this._stateId;
     }
 
+    get rests() {
+        return 10; // нужно сделать rests у продукта и лимиты по модификаторам
+    }
+
+    get availableQuantitiy() {
+        return Math.min(this.rests, 5); // нужно сделать лимиты по модификаторам
+    }
+
     get productId() { return this._productNode.content.id; }
 
     get __productNode__() { return this._productNode; }
