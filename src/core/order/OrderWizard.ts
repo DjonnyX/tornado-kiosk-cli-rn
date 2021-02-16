@@ -1,5 +1,6 @@
 import { ICompiledLanguage, ICompiledProduct, ICurrency } from "@djonnyx/tornado-types";
 import EventEmitter from "eventemitter3";
+import { priceFormatter } from "../../utils/price";
 import { PositionWizardModes } from "../enums";
 import { IOrderWizard, IPositionWizard } from "../interfaces";
 import { PositionWizard } from "../position-wizard";
@@ -188,7 +189,7 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
     }
 
     getFormatedSum(withCurrency: boolean = false): string {
-        let s = (this._sum * 0.01).toFixed(2);
+        let s = priceFormatter(this._sum);
         if (withCurrency) {
             s += this._currency.symbol;
         }
