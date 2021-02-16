@@ -33,7 +33,6 @@ const SnackContainer = React.memo(({ message, duration, visible, onComplete, _sn
             clearTimeout(timeout);
         }
     }, [visible, duration, message]);
-    console.warn("snack visibility", visible);
     return (
         <NotificationModal visible={visible}>
             <Text style={{ fontSize: 20, fontWeight: "bold", color: theme.themes[theme.name].common.notificationAlert.textColor }}>{message}</Text>
