@@ -35,7 +35,10 @@ const IntroScreenContainer = React.memo(({ _language, _intros, navigation, _curr
     }, []);
 
     return (
-        <View style={{ flex: 1, justifyContent: "center", alignItems: "center", width: "100%", height: "100%", backgroundColor: theme.themes[theme.name].intro.background }}>
+        <View style={{
+            flex: 1, justifyContent: "center", alignItems: "center", width: "100%", height: "100%",
+            backgroundColor: theme.themes[theme.name].intro.background
+        }}>
             <Ads ads={_intros} language={_language} onPress={pressHandler}></Ads>
         </View>
     );

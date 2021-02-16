@@ -11,7 +11,7 @@ interface IAdsProps {
     onPress: (ad: ICompiledAd) => void;
 }
 
-export const Ads = ({ language, ads, onPress }: IAdsProps) => {
+export const Ads = React.memo(({ language, ads, onPress }: IAdsProps) => {
     const [currentAdIndex, _setCurrentAdIndex] = useState(0);
 
     const nextCurrentAdIndex = () => {
@@ -69,4 +69,4 @@ export const Ads = ({ language, ads, onPress }: IAdsProps) => {
             </TouchableOpacity>
         </View>
     );
-}
+})
