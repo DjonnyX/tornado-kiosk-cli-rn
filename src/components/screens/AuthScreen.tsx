@@ -6,7 +6,7 @@ import { View, TextInput } from "react-native";
 import { MainNavigationScreenTypes } from "../navigation";
 import { IAppState } from "../../store/state";
 import { connect } from "react-redux";
-import { CapabilitiesSelectors, CombinedDataSelectors, SystemSelectors } from "../../store/selectors";
+import { CombinedDataSelectors, SystemSelectors } from "../../store/selectors";
 import { CommonActions } from "@react-navigation/native";
 import { theme } from "../../theme";
 import { CapabilitiesActions, NotificationActions } from "../../store/actions";
@@ -21,7 +21,6 @@ import { IAlertState } from "../../interfaces";
 
 interface IAuthSelfProps {
     // store props
-    _onChangeScreen: (navigator: StackNavigationProp<any, MainNavigationScreenTypes>) => void;
     _onChangeSerialNumber: (serialNumber: string) => void;
     _onChangeSetupStep: (setupStep: number) => void;
     _onChangeTerminalId: (terminalId: string) => void;
@@ -74,8 +73,8 @@ function createAssetsClientDir<T extends { clientId: string }>(v: T) {
 
 interface IAuthProps extends StackScreenProps<any, MainNavigationScreenTypes.LOADING>, IAuthSelfProps { }
 
-const AuthScreenContainer = React.memo(({ _serialNumber, _setupStep, _terminalId, navigation, _currentScreen,
-    _alertOpen, _onChangeScreen, _onChangeSerialNumber, _onChangeSetupStep, _onChangeTerminalId,
+const AuthScreenContainer = React.memo(({ _serialNumber, _setupStep, _terminalId, navigation,
+    _alertOpen, _onChangeSerialNumber, _onChangeSetupStep, _onChangeTerminalId,
 }: IAuthProps) => {
     const [stores, setStores] = useState<Array<IStore>>([]);
     const [serialNumber, setSerialNumber] = useState<string>(_serialNumber);
@@ -85,10 +84,6 @@ const AuthScreenContainer = React.memo(({ _serialNumber, _setupStep, _terminalId
     const [showProgressBar, setShowProgressBar] = useState<boolean>(false);
     const [retryVerificationId, setRetryVerificationId] = useState<number>(0);
     const [retryGetStores, setRetryGetStores] = useState<number>(0);
-
-    useEffect(() => {
-        _onChangeScreen(navigation);
-    }, [_currentScreen]);
 
     useEffect(() => {
         if (_setupStep === 2) {
@@ -107,14 +102,16 @@ const AuthScreenContainer = React.memo(({ _serialNumber, _setupStep, _terminalId
                         refApiService.serial = _serialNumber;
 
                         // License valid!
-                        navigation.dispatch(
+                        /*navigation.dispatch(
                             CommonActions.reset({
                                 index: 1,
                                 routes: [
                                     { name: MainNavigationScreenTypes.LOADING },
                                 ],
                             })
-                        );
+                        );*/
+
+                        navigation.navigate(MainNavigationScreenTypes.LOADING);
                     },
                     err => {
                         _alertOpen({
@@ -292,15 +289,11 @@ const mapStateToProps = (state: IAppState, ownProps: IAuthProps) => {
         _serialNumber: SystemSelectors.selectSerialNumber(state),
         _setupStep: SystemSelectors.selectSetupStep(state),
         _terminalId: SystemSelectors.selectTerminalId(state),
-        _currentScreen: CapabilitiesSelectors.selectCurrentScreen(state),
     };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
     return {
-        _onChangeScreen: (navigator: StackNavigationProp<any, MainNavigationScreenTypes>) => {
-            dispatch(CapabilitiesActions.setCurrentScreen(navigator, MainNavigationScreenTypes.AUTH));
-        },
         _onChangeSerialNumber: (serialNumber: string) => {
             dispatch(SystemActions.setSerialNumber(serialNumber));
         },

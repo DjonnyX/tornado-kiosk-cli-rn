@@ -19,7 +19,6 @@ interface ICapabilitiesActionSetOrderType extends Action<CapabilitiesActionTypes
 
 interface ICapabilitiesActionSetCurrentScreen extends Action<CapabilitiesActionTypes.SET_CURRENT_SCREEN> {
     currentScreen: MainNavigationScreenTypes;
-    navigator: StackNavigationProp<any, MainNavigationScreenTypes>;
 }
 
 export class CapabilitiesActions {
@@ -33,11 +32,11 @@ export class CapabilitiesActions {
         orderType,
     });
 
-    static setCurrentScreen = (navigator: StackNavigationProp<any, MainNavigationScreenTypes>, currentScreen: MainNavigationScreenTypes): ICapabilitiesActionSetCurrentScreen => ({
+    static setCurrentScreen = (currentScreen: MainNavigationScreenTypes): ICapabilitiesActionSetCurrentScreen => ({
         type: CapabilitiesActionTypes.SET_CURRENT_SCREEN,
         currentScreen,
-        navigator,
     });
 }
 
-export type TCapabilitiesActions = ICapabilitiesActionSetLanguage | ICapabilitiesActionSetOrderType | ICapabilitiesActionSetCurrentScreen;
+export type TCapabilitiesActions = ICapabilitiesActionSetLanguage | ICapabilitiesActionSetOrderType
+| ICapabilitiesActionSetCurrentScreen;

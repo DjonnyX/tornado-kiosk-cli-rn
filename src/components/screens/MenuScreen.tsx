@@ -1,6 +1,5 @@
 import React, { Dispatch, useState, useCallback, useEffect } from "react";
-import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
-import { CommonActions } from "@react-navigation/native";
+import { StackScreenProps } from "@react-navigation/stack";
 import { View, Dimensions, ScaledSize } from "react-native";
 import { connect } from "react-redux";
 import { ICompiledMenu, ICurrency, ICompiledLanguage, ICompiledOrderType, ICompiledProduct } from "@djonnyx/tornado-types";
@@ -12,7 +11,7 @@ import { CapabilitiesActions, MyOrderActions, NotificationActions } from "../../
 import { MyOrderPanel } from "../simple/MyOrderPanel";
 import { Menu } from "../simple/Menu";
 import { theme } from "../../theme";
-import { IAlertState, ISnackState } from "../../interfaces";
+import { IAlertState } from "../../interfaces";
 
 interface IMenuSelfProps {
     // store props
@@ -21,7 +20,6 @@ interface IMenuSelfProps {
     _defaultCurrency: ICurrency;
     _menu: ICompiledMenu;
     _language: ICompiledLanguage;
-    _currentScreen: MainNavigationScreenTypes | undefined;
     _orderStateId: number;
     _alertOpen: (alert: IAlertState) => void;
 
@@ -29,7 +27,6 @@ interface IMenuSelfProps {
     _onChangeLanguage: (language: ICompiledLanguage) => void;
     _onChangeOrderType: (orderType: ICompiledOrderType) => void;
     _onAddOrderPosition: (position: ICompiledProduct) => void;
-    _onChangeScreen: (navigator: StackNavigationProp<any, MainNavigationScreenTypes>) => void;
     _onResetOrder: () => void;
 
     // self props
@@ -39,18 +36,13 @@ interface IMenuProps extends StackScreenProps<any, MainNavigationScreenTypes.MEN
 
 const MenuScreenContainer = React.memo(({
     _languages, _orderTypes, _defaultCurrency,
-    _menu, _language, _orderStateId, _currentScreen,
-    _onChangeScreen, _onResetOrder, _alertOpen,
+    _menu, _language, _orderStateId, _onResetOrder, _alertOpen,
     _onChangeLanguage, _onChangeOrderType, _onAddOrderPosition, navigation,
 }: IMenuProps) => {
     const [windowSize, _setWindowSize] = useState({ width: Dimensions.get("window").width, height: Dimensions.get("window").height });
 
     const myOrderWidth = 170;
     let menuWidth = windowSize.width - myOrderWidth;
-
-    useEffect(() => {
-        _onChangeScreen(navigation);
-    }, [_currentScreen]);
 
     useEffect(() => {
         function dimensionsChangeHandler({ window }: { window: ScaledSize }) {
@@ -69,14 +61,7 @@ const MenuScreenContainer = React.memo(({
     });
 
     const confirmHandler = useCallback(() => {
-        navigation.dispatch(
-            CommonActions.reset({
-                index: 1,
-                routes: [
-                    { name: MainNavigationScreenTypes.CONFIRMATION_ORDER },
-                ],
-            })
-        );
+        navigation.navigate(MainNavigationScreenTypes.CONFIRMATION_ORDER);
     }, []);
 
     const cancelOrderConfirm = () => {
@@ -125,7 +110,6 @@ const mapStateToProps = (state: IAppState, ownProps: IMenuProps) => {
         _languages: CombinedDataSelectors.selectLangages(state),
         _orderTypes: CombinedDataSelectors.selectOrderTypes(state),
         _language: CapabilitiesSelectors.selectLanguage(state),
-        _currentScreen: CapabilitiesSelectors.selectCurrentScreen(state),
         _orderStateId: MyOrderSelectors.selectStateId(state),
     };
 };
@@ -140,9 +124,6 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
         },
         _onAddOrderPosition: (product: ICompiledProduct) => {
             dispatch(MyOrderActions.edit(product));
-        },
-        _onChangeScreen: (navigator: StackNavigationProp<any, MainNavigationScreenTypes>) => {
-            dispatch(CapabilitiesActions.setCurrentScreen(navigator, MainNavigationScreenTypes.MENU));
         },
         _onResetOrder: () => {
             dispatch(MyOrderActions.reset());

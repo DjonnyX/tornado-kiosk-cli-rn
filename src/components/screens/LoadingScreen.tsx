@@ -1,43 +1,38 @@
-import React, { Dispatch, useEffect } from "react";
+import React, { Dispatch, useCallback, useEffect } from "react";
 import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
 import { ProgressBar } from "@react-native-community/progress-bar-android";
 import { View, Text } from "react-native";
 import { MainNavigationScreenTypes } from "../navigation";
 import { IAppState } from "../../store/state";
 import { connect } from "react-redux";
-import { CapabilitiesSelectors, CombinedDataSelectors } from "../../store/selectors";
-import { CommonActions } from "@react-navigation/native";
+import { CombinedDataSelectors } from "../../store/selectors";
 import { theme } from "../../theme";
 import { CapabilitiesActions } from "../../store/actions";
+import { CommonActions } from "@react-navigation/native";
 
 interface ILoadingSelfProps {
   // store props
-  _onChangeScreen: (navigator: StackNavigationProp<any, MainNavigationScreenTypes>) => void;
   _progress: number;
   _loaded: boolean;
-  _currentScreen: MainNavigationScreenTypes | undefined;
 
   // self props
 }
 
 interface ILoadingProps extends StackScreenProps<any, MainNavigationScreenTypes.LOADING>, ILoadingSelfProps { }
 
-const LoadingScreenContainer = React.memo(({ _progress, _loaded, navigation, _currentScreen, _onChangeScreen }: ILoadingProps) => {
-  useEffect(() => {
-    _onChangeScreen(navigation);
-  }, [_currentScreen]);
-
+const LoadingScreenContainer = React.memo(({ _progress, _loaded, navigation }: ILoadingProps) => {
   useEffect(() => {
     if (_loaded) {
       setTimeout(() => {
-        navigation.dispatch(
-          CommonActions.reset({
-            index: 1,
-            routes: [
-              { name: MainNavigationScreenTypes.INTRO },
-            ],
-          })
-        );
+        /*navigation.dispatch(
+            CommonActions.reset({
+                index: 1,
+                routes: [
+                  { name: MainNavigationScreenTypes.INTRO },
+                ],
+            })
+        );*/
+        navigation.navigate(MainNavigationScreenTypes.INTRO)
       });
     }
   });
@@ -67,15 +62,12 @@ const mapStateToProps = (state: IAppState, ownProps: ILoadingProps) => {
   return {
     _progress: CombinedDataSelectors.selectProgress(state),
     _loaded: CombinedDataSelectors.selectLoaded(state),
-    _currentScreen: CapabilitiesSelectors.selectCurrentScreen(state),
   };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
   return {
-    _onChangeScreen: (navigator: StackNavigationProp<any, MainNavigationScreenTypes>) => {
-      dispatch(CapabilitiesActions.setCurrentScreen(navigator, MainNavigationScreenTypes.LOADING));
-    },
+
   };
 };
 
