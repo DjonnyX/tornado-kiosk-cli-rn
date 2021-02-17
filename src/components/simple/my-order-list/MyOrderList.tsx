@@ -1,5 +1,5 @@
 import React, { useRef, useCallback, Dispatch } from "react";
-import { SafeAreaView, ScrollView } from "react-native";
+import { SafeAreaView } from "react-native";
 import { ICompiledLanguage, ICurrency } from "@djonnyx/tornado-types";
 import { FlatList } from "react-native-gesture-handler";
 import { MyOrderListItem } from "./MyOrderListItem";
@@ -9,6 +9,7 @@ import { connect } from "react-redux";
 import { OrderWizard } from "../../../core/order/OrderWizard";
 import { IAlertState } from "../../../interfaces";
 import { NotificationActions } from "../../../store/actions";
+import { IPositionWizard } from "../../../core/interfaces";
 
 interface IMyOrderListProps {
     // store
@@ -19,24 +20,21 @@ interface IMyOrderListProps {
 }
 
 export const MyOrderListContainer = React.memo(({ _currency, _language, _alertOpen, _orderStateId }: IMyOrderListProps) => {
-    const scrollView = useRef<ScrollView>(null);
+    const flatListRef = useRef<FlatList<IPositionWizard>>();
 
     const contentSizeChangeHandler = useCallback(() => {
-        scrollView.current?.scrollToEnd({ animated: true });
-    }, [scrollView]);
+        flatListRef.current?.scrollToEnd({ animated: true });
+    }, [flatListRef]);
 
     return (
         <SafeAreaView style={{ flex: 1, width: "100%" }}>
-            <ScrollView ref={scrollView} onContentSizeChange={contentSizeChangeHandler} style={{ flex: 1 }} horizontal={false}
-            >
-                <FlatList updateCellsBatchingPeriod={10} style={{ flex: 1 }} data={OrderWizard.current.positions} renderItem={({ item }) => {
-                    return <MyOrderListItem key={item.id} position={item} currency={_currency as ICurrency}
-                        language={_language as ICompiledLanguage} imageHeight={48} stateId={item.stateId}
-                        alertOpen={_alertOpen as any}/>
-                }}
-                    keyExtractor={(item, index) => index.toString()}>
-                </FlatList>
-            </ScrollView>
+            <FlatList ref={flatListRef as any} onContentSizeChange={contentSizeChangeHandler} persistentScrollbar updateCellsBatchingPeriod={10} style={{ flex: 1 }} data={OrderWizard.current.positions} renderItem={({ item }) => {
+                return <MyOrderListItem key={item.id} position={item} currency={_currency as ICurrency}
+                    language={_language as ICompiledLanguage} imageHeight={48} stateId={item.stateId}
+                    alertOpen={_alertOpen as any} />
+            }}
+                keyExtractor={(item, index) => index.toString()}>
+            </FlatList>
         </SafeAreaView>
     )
 })

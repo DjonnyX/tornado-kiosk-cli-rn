@@ -1,5 +1,5 @@
 import React, { Dispatch, useCallback } from "react";
-import { FlatList, SafeAreaView, ScrollView, Text, View } from "react-native";
+import { FlatList, SafeAreaView, Text, View } from "react-native";
 import { connect } from "react-redux";
 import { StackScreenProps } from "@react-navigation/stack";
 import { ICompiledLanguage, ICompiledAd, ICurrency } from "@djonnyx/tornado-types";
@@ -56,14 +56,12 @@ const ConfirmationOrderScreenContainer = React.memo(({ _language, _banners, _cur
             <View style={{ flex: 1, flexDirection: "column", width: "100%", height: "100%", maxHeight: _banners.length > 0 ? "90%" : "100%" }}>
                 <View style={{ flex: 1 }}>
                     <SafeAreaView style={{ flex: 1, width: "100%" }}>
-                        <ScrollView style={{ flex: 1 }} horizontal={false}>
-                            <FlatList updateCellsBatchingPeriod={10} style={{ flex: 1, margin: 20 }} data={OrderWizard.current.positions} renderItem={({ item }) => {
-                                return <ConfirmationOrderListItem key={item.id} stateId={item.stateId} position={item} currency={_currency} language={_language}
-                                    imageHeight={64} alertOpen={_alertOpen} />
-                            }}
-                                keyExtractor={(item, index) => index.toString()}>
-                            </FlatList>
-                        </ScrollView>
+                        <FlatList persistentScrollbar updateCellsBatchingPeriod={10} style={{ flex: 1, margin: 20 }} data={OrderWizard.current.positions} renderItem={({ item }) => {
+                            return <ConfirmationOrderListItem key={item.id} stateId={item.stateId} position={item} currency={_currency} language={_language}
+                                imageHeight={64} alertOpen={_alertOpen} />
+                        }}
+                            keyExtractor={(item, index) => index.toString()}>
+                        </FlatList>
                     </SafeAreaView>
                 </View>
                 <View style={{ width: "100%", flexDirection: "row", paddingLeft: 40, paddingRight: 40, paddingTop: 30, paddingBottom: 30 }}>
