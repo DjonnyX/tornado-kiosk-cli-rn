@@ -102,16 +102,14 @@ const AuthScreenContainer = React.memo(({ _serialNumber, _setupStep, _terminalId
                         refApiService.serial = _serialNumber;
 
                         // License valid!
-                        /*navigation.dispatch(
+                        navigation.dispatch(
                             CommonActions.reset({
                                 index: 1,
                                 routes: [
                                     { name: MainNavigationScreenTypes.LOADING },
                                 ],
                             })
-                        );*/
-
-                        navigation.navigate(MainNavigationScreenTypes.LOADING);
+                        );
                     },
                     err => {
                         _alertOpen({

@@ -24,15 +24,13 @@ const LoadingScreenContainer = React.memo(({ _progress, _loaded, navigation }: I
   useEffect(() => {
     if (_loaded) {
       setTimeout(() => {
-        /*navigation.dispatch(
-            CommonActions.reset({
-                index: 1,
-                routes: [
-                  { name: MainNavigationScreenTypes.INTRO },
-                ],
-            })
-        );*/
-        navigation.navigate(MainNavigationScreenTypes.INTRO)
+        navigation.dispatch(
+          CommonActions.reset({
+            routes: [
+              { name: MainNavigationScreenTypes.INTRO },
+            ],
+          })
+        );
       });
     }
   });
