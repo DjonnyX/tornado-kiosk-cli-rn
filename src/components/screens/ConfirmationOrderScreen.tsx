@@ -57,23 +57,23 @@ const ConfirmationOrderScreenContainer = React.memo(({ _language, _banners, _cur
                 <View style={{ flex: 1 }}>
                     <SafeAreaView style={{ flex: 1, width: "100%" }}>
                         <ScrollView style={{ flex: 1 }} horizontal={false}>
-                            <FlatList updateCellsBatchingPeriod={10} style={{ flex: 1 }} data={OrderWizard.current.positions} renderItem={({ item }) => {
+                            <FlatList updateCellsBatchingPeriod={10} style={{ flex: 1, margin: 20 }} data={OrderWizard.current.positions} renderItem={({ item }) => {
                                 return <ConfirmationOrderListItem key={item.id} stateId={item.stateId} position={item} currency={_currency} language={_language}
-                                    imageHeight={48} alertOpen={_alertOpen} />
+                                    imageHeight={64} alertOpen={_alertOpen} />
                             }}
                                 keyExtractor={(item, index) => index.toString()}>
                             </FlatList>
                         </ScrollView>
                     </SafeAreaView>
                 </View>
-                <View style={{ width: "100%", flexDirection: "row" }}>
+                <View style={{ width: "100%", flexDirection: "row", paddingLeft: 40, paddingRight: 40, paddingTop: 30, paddingBottom: 30 }}>
                     <SimpleButton title="Назад"
                         styleView={{ opacity: 1 }}
                         style={{ backgroundColor: "#30a02a", borderRadius: 8, padding: 20 }}
                         textStyle={{ fontWeight: "bold", color: "#ffffff", fontSize: 26 }}
                         onPress={onPrevious}></SimpleButton>
-                    <View style={{ flex: 1 }}>
-                        <Text style={{ fontSize: 24, fontWeight: "bold", color: "#ffffff", textAlign: "center", textTransform: "uppercase" }}>{
+                    <View style={{ flex: 1, alignContent: "center", justifyContent: "center" }}>
+                        <Text style={{ fontSize: 34, fontWeight: "bold", color: "#ffffff", textAlign: "center", textTransform: "uppercase" }}>{
                             `Итого: ${OrderWizard.current.getFormatedSum(true)}`
                         }</Text>
                     </View>

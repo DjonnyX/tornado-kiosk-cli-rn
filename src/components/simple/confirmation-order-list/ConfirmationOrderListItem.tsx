@@ -51,44 +51,81 @@ export const ConfirmationOrderListItem = React.memo(({ stateId, imageHeight, cur
     };
 
     return (
-        <View style={{ flex: 1, paddingLeft: 24, paddingRight: 24, marginBottom: 20 }}>
-            <View style={{ flex: 1, width: "100%", height: imageHeight, marginBottom: 2, justifyContent: "flex-end" }}>
+        <View style={{ flex: 1, flexDirection: "row", paddingLeft: 24, paddingRight: 24, marginBottom: 20 }}>
+            <View style={{ width: 64, height: imageHeight, marginBottom: 2, marginRight: 20, justifyContent: "flex-end" }}>
                 <FastImage style={{ width: "100%", height: "100%" }} source={{
                     uri: `file://${currentAdAsset?.mipmap.x128}`,
                 }} resizeMode={FastImage.resizeMode.contain}></FastImage>
             </View>
-            <Text numberOfLines={3} ellipsizeMode="tail" style={{
-                textAlign: "center", fontSize: 12,
-                color: theme.themes[theme.name].menu.draftOrder.item.nameColor, textTransform: "uppercase", fontWeight: "bold"
-            }}>
+            <View style={{ flex: 1 }}>
+                <View style={{ flexDirection: "row", marginRight: 20 }}>
+                    <View style={{ flex: 1 }}>
+                        <Text numberOfLines={3} ellipsizeMode="tail" style={{
+                            textAlign: "left", fontSize: 20,
+                            color: theme.themes[theme.name].menu.draftOrder.item.nameColor, textTransform: "uppercase", fontWeight: "bold"
+                        }}>
+                            {
+                                currentContent?.name
+                            }
+                        </Text>
+                    </View>
+                    <View style={{ width: 192 }}>
+                        <Text numberOfLines={1} ellipsizeMode="tail" style={{
+                            textAlign: "right", fontSize: 24,
+                            color: theme.themes[theme.name].menu.draftOrder.item.nameColor, fontWeight: "bold"
+                        }}>
+                            {
+                                `${position.quantity}x${position.getFormatedSumPerOne(true)}`
+                            }
+                        </Text>
+                    </View>
+                </View>
                 {
-                    currentContent?.name
+                    position.nestedPositions.map(p => <View style={{ flexDirection: "row", marginRight: 20 }}>
+                        <View style={{ flex: 1 }}>
+                            <Text numberOfLines={1} ellipsizeMode="tail" style={{
+                                textAlign: "left", fontSize: 12,
+                                color: "green", textTransform: "uppercase", fontWeight: "bold"
+                            }}>
+                                {
+                                    p.__productNode__?.content.contents[language?.code].name
+                                }
+                            </Text>
+                        </View>
+                        <View style={{ width: 192 }}>
+                            <Text numberOfLines={1} ellipsizeMode="tail" style={{
+                                textAlign: "right", fontSize: 12,
+                                color: "green", fontWeight: "bold"
+                            }}>
+                                {
+                                    `${p.quantity}x${p.getFormatedPrice(true)}`
+                                }
+                            </Text>
+                        </View>
+                    </View>
+                    )
                 }
-            </Text>
-            <View style={{ alignItems: "center", justifyContent: "center", marginBottom: 1 }}>
-                <Text style={{ textAlign: "center", fontSize: 12, paddingTop: 4, paddingBottom: 4, paddingLeft: 6, paddingRight: 6, color: theme.themes[theme.name].menu.draftOrder.item.price.textColor }}>
-                    {
-                        position.getFormatedSum(true)
-                    }
-                </Text>
+
             </View>
-            <NumericStapper
-                value={position.quantity}
-                buttonStyle={{
-                    width: 32, height: 32, borderStyle: "solid", borderWidth: 0.5, borderRadius: 3,
-                    borderColor: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.borderColor,
-                    padding: 6
-                }}
-                buttonTextStyle={{
-                    color: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.textColor as any,
-                }}
-                textStyle={{ width: 44, color: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.indicator.textColor }}
-                iconDecrement="-"
-                iconIncrement="+"
-                min={0}
-                max={Math.min(position.rests, 99)}
-                onChange={changeQuantityHandler}
-            />
+            <View style={{ width: 144, height: 44 }}>
+                <NumericStapper
+                    value={position.quantity}
+                    buttonStyle={{
+                        width: 44, height: 44, borderStyle: "solid", borderWidth: 0.5, borderRadius: 3,
+                        borderColor: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.borderColor,
+                        padding: 6
+                    }}
+                    buttonTextStyle={{
+                        color: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.textColor as any,
+                    }}
+                    textStyle={{ width: 44, color: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.indicator.textColor }}
+                    iconDecrement="-"
+                    iconIncrement="+"
+                    min={0}
+                    max={Math.min(position.rests, 99)}
+                    onChange={changeQuantityHandler}
+                />
+            </View>
         </View>
     );
 })
