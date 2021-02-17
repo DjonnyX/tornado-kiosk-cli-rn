@@ -6,7 +6,6 @@ const initialState: ICapabilitiesState = {
     language: undefined,
     orderType: undefined,
     currentScreen: undefined,
-    navigator: undefined,
 };
 
 const capabilitiesReducer: Reducer<ICapabilitiesState, TCapabilitiesActions> = (
@@ -27,7 +26,6 @@ const capabilitiesReducer: Reducer<ICapabilitiesState, TCapabilitiesActions> = (
         case CapabilitiesActionTypes.SET_CURRENT_SCREEN:
             return {
                 ...state,
-                navigator: action.navigator,
                 currentScreen: action.currentScreen,
             };
         default:

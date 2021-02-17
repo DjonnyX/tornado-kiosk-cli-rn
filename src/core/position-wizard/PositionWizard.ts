@@ -2,7 +2,7 @@ import { ICompiledMenuNode, ICompiledProduct, ICompiledSelector, ICurrency } fro
 import EventEmitter from "eventemitter3";
 import { priceFormatter } from "../../utils/price";
 import { PositionWizardModes } from "../enums";
-import { IPositionWizard, IPositionWizardGroup } from "../interfaces";
+import { IPositionWizard, IPositionWizardGroup, IPositionWizardPosition } from "../interfaces";
 import { PositionWizardEventTypes, PositionWizardGroupEventTypes } from "./events";
 import { PositionWizardGroup } from "./PositionWizardGroup";
 
@@ -70,6 +70,9 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
     protected _sum: number = 0;
     get sum() { return this._sum; }
 
+    protected _sumPerOne: number = 0;
+    get sumPerOne() { return this._sumPerOne; }
+
     protected _currentGroup: number = 0;
     set currentGroup(v: number) {
         if (this._currentGroup !== v) {
@@ -77,6 +80,19 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
         }
     }
     get currentGroup() { return this._currentGroup; }
+
+    get nestedPositions() {
+        const result = new Array<IPositionWizardPosition>();
+        this._groups.forEach(g => {
+            g.positions.forEach(p => {
+                if (p.quantity > 0) {
+                    result.push(p);
+                }
+            });
+        });
+
+        return result;
+    }
 
     private onChangePositionQuantity = () => {
         // etc
@@ -116,7 +132,9 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
             sum += g.sum;
         });
 
-        this._sum = sum + this.price * this._quantity;
+        this._sumPerOne = sum + this.price;
+
+        this._sum = this._sumPerOne * this._quantity;
     }
 
     protected validate(): boolean {
@@ -137,6 +155,14 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
 
     getFormatedSum(withCurrency: boolean = false): string {
         let s = priceFormatter(this._sum);
+        if (withCurrency) {
+            s += this._currency.symbol;
+        }
+        return s;
+    }
+
+    getFormatedSumPerOne(withCurrency: boolean = false): string {
+        let s = priceFormatter(this._sumPerOne);
         if (withCurrency) {
             s += this._currency.symbol;
         }
