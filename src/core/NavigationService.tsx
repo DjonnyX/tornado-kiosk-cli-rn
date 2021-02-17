@@ -1,72 +1,45 @@
-import React, { Component, Dispatch } from "react";
+import React, { Dispatch, useEffect } from "react";
 import { connect } from "react-redux";
 import { IAppState } from "../store/state";
 import { CapabilitiesSelectors, MyOrderSelectors } from "../store/selectors";
-import { StackNavigationProp } from "@react-navigation/stack";
 import { MainNavigationScreenTypes } from "../components/navigation";
-import { CommonActions } from "@react-navigation/native";
 import { NotificationActions } from "../store/actions";
 
 interface INavigationServiceProps {
     // store
-    _snackClose: () => void;
-    _alertClose: () => void;
+    _snackClose?: () => void;
+    _alertClose?: () => void;
+    _orderStateId?: number;
+    _currentScreen?: MainNavigationScreenTypes;
 
-    _orderStateId: number;
-    _currentScreen: MainNavigationScreenTypes;
-    _navigator: StackNavigationProp<any, MainNavigationScreenTypes>;
+    // self
+    onNavigate?: (screen: MainNavigationScreenTypes) => void;
 }
 
-interface INavigationServiceState { }
+export const NavigationServiceContainer = React.memo(({ onNavigate, _orderStateId, _currentScreen,
+    _alertClose, _snackClose }: INavigationServiceProps) => {
 
-class NavigationServiceContainer extends Component<INavigationServiceProps, INavigationServiceState> {
-    constructor(props: any) {
-        super(props);
-    }
-
-    shouldComponentUpdate(nextProps: Readonly<INavigationServiceProps>, nextState: Readonly<INavigationServiceState>, nextContext: any) {
-        if (nextProps._navigator && this.props._orderStateId !== nextProps._orderStateId) {
-            if (nextProps._orderStateId === 0 && (nextProps._currentScreen === MainNavigationScreenTypes.MENU
-                || nextProps._currentScreen === MainNavigationScreenTypes.CONFIRMATION_ORDER)) {
-                setTimeout(() => {
-                    nextProps._navigator.dispatch(
-                        CommonActions.reset({
-                            index: 1,
-                            routes: [
-                                { name: MainNavigationScreenTypes.INTRO },
-                            ],
-                        })
-                    );
-
-                    this.props._alertClose();
-                    this.props._snackClose();
-                });
-            } else
-                if (nextProps._orderStateId === 1 && nextProps._currentScreen !== MainNavigationScreenTypes.MENU) {
-                    nextProps._navigator.dispatch(
-                        CommonActions.reset({
-                            index: 1,
-                            routes: [
-                                { name: MainNavigationScreenTypes.MENU },
-                            ],
-                        })
-                    );
-                }
+    useEffect(() => {
+        if (_orderStateId === 0 && (_currentScreen === MainNavigationScreenTypes.MENU
+            || _currentScreen === MainNavigationScreenTypes.CONFIRMATION_ORDER)) {
+            
+            if (_alertClose !== undefined) _alertClose();
+            if (_snackClose !== undefined) _snackClose();
+            if (onNavigate !== undefined) onNavigate(MainNavigationScreenTypes.INTRO);
         }
+        else
+            if (_orderStateId === 1 && _currentScreen !== MainNavigationScreenTypes.MENU) {
+                if (onNavigate !== undefined) onNavigate(MainNavigationScreenTypes.MENU);
+            }
+    }, [_orderStateId, _currentScreen, onNavigate]);
 
-        if (super.shouldComponentUpdate) return super.shouldComponentUpdate(nextProps, nextState, nextContext);
-        return true;
-    }
 
-    render() {
-        return <></>;
-    }
-}
+    return <></>;
+});
 
 const mapStateToProps = (state: IAppState) => {
     return {
         _orderStateId: MyOrderSelectors.selectStateId(state),
-        _navigator: CapabilitiesSelectors.selectNavigator(state),
         _currentScreen: CapabilitiesSelectors.selectCurrentScreen(state),
     };
 };

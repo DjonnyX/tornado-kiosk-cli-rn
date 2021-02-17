@@ -189,7 +189,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => {
         _alertOpen: (alert: IAlertState) => {
             dispatch(NotificationActions.alertOpen(alert));
         },
-        _alertClose: (alert: IAlertState) => {
+        _alertClose: () => {
             dispatch(NotificationActions.alertClose());
         },
     };

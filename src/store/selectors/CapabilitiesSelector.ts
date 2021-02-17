@@ -11,8 +11,4 @@ export namespace CapabilitiesSelectors {
     export const selectCurrentScreen = createSelector(getCapabilities, (state) => {
         return state?.currentScreen;
     });
-
-    export const selectNavigator = createSelector(getCapabilities, (state) => {
-        return state?.navigator;
-    });
 }

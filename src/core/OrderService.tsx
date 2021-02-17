@@ -1,4 +1,4 @@
-import React, { Component, Dispatch } from "react";
+import React, { Component, Dispatch, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { IAppState } from "../store/state";
 import { ICompiledLanguage, ICurrency } from "@djonnyx/tornado-types";
@@ -7,7 +7,7 @@ import { OrderWizardEventTypes } from "./order/events";
 import { MyOrderActions, NotificationActions } from "../store/actions";
 import { CapabilitiesSelectors, CombinedDataSelectors, MyOrderSelectors } from "../store/selectors";
 import { ISnackState } from "../interfaces";
-import { IPositionWizard } from "./interfaces";
+import { IOrderWizard, IPositionWizard } from "./interfaces";
 
 interface IOrderServiceProps {
     // store
@@ -19,62 +19,57 @@ interface IOrderServiceProps {
     _currency?: ICurrency;
 }
 
-interface IOrderServiceState { }
+export const OrderServiceContainer = React.memo(({ _orderStateId, _language,
+    _currency, _snackOpen, _onUpdateStateId }: IOrderServiceProps) => {
+    const [orderWizard, setOrderWizard] = useState<IOrderWizard | undefined>(undefined);
+    const [previousLastPosition, setPreviousLastPosition] = useState<IPositionWizard | null>(null);
 
-class OrderServiceContainer extends Component<IOrderServiceProps, IOrderServiceState> {
-    private _orderWizard: OrderWizard | undefined;
-    private _previousLastPosition: IPositionWizard | null = null;
+    useEffect(() => {
+        if (orderWizard) {
+            const onOrderWizardChange = () => {
+                setTimeout(() => {
+                    _onUpdateStateId(orderWizard?.stateId || 0);
+                });
+            }
 
-    private _onOrderWizardChange = () => {
-        setTimeout(() => {
-            this.props._onUpdateStateId(this._orderWizard?.stateId || 0);
-        });
-    }
-
-    constructor(props: IOrderServiceProps) {
-        super(props);
-    }
-
-    shouldComponentUpdate(nextProps: Readonly<IOrderServiceProps>, nextState: Readonly<IOrderServiceState>, nextContext: any) {
-        if (this.props._language !== nextProps._language
-            || this.props._currency !== nextProps._currency) {
-
-            if (!!nextProps._language && !!nextProps._currency) {
-
-                if (!this._orderWizard) {
-                    this._orderWizard = new OrderWizard(nextProps._currency, nextProps._language);
-                    this._orderWizard.addListener(OrderWizardEventTypes.CHANGE, this._onOrderWizardChange);
-                } else {
-                    if (this.props._currency !== nextProps._currency) {
-                        this._orderWizard.currency = nextProps._currency;
-                    }
-                    if (this.props._language !== nextProps._language) {
-                        this._orderWizard.language = nextProps._language;
-                    }
-                }
+            orderWizard.addListener(OrderWizardEventTypes.CHANGE, onOrderWizardChange);
+            return () => {
+                orderWizard.removeListener(OrderWizardEventTypes.CHANGE, onOrderWizardChange);
             }
         }
+    }, [orderWizard]);
 
-        if (this.props._orderStateId !== nextProps._orderStateId) {
-            if (this._previousLastPosition !== OrderWizard.current.lastPosition) {
-                this._previousLastPosition = OrderWizard.current.lastPosition;
-                if (!!this._previousLastPosition) {
-                    this.props._snackOpen({
-                        message: `"${this._previousLastPosition?.__product__?.contents[this.props._language?.code || ""]?.name}" добавлен в заказ!`,
-                        duration: 10000,
-                    });
-                }
+    useEffect(() => {
+        if (!!_language && !!_currency) {
+
+            if (!orderWizard) {
+                const ow = new OrderWizard(_currency, _language);
+                setOrderWizard(ow);
+
+            } else {
+                orderWizard.currency = _currency;
+                orderWizard.language = _language;
             }
         }
+    }, [_language, _currency]);
 
-        if (super.shouldComponentUpdate) return super.shouldComponentUpdate(nextProps, nextState, nextContext);
-        return true;
-    }
+    useEffect(() => {
+        if (!!OrderWizard?.current?.lastPosition && previousLastPosition !== OrderWizard.current.lastPosition) {
+            setPreviousLastPosition(OrderWizard.current.lastPosition);
+        }
+    }, [_orderStateId]);
 
-    render() {
-        return <></>;
-    }
-}
+    useEffect(() => {
+        if (!!previousLastPosition) {
+            _snackOpen({
+                message: `"${previousLastPosition?.__product__?.contents[_language?.code || ""]?.name}" добавлен в заказ!`,
+                duration: 5000,
+            });
+        }
+    }, [previousLastPosition]);
+
+    return <></>;
+});
 
 const mapStateToProps = (state: IAppState) => {
     return {
