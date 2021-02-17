@@ -9,10 +9,12 @@ export interface IPositionWizard extends EventEmitter {
     readonly mode: PositionWizardModes;
     readonly __product__: ICompiledProduct | null;
     readonly currency: ICurrency;
+    readonly nestedPositions: Array<IPositionWizardPosition>;
     currentGroup: number;
     quantity: number;
     readonly sum: number;
     getFormatedSum: (withCurrency?: boolean) => string;
+    getFormatedSumPerOne: (withCurrency?: boolean) => string;
     readonly groups: Array<IPositionWizardGroup>;
     dispose: () => void;
 }
