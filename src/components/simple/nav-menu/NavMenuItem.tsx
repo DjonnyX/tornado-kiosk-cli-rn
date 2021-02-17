@@ -4,6 +4,7 @@ import FastImage from "react-native-fast-image";
 import { ICompiledMenuNode, NodeTypes, ICompiledProduct, ICurrency, ICompiledLanguage } from "@djonnyx/tornado-types";
 import { theme } from "../../../theme";
 import { priceFormatter } from "../../../utils/price";
+import { TagList } from "../TagList";
 
 interface INavMenuItemProps {
     thumbnailHeight: number;
@@ -29,6 +30,10 @@ export const NavMenuItem = React.memo(({ thumbnailHeight, currency, language, no
     return (
         <View style={{ flex: 1, backgroundColor: theme.themes[theme.name].menu.navMenu.item.backgroundColor, /*backgroundColor: Color.rgb(currentContent.color).alpha(0.05).toString(),*/ borderRadius: 16, padding: 22 }}>
             <TouchableOpacity style={{ alignItems: "center" }} onPress={pressHandler}>
+                {
+                    !!tags &&
+                    <TagList tags={tags} language={language} />
+                }
                 <View style={{ width: "100%", height: thumbnailHeight, marginBottom: 5 }} renderToHardwareTextureAndroid={true}>
                     <FastImage style={{ width: "100%", height: "100%" }} source={{
                         uri: `file://${currentAdAsset?.path}`,
@@ -56,21 +61,6 @@ export const NavMenuItem = React.memo(({ thumbnailHeight, currency, language, no
                         </View>
                         :
                         undefined
-                }
-                {
-                    /*<View style={{ position: "absolute", flexDirection: "row", flexWrap: "wrap" }}>
-                        {
-                            tags?.map(tag =>
-                                tag?.contents[language.code]?.resources?.main?.mipmap?.x32
-                                    ?
-                                    <Image style={{ width: 16, height: 16 }} source={{
-                                        uri: `file://${tag?.contents[language.code]?.resources?.main?.mipmap?.x32}`,
-                                    }} resizeMode="contain" resizeMethod="scale"></Image>
-                                    :
-                                <View key={tag.id} style={{ width: 8, height: 8, marginRight: 2, backgroundColor: tag?.contents[language.code]?.color, borderRadius: 4 }}></View>
-                            )
-                        }
-                    </View>*/
                 }
             </TouchableOpacity>
         </View>
