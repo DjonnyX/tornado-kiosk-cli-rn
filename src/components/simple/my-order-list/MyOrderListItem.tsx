@@ -68,7 +68,7 @@ export const MyOrderListItem = React.memo(({ stateId, imageHeight, currency, lan
             <View style={{ alignItems: "center", justifyContent: "center", marginBottom: 1 }}>
                 <Text style={{ textAlign: "center", fontSize: 12, paddingTop: 4, paddingBottom: 4, paddingLeft: 6, paddingRight: 6, color: theme.themes[theme.name].menu.draftOrder.item.price.textColor }}>
                     {
-                        position.getFormatedSum(true)
+                        position.getFormatedSumPerOne(true)
                     }
                 </Text>
             </View>
