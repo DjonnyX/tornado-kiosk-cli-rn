@@ -5,6 +5,7 @@ import { ICompiledMenuNode, NodeTypes, ICompiledProduct, ICurrency, ICompiledLan
 import { theme } from "../../../theme";
 import { NumericStapper } from "../NumericStapper";
 import { IPositionWizardPosition } from "../../../core/interfaces";
+import { TagList } from "../TagList";
 
 interface IModifierListItemProps {
     stateId: number;
@@ -38,6 +39,10 @@ export const ModifierListItem = React.memo(({ thumbnailHeight, currency, languag
     return (
         <View style={{ flex: 1, backgroundColor: theme.themes[theme.name].menu.navMenu.item.backgroundColor, /*backgroundColor: Color.rgb(currentContent.color).alpha(0.05).toString(),*/ borderRadius: 16, padding: 22 }}>
             <TouchableOpacity style={{ alignItems: "center" }} onPress={pressHandler}>
+                {
+                    !!tags &&
+                    <TagList tags={tags} language={language} />
+                }
                 <View style={{ width: "100%", height: thumbnailHeight, marginBottom: 5 }} renderToHardwareTextureAndroid={true}>
                     <FastImage style={{ width: "100%", height: "100%" }} source={{
                         uri: `file://${currentAdAsset?.path}`,
