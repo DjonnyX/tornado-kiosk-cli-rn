@@ -14,43 +14,28 @@ interface IAlertServiceProps {
     _alertClose: () => void;
 }
 
-interface IAlertServiceState { }
+export const AlertServiceContainer = React.memo(({ _alertParams, _alertClose }: IAlertServiceProps) => {
+    return <View style={{ position: "absolute", left: 0, top: 0, right: 0, bottom: 0, }}>
+    <View style={{ flex: 1, width: "100%", height: "100%" }}>
+        <ModalTransparent visible={Boolean(_alertParams.visible)}>
+            <AlertContent
+                title={_alertParams.title || ""}
+                message={_alertParams.message || ""}
+                buttons={_alertParams.buttons.map(b => ({
+                    ...b,
+                    action: () => {
+                        if (!!b.action) {
+                            b.action();
+                        }
 
-class AlertServiceContainer extends PureComponent<IAlertServiceProps, IAlertServiceState> {
-    constructor(props: IAlertServiceProps) {
-        super(props);
-    }
-
-    render() {
-        const { _alertParams, _alertClose } = this.props;
-
-        return <View style={{ position: "absolute", left: 0, top: 0, right: 0, bottom: 0, }}>
-            <View style={{ flex: 1, width: "100%", height: "100%" }}>
-                <ModalTransparent visible={Boolean(_alertParams.visible)}>
-                    <AlertContent
-                        title={_alertParams.title || ""}
-                        message={_alertParams.message || ""}
-                        buttons={_alertParams.buttons.map(b => ({
-                            ...b,
-                            action: () => {
-                                if (!!b.action) {
-                                    b.action();
-                                }
-
-                                _alertClose();
-                            }
-                        }))}
-                    />
-                </ModalTransparent>
-                <View style={{ flex: 1, width: "100%", height: "100%" }}>
-                    {
-                        this.props.children
+                        _alertClose();
                     }
-                </View>
-            </View>
-        </View>
-    }
-}
+                }))}
+            />
+        </ModalTransparent>
+    </View>
+</View>
+});
 
 const mapStateToProps = (state: IAppState) => {
     return {
