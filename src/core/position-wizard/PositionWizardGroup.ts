@@ -1,7 +1,7 @@
 import { ICompiledMenuNode, ICompiledProduct, ICompiledSelector, ICurrency } from "@djonnyx/tornado-types";
 import EventEmitter from "eventemitter3";
 import { priceFormatter } from "../../utils/price";
-import { PositionWizardModes } from "../enums";
+import { PositionWizardModes, PositionWizardTypes } from "../enums";
 import { IPositionWizard, IPositionWizardGroup } from "../interfaces";
 import { PositionWizardEventTypes, PositionWizardGroupEventTypes } from "./events";
 import { PositionWizard } from "./PositionWizard";
@@ -42,7 +42,7 @@ export class PositionWizardGroup extends EventEmitter implements IPositionWizard
         super();
 
         this._groupNode.children.forEach((p, index) => {
-            const position = new PositionWizard(_mode, p.content as ICompiledProduct, this._currency);
+            const position = new PositionWizard(_mode, p.content as ICompiledProduct, this._currency, PositionWizardTypes.MODIFIER);
             position.addListener(PositionWizardEventTypes.CHANGE, this.onChangePositionQuantity);
 
             this._positions.push(position);

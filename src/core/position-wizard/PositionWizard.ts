@@ -1,6 +1,6 @@
 import EventEmitter from "eventemitter3";
 import { ICompiledMenuNode, ICompiledProduct, ICompiledSelector, ICurrency } from "@djonnyx/tornado-types";
-import { PositionWizardModes } from "../enums";
+import { PositionWizardModes, PositionWizardTypes } from "../enums";
 import { IPositionWizard, IPositionWizardGroup } from "../interfaces";
 import { PositionWizardEventTypes, PositionWizardGroupEventTypes } from "./events";
 import { PositionWizardGroup } from "./PositionWizardGroup";
@@ -22,6 +22,7 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
 
         return editedPosition;
     }
+
     protected _id: number = 0;
 
     get id() {
@@ -32,6 +33,10 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
 
     get stateId() {
         return this._stateId;
+    }
+
+    get type() {
+        return this._type;
     }
 
     get rests() {
@@ -112,6 +117,7 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
         protected _mode: PositionWizardModes,
         protected _product: ICompiledProduct,
         protected _currency: ICurrency,
+        protected _type: PositionWizardTypes = PositionWizardTypes.PRODUCT,
     ) {
         super();
 
