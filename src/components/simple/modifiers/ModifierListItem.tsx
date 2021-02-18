@@ -66,29 +66,29 @@ export const ModifierListItem = React.memo(({ thumbnailHeight, currency, languag
                         currentContent?.description
                     }
                 </Text>
-                <NumericStapper
-                    value={position.quantity}
-                    buttonStyle={{
-                        width: 48, height: 48, borderStyle: "solid", borderWidth: 0.5, borderRadius: 3,
-                        borderColor: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.borderColor,
-                        padding: 6
-                    }}
-                    buttonTextStyle={{
-                        color: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.textColor as any,
-                    }}
-                    textStyle={{ color: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.indicator.textColor }}
-                    iconDecrement="-"
-                    iconIncrement="+"
-                    onChange={changeQuantityHandler}
-                    formatValueFunction={(value: number) => {
-                        return position.sum > 0
-                            ? `${String(value)}x${position.getFormatedPrice(true)}`
-                            : String(position.getFormatedPrice(true));
-                    }}
-                    min={0}
-                    max={Math.min(position.availableQuantitiy, 99)}
-                />
             </TouchableOpacity>
+            <NumericStapper
+                value={position.quantity}
+                buttonStyle={{
+                    width: 48, height: 48, borderStyle: "solid", borderWidth: 0.5, borderRadius: 3,
+                    borderColor: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.borderColor,
+                    padding: 6
+                }}
+                buttonTextStyle={{
+                    color: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.textColor as any,
+                }}
+                textStyle={{ color: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.indicator.textColor }}
+                iconDecrement="-"
+                iconIncrement="+"
+                onChange={changeQuantityHandler}
+                formatValueFunction={(value: number) => {
+                    return position.sum > 0
+                        ? `${String(value)}x${position.getFormatedSumPerOne(true)}`
+                        : String(position.getFormatedSumPerOne(true));
+                }}
+                min={0}
+                max={Math.min(position.availableQuantitiy, 99)}
+            />
         </View>
     );
 });

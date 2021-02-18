@@ -48,7 +48,7 @@ export const ModifiersEditorContainer = React.memo(({ _orderStateId, _language, 
     }, []);
 
     const onPress = (position: IPositionWizard) => {
-
+        position.edit();
     }
 
     return (
