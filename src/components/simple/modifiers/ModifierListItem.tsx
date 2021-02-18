@@ -4,16 +4,16 @@ import FastImage from "react-native-fast-image";
 import { ICompiledMenuNode, NodeTypes, ICompiledProduct, ICurrency, ICompiledLanguage } from "@djonnyx/tornado-types";
 import { theme } from "../../../theme";
 import { NumericStapper } from "../NumericStapper";
-import { IPositionWizardPosition } from "../../../core/interfaces";
+import { IPositionWizard } from "../../../core/interfaces";
 import { TagList } from "../TagList";
 
 interface IModifierListItemProps {
     stateId: number;
     thumbnailHeight: number;
-    position: IPositionWizardPosition;
+    position: IPositionWizard;
     currency: ICurrency;
     language: ICompiledLanguage;
-    onPress: (position: IPositionWizardPosition) => void;
+    onPress: (position: IPositionWizard) => void;
 }
 
 export const ModifierListItem = React.memo(({ thumbnailHeight, currency, language, position, stateId,
@@ -29,11 +29,11 @@ export const ModifierListItem = React.memo(({ thumbnailHeight, currency, languag
         position.quantity = qnt;
     }
 
-    const currentContent = position.__productNode__.content?.contents[language?.code];
+    const currentContent = position.__product__?.contents[language?.code];
     const currentAdAsset = currentContent?.resources?.icon;
 
-    const tags = position.__productNode__.type === NodeTypes.PRODUCT && position.__productNode__.content.tags?.length > 0
-        ? position.__productNode__.content.tags
+    const tags = !!position.__product__?.tags && position.__product__?.tags?.length > 0
+        ? position.__product__?.tags
         : undefined;
 
     return (
@@ -54,7 +54,7 @@ export const ModifierListItem = React.memo(({ thumbnailHeight, currency, languag
                         fontWeight: "bold", textTransform: "uppercase"
                     }}>
                     {
-                        currentContent.name
+                        currentContent?.name
                     }
                 </Text>
                 <Text textBreakStrategy="simple" numberOfLines={2} ellipsizeMode="tail" style={{
@@ -63,7 +63,7 @@ export const ModifierListItem = React.memo(({ thumbnailHeight, currency, languag
                     marginBottom: 12
                 }}>
                     {
-                        currentContent.description
+                        currentContent?.description
                     }
                 </Text>
                 <NumericStapper

@@ -1,10 +1,10 @@
-import { ICompiledMenuNode, ICompiledProduct, ICompiledSelector, ICurrency } from "@djonnyx/tornado-types";
 import EventEmitter from "eventemitter3";
-import { priceFormatter } from "../../utils/price";
+import { ICompiledMenuNode, ICompiledProduct, ICompiledSelector, ICurrency } from "@djonnyx/tornado-types";
 import { PositionWizardModes } from "../enums";
-import { IPositionWizard, IPositionWizardGroup, IPositionWizardPosition } from "../interfaces";
+import { IPositionWizard, IPositionWizardGroup } from "../interfaces";
 import { PositionWizardEventTypes, PositionWizardGroupEventTypes } from "./events";
 import { PositionWizardGroup } from "./PositionWizardGroup";
+import { priceFormatter } from "../../utils/price";
 
 export class PositionWizard extends EventEmitter implements IPositionWizard {
     protected static __id = 0;
@@ -22,7 +22,6 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
 
         return editedPosition;
     }
-
     protected _id: number = 0;
 
     get id() {
@@ -39,6 +38,10 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
         return 10; // нужно сделать rests у продукта
     }
 
+    get availableQuantitiy() {
+        return Math.min(this.rests, 5); // нужно сделать лимиты по модификаторам
+    }
+
     get mode() { return this._mode; }
 
     get __product__() { return this._product; }
@@ -48,17 +51,18 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
     get currency() { return this._currency; }
 
     protected _quantity: number = 0;
+    get quantity() { return this._quantity; }
     set quantity(v: number) {
         if (this._quantity !== v) {
             this._quantity = v;
 
             this.recalculate();
+            this.validate();
             this.update();
 
             this.emit(PositionWizardEventTypes.CHANGE);
         }
     }
-    get quantity() { return this._quantity; }
 
     protected _groups = new Array<IPositionWizardGroup>();
 
@@ -82,7 +86,7 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
     get currentGroup() { return this._currentGroup; }
 
     get nestedPositions() {
-        const result = new Array<IPositionWizardPosition>();
+        const result = new Array<IPositionWizard>();
         this._groups.forEach(g => {
             g.positions.forEach(p => {
                 if (p.quantity > 0) {
@@ -115,7 +119,7 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
         this._id = PositionWizard.__id;
 
         this._product.structure.children.forEach((s, index) => {
-            const group = new PositionWizardGroup(index, s as ICompiledMenuNode<ICompiledSelector>, this._currency);
+            const group = new PositionWizardGroup(_mode, index, s as ICompiledMenuNode<ICompiledSelector>, this._currency);
             group.addListener(PositionWizardGroupEventTypes.CHANGE, this.onChangePositionQuantity);
 
             this._groups.push(group);
@@ -151,6 +155,14 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
 
     protected update(): void {
         this._stateId++;
+    }
+
+    getFormatedPrice(withCurrency: boolean = false): string {
+        let s = priceFormatter(this.price);
+        if (withCurrency) {
+            s += this._currency.symbol;
+        }
+        return s;
     }
 
     getFormatedSum(withCurrency: boolean = false): string {
