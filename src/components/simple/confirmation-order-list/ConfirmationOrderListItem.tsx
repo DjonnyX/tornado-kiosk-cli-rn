@@ -88,7 +88,7 @@ export const ConfirmationOrderListItem = React.memo(({ stateId, imageHeight, cur
                                 color: "green", textTransform: "uppercase", fontWeight: "bold"
                             }}>
                                 {
-                                    p.__productNode__?.content.contents[language?.code].name
+                                    p.__product__?.contents[language?.code].name
                                 }
                             </Text>
                         </View>

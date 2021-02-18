@@ -4,7 +4,7 @@ import { View, Text, SafeAreaView, ScrollView, TouchableOpacity } from "react-na
 import FastImage from "react-native-fast-image";
 import { connect } from "react-redux";
 import { PositionWizardModes } from "../../../core/enums";
-import { IPositionWizard, IPositionWizardPosition } from "../../../core/interfaces";
+import { IPositionWizard } from "../../../core/interfaces";
 import { OrderWizard } from "../../../core/order/OrderWizard";
 import { PositionWizardEventTypes } from "../../../core/position-wizard/events";
 import { CapabilitiesSelectors, CombinedDataSelectors, MyOrderSelectors } from "../../../store/selectors";
@@ -47,8 +47,8 @@ export const ModifiersEditorContainer = React.memo(({ _orderStateId, _language, 
         OrderWizard.current.editCancel(true);
     }, []);
 
-    const onPress = (position: IPositionWizardPosition) => {
-
+    const onPress = (position: IPositionWizard) => {
+        position.edit();
     }
 
     return (
