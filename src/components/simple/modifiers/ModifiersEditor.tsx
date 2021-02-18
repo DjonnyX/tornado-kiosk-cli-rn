@@ -44,12 +44,8 @@ export const ModifiersEditorContainer = React.memo(({ _orderStateId, _language, 
     }, []);
 
     const onClose = useCallback(() => {
-        OrderWizard.current.editCancel(true);
+        OrderWizard.current.editCancel();
     }, []);
-
-    const onPress = (position: IPositionWizard) => {
-        position.edit();
-    }
 
     return (
         <ModalRollTop visible={!!OrderWizard.current.currentPosition}>
@@ -74,7 +70,7 @@ export const ModifiersEditorContainer = React.memo(({ _orderStateId, _language, 
                                 </View>
                                 <View>
                                     <Text style={{ fontSize: 48, fontWeight: "bold", color: "#ffffff", textTransform: "uppercase" }}>{
-                                        OrderWizard.current.currentPosition.getFormatedSum(true)
+                                        OrderWizard.current.currentPosition.getFormatedSumPerOne(true)
                                     }</Text>
                                 </View>
                             </View>
@@ -129,7 +125,7 @@ export const ModifiersEditorContainer = React.memo(({ _orderStateId, _language, 
                                     <GridList style={{ flex: 1 }} padding={10} spacing={6} data={OrderWizard.current.currentPosition.groups[OrderWizard.current.currentPosition.currentGroup].positions}
                                         itemDimension={218} animationSkipFrames={10} renderItem={({ item }) => {
                                             return <ModifierListItem key={item.id} position={item} currency={_currency} language={_language}
-                                                thumbnailHeight={128} onPress={onPress} stateId={item.stateId}></ModifierListItem>
+                                                thumbnailHeight={128} stateId={item.stateId}></ModifierListItem>
                                         }}
                                         keyExtractor={(item, index) => item.id}>
                                     </GridList>

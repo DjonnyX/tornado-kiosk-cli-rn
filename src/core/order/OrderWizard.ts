@@ -152,7 +152,7 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
         this.emit(OrderWizardEventTypes.CHANGE);
     }
 
-    editCancel(remove: boolean = false): void {
+    editCancel(): void {
         const currentPosition = this.currentPosition;
 
         if (!currentPosition) {
@@ -161,10 +161,8 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
 
         currentPosition.currentGroup = 0;
 
-        if (currentPosition.mode === PositionWizardModes.EDIT && currentPosition.type !== PositionWizardTypes.MODIFIER) {
-            if (remove) {
-                this.remove(currentPosition);
-            }
+        if (currentPosition.mode === PositionWizardModes.EDIT) {
+            // etc
         } else
             if (currentPosition.mode === PositionWizardModes.NEW) {
                 currentPosition.removeAllListeners();

@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { View, Text, TouchableOpacity, GestureResponderEvent } from "react-native";
 import FastImage from "react-native-fast-image";
-import { ICompiledMenuNode, NodeTypes, ICompiledProduct, ICurrency, ICompiledLanguage } from "@djonnyx/tornado-types";
+import { ICurrency, ICompiledLanguage } from "@djonnyx/tornado-types";
 import { theme } from "../../../theme";
 import { NumericStapper } from "../NumericStapper";
 import { IPositionWizard } from "../../../core/interfaces";
@@ -13,16 +13,12 @@ interface IModifierListItemProps {
     position: IPositionWizard;
     currency: ICurrency;
     language: ICompiledLanguage;
-    onPress: (position: IPositionWizard) => void;
 }
 
-export const ModifierListItem = React.memo(({ thumbnailHeight, currency, language, position, stateId,
-    onPress }: IModifierListItemProps) => {
+export const ModifierListItem = React.memo(({ thumbnailHeight, currency, language, position, stateId }: IModifierListItemProps) => {
 
     const pressHandler = useCallback((e: GestureResponderEvent) => {
-        if (!!onPress) {
-            onPress(position);
-        }
+        position.edit();
     }, []);
 
     const changeQuantityHandler = (qnt: number) => {
@@ -45,7 +41,7 @@ export const ModifierListItem = React.memo(({ thumbnailHeight, currency, languag
                 }
                 <View style={{ width: "100%", height: thumbnailHeight, marginBottom: 5 }} renderToHardwareTextureAndroid={true}>
                     <FastImage style={{ width: "100%", height: "100%" }} source={{
-                        uri: `file://${currentAdAsset?.path}`,
+                        uri: `file://${currentAdAsset?.mipmap.x128}`,
                     }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                 </View>
                 <Text textBreakStrategy="simple" numberOfLines={2} ellipsizeMode="tail"

@@ -9,7 +9,7 @@ export interface IOrderWizard extends EventEmitter {
     currency: ICurrency;
     language: ICompiledLanguage;
     editProduct: (product: ICompiledProduct) => void;
-    editCancel: (remove?: boolean) => void;
+    editCancel: () => void;
     findPosition: (position: IPositionWizard) => IPositionWizard | undefined;
     add: (position: IPositionWizard) => void;
     remove: (position: IPositionWizard) => void;
