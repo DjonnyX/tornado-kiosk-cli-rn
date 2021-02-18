@@ -18,16 +18,20 @@ export class PositionWizardGroup extends EventEmitter implements IPositionWizard
     get currency() { return this._currency; }
 
     protected _isValid: boolean = true;
+    set isValid(v: boolean) {
+        if (this._isValid !== v) {
+            this._isValid = v;
+        }
+    }
     get isValid() { return this._isValid; }
 
     protected _sum: number = 0;
     get sum() { return this._sum; }
 
-    private onChangePositionQuantity = () => {
+    private onChangePositionState = () => {
         // etc
 
         this.recalculate();
-        this.validate();
         this.emit(PositionWizardEventTypes.CHANGE);
     }
 
@@ -45,7 +49,7 @@ export class PositionWizardGroup extends EventEmitter implements IPositionWizard
         this._groupNode.children.forEach((p, index) => {
             const position = new PositionWizard(PositionWizardModes.EDIT, p as ICompiledMenuNode<ICompiledProduct>,
                 this._currency, PositionWizardTypes.MODIFIER);
-            position.addListener(PositionWizardEventTypes.CHANGE, this.onChangePositionQuantity);
+            position.addListener(PositionWizardEventTypes.CHANGE, this.onChangePositionState);
             position.addListener(PositionWizardEventTypes.EDIT, this.onPositionEdit);
 
             this._positions.push(position);
@@ -61,15 +65,6 @@ export class PositionWizardGroup extends EventEmitter implements IPositionWizard
         });
 
         this._sum = sum;
-    }
-
-    protected validate(): boolean {
-        this._positions.forEach(p => {
-            // etc
-        });
-
-        this._isValid = true;
-        return true;
     }
 
     getFormatedSum(withCurrency: boolean = false): string {

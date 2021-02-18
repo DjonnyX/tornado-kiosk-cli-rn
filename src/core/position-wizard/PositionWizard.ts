@@ -5,6 +5,7 @@ import { IPositionWizard, IPositionWizardGroup } from "../interfaces";
 import { PositionWizardEventTypes } from "./events";
 import { PositionWizardGroup } from "./PositionWizardGroup";
 import { priceFormatter } from "../../utils/price";
+import { ScenarioProcessing } from "../scenarios";
 
 export class PositionWizard extends EventEmitter implements IPositionWizard {
     protected static __id = 0;
@@ -82,13 +83,10 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
 
     edit() {
         if (this._mode === PositionWizardModes.NEW) {
-            throw Error("Position with mode \"new\" can not to edit.");
+            throw Error("Position with mode \"new\" cannot be edited.");
         }
 
-        console.warn("edit")
-
         if (this._groups.length > 0) {
-            console.warn("emit")
             this.emit(PositionWizardEventTypes.EDIT, this);
         }
     }
@@ -98,6 +96,11 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
     get groups() { return this._groups; }
 
     protected _isValid: boolean = true;
+    set isValid(v: boolean) {
+        if (this._isValid !== v) {
+            this._isValid = v;
+        }
+    }
     get isValid() { return this._isValid; }
 
     protected _sum: number = 0;
@@ -128,7 +131,7 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
         return result;
     }
 
-    private onChangePositionQuantity = () => {
+    private onChangePositionState = () => {
         // etc
 
         this.recalculate();
@@ -159,7 +162,7 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
 
         this._product.structure.children.forEach((s, index) => {
             const group = new PositionWizardGroup(index, s as ICompiledMenuNode<ICompiledSelector>, this._currency);
-            group.addListener(PositionWizardEventTypes.CHANGE, this.onChangePositionQuantity);
+            group.addListener(PositionWizardEventTypes.CHANGE, this.onChangePositionState);
             group.addListener(PositionWizardEventTypes.EDIT, this.onEditPosition);
 
             this._groups.push(group);
@@ -181,16 +184,20 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
         this._sum = this._sumPerOne * this._quantity;
     }
 
+    /**
+     * Валидация происходит от корневого продукта
+     * Описание:
+     * Сначала эмитяся события PositionWizardEventTypes.CHANGE до корневого продукта,
+     * далее вызывается низходящая рекурсивная валидация, которая проставляет статусы
+     * валидности у групп и модификаторов.
+     * Так происходит при каждом изменении любой части состояния продукта
+     */
     protected validate(): boolean {
-        this._groups.forEach(g => {
-            if (!g.isValid) {
-                this._isValid = false;
-                return false;
-            }
-        });
+        if (this._type === PositionWizardTypes.PRODUCT) {
+            this._isValid = ScenarioProcessing.validatePosition(this);
+        }
 
-        this._isValid = true;
-        return true;
+        return this._isValid;
     }
 
     protected update(): void {
