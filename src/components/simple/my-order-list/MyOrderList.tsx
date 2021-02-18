@@ -26,12 +26,16 @@ export const MyOrderListContainer = React.memo(({ _currency, _language, _alertOp
         flatListRef.current?.scrollToEnd({ animated: true });
     }, [flatListRef]);
 
+    const onPress = (position: IPositionWizard) => {
+        position.edit();
+    }
+
     return (
         <SafeAreaView style={{ flex: 1, width: "100%" }}>
             <FlatList ref={flatListRef as any} onContentSizeChange={contentSizeChangeHandler} persistentScrollbar updateCellsBatchingPeriod={10} style={{ flex: 1 }} data={OrderWizard.current.positions} renderItem={({ item }) => {
                 return <MyOrderListItem key={item.id} position={item} currency={_currency as ICurrency}
                     language={_language as ICompiledLanguage} imageHeight={48} stateId={item.stateId}
-                    alertOpen={_alertOpen as any} />
+                    alertOpen={_alertOpen as any} onPress={onPress} />
             }}
                 keyExtractor={(item, index) => index.toString()}>
             </FlatList>

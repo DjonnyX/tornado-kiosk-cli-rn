@@ -1,5 +1,5 @@
-import React from "react";
-import { View, Text } from "react-native";
+import React, { useCallback } from "react";
+import { View, Text, TouchableOpacity, GestureResponderEvent } from "react-native";
 import FastImage from "react-native-fast-image";
 import { ICurrency, ICompiledLanguage } from "@djonnyx/tornado-types";
 import { NumericStapper } from "../NumericStapper";
@@ -15,11 +15,17 @@ interface IMyOrderListItemItemProps {
     currency: ICurrency;
     language: ICompiledLanguage;
     alertOpen: (alert: IAlertState) => void;
+    onPress: (position: IPositionWizard) => void;
 }
 
-export const MyOrderListItem = React.memo(({ stateId, imageHeight, currency, language, position, alertOpen }: IMyOrderListItemItemProps) => {
+export const MyOrderListItem = React.memo(({ stateId, imageHeight, currency, language, position,
+    alertOpen, onPress }: IMyOrderListItemItemProps) => {
     const currentContent = position.__product__?.contents[language?.code];
     const currentAdAsset = currentContent?.resources?.icon;
+
+    const pressHandler = useCallback((e: GestureResponderEvent) => {
+        onPress(position);
+    }, []);
 
     const setQuantity = (qnt: number) => {
         position.quantity = qnt;
@@ -52,26 +58,28 @@ export const MyOrderListItem = React.memo(({ stateId, imageHeight, currency, lan
 
     return (
         <View style={{ flex: 1, paddingLeft: 24, paddingRight: 24, marginBottom: 20 }}>
-            <View style={{ flex: 1, width: "100%", height: imageHeight, marginBottom: 2, justifyContent: "flex-end" }}>
-                <FastImage style={{ width: "100%", height: "100%" }} source={{
-                    uri: `file://${currentAdAsset?.mipmap.x128}`,
-                }} resizeMode={FastImage.resizeMode.contain}></FastImage>
-            </View>
-            <Text numberOfLines={3} ellipsizeMode="tail" style={{
-                textAlign: "center", fontSize: 12,
-                color: theme.themes[theme.name].menu.draftOrder.item.nameColor, textTransform: "uppercase", fontWeight: "bold"
-            }}>
-                {
-                    currentContent?.name
-                }
-            </Text>
-            <View style={{ alignItems: "center", justifyContent: "center", marginBottom: 1 }}>
-                <Text style={{ textAlign: "center", fontSize: 12, paddingTop: 4, paddingBottom: 4, paddingLeft: 6, paddingRight: 6, color: theme.themes[theme.name].menu.draftOrder.item.price.textColor }}>
+            <TouchableOpacity style={{ alignItems: "center" }} onPress={pressHandler}>
+                <View style={{ flex: 1, width: "100%", height: imageHeight, marginBottom: 2, justifyContent: "flex-end" }}>
+                    <FastImage style={{ width: "100%", height: "100%" }} source={{
+                        uri: `file://${currentAdAsset?.mipmap.x128}`,
+                    }} resizeMode={FastImage.resizeMode.contain}></FastImage>
+                </View>
+                <Text numberOfLines={3} ellipsizeMode="tail" style={{
+                    textAlign: "center", fontSize: 12,
+                    color: theme.themes[theme.name].menu.draftOrder.item.nameColor, textTransform: "uppercase", fontWeight: "bold"
+                }}>
                     {
-                        position.getFormatedSumPerOne(true)
+                        currentContent?.name
                     }
                 </Text>
-            </View>
+                <View style={{ alignItems: "center", justifyContent: "center", marginBottom: 1 }}>
+                    <Text style={{ textAlign: "center", fontSize: 12, paddingTop: 4, paddingBottom: 4, paddingLeft: 6, paddingRight: 6, color: theme.themes[theme.name].menu.draftOrder.item.price.textColor }}>
+                        {
+                            position.getFormatedSumPerOne(true)
+                        }
+                    </Text>
+                </View>
+            </TouchableOpacity>
             <NumericStapper
                 value={position.quantity}
                 buttonStyle={{
