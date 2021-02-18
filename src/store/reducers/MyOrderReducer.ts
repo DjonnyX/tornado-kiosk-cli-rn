@@ -16,7 +16,7 @@ const myOrderReducer: Reducer<IMyOrderState, TMyOrderActions> = (
             OrderWizard.current.editProduct(action.product);
             return state;
         case MyOrderActionTypes.EDIT_CANCEL:
-            OrderWizard.current.editCancel(action.remove);
+            OrderWizard.current.editCancel();
             return state;
         case MyOrderActionTypes.ADD:
             OrderWizard.current.add(action.position);
