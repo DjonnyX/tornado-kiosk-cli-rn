@@ -10,7 +10,8 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
     protected static __id = 0;
 
     static from(position: IPositionWizard, mode: PositionWizardModes): IPositionWizard {
-        const editedPosition = new PositionWizard(mode, position.__product__ as ICompiledProduct, position.currency);
+        const editedPosition = new PositionWizard(mode, position.__productNode__ as ICompiledMenuNode<ICompiledProduct>,
+            position.currency);
 
         PositionWizard.copyAttributes(position, editedPosition);
 
@@ -141,9 +142,11 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
         this.emit(PositionWizardEventTypes.EDIT, target);
     }
 
+    protected _product!: ICompiledProduct;
+
     constructor(
         protected _mode: PositionWizardModes,
-        protected _product: ICompiledProduct,
+        public readonly __productNode__: ICompiledMenuNode<ICompiledProduct>,
         protected _currency: ICurrency,
         protected _type: PositionWizardTypes = PositionWizardTypes.PRODUCT,
     ) {
@@ -151,6 +154,8 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
 
         PositionWizard.__id++;
         this._id = PositionWizard.__id;
+
+        this._product = __productNode__.content;
 
         this._product.structure.children.forEach((s, index) => {
             const group = new PositionWizardGroup(index, s as ICompiledMenuNode<ICompiledSelector>, this._currency);

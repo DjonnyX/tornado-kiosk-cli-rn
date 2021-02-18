@@ -10,6 +10,7 @@ export interface IPositionWizard extends EventEmitter {
     readonly availableQuantitiy: number;
     readonly mode: PositionWizardModes;
     readonly __product__: ICompiledProduct | null;
+    readonly __productNode__: ICompiledMenuNode<ICompiledProduct>;
     readonly currency: ICurrency;
     readonly nestedPositions: Array<IPositionWizard>;
     currentGroup: number;

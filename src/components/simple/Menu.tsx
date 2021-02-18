@@ -17,7 +17,7 @@ interface IMenuProps {
     height: number;
 
     cancelOrder: () => void;
-    addPosition: (position: ICompiledProduct) => void;
+    addPosition: (productNode: ICompiledMenuNode<ICompiledProduct>) => void;
 }
 
 const sideMenuWidth = 180;
@@ -61,19 +61,15 @@ export const Menu = React.memo(({
 
     // навигация / добавление продукта
     const navigateTo = (node: ICompiledMenuNode) => {
-        /*if (node === selected.current) {
-            return;
-        }*/
-
         if (node.type === NodeTypes.SELECTOR || node.type === NodeTypes.SELECTOR_NODE) {
 
             // навигация по категории
             setSelectedCategory(node);
         } else if (node.type === NodeTypes.PRODUCT) {
-            const product = node.content as ICompiledProduct;
+            const productNode = node as ICompiledMenuNode<ICompiledProduct>;
 
             // добавление позиции
-            addPosition(product);
+            addPosition(productNode);
         }
     }
 

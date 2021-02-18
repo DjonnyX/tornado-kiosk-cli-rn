@@ -1,4 +1,4 @@
-import { ICompiledLanguage, ICompiledProduct, ICurrency } from "@djonnyx/tornado-types";
+import { ICompiledLanguage, ICompiledMenuNode, ICompiledProduct, ICurrency } from "@djonnyx/tornado-types";
 import EventEmitter from "eventemitter3";
 import { priceFormatter } from "../../utils/price";
 import { PositionWizardModes, PositionWizardTypes } from "../enums";
@@ -127,8 +127,8 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
         this.emit(OrderWizardEventTypes.CHANGE);
     }
 
-    editProduct(product: ICompiledProduct) {
-        const position = new PositionWizard(PositionWizardModes.NEW, product, this._currency);
+    editProduct(productNode: ICompiledMenuNode<ICompiledProduct>) {
+        const position = new PositionWizard(PositionWizardModes.NEW, productNode, this._currency);
         position.addListener(PositionWizardEventTypes.EDIT, this.onEditPosition);
         position.quantity = 1;
 

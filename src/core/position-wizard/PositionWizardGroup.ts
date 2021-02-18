@@ -43,7 +43,8 @@ export class PositionWizardGroup extends EventEmitter implements IPositionWizard
         super();
 
         this._groupNode.children.forEach((p, index) => {
-            const position = new PositionWizard(PositionWizardModes.EDIT, p.content as ICompiledProduct, this._currency, PositionWizardTypes.MODIFIER);
+            const position = new PositionWizard(PositionWizardModes.EDIT, p as ICompiledMenuNode<ICompiledProduct>,
+                this._currency, PositionWizardTypes.MODIFIER);
             position.addListener(PositionWizardEventTypes.CHANGE, this.onChangePositionQuantity);
             position.addListener(PositionWizardEventTypes.EDIT, this.onPositionEdit);
 
