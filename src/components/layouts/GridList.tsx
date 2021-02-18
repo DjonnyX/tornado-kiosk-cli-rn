@@ -17,9 +17,9 @@ const FPS = 1000 / 60;
 
 export const GridList = React.memo(({ data, renderItem, style, keyExtractor, spacing = 0, padding = 0, animationSkipFrames = 0, itemDimension }: IGridListProps) => {
     const [cellWidth, _setCellWidth] = useState(new Animated.Value(1));
+    const [gap, _setGap] = useState(spacing * 0.5);
+    
     let cellAnimation: Animated.CompositeAnimation;
-
-    const gap = spacing * 0.5;
 
     cellAnimation = Animated.timing(cellWidth, {
         useNativeDriver: false,
@@ -39,7 +39,7 @@ export const GridList = React.memo(({ data, renderItem, style, keyExtractor, spa
         cellAnimation = Animated.timing(cellWidth, {
             useNativeDriver: false,
             toValue: actualItemWidth,
-            duration: 100,
+            duration: 50,
             easing: Easing.cubic,
         });
         cellAnimation.start();
