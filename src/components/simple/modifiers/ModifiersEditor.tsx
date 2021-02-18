@@ -47,30 +47,32 @@ export const ModifiersEditorContainer = React.memo(({ _orderStateId, _language, 
         OrderWizard.current.editCancel();
     }, []);
 
+    const currentPosition = OrderWizard.current.currentPosition;
+
     return (
-        <ModalRollTop visible={!!OrderWizard.current.currentPosition}>
+        <ModalRollTop visible={!!currentPosition}>
             <View style={{ flex: 1, width: "100%" }}>
                 {
-                    !!OrderWizard.current.currentPosition && !!_language && !!_currency &&
+                    !!currentPosition && !!_language && !!_currency &&
                     <View style={{ flex: 1, width: "100%" }}>
                         <View style={{ flexDirection: "row", width: "100%" }}>
                             <View style={{ flex: 1, width: "100%", flexDirection: "row" }}>
                                 <View style={{ marginBottom: 5 }} renderToHardwareTextureAndroid={true}>
                                     <FastImage style={{ width: 192, height: 192 }} source={{
-                                        uri: `file://${OrderWizard.current.currentPosition.__product__?.contents[_language?.code]?.resources?.icon.path}`,
+                                        uri: `file://${currentPosition.__product__?.contents[_language?.code]?.resources?.icon.path}`,
                                     }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                                 </View>
                                 <View style={{ flex: 1 }}>
                                     <Text style={{ fontSize: 32, fontWeight: "bold", color: "#ffffff", textTransform: "uppercase" }}>{
-                                        OrderWizard.current.currentPosition.__product__?.contents[_language.code]?.name
+                                        currentPosition.__product__?.contents[_language.code]?.name
                                     }</Text>
                                     <Text style={{ fontSize: 14, color: "#ffffff", textTransform: "uppercase" }}>{
-                                        OrderWizard.current.currentPosition.__product__?.contents[_language.code]?.description
+                                        currentPosition.__product__?.contents[_language.code]?.description
                                     }</Text>
                                 </View>
                                 <View>
                                     <Text style={{ fontSize: 48, fontWeight: "bold", color: "#ffffff", textTransform: "uppercase" }}>{
-                                        OrderWizard.current.currentPosition.getFormatedSumPerOne(true)
+                                        currentPosition.getFormatedSumPerOne(true)
                                     }</Text>
                                 </View>
                             </View>
@@ -85,10 +87,10 @@ export const ModifiersEditorContainer = React.memo(({ _orderStateId, _language, 
                             <View style={{ width: "100%", alignItems: "center" }}>
                                 <View style={{ width: "100%", flexDirection: "row", height: 4, maxWidth: 300, }}>
                                     {
-                                        OrderWizard.current.currentPosition.groups.map((gr, i) =>
+                                        currentPosition.groups.map((gr, i) =>
                                             <View key={gr.index} style={{
                                                 flex: 1, marginRight: 3, height: 4,
-                                                backgroundColor: i === OrderWizard.current.currentPosition?.currentGroup ? gr.isValid ? "#30a02a" : "#ff4e4e" : "rgba(255,255,255,0.25)"
+                                                backgroundColor: i === currentPosition?.currentGroup ? gr.isValid ? "#30a02a" : "#ff4e4e" : "rgba(255,255,255,0.25)"
                                             }}></View>
                                         )
                                     }
@@ -101,28 +103,28 @@ export const ModifiersEditorContainer = React.memo(({ _orderStateId, _language, 
                                     styleDisabled={{ backgroundColor: "transparent", borderRadius: 8, borderWidth: 2, borderColor: "rgba(255,255,255,0.1)" }}
                                     textStyle={{ fontWeight: "bold", color: "#ffffff", fontSize: 26 }}
                                     textStyleDisabled={{ fontWeight: "bold", color: "rgba(255,255,255,0.1)", fontSize: 26 }}
-                                    disabled={OrderWizard.current.currentPosition.currentGroup === 0} onPress={onPreviousGroup}></SimpleButton>
+                                    disabled={currentPosition.currentGroup === 0} onPress={onPreviousGroup}></SimpleButton>
                                 <View style={{ flex: 1 }}>
                                     <Text style={{ fontSize: 24, fontWeight: "bold", color: "#ffffff", textAlign: "center", textTransform: "uppercase" }}>{
-                                        OrderWizard.current.currentPosition.groups[OrderWizard.current.currentPosition.currentGroup].__groupNode__.content?.contents[_language.code]?.name
+                                        currentPosition.groups[currentPosition.currentGroup].__groupNode__.content?.contents[_language.code]?.name
                                     }</Text>
-                                    <Text style={{ fontSize: 14, color: OrderWizard.current.currentPosition.groups[OrderWizard.current.currentPosition.currentGroup].isValid ? "#ffffff" : "#ff4e4e", textAlign: "center", textTransform: "uppercase" }}>{
-                                        OrderWizard.current.currentPosition.groups[OrderWizard.current.currentPosition.currentGroup].__groupNode__.content?.contents[_language.code]?.description
+                                    <Text style={{ fontSize: 14, color: currentPosition.groups[currentPosition.currentGroup].isValid ? "#ffffff" : "#ff4e4e", textAlign: "center", textTransform: "uppercase" }}>{
+                                        currentPosition.groups[currentPosition.currentGroup].__groupNode__.content?.contents[_language.code]?.description
                                     }</Text>
                                 </View>
-                                <SimpleButton title={OrderWizard.current.currentPosition.currentGroup === OrderWizard.current.currentPosition.groups.length - 1 ? "Готово" : "Далее"}
+                                <SimpleButton title={currentPosition.currentGroup === currentPosition.groups.length - 1 ? "Готово" : "Далее"}
                                     styleView={{ opacity: 1 }}
                                     style={{ backgroundColor: "#30a02a", borderRadius: 8, padding: 20 }}
                                     styleDisabled={{ backgroundColor: "transparent", borderRadius: 8, borderWidth: 2, borderColor: "#a02a2a" }}
                                     textStyle={{ fontWeight: "bold", color: "#ffffff", fontSize: 26, textTransform: "uppercase" }}
                                     textStyleDisabled={{ fontWeight: "bold", color: "#a02a2a", fontSize: 26 }}
-                                    disabled={!OrderWizard.current.currentPosition.groups[OrderWizard.current.currentPosition.currentGroup].isValid} onPress={onNextGroup}></SimpleButton>
+                                    disabled={!currentPosition.groups[currentPosition.currentGroup].isValid} onPress={onNextGroup}></SimpleButton>
                             </View>
                             <SafeAreaView style={{
                                 flex: 1, width: "100%",
                             }}>
                                 <ScrollView style={{ flex: 1, marginTop: 68 }} horizontal={false}>
-                                    <GridList style={{ flex: 1 }} padding={10} spacing={6} data={OrderWizard.current.currentPosition.groups[OrderWizard.current.currentPosition.currentGroup].positions}
+                                    <GridList style={{ flex: 1 }} padding={10} spacing={6} data={currentPosition.groups[currentPosition.currentGroup].positions}
                                         itemDimension={218} animationSkipFrames={10} renderItem={({ item }) => {
                                             return <ModifierListItem key={item.id} position={item} currency={_currency} language={_language}
                                                 thumbnailHeight={128} stateId={item.stateId}></ModifierListItem>
