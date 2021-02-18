@@ -8,6 +8,8 @@ export interface IPositionWizard extends EventEmitter {
     readonly stateId: number;
     readonly rests: number;
     readonly availableQuantitiy: number;
+    upLimit: number;
+    downLimit: number;
     isValid: boolean;
     readonly mode: PositionWizardModes;
     readonly __product__: ICompiledProduct | null;

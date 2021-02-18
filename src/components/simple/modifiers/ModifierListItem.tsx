@@ -82,8 +82,8 @@ export const ModifierListItem = React.memo(({ thumbnailHeight, currency, languag
                         ? `${String(value)}x${position.getFormatedSumPerOne(true)}`
                         : String(position.getFormatedSumPerOne(true));
                 }}
-                min={0}
-                max={Math.min(position.availableQuantitiy, 99)}
+                min={position.downLimit}
+                max={position.availableQuantitiy}
             />
         </View>
     );

@@ -7,7 +7,10 @@ import { PositionWizardGroup } from "./PositionWizardGroup";
 import { priceFormatter } from "../../utils/price";
 import { ScenarioProcessing } from "../scenarios";
 
+
 export class PositionWizard extends EventEmitter implements IPositionWizard {
+    static MAX_AVAILABLE_LIMIT = 99;
+
     protected static __id = 0;
 
     static from(position: IPositionWizard, mode: PositionWizardModes): IPositionWizard {
@@ -50,7 +53,7 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
     }
 
     get availableQuantitiy() {
-        return Math.min(this.rests, 5); // нужно сделать лимиты по модификаторам
+        return Math.min(this.rests, this._upLimit);
     }
 
     get mode() { return this._mode; }
@@ -102,6 +105,24 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
         }
     }
     get isValid() { return this._isValid; }
+
+    protected _downLimit: number = 0;
+    set downLimit(v: number) {
+        if (this._downLimit !== v) {
+            const normalizedValue = v < 0 ? 0 : v;
+            this._downLimit = normalizedValue;
+        }
+    }
+    get downLimit() { return this._downLimit; }
+
+    protected _upLimit: number = 0;
+    set upLimit(v: number) {
+        if (this._upLimit !== v) {
+            const normalizedValue = v < 0 ? 0 : v;
+            this._upLimit = normalizedValue === 0 ? PositionWizard.MAX_AVAILABLE_LIMIT : normalizedValue;
+        }
+    }
+    get upLimit() { return this._upLimit; }
 
     protected _sum: number = 0;
     get sum() { return this._sum; }
@@ -167,6 +188,10 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
 
             this._groups.push(group);
         });
+
+        if (this._type === PositionWizardTypes.PRODUCT) {
+            ScenarioProcessing.setupPosition(this);
+        }
 
         this.recalculate();
         this.validate();
