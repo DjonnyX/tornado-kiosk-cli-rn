@@ -3,7 +3,7 @@ import EventEmitter from "eventemitter3";
 import { priceFormatter } from "../../utils/price";
 import { PositionWizardModes, PositionWizardTypes } from "../enums";
 import { IPositionWizard, IPositionWizardGroup } from "../interfaces";
-import { PositionWizardEventTypes, PositionWizardGroupEventTypes } from "./events";
+import { PositionWizardEventTypes } from "./events";
 import { PositionWizard } from "./PositionWizard";
 
 export class PositionWizardGroup extends EventEmitter implements IPositionWizardGroup {
@@ -12,8 +12,6 @@ export class PositionWizardGroup extends EventEmitter implements IPositionWizard
     get __groupNode__() { return this._groupNode; }
 
     protected _positions = new Array<IPositionWizard>();
-
-    get mode() { return this._mode; }
 
     get positions() { return this._positions; }
 
@@ -30,11 +28,14 @@ export class PositionWizardGroup extends EventEmitter implements IPositionWizard
 
         this.recalculate();
         this.validate();
-        this.emit(PositionWizardGroupEventTypes.CHANGE);
+        this.emit(PositionWizardEventTypes.CHANGE);
+    }
+
+    private onPositionEdit = (target: IPositionWizard) => {
+        this.emit(PositionWizardEventTypes.EDIT, target);
     }
 
     constructor(
-        protected _mode: PositionWizardModes,
         protected _index: number,
         protected _groupNode: ICompiledMenuNode<ICompiledSelector>,
         protected _currency: ICurrency,
@@ -42,8 +43,9 @@ export class PositionWizardGroup extends EventEmitter implements IPositionWizard
         super();
 
         this._groupNode.children.forEach((p, index) => {
-            const position = new PositionWizard(_mode, p.content as ICompiledProduct, this._currency, PositionWizardTypes.MODIFIER);
+            const position = new PositionWizard(PositionWizardModes.EDIT, p.content as ICompiledProduct, this._currency, PositionWizardTypes.MODIFIER);
             position.addListener(PositionWizardEventTypes.CHANGE, this.onChangePositionQuantity);
+            position.addListener(PositionWizardEventTypes.EDIT, this.onPositionEdit);
 
             this._positions.push(position);
         });

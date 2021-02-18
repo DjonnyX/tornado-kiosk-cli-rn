@@ -1,7 +1,7 @@
 import { ICompiledLanguage, ICompiledProduct, ICurrency } from "@djonnyx/tornado-types";
 import EventEmitter from "eventemitter3";
 import { priceFormatter } from "../../utils/price";
-import { PositionWizardModes } from "../enums";
+import { PositionWizardModes, PositionWizardTypes } from "../enums";
 import { IOrderWizard, IPositionWizard } from "../interfaces";
 import { PositionWizard } from "../position-wizard";
 import { PositionWizardEventTypes } from "../position-wizard/events";
@@ -45,6 +45,16 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
         this.update();
 
         this.emit(OrderWizardEventTypes.CHANGE);
+    }
+
+    private onEditPosition = (position: IPositionWizard) => {
+        if (position.mode === PositionWizardModes.NEW && position.type === PositionWizardTypes.PRODUCT) {
+            return;
+        }
+
+        if (position.groups.length > 0) {
+            this.edit(position);
+        }
     }
 
     constructor(protected _currency: ICurrency, protected _language: ICompiledLanguage) {
@@ -97,7 +107,11 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
 
             this.emit(OrderWizardEventTypes.CHANGE);
         } else {
-            this.add(currentPosition);
+            if (currentPosition.type !== PositionWizardTypes.MODIFIER
+                && currentPosition.mode !== PositionWizardModes.EDIT) {
+                this.add(currentPosition);
+            }
+
             this.editCancel();
         }
     }
@@ -113,8 +127,9 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
         this.emit(OrderWizardEventTypes.CHANGE);
     }
 
-    edit(product: ICompiledProduct) {
+    editProduct(product: ICompiledProduct) {
         const position = new PositionWizard(PositionWizardModes.NEW, product, this._currency);
+        position.addListener(PositionWizardEventTypes.EDIT, this.onEditPosition);
         position.quantity = 1;
 
         if (position.groups.length === 0) {
@@ -129,6 +144,14 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
         }
     }
 
+    edit(position: IPositionWizard) {
+        this._editingPositions.push(position);
+
+        this.update();
+
+        this.emit(OrderWizardEventTypes.CHANGE);
+    }
+
     editCancel(remove: boolean = false): void {
         const currentPosition = this.currentPosition;
 
@@ -136,7 +159,9 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
             return;
         }
 
-        if (currentPosition.mode === PositionWizardModes.EDIT) {
+        currentPosition.currentGroup = 0;
+
+        if (currentPosition.mode === PositionWizardModes.EDIT && currentPosition.type !== PositionWizardTypes.MODIFIER) {
             if (remove) {
                 this.remove(currentPosition);
             }
@@ -157,9 +182,14 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
             throw Error("Position with mode \"edit\" can not be added to order.");
         }
 
+        if (position.type === PositionWizardTypes.MODIFIER) {
+            throw Error("Position with type \"modifier\" can not be added to order.");
+        }
+
         const editedPosition = PositionWizard.from(position, PositionWizardModes.EDIT);
         this._positions.push(editedPosition);
         editedPosition.addListener(PositionWizardEventTypes.CHANGE, this.onChangePosition);
+        editedPosition.addListener(PositionWizardEventTypes.EDIT, this.onEditPosition);
 
         this._lastPosition = editedPosition;
 

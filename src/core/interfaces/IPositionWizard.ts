@@ -1,9 +1,10 @@
 import { ICompiledMenuNode, ICompiledProduct, ICompiledSelector, ICurrency } from "@djonnyx/tornado-types";
 import EventEmitter from "eventemitter3";
-import { PositionWizardModes } from "../enums";
+import { PositionWizardModes, PositionWizardTypes } from "../enums";
 
 export interface IPositionWizard extends EventEmitter {
     readonly id: number;
+    readonly type: PositionWizardTypes;
     readonly stateId: number;
     readonly rests: number;
     readonly availableQuantitiy: number;
@@ -15,6 +16,7 @@ export interface IPositionWizard extends EventEmitter {
     quantity: number;
     readonly price: number;
     readonly sum: number;
+    edit: () => void;
     getFormatedPrice: (withCurrency?: boolean) => string;
     getFormatedSum: (withCurrency?: boolean) => string;
     getFormatedSumPerOne: (withCurrency?: boolean) => string;

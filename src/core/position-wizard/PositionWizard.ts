@@ -2,7 +2,7 @@ import EventEmitter from "eventemitter3";
 import { ICompiledMenuNode, ICompiledProduct, ICompiledSelector, ICurrency } from "@djonnyx/tornado-types";
 import { PositionWizardModes, PositionWizardTypes } from "../enums";
 import { IPositionWizard, IPositionWizardGroup } from "../interfaces";
-import { PositionWizardEventTypes, PositionWizardGroupEventTypes } from "./events";
+import { PositionWizardEventTypes } from "./events";
 import { PositionWizardGroup } from "./PositionWizardGroup";
 import { priceFormatter } from "../../utils/price";
 
@@ -12,15 +12,19 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
     static from(position: IPositionWizard, mode: PositionWizardModes): IPositionWizard {
         const editedPosition = new PositionWizard(mode, position.__product__ as ICompiledProduct, position.currency);
 
-        editedPosition.quantity = position.quantity;
-
-        editedPosition._groups.forEach((g, i) => {
-            g.positions.forEach((p, j) => {
-                p.quantity = position.groups[i].positions[j].quantity;
-            });
-        });
+        PositionWizard.copyAttributes(position, editedPosition);
 
         return editedPosition;
+    }
+
+    protected static copyAttributes(src: IPositionWizard, position: IPositionWizard) {
+        position.quantity = src.quantity;
+
+        position.groups.forEach((g, i) => {
+            g.positions.forEach((p, j) => {
+                PositionWizard.copyAttributes(src.groups[i].positions[j], p);
+            });
+        });
     }
 
     protected _id: number = 0;
@@ -66,6 +70,25 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
             this.update();
 
             this.emit(PositionWizardEventTypes.CHANGE);
+
+            if (this.type === PositionWizardTypes.MODIFIER) {
+                if (this._quantity > 0 && this._groups.length > 0 && !this._isValid) {
+                    this.emit(PositionWizardEventTypes.EDIT, this);
+                }
+            }
+        }
+    }
+
+    edit() {
+        if (this._mode === PositionWizardModes.NEW) {
+            throw Error("Position with mode \"new\" can not to edit.");
+        }
+
+        console.warn("edit")
+
+        if (this._groups.length > 0) {
+            console.warn("emit")
+            this.emit(PositionWizardEventTypes.EDIT, this);
         }
     }
 
@@ -96,6 +119,7 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
             g.positions.forEach(p => {
                 if (p.quantity > 0) {
                     result.push(p);
+                    result.push(...p.nestedPositions);
                 }
             });
         });
@@ -113,6 +137,10 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
         this.emit(PositionWizardEventTypes.CHANGE);
     }
 
+    private onEditPosition = (target: IPositionWizard) => {
+        this.emit(PositionWizardEventTypes.EDIT, target);
+    }
+
     constructor(
         protected _mode: PositionWizardModes,
         protected _product: ICompiledProduct,
@@ -125,8 +153,9 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
         this._id = PositionWizard.__id;
 
         this._product.structure.children.forEach((s, index) => {
-            const group = new PositionWizardGroup(_mode, index, s as ICompiledMenuNode<ICompiledSelector>, this._currency);
-            group.addListener(PositionWizardGroupEventTypes.CHANGE, this.onChangePositionQuantity);
+            const group = new PositionWizardGroup(index, s as ICompiledMenuNode<ICompiledSelector>, this._currency);
+            group.addListener(PositionWizardEventTypes.CHANGE, this.onChangePositionQuantity);
+            group.addListener(PositionWizardEventTypes.EDIT, this.onEditPosition);
 
             this._groups.push(group);
         });
