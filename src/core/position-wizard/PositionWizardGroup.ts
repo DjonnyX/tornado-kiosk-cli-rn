@@ -1,26 +1,17 @@
 import { ICompiledMenuNode, ICompiledProduct, ICompiledSelector, ICurrency } from "@djonnyx/tornado-types";
 import EventEmitter from "eventemitter3";
 import { priceFormatter } from "../../utils/price";
-import { IPositionWizardGroup, IPositionWizardPosition } from "../interfaces";
-import { PositionWizardGroupEventTypes, PositionWizardPositionEventTypes } from "./events";
-import { PositionWizardPosition } from "./PositionWizardPosition";
+import { PositionWizardModes, PositionWizardTypes } from "../enums";
+import { IPositionWizard, IPositionWizardGroup } from "../interfaces";
+import { PositionWizardEventTypes } from "./events";
+import { PositionWizard } from "./PositionWizard";
 
 export class PositionWizardGroup extends EventEmitter implements IPositionWizardGroup {
     get index() { return this._index; }
 
     get __groupNode__() { return this._groupNode; }
 
-    protected _quantity: number = 0;
-    set quantity(v: number) {
-        if (this._quantity !== v) {
-            this._quantity = v;
-
-            this.emit(PositionWizardPositionEventTypes.CHANGE_QUANTITY);
-        }
-    }
-    get quantity() { return this._quantity; }
-
-    protected _positions = new Array<IPositionWizardPosition>();
+    protected _positions = new Array<IPositionWizard>();
 
     get positions() { return this._positions; }
 
@@ -32,11 +23,16 @@ export class PositionWizardGroup extends EventEmitter implements IPositionWizard
     protected _sum: number = 0;
     get sum() { return this._sum; }
 
-    private onChangePositionQuantity = (target: IPositionWizardPosition) => {
+    private onChangePositionQuantity = () => {
         // etc
+
         this.recalculate();
         this.validate();
-        this.emit(PositionWizardGroupEventTypes.CHANGE);
+        this.emit(PositionWizardEventTypes.CHANGE);
+    }
+
+    private onPositionEdit = (target: IPositionWizard) => {
+        this.emit(PositionWizardEventTypes.EDIT, target);
     }
 
     constructor(
@@ -47,8 +43,9 @@ export class PositionWizardGroup extends EventEmitter implements IPositionWizard
         super();
 
         this._groupNode.children.forEach((p, index) => {
-            const position = new PositionWizardPosition(index, p as ICompiledMenuNode<ICompiledProduct>, this._currency);
-            position.addListener(PositionWizardPositionEventTypes.CHANGE_QUANTITY, this.onChangePositionQuantity);
+            const position = new PositionWizard(PositionWizardModes.EDIT, p.content as ICompiledProduct, this._currency, PositionWizardTypes.MODIFIER);
+            position.addListener(PositionWizardEventTypes.CHANGE, this.onChangePositionQuantity);
+            position.addListener(PositionWizardEventTypes.EDIT, this.onPositionEdit);
 
             this._positions.push(position);
         });
