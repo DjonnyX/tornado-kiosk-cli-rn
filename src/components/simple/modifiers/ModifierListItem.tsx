@@ -70,7 +70,16 @@ export const ModifierListItem = React.memo(({ thumbnailHeight, currency, languag
                     borderColor: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.borderColor,
                     padding: 6
                 }}
+                disabledButtonStyle={{
+                    width: 48, height: 48, borderStyle: "solid", borderWidth: 0.5, borderRadius: 3,
+                    borderColor: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.borderColor,
+                    padding: 6,
+                    opacity: 0.25
+                }}
                 buttonTextStyle={{
+                    color: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.textColor as any,
+                }}
+                disabledButtonTextStyle={{
                     color: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.textColor as any,
                 }}
                 textStyle={{ color: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.indicator.textColor }}
