@@ -13,10 +13,10 @@ const myOrderReducer: Reducer<IMyOrderState, TMyOrderActions> = (
 ) => {
     switch (action.type) {
         case MyOrderActionTypes.EDIT_PRODUCT:
-            OrderWizard.current.editProduct(action.product);
+            OrderWizard.current.editProduct(action.productNode);
             return state;
         case MyOrderActionTypes.EDIT_CANCEL:
-            OrderWizard.current.editCancel(action.remove);
+            OrderWizard.current.editCancel();
             return state;
         case MyOrderActionTypes.ADD:
             OrderWizard.current.add(action.position);

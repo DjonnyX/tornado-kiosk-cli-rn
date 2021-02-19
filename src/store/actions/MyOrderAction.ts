@@ -1,5 +1,5 @@
 import { Action } from "redux";
-import { ICompiledProduct } from "@djonnyx/tornado-types";
+import { ICompiledMenuNode, ICompiledProduct } from "@djonnyx/tornado-types";
 import { IPositionWizard } from "../../core/interfaces";
 
 export enum MyOrderActionTypes {
@@ -13,7 +13,7 @@ export enum MyOrderActionTypes {
 }
 
 interface IMyOrderActionEdit extends Action<MyOrderActionTypes.EDIT_PRODUCT> {
-    product: ICompiledProduct;
+    productNode: ICompiledMenuNode<ICompiledProduct>;
 }
 
 interface IMyOrderActionEditCancel extends Action<MyOrderActionTypes.EDIT_CANCEL> {
@@ -44,9 +44,9 @@ export class MyOrderActions {
         stateId,
     });
 
-    static edit = (product: ICompiledProduct): IMyOrderActionEdit => ({
+    static edit = (productNode: ICompiledMenuNode<ICompiledProduct>): IMyOrderActionEdit => ({
         type: MyOrderActionTypes.EDIT_PRODUCT,
-        product,
+        productNode,
     });
 
     static editCancel = (remove: boolean = false): IMyOrderActionEditCancel => ({

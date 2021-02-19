@@ -2,7 +2,7 @@ import React, { Dispatch, useState, useCallback, useEffect } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
 import { View, Dimensions, ScaledSize } from "react-native";
 import { connect } from "react-redux";
-import { ICompiledMenu, ICurrency, ICompiledLanguage, ICompiledOrderType, ICompiledProduct } from "@djonnyx/tornado-types";
+import { ICompiledMenu, ICurrency, ICompiledLanguage, ICompiledOrderType, ICompiledProduct, ICompiledMenuNode } from "@djonnyx/tornado-types";
 import { MainNavigationScreenTypes } from "../navigation";
 import { IAppState } from "../../store/state";
 import { CombinedDataSelectors, MyOrderSelectors } from "../../store/selectors";
@@ -26,7 +26,7 @@ interface IMenuSelfProps {
     // store dispatches
     _onChangeLanguage: (language: ICompiledLanguage) => void;
     _onChangeOrderType: (orderType: ICompiledOrderType) => void;
-    _onAddOrderPosition: (position: ICompiledProduct) => void;
+    _onAddOrderPosition: (productNode: ICompiledMenuNode<ICompiledProduct>) => void;
     _onResetOrder: () => void;
 
     // self props
@@ -84,8 +84,8 @@ const MenuScreenContainer = React.memo(({
         });
     }, []);
 
-    const addProductHandler = (product: ICompiledProduct) => {
-        _onAddOrderPosition(product);
+    const addProductHandler = (productNode: ICompiledMenuNode<ICompiledProduct>) => {
+        _onAddOrderPosition(productNode);
     };
 
     return (
@@ -122,8 +122,8 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
         _onChangeOrderType: (orderType: ICompiledOrderType) => {
             dispatch(CapabilitiesActions.setOrderType(orderType));
         },
-        _onAddOrderPosition: (product: ICompiledProduct) => {
-            dispatch(MyOrderActions.edit(product));
+        _onAddOrderPosition: (productNode: ICompiledMenuNode<ICompiledProduct>) => {
+            dispatch(MyOrderActions.edit(productNode));
         },
         _onResetOrder: () => {
             dispatch(MyOrderActions.reset());
