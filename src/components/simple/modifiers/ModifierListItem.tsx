@@ -34,7 +34,7 @@ export const ModifierListItem = React.memo(({ thumbnailHeight, currency, languag
 
     return (
         <View style={{ flex: 1, backgroundColor: theme.themes[theme.name].menu.navMenu.item.backgroundColor, /*backgroundColor: Color.rgb(currentContent.color).alpha(0.05).toString(),*/ borderRadius: 16, padding: 22 }}>
-            <TouchableOpacity style={{ alignItems: "center" }} onPress={pressHandler}>
+            <TouchableOpacity style={{ alignItems: "center", flex: 1 }} onPress={pressHandler}>
                 {
                     !!tags &&
                     <TagList tags={tags} language={language} />
