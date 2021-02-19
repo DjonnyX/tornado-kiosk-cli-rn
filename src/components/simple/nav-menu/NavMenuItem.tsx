@@ -29,26 +29,28 @@ export const NavMenuItem = React.memo(({ thumbnailHeight, currency, language, no
 
     return (
         <View style={{ flex: 1, backgroundColor: theme.themes[theme.name].menu.navMenu.item.backgroundColor, /*backgroundColor: Color.rgb(currentContent.color).alpha(0.05).toString(),*/ borderRadius: 16, padding: 22 }}>
-            <TouchableOpacity style={{ alignItems: "center" }} onPress={pressHandler}>
-                {
-                    !!tags &&
-                    <TagList tags={tags} language={language} />
-                }
-                <View style={{ width: "100%", height: thumbnailHeight, marginBottom: 5 }} renderToHardwareTextureAndroid={true}>
-                    <FastImage style={{ width: "100%", height: "100%" }} source={{
-                        uri: `file://${currentAdAsset?.mipmap.x128}`,
-                    }} resizeMode={FastImage.resizeMode.contain}></FastImage>
+            <TouchableOpacity style={{ alignItems: "center", flex: 1 }} onPress={pressHandler}>
+                <View style={{ alignItems: "center", flex: 1, width: "100%" }}>
+                    {
+                        !!tags &&
+                        <TagList tags={tags} language={language} />
+                    }
+                    <View style={{ width: "100%", height: thumbnailHeight, marginBottom: 5 }} renderToHardwareTextureAndroid={true}>
+                        <FastImage style={{ width: "100%", height: "100%" }} source={{
+                            uri: `file://${currentAdAsset?.mipmap.x128}`,
+                        }} resizeMode={FastImage.resizeMode.contain}></FastImage>
+                    </View>
+                    <Text textBreakStrategy="simple" numberOfLines={2} ellipsizeMode="tail" style={{ textAlign: "center", fontSize: 20, marginBottom: 6, color: theme.themes[theme.name].menu.navMenu.item.nameColor, fontWeight: "bold", textTransform: "uppercase" }}>
+                        {
+                            currentContent.name
+                        }
+                    </Text>
+                    <Text textBreakStrategy="simple" numberOfLines={2} ellipsizeMode="tail" style={{ textAlign: "center", fontSize: 10, color: theme.themes[theme.name].menu.navMenu.item.descriptionColor, textTransform: "uppercase", marginBottom: 12 }}>
+                        {
+                            currentContent.description
+                        }
+                    </Text>
                 </View>
-                <Text textBreakStrategy="simple" numberOfLines={2} ellipsizeMode="tail" style={{ textAlign: "center", fontSize: 20, marginBottom: 6, color: theme.themes[theme.name].menu.navMenu.item.nameColor, fontWeight: "bold", textTransform: "uppercase" }}>
-                    {
-                        currentContent.name
-                    }
-                </Text>
-                <Text textBreakStrategy="simple" numberOfLines={2} ellipsizeMode="tail" style={{ textAlign: "center", fontSize: 10, color: theme.themes[theme.name].menu.navMenu.item.descriptionColor, textTransform: "uppercase", marginBottom: 12 }}>
-                    {
-                        currentContent.description
-                    }
-                </Text>
                 {
                     node.type === NodeTypes.PRODUCT
                         ?

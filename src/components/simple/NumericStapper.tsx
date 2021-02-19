@@ -18,7 +18,7 @@ const NumericStepperButton = React.memo(({ icon, style, textStyle, disabled, dis
 
     return (
         <TouchableOpacity onPress={onPress}>
-            <View style={{ flex: 1, alignItems: "center", justifyContent: "center", ...actualStyle as any }}>
+            <View style={{alignItems: "center", justifyContent: "center", ...actualStyle as any }}>
                 <Text style={{ ...actualTextStyle as any }}>
                     {
                         icon
