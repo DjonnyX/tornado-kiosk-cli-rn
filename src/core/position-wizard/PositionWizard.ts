@@ -84,16 +84,6 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
         }
     }
 
-    edit() {
-        if (this._mode === PositionWizardModes.NEW) {
-            throw Error("Position with mode \"new\" cannot be edited.");
-        }
-
-        if (this._groups.length > 0) {
-            this.emit(PositionWizardEventTypes.EDIT, this);
-        }
-    }
-
     protected _groups = new Array<IPositionWizardGroup>();
 
     get groups() { return this._groups; }
@@ -109,17 +99,15 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
     protected _downLimit: number = 0;
     set downLimit(v: number) {
         if (this._downLimit !== v) {
-            const normalizedValue = v < 0 ? 0 : v;
-            this._downLimit = normalizedValue;
+            this._downLimit = v;
         }
     }
     get downLimit() { return this._downLimit; }
 
-    protected _upLimit: number = 0;
+    protected _upLimit: number = PositionWizard.MAX_AVAILABLE_LIMIT;
     set upLimit(v: number) {
         if (this._upLimit !== v) {
-            const normalizedValue = v < 0 ? 0 : v;
-            this._upLimit = normalizedValue === 0 ? PositionWizard.MAX_AVAILABLE_LIMIT : normalizedValue;
+            this._upLimit = v === 0 ? PositionWizard.MAX_AVAILABLE_LIMIT : v;
         }
     }
     get upLimit() { return this._upLimit; }
@@ -227,6 +215,16 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
 
     protected update(): void {
         this._stateId++;
+    }
+
+    edit() {
+        if (this._mode === PositionWizardModes.NEW) {
+            throw Error("Position with mode \"new\" cannot be edited.");
+        }
+
+        if (this._groups.length > 0) {
+            this.emit(PositionWizardEventTypes.EDIT, this);
+        }
     }
 
     getFormatedPrice(withCurrency: boolean = false): string {

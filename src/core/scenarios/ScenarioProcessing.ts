@@ -5,7 +5,7 @@ export class ScenarioProcessing {
     static getNormalizedDownLimit(value: number): number {
         return value < 0 ? 0 : value;
     }
-    
+
     static getNormalizedUpLimit(value: number): number {
         return value <= 0 ? Number.MAX_SAFE_INTEGER : value;
     }
@@ -14,50 +14,20 @@ export class ScenarioProcessing {
         const scenarios: Array<IScenario> = position.__productNode__.scenarios;
         if (!!scenarios && scenarios.length > 0) {
             scenarios.forEach(s => {
-                switch (s.action) {
-                    case ScenarioProductActionTypes.DOWN_LIMIT: {
-                        const normalizedValue = ScenarioProcessing.getNormalizedDownLimit(Number(s.value));
-                        position.downLimit = normalizedValue;
-
-                        // Выставляется дефолтовое минимальное количество,
-                        // которое нельзя уменьшать. Это формирование позиции
-                        // с предустановленным выбором
-                        position.quantity = position.downLimit;
-                        break;
-                    }
-                    case ScenarioProductActionTypes.UP_LIMIT: {
-                        const normalizedValue = ScenarioProcessing.getNormalizedUpLimit(Number(s.value));
-                        position.upLimit = normalizedValue;
-                        break;
-                    }
-                }
+                ScenarioProcessing.setupPositionLimits(position, s);
             });
         }
 
         if (!!position.groups && position.groups.length > 0) {
             position.groups.forEach(g => {
+                if (!!g.positions && g.positions.length > 0) {
+                    g.positions.forEach(p => {
+                        ScenarioProcessing.setupPosition(p);
 
-                if (!!g.__groupNode__.scenarios && g.__groupNode__.scenarios.length > 0) {
-                    g.__groupNode__.scenarios.forEach(s => {
-                        if (!!g.positions && g.positions.length > 0) {
-                            g.positions.forEach(p => {
-                                ScenarioProcessing.setupPosition(p);
-
-                                // Мержинг лимитов группы
-                                switch (s.action) {
-                                    case "min-usage": {//ScenarioSelectorActionTypes.MIN_USAGE: {
-                                        const normalizedValue = ScenarioProcessing.getNormalizedDownLimit(Number(s.value));
-                                        p.downLimit = Math.max(p.downLimit, normalizedValue);
-                                        break;
-                                    }
-                                    case ScenarioSelectorActionTypes.MAX_USAGE: {
-                                        const normalizedValue = ScenarioProcessing.getNormalizedUpLimit(Number(s.value));
-                                        p.upLimit = Math.min(p.upLimit, normalizedValue);
-                                        break;
-                                    }
-                                }
-                            });
-                        }
+                        g.__groupNode__.scenarios.forEach(s => {
+                            // Мержинг лимитов группы
+                            ScenarioProcessing.mergePositionLimitsWithGroup(p, s);
+                        });
                     });
                 }
             });
@@ -74,7 +44,7 @@ export class ScenarioProcessing {
             scenarios.forEach(s => {
                 switch (s.action) {
                     case ScenarioProductActionTypes.DOWN_LIMIT: {
-                        const normalizedValue = ScenarioProcessing.getNormalizedDownLimit(Number(s.value));
+                        const normalizedValue = ScenarioProcessing.getNormalizedDownLimit(parseInt(s.value as any));
                         const isValid = position.quantity >= normalizedValue;
                         if (!isValid) {
                             isPositionValid = false;
@@ -82,7 +52,7 @@ export class ScenarioProcessing {
                         break;
                     }
                     case ScenarioProductActionTypes.UP_LIMIT: {
-                        const normalizedValue = ScenarioProcessing.getNormalizedUpLimit(Number(s.value));
+                        const normalizedValue = ScenarioProcessing.getNormalizedUpLimit(parseInt(s.value as any));
                         const isValid = position.quantity <= normalizedValue;
                         if (!isValid) {
                             isPositionValid = false;
@@ -140,6 +110,44 @@ export class ScenarioProcessing {
         position.isValid = isPositionValid;
 
         return position.isValid;
+    }
+
+    private static setupPositionLimits(p: IPositionWizard, s: IScenario): void {
+        switch (s.action) {
+            case ScenarioProductActionTypes.DOWN_LIMIT: {
+                const normalizedValue = ScenarioProcessing.getNormalizedDownLimit(parseInt(s.value as any));
+                p.downLimit = normalizedValue;
+
+                // Выставляется дефолтовое минимальное количество,
+                // которое нельзя уменьшать. Это формирование позиции
+                // с предустановленным выбором
+                p.quantity = p.downLimit;
+                break;
+            }
+            case ScenarioProductActionTypes.UP_LIMIT: {
+                const normalizedValue = ScenarioProcessing.getNormalizedUpLimit(parseInt(s.value as any));
+                p.upLimit = normalizedValue;
+                break;
+            }
+        }
+    }
+
+    /**
+     * Мержинг пределов
+     * Мержится только верхний предел
+     */
+    private static mergePositionLimitsWithGroup(p: IPositionWizard, s: IScenario): void {
+        switch (s.action) {
+            case "min-usage": {//ScenarioSelectorActionTypes.MIN_USAGE: {
+                // p.downLimit = Math.max(p.downLimit, normalizedValue);
+                break;
+            }
+            case ScenarioSelectorActionTypes.MAX_USAGE: {
+                const normalizedValue = ScenarioProcessing.getNormalizedUpLimit(parseInt(s.value as any));
+                p.upLimit = Math.min(p.upLimit, normalizedValue);
+                break;
+            }
+        }
     }
 
     private static isModifiersValid(group: IPositionWizardGroup): boolean {
