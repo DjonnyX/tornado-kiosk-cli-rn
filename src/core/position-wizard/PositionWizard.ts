@@ -5,12 +5,17 @@ import { IPositionWizard, IPositionWizardGroup } from "../interfaces";
 import { PositionWizardEventTypes } from "./events";
 import { PositionWizardGroup } from "./PositionWizardGroup";
 import { priceFormatter } from "../../utils/price";
+import { ScenarioProcessing } from "../scenarios";
+
 
 export class PositionWizard extends EventEmitter implements IPositionWizard {
+    static MAX_AVAILABLE_LIMIT = 99;
+
     protected static __id = 0;
 
     static from(position: IPositionWizard, mode: PositionWizardModes): IPositionWizard {
-        const editedPosition = new PositionWizard(mode, position.__product__ as ICompiledProduct, position.currency);
+        const editedPosition = new PositionWizard(mode, position.__productNode__ as ICompiledMenuNode<ICompiledProduct>,
+            position.currency);
 
         PositionWizard.copyAttributes(position, editedPosition);
 
@@ -48,7 +53,7 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
     }
 
     get availableQuantitiy() {
-        return Math.min(this.rests, 5); // нужно сделать лимиты по модификаторам
+        return Math.min(this.rests, this._actualUpLimit);
     }
 
     get mode() { return this._mode; }
@@ -79,25 +84,47 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
         }
     }
 
-    edit() {
-        if (this._mode === PositionWizardModes.NEW) {
-            throw Error("Position with mode \"new\" can not to edit.");
-        }
-
-        console.warn("edit")
-
-        if (this._groups.length > 0) {
-            console.warn("emit")
-            this.emit(PositionWizardEventTypes.EDIT, this);
-        }
-    }
-
     protected _groups = new Array<IPositionWizardGroup>();
 
     get groups() { return this._groups; }
 
     protected _isValid: boolean = true;
+    set isValid(v: boolean) {
+        if (this._isValid !== v) {
+            this._isValid = v;
+        }
+    }
     get isValid() { return this._isValid; }
+
+    protected _downLimit: number = 0;
+    set downLimit(v: number) {
+        if (this._downLimit !== v) {
+            this._downLimit = v;
+        }
+    }
+    get downLimit() { return this._downLimit; }
+
+    protected _upLimit: number = PositionWizard.MAX_AVAILABLE_LIMIT;
+    set upLimit(v: number) {
+        if (this._upLimit !== v) {
+            this._upLimit = this._actualUpLimit = v === 0 ? PositionWizard.MAX_AVAILABLE_LIMIT : v;
+        }
+    }
+    get upLimit() { return this._upLimit; }
+
+    protected _actualUpLimit: number = 0;
+    set actualUpLimit(v: number) {
+        if (this._actualUpLimit !== v) {
+            this._actualUpLimit = v;
+            this.update();
+        }
+    }
+    /**
+     * Динамический верхний предел
+     * Выставляется из расчета вычисления действительно доступного количества в группе
+     * Связан на прямую с сценариями группы
+     */
+    get actualUpLimit() { return this._actualUpLimit; }
 
     protected _sum: number = 0;
     get sum() { return this._sum; }
@@ -127,7 +154,7 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
         return result;
     }
 
-    private onChangePositionQuantity = () => {
+    private onChangePositionState = () => {
         // etc
 
         this.recalculate();
@@ -141,9 +168,11 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
         this.emit(PositionWizardEventTypes.EDIT, target);
     }
 
+    protected _product!: ICompiledProduct;
+
     constructor(
         protected _mode: PositionWizardModes,
-        protected _product: ICompiledProduct,
+        public readonly __productNode__: ICompiledMenuNode<ICompiledProduct>,
         protected _currency: ICurrency,
         protected _type: PositionWizardTypes = PositionWizardTypes.PRODUCT,
     ) {
@@ -152,13 +181,19 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
         PositionWizard.__id++;
         this._id = PositionWizard.__id;
 
+        this._product = __productNode__.content;
+
         this._product.structure.children.forEach((s, index) => {
             const group = new PositionWizardGroup(index, s as ICompiledMenuNode<ICompiledSelector>, this._currency);
-            group.addListener(PositionWizardEventTypes.CHANGE, this.onChangePositionQuantity);
+            group.addListener(PositionWizardEventTypes.CHANGE, this.onChangePositionState);
             group.addListener(PositionWizardEventTypes.EDIT, this.onEditPosition);
 
             this._groups.push(group);
         });
+
+        if (this._type === PositionWizardTypes.PRODUCT) {
+            ScenarioProcessing.setupPosition(this);
+        }
 
         this.recalculate();
         this.validate();
@@ -176,20 +211,34 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
         this._sum = this._sumPerOne * this._quantity;
     }
 
+    /**
+     * Валидация происходит от корневого продукта
+     * Описание:
+     * Сначала эмитяся события PositionWizardEventTypes.CHANGE до корневого продукта,
+     * далее вызывается низходящая рекурсивная валидация, которая проставляет статусы
+     * валидности у групп и модификаторов.
+     * Так происходит при каждом изменении любой части состояния продукта
+     */
     protected validate(): boolean {
-        this._groups.forEach(g => {
-            if (!g.isValid) {
-                this._isValid = false;
-                return false;
-            }
-        });
+        if (this._type === PositionWizardTypes.PRODUCT) {
+            this._isValid = ScenarioProcessing.validatePosition(this);
+        }
 
-        this._isValid = true;
-        return true;
+        return this._isValid;
     }
 
     protected update(): void {
         this._stateId++;
+    }
+
+    edit() {
+        if (this._mode === PositionWizardModes.NEW) {
+            throw Error("Position with mode \"new\" cannot be edited.");
+        }
+
+        if (this._groups.length > 0) {
+            this.emit(PositionWizardEventTypes.EDIT, this);
+        }
     }
 
     getFormatedPrice(withCurrency: boolean = false): string {

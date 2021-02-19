@@ -1,5 +1,5 @@
-import React from "react";
-import { View, Text } from "react-native";
+import React, { useCallback } from "react";
+import { View, Text, TouchableOpacity, GestureResponderEvent } from "react-native";
 import FastImage from "react-native-fast-image";
 import { ICurrency, ICompiledLanguage } from "@djonnyx/tornado-types";
 import { NumericStapper } from "../NumericStapper";
@@ -17,9 +17,14 @@ interface ConfirmationOrderListItemProps {
     alertOpen: (alert: IAlertState) => void;
 }
 
-export const ConfirmationOrderListItem = React.memo(({ stateId, imageHeight, currency, language, position, alertOpen }: ConfirmationOrderListItemProps) => {
+export const ConfirmationOrderListItem = React.memo(({ stateId, imageHeight, currency, language, position,
+    alertOpen }: ConfirmationOrderListItemProps) => {
     const currentContent = position.__product__?.contents[language?.code];
     const currentAdAsset = currentContent?.resources?.icon;
+
+    const pressHandler = useCallback((e: GestureResponderEvent) => {
+        position.edit();
+    }, []);
 
     const setQuantity = (qnt: number) => {
         position.quantity = qnt;
@@ -52,61 +57,63 @@ export const ConfirmationOrderListItem = React.memo(({ stateId, imageHeight, cur
 
     return (
         <View style={{ flex: 1, flexDirection: "row", paddingLeft: 24, paddingRight: 24, marginBottom: 20 }}>
-            <View style={{ width: 64, height: imageHeight, marginBottom: 2, marginRight: 20, justifyContent: "flex-end" }}>
-                <FastImage style={{ width: "100%", height: "100%" }} source={{
-                    uri: `file://${currentAdAsset?.mipmap.x128}`,
-                }} resizeMode={FastImage.resizeMode.contain}></FastImage>
-            </View>
-            <View style={{ flex: 1 }}>
-                <View style={{ flexDirection: "row", marginRight: 20 }}>
-                    <View style={{ flex: 1 }}>
-                        <Text numberOfLines={3} ellipsizeMode="tail" style={{
-                            textAlign: "left", fontSize: 20,
-                            color: theme.themes[theme.name].menu.draftOrder.item.nameColor, textTransform: "uppercase", fontWeight: "bold"
-                        }}>
-                            {
-                                currentContent?.name
-                            }
-                        </Text>
-                    </View>
-                    <View style={{ width: 192 }}>
-                        <Text numberOfLines={1} ellipsizeMode="tail" style={{
-                            textAlign: "right", fontSize: 24,
-                            color: theme.themes[theme.name].menu.draftOrder.item.nameColor, fontWeight: "bold"
-                        }}>
-                            {
-                                `${position.quantity}x${position.getFormatedSumPerOne(true)}`
-                            }
-                        </Text>
-                    </View>
+            <TouchableOpacity style={{ flex: 1, flexDirection: "row" }} onPress={pressHandler}>
+                <View style={{ width: 64, height: imageHeight, marginRight: 20, justifyContent: "flex-end" }}>
+                    <FastImage style={{ width: "100%", height: "100%" }} source={{
+                        uri: `file://${currentAdAsset?.mipmap.x128}`,
+                    }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                 </View>
-                {
-                    position.nestedPositions.map(p => <View style={{ flexDirection: "row", marginRight: 20 }}>
+                <View style={{ flex: 1, marginTop: 8 }}>
+                    <View style={{ flexDirection: "row", marginRight: 20, alignItems: "flex-start" }}>
                         <View style={{ flex: 1 }}>
-                            <Text numberOfLines={1} ellipsizeMode="tail" style={{
-                                textAlign: "left", fontSize: 12,
-                                color: "green", textTransform: "uppercase", fontWeight: "bold"
+                            <Text numberOfLines={3} ellipsizeMode="tail" style={{
+                                textAlign: "left", fontSize: 20,
+                                color: theme.themes[theme.name].menu.draftOrder.item.nameColor, textTransform: "uppercase", fontWeight: "bold"
                             }}>
                                 {
-                                    p.__product__?.contents[language?.code].name
+                                    currentContent?.name
                                 }
                             </Text>
                         </View>
                         <View style={{ width: 192 }}>
-                            <Text numberOfLines={1} ellipsizeMode="tail" style={{
-                                textAlign: "right", fontSize: 12,
-                                color: "green", fontWeight: "bold"
+                            <Text style={{
+                                textAlign: "right", fontSize: 24,
+                                color: theme.themes[theme.name].menu.draftOrder.item.nameColor, fontWeight: "bold"
                             }}>
                                 {
-                                    `${p.quantity}x${p.getFormatedPrice(true)}`
+                                    `${position.quantity}x${position.getFormatedSumPerOne(true)}`
                                 }
                             </Text>
                         </View>
                     </View>
-                    )
-                }
+                    {
+                        position.nestedPositions.map(p => <View style={{ flexDirection: "row", marginRight: 20 }}>
+                            <View style={{ flex: 1 }}>
+                                <Text numberOfLines={1} ellipsizeMode="tail" style={{
+                                    textAlign: "left", fontSize: 12,
+                                    color: "green", textTransform: "uppercase", fontWeight: "bold"
+                                }}>
+                                    {
+                                        p.__product__?.contents[language?.code].name
+                                    }
+                                </Text>
+                            </View>
+                            <View style={{ width: 192 }}>
+                                <Text numberOfLines={1} ellipsizeMode="tail" style={{
+                                    textAlign: "right", fontSize: 12,
+                                    color: "green", fontWeight: "bold"
+                                }}>
+                                    {
+                                        `${p.quantity}x${p.getFormatedPrice(true)}`
+                                    }
+                                </Text>
+                            </View>
+                        </View>
+                        )
+                    }
 
-            </View>
+                </View>
+            </TouchableOpacity>
             <View style={{ width: 144, height: 44 }}>
                 <NumericStapper
                     value={position.quantity}

@@ -8,8 +8,13 @@ export interface IPositionWizard extends EventEmitter {
     readonly stateId: number;
     readonly rests: number;
     readonly availableQuantitiy: number;
+    actualUpLimit: number;
+    upLimit: number;
+    downLimit: number;
+    isValid: boolean;
     readonly mode: PositionWizardModes;
     readonly __product__: ICompiledProduct | null;
+    readonly __productNode__: ICompiledMenuNode<ICompiledProduct>;
     readonly currency: ICurrency;
     readonly nestedPositions: Array<IPositionWizard>;
     currentGroup: number;
@@ -26,7 +31,7 @@ export interface IPositionWizard extends EventEmitter {
 
 export interface IPositionWizardGroup extends EventEmitter {
     readonly index: number;
-    readonly isValid: boolean;
+    isValid: boolean;
     readonly currency: ICurrency;
     readonly positions: Array<IPositionWizard>;
     readonly __groupNode__: ICompiledMenuNode<ICompiledSelector>;

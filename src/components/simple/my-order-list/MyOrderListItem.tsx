@@ -15,16 +15,15 @@ interface IMyOrderListItemItemProps {
     currency: ICurrency;
     language: ICompiledLanguage;
     alertOpen: (alert: IAlertState) => void;
-    onPress: (position: IPositionWizard) => void;
 }
 
 export const MyOrderListItem = React.memo(({ stateId, imageHeight, currency, language, position,
-    alertOpen, onPress }: IMyOrderListItemItemProps) => {
+    alertOpen }: IMyOrderListItemItemProps) => {
     const currentContent = position.__product__?.contents[language?.code];
     const currentAdAsset = currentContent?.resources?.icon;
 
     const pressHandler = useCallback((e: GestureResponderEvent) => {
-        onPress(position);
+        position.edit();
     }, []);
 
     const setQuantity = (qnt: number) => {

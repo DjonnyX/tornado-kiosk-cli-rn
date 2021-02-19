@@ -47,13 +47,13 @@ export const NumericStapper = React.memo(({ value = 0, iconDecrement = "-", icon
         if (min === undefined || value > min) {
             setValue(value - 1);
         }
-    }, [value]);
+    }, [value, min]);
 
     const incrementHandler = useCallback(() => {
         if (max === undefined || value < max) {
             setValue(value + 1);
         }
-    }, [value]);
+    }, [value, max]);
 
     return (
         <View style={{ flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "center", ...containerStyle as any }}>
