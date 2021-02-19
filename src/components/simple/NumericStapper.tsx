@@ -1,18 +1,25 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { View, Text, TouchableOpacity, StyleProp, ViewStyle, TextStyle } from "react-native";
 
 interface INumericStepperButtonProps {
     icon: string;
     onPress: () => void;
+    disabled?: boolean;
     style: StyleProp<ViewStyle>;
+    disabledStyle: StyleProp<ViewStyle>;
     textStyle: StyleProp<TextStyle>;
+    disabledTextStyle: StyleProp<TextStyle>;
 }
 
-const NumericStepperButton = ({ icon, style, textStyle, onPress }: INumericStepperButtonProps) => {
+const NumericStepperButton = React.memo(({ icon, style, textStyle, disabled, disabledStyle, disabledTextStyle, onPress }: INumericStepperButtonProps) => {
+
+    const actualStyle = disabled ? disabledStyle : style;
+    const actualTextStyle = disabled ? disabledTextStyle : textStyle;
+
     return (
         <TouchableOpacity onPress={onPress}>
-            <View style={{ flex: 1, alignItems: "center", justifyContent: "center", ...style as any }}>
-                <Text style={{ ...textStyle as any }}>
+            <View style={{ flex: 1, alignItems: "center", justifyContent: "center", ...actualStyle as any }}>
+                <Text style={{ ...actualTextStyle as any }}>
                     {
                         icon
                     }
@@ -20,7 +27,7 @@ const NumericStepperButton = ({ icon, style, textStyle, onPress }: INumericStepp
             </View>
         </TouchableOpacity>
     );
-}
+});
 
 interface INumericStapperProps {
     onChange: (value: number) => void;
@@ -28,7 +35,9 @@ interface INumericStapperProps {
     formatValueFunction?: (value: number) => string;
     textStyle?: StyleProp<TextStyle>;
     buttonStyle?: StyleProp<ViewStyle | TextStyle>;
+    disabledButtonStyle?: StyleProp<ViewStyle | TextStyle>;
     buttonTextStyle: StyleProp<TextStyle>;
+    disabledButtonTextStyle: StyleProp<TextStyle>;
     containerStyle?: StyleProp<ViewStyle>;
     iconDecrement?: string;
     iconIncrement?: string;
@@ -36,10 +45,16 @@ interface INumericStapperProps {
     max?: number;
 }
 
-export const NumericStapper = React.memo(({ value = 0, iconDecrement = "-", iconIncrement = "+", buttonStyle, buttonTextStyle,
+export const NumericStapper = React.memo(({ value = 0, iconDecrement = "-", iconIncrement = "+",
+    buttonStyle, disabledButtonStyle, disabledButtonTextStyle, buttonTextStyle,
     containerStyle, textStyle, min, max, formatValueFunction, onChange }: INumericStapperProps) => {
+    const [isDecDisabled, setIsDecDisabled] = useState(value === min);
+    const [isIncDisabled, setIsIncDisabled] = useState(value === max);
 
     const setValue = (value: number) => {
+        setIsDecDisabled(value === min);
+        setIsIncDisabled(value === max);
+
         onChange(value);
     }
 
@@ -57,7 +72,8 @@ export const NumericStapper = React.memo(({ value = 0, iconDecrement = "-", icon
 
     return (
         <View style={{ flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "center", ...containerStyle as any }}>
-            <NumericStepperButton style={buttonStyle} textStyle={buttonTextStyle} icon={iconDecrement} onPress={decrementHandler} />
+            <NumericStepperButton disabled={isDecDisabled} style={buttonStyle} disabledStyle={disabledButtonStyle}
+                textStyle={buttonTextStyle} disabledTextStyle={buttonTextStyle} icon={iconDecrement} onPress={decrementHandler} />
             <Text style={{ flex: 1, textAlign: "center", ...textStyle as any }}>
                 {
                     !!formatValueFunction
@@ -65,7 +81,8 @@ export const NumericStapper = React.memo(({ value = 0, iconDecrement = "-", icon
                         : value.toString()
                 }
             </Text>
-            <NumericStepperButton style={buttonStyle} textStyle={buttonTextStyle} icon={iconIncrement} onPress={incrementHandler} />
+            <NumericStepperButton disabled={isIncDisabled} style={buttonStyle} disabledStyle={disabledButtonStyle}
+                textStyle={buttonTextStyle} disabledTextStyle={buttonTextStyle} icon={iconIncrement} onPress={incrementHandler} />
         </View>
     );
 })
