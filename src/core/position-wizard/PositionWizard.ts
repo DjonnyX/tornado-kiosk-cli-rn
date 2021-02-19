@@ -53,7 +53,7 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
     }
 
     get availableQuantitiy() {
-        return Math.min(this.rests, this._upLimit);
+        return Math.min(this.rests, this._actualUpLimit);
     }
 
     get mode() { return this._mode; }
@@ -107,10 +107,24 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
     protected _upLimit: number = PositionWizard.MAX_AVAILABLE_LIMIT;
     set upLimit(v: number) {
         if (this._upLimit !== v) {
-            this._upLimit = v === 0 ? PositionWizard.MAX_AVAILABLE_LIMIT : v;
+            this._upLimit = this._actualUpLimit = v === 0 ? PositionWizard.MAX_AVAILABLE_LIMIT : v;
         }
     }
     get upLimit() { return this._upLimit; }
+
+    protected _actualUpLimit: number = 0;
+    set actualUpLimit(v: number) {
+        if (this._actualUpLimit !== v) {
+            this._actualUpLimit = v;
+            this.update();
+        }
+    }
+    /**
+     * Динамический верхний предел
+     * Выставляется из расчета вычисления действительно доступного количества в группе
+     * Связан на прямую с сценариями группы
+     */
+    get actualUpLimit() { return this._actualUpLimit; }
 
     protected _sum: number = 0;
     get sum() { return this._sum; }

@@ -75,7 +75,12 @@ export class ScenarioProcessing {
                                 if (groupTotalQnt === -1) {
                                     groupTotalQnt = ScenarioProcessing.getTotalProductsQuantity(g);
                                 }
-                                const isValid = groupTotalQnt >= Number(s.value);
+                                const val = ScenarioProcessing.getNormalizedDownLimit(parseInt(s.value as any));
+                                /*const diff = val - groupTotalQnt;
+                                g.positions.forEach(p => {
+                                    p.actualUpLimit = Math.min(diff, p.upLimit);
+                                });*/
+                                const isValid = groupTotalQnt >= val;
                                 if (!isValid) {
                                     isGroupValid = false;
                                 }
@@ -85,7 +90,15 @@ export class ScenarioProcessing {
                                 if (groupTotalQnt === -1) {
                                     groupTotalQnt = ScenarioProcessing.getTotalProductsQuantity(g);
                                 }
-                                const isValid = groupTotalQnt <= Number(s.value);
+                                const val = ScenarioProcessing.getNormalizedUpLimit(parseInt(s.value as any));
+                                
+                                const diff = val - groupTotalQnt;
+                                g.positions.forEach(p => {
+                                    // динамическое обновление верхнего предела
+                                    p.actualUpLimit = Math.min(p.quantity + diff, p.upLimit);
+                                });
+
+                                const isValid = groupTotalQnt <= val;
                                 if (!isValid) {
                                     isGroupValid = false;
                                 }
