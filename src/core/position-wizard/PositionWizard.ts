@@ -22,7 +22,7 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
         return editedPosition;
     }
 
-    protected static copyAttributes(src: IPositionWizard, position: IPositionWizard) {
+    static copyAttributes(src: IPositionWizard, position: IPositionWizard) {
         position.quantity = src.quantity;
 
         position.groups.forEach((g, i) => {
