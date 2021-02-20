@@ -11,7 +11,7 @@ export interface IOrderWizard extends EventEmitter {
     editProduct: (productNode: ICompiledMenuNode<ICompiledProduct>) => void;
     editCancel: () => void;
     findPosition: (position: IPositionWizard) => IPositionWizard | undefined;
-    add: (position: IPositionWizard) => void;
+    add: (position: IPositionWizard, isTemp?: boolean) => IPositionWizard;
     remove: (position: IPositionWizard) => void;
     reset: () => void;
     getFormatedSum: (withCurrency?: boolean) => string;
