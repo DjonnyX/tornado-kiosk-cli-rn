@@ -23,6 +23,8 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
     protected _editingPositions = new Array<IPositionWizard>();
     get editingPositions() { return this._editingPositions; }
 
+    protected _originalEditingPosition?: IPositionWizard | null;
+
     protected _lastPosition: IPositionWizard | null = null;
     get lastPosition() { return this._lastPosition; }
 
@@ -53,7 +55,13 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
         }
 
         if (position.groups.length > 0) {
-            this.edit(position);
+            if (position.type === PositionWizardTypes.MODIFIER) {
+                this.edit(position);
+            } else
+                if (position.type === PositionWizardTypes.PRODUCT) {
+                    const editingPosition = this.add(position, true);
+                    this.edit(editingPosition);
+                }
         }
     }
 
@@ -107,9 +115,15 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
 
             this.emit(OrderWizardEventTypes.CHANGE);
         } else {
-            if (currentPosition.type !== PositionWizardTypes.MODIFIER
-                && currentPosition.mode !== PositionWizardModes.EDIT) {
-                this.add(currentPosition);
+            if (currentPosition.type !== PositionWizardTypes.MODIFIER) {
+                if (currentPosition.mode === PositionWizardModes.EDIT) {
+                    if (!!this._originalEditingPosition) {
+                        PositionWizard.copyAttributes(currentPosition, this._originalEditingPosition);
+                    }
+                } else
+                    if (currentPosition.mode === PositionWizardModes.NEW) {
+                        this.add(currentPosition);
+                    }
             }
 
             this.editCancel();
@@ -161,39 +175,34 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
 
         currentPosition.currentGroup = 0;
 
-        if (currentPosition.mode === PositionWizardModes.EDIT) {
-            // etc
-        } else
-            if (currentPosition.mode === PositionWizardModes.NEW) {
-                currentPosition.removeAllListeners();
-                currentPosition.dispose();
-            }
+        currentPosition.removeAllListeners();
+        currentPosition.dispose();
+
         this._editingPositions.splice(this._editingPositions.findIndex(ep => ep === currentPosition), 1);
+        this._originalEditingPosition = null;
 
         this.update();
 
         this.emit(OrderWizardEventTypes.CHANGE);
     }
 
-    add(position: IPositionWizard): void {
-        if (position.mode === PositionWizardModes.EDIT) {
-            throw Error("Position with mode \"edit\" can not be added to order.");
-        }
-
-        if (position.type === PositionWizardTypes.MODIFIER) {
-            throw Error("Position with type \"modifier\" can not be added to order.");
-        }
-
+    add(position: IPositionWizard, isTemp: boolean = false): IPositionWizard {
         const editedPosition = PositionWizard.from(position, PositionWizardModes.EDIT);
-        this._positions.push(editedPosition);
         editedPosition.addListener(PositionWizardEventTypes.CHANGE, this.onChangePosition);
         editedPosition.addListener(PositionWizardEventTypes.EDIT, this.onEditPosition);
 
-        this._lastPosition = editedPosition;
+        if (isTemp) {
+            this._originalEditingPosition = position;
+        } else {
+            this._positions.push(editedPosition);
+            this._lastPosition = editedPosition;
+        }
 
         this.update();
 
         this.emit(OrderWizardEventTypes.CHANGE);
+
+        return editedPosition;
     }
 
     remove(position: IPositionWizard): void {
@@ -219,6 +228,8 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
             p.dispose();
         });
         this._editingPositions = [];
+
+        this._originalEditingPosition = null;
 
         this._lastPosition = null;
 
@@ -246,6 +257,8 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
             p.removeAllListeners();
             p.dispose();
         });
+
+        this._originalEditingPosition = null;
 
         this._lastPosition = null;
     }
