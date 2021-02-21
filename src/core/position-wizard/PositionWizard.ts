@@ -112,10 +112,10 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
     }
     get upLimit() { return this._upLimit; }
 
-    protected _actualUpLimit: number = 0;
+    protected _actualUpLimit: number = PositionWizard.MAX_AVAILABLE_LIMIT;
     set actualUpLimit(v: number) {
         if (this._actualUpLimit !== v) {
-            this._actualUpLimit = v;
+            this._actualUpLimit = v === 0 ? PositionWizard.MAX_AVAILABLE_LIMIT : v;
             this.update();
         }
     }
