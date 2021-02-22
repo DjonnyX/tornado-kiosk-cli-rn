@@ -7,6 +7,19 @@ import { Log } from "./Log";
 import { AuthStore } from "../native";
 import { extractError } from "../utils/error";
 
+const ERR_PATTERN = /(Error: )([\w]*)/gm;
+
+const extractErrorType = (err: string) => {
+    if (!!err) {
+        const s = err.match(ERR_PATTERN);
+        if (!!s && s.length > 0) {
+            return s[0].replace(/Error: /g, "");
+        }
+    }
+
+    return "Unknown error.";
+}
+
 interface IRequestOptions {
     useAttempts?: boolean;
     breakAfter?: number;
@@ -34,36 +47,49 @@ const request = (observable: Observable<Response>, options?: IRequestOptions): O
 }
 
 const parseResponse = (res: Response) => {
-    let result: Observable<any>;
-    result = from(res.json());
-
     if (res.ok) {
-        return result;
-    }
-
-    return of(res).pipe(
-        switchMap(res => from(res.json()).pipe(
-            catchError(err => {
-                return of(null)
-            }),
-            switchMap(data => {
-                if (!data) {
-                    switch (res.status) {
-                        case 401:
-                            return throwError("Некорректная лицензия.");
-                        case 504:
-                            return throwError("Ошибка в соединении.");
-                        default:
-                            return from(res.text()).pipe(switchMap(e => throwError(e)));
-                    }
-                }
-
+        return from(res.json()).pipe(
+            map(data => {
                 const err = extractError(data.error);
-                if (err) {
+                if (!!err) {
                     return throwError(err);
                 }
 
+                return data;
+            }),
+        );
+    }
+
+    return of(res).pipe(
+        switchMap(res => from(res.text()).pipe(
+            catchError(err => {
+                switch (res.status) {
+                    case 504:
+                        return throwError("Ошибка в соединении.");
+                }
+                switch (res.status) {
+                    case 401:
+                        return throwError("Некорректная лицензия.");
+                    case 504:
+                        return throwError("Ошибка в соединении.");
+                }
+
                 return throwError(res.statusText);
+            }),
+            switchMap(text => {
+                const errType = extractErrorType(text);
+                switch (errType) {
+                    case "TokenBadFormat":
+                        return throwError(Error("Неверный формат токена"));
+                    case "LicenseNotFound":
+                        return throwError(Error("Лицензия не найдена"));
+                    case "LicensePeriodIsFinish":
+                        return throwError(Error("Истек срок действия лицензии"));
+                    case "TokenExpiredError":
+                        return throwError(Error("Ошибка проверки подлинности ключа (054)"));
+                    default:
+                        return throwError(Error("Неизвестная ошибка"));
+                }
             }),
         )),
     );
