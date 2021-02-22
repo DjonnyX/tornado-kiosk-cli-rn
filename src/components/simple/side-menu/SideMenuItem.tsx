@@ -2,10 +2,11 @@ import React, { useState, useCallback } from "react";
 import { View, Text, TouchableOpacity, GestureResponderEvent, LayoutChangeEvent, Animated, Easing } from "react-native";
 import * as Color from "color";
 import FastImage from "react-native-fast-image";
-import { ICompiledMenuNode, NodeTypes, ICompiledLanguage } from "@djonnyx/tornado-types";
+import { NodeTypes, ICompiledLanguage } from "@djonnyx/tornado-types";
 import { theme } from "../../../theme";
+import { MenuNode } from "../../../core/menu/MenuNode";
 
-const getSelectedDepth = (node: ICompiledMenuNode, selected: ICompiledMenuNode, depth: number = 0): number => {
+const getSelectedDepth = (node: MenuNode, selected: MenuNode, depth: number = 0): number => {
     let result = -1;
     depth++;
 
@@ -27,8 +28,8 @@ const getSelectedDepth = (node: ICompiledMenuNode, selected: ICompiledMenuNode, 
     return result;
 }
 
-const getAllChildren = (node: ICompiledMenuNode, selected: ICompiledMenuNode, selectedDepth: number, depth: number = 0): Array<ICompiledMenuNode> => {
-    const children = new Array<ICompiledMenuNode>();
+const getAllChildren = (node: MenuNode, selected: MenuNode, selectedDepth: number, depth: number = 0): Array<MenuNode> => {
+    const children = new Array<MenuNode>();
     depth++;
 
     for (const child of node.children) {
@@ -47,7 +48,7 @@ const getAllChildren = (node: ICompiledMenuNode, selected: ICompiledMenuNode, se
     return children;
 }
 
-const getChainChildren = (node: ICompiledMenuNode, selected: ICompiledMenuNode): Array<ICompiledMenuNode> => {
+const getChainChildren = (node: MenuNode, selected: MenuNode): Array<MenuNode> => {
     const selectedDepth = getSelectedDepth(node, selected);
     const chainOfChildren = getAllChildren(node, selected, selectedDepth);
 
@@ -57,10 +58,10 @@ const getChainChildren = (node: ICompiledMenuNode, selected: ICompiledMenuNode):
 interface ISideMenuItemProps {
     depth?: number;
     height?: number;
-    node: ICompiledMenuNode;
-    selected: ICompiledMenuNode;
+    node: MenuNode;
+    selected: MenuNode;
     language: ICompiledLanguage;
-    onPress: (ad: ICompiledMenuNode) => void;
+    onPress: (node: MenuNode) => void;
 }
 
 export const SideMenuItem = React.memo(({ depth = 0, height = 0, selected, language, node, onPress }: ISideMenuItemProps) => {
@@ -102,7 +103,7 @@ export const SideMenuItem = React.memo(({ depth = 0, height = 0, selected, langu
         subMenuSizeAnimation.start();
     };
 
-    const currentContent = node.content?.contents[language?.code];
+    const currentContent = node.__rawNode__.content?.contents[language?.code];
     const currentAdAsset = currentContent?.resources?.icon;
     const color = theme.themes[theme.name].menu.sideMenu.item.backgroundColor; //currentContent.color;
     const isExpanded = node === selected || node.children.filter(child => child === selected).length > 0;

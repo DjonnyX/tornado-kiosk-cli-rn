@@ -39,4 +39,8 @@ export namespace CombinedDataSelectors {
     export const selectMenu = createSelector(getCombinedData, (state) => {
         return state?.data?.menu;
     });
+
+    export const selectBusinessPeriods = createSelector(getCombinedData, (state) => {
+        return state?.data?.refs.__raw.businessPeriods;
+    });
 }

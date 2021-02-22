@@ -1,17 +1,18 @@
 import React, { useCallback } from "react";
 import { View, Text, TouchableOpacity, GestureResponderEvent } from "react-native";
 import FastImage from "react-native-fast-image";
-import { ICompiledMenuNode, NodeTypes, ICompiledProduct, ICurrency, ICompiledLanguage } from "@djonnyx/tornado-types";
+import { NodeTypes, ICompiledProduct, ICurrency, ICompiledLanguage } from "@djonnyx/tornado-types";
 import { theme } from "../../../theme";
 import { priceFormatter } from "../../../utils/price";
 import { TagList } from "../TagList";
+import { MenuNode } from "../../../core/menu/MenuNode";
 
 interface INavMenuItemProps {
     thumbnailHeight: number;
-    node: ICompiledMenuNode;
+    node: MenuNode;
     currency: ICurrency;
     language: ICompiledLanguage;
-    onPress: (node: ICompiledMenuNode) => void;
+    onPress: (node: MenuNode) => void;
 }
 
 export const NavMenuItem = React.memo(({ thumbnailHeight, currency, language, node, onPress }: INavMenuItemProps) => {
@@ -22,10 +23,12 @@ export const NavMenuItem = React.memo(({ thumbnailHeight, currency, language, no
         }
     }, []);
 
-    const currentContent = node.content?.contents[language?.code];
+    const currentContent = node.__rawNode__.content?.contents[language?.code];
     const currentAdAsset = currentContent?.resources?.icon;
 
-    const tags = node.type === NodeTypes.PRODUCT && (node.content as ICompiledProduct).tags?.length > 0 ? (node.content as ICompiledProduct).tags : undefined;
+    const tags = node.type === NodeTypes.PRODUCT && (node.__rawNode__.content as ICompiledProduct).tags?.length > 0
+    ? (node.__rawNode__.content as ICompiledProduct).tags
+    : undefined;
 
     return (
         <View style={{ flex: 1, backgroundColor: theme.themes[theme.name].menu.navMenu.item.backgroundColor, /*backgroundColor: Color.rgb(currentContent.color).alpha(0.05).toString(),*/ borderRadius: 16, padding: 22 }}>
@@ -57,7 +60,7 @@ export const NavMenuItem = React.memo(({ thumbnailHeight, currency, language, no
                         <View style={{ borderStyle: "solid", borderWidth: 0.5, borderRadius: 5, alignItems: "center", justifyContent: "center", borderColor: theme.themes[theme.name].menu.navMenu.item.price.borderColor, marginBottom: 12 }}>
                             <Text style={{ textAlign: "center", fontSize: 16, paddingTop: 6, paddingBottom: 6, paddingLeft: 14, paddingRight: 14, color: theme.themes[theme.name].menu.navMenu.item.price.textColor }}>
                                 {
-                                    `${priceFormatter((node.content as ICompiledProduct).prices[currency.id as string]?.value)} ${currency.symbol}`
+                                    `${priceFormatter((node.__rawNode__.content as ICompiledProduct).prices[currency.id as string]?.value)} ${currency.symbol}`
                                 }
                             </Text>
                         </View>

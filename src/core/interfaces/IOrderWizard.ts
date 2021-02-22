@@ -1,5 +1,5 @@
 import EventEmitter from "eventemitter3";
-import { ICompiledLanguage, ICompiledMenuNode, ICompiledProduct, ICurrency } from "@djonnyx/tornado-types";
+import { IBusinessPeriod, ICompiledLanguage, ICompiledMenuNode, ICompiledProduct, ICurrency } from "@djonnyx/tornado-types";
 import { IPositionWizard } from "./IPositionWizard";
 
 export interface IOrderWizard extends EventEmitter {
@@ -8,6 +8,7 @@ export interface IOrderWizard extends EventEmitter {
     readonly positions: Array<IPositionWizard>;
     currency: ICurrency;
     language: ICompiledLanguage;
+    businessPeriods: Array<IBusinessPeriod>;
     editProduct: (productNode: ICompiledMenuNode<ICompiledProduct>) => void;
     editCancel: () => void;
     findPosition: (position: IPositionWizard) => IPositionWizard | undefined;

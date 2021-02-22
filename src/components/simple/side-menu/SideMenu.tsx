@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import { SafeAreaView, View } from "react-native";
-import { ICompiledMenu, ICompiledMenuNode, ICompiledLanguage } from "@djonnyx/tornado-types";
+import { ICompiledLanguage } from "@djonnyx/tornado-types";
 import { SideMenuItem } from "./SideMenuItem";
 import { ScrollView } from "react-native-gesture-handler";
+import { MenuNode } from "../../../core/menu/MenuNode";
 
 interface ISideMenuProps {
-    menu: ICompiledMenu;
-    selected: ICompiledMenuNode;
+    menu: MenuNode;
+    selected: MenuNode;
     language: ICompiledLanguage;
-    onPress: (category: ICompiledMenuNode) => void;
+    onPress: (category: MenuNode) => void;
 }
 
 export const SideMenu = React.memo(({ selected, language, menu, onPress }: ISideMenuProps) => {

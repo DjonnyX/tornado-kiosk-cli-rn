@@ -2,23 +2,25 @@ import React, { Dispatch, useState, useCallback, useEffect } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
 import { View, Dimensions, ScaledSize } from "react-native";
 import { connect } from "react-redux";
-import { ICompiledMenu, ICurrency, ICompiledLanguage, ICompiledOrderType, ICompiledProduct, ICompiledMenuNode } from "@djonnyx/tornado-types";
+import { ICurrency, ICompiledLanguage, ICompiledOrderType, ICompiledProduct, ICompiledMenuNode } from "@djonnyx/tornado-types";
 import { MainNavigationScreenTypes } from "../navigation";
 import { IAppState } from "../../store/state";
-import { CombinedDataSelectors, MyOrderSelectors } from "../../store/selectors";
+import { CombinedDataSelectors, MenuSelectors, MyOrderSelectors } from "../../store/selectors";
 import { CapabilitiesSelectors } from "../../store/selectors/CapabilitiesSelector";
 import { CapabilitiesActions, MyOrderActions, NotificationActions } from "../../store/actions";
 import { MyOrderPanel } from "../simple/MyOrderPanel";
 import { Menu } from "../simple/Menu";
 import { theme } from "../../theme";
 import { IAlertState } from "../../interfaces";
+import { MenuWizard } from "../../core/menu/MenuWizard";
+import { MenuNode } from "../../core/menu/MenuNode";
 
 interface IMenuSelfProps {
     // store props
     _languages: Array<ICompiledLanguage>;
     _orderTypes: Array<ICompiledOrderType>;
     _defaultCurrency: ICurrency;
-    _menu: ICompiledMenu;
+    _menuStateId: number;
     _language: ICompiledLanguage;
     _orderStateId: number;
     _alertOpen: (alert: IAlertState) => void;
@@ -26,7 +28,7 @@ interface IMenuSelfProps {
     // store dispatches
     _onChangeLanguage: (language: ICompiledLanguage) => void;
     _onChangeOrderType: (orderType: ICompiledOrderType) => void;
-    _onAddOrderPosition: (productNode: ICompiledMenuNode<ICompiledProduct>) => void;
+    _onAddOrderPosition: (productNode: MenuNode) => void;
     _onResetOrder: () => void;
 
     // self props
@@ -36,7 +38,7 @@ interface IMenuProps extends StackScreenProps<any, MainNavigationScreenTypes.MEN
 
 const MenuScreenContainer = React.memo(({
     _languages, _orderTypes, _defaultCurrency,
-    _menu, _language, _orderStateId, _onResetOrder, _alertOpen,
+    _menuStateId, _language, _orderStateId, _onResetOrder, _alertOpen,
     _onChangeLanguage, _onChangeOrderType, _onAddOrderPosition, navigation,
 }: IMenuProps) => {
     const [windowSize, _setWindowSize] = useState({ width: Dimensions.get("window").width, height: Dimensions.get("window").height });
@@ -84,14 +86,15 @@ const MenuScreenContainer = React.memo(({
         });
     }, []);
 
-    const addProductHandler = (productNode: ICompiledMenuNode<ICompiledProduct>) => {
+    const addProductHandler = (productNode: MenuNode) => {
         _onAddOrderPosition(productNode);
     };
 
     return (
+        !!MenuWizard.current.menu &&
         <View style={{ flexDirection: "row", width: "100%", height: "100%", backgroundColor: theme.themes[theme.name].menu.background }}>
             <View style={{ position: "absolute", width: menuWidth, height: "100%", zIndex: 1 }}>
-                <Menu currency={_defaultCurrency} language={_language} menu={_menu} width={menuWidth} height={windowSize.height}
+                <Menu currency={_defaultCurrency} language={_language} menu={MenuWizard.current.menu} width={menuWidth} height={windowSize.height}
                     cancelOrder={cancelHandler} addPosition={addProductHandler}
                 ></Menu>
             </View>
@@ -106,7 +109,7 @@ const MenuScreenContainer = React.memo(({
 const mapStateToProps = (state: IAppState, ownProps: IMenuProps) => {
     return {
         _defaultCurrency: CombinedDataSelectors.selectDefaultCurrency(state),
-        _menu: CombinedDataSelectors.selectMenu(state),
+        _menuStateId: MenuSelectors.selectStateId(state),
         _languages: CombinedDataSelectors.selectLangages(state),
         _orderTypes: CombinedDataSelectors.selectOrderTypes(state),
         _language: CapabilitiesSelectors.selectLanguage(state),
@@ -122,8 +125,8 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
         _onChangeOrderType: (orderType: ICompiledOrderType) => {
             dispatch(CapabilitiesActions.setOrderType(orderType));
         },
-        _onAddOrderPosition: (productNode: ICompiledMenuNode<ICompiledProduct>) => {
-            dispatch(MyOrderActions.edit(productNode));
+        _onAddOrderPosition: (productNode: MenuNode) => {
+            dispatch(MyOrderActions.edit(productNode.__rawNode__ as ICompiledMenuNode<ICompiledProduct>));
         },
         _onResetOrder: () => {
             dispatch(MyOrderActions.reset());

@@ -1,23 +1,26 @@
 import React, { useState, useCallback } from "react";
 import { View, Text, Animated, Easing } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
-import { ICompiledMenuNode, ICompiledMenu, NodeTypes, ICompiledLanguage, ICurrency, ICompiledProduct, IOrderPosition } from "@djonnyx/tornado-types";
+import {
+    NodeTypes, ICompiledLanguage, ICurrency,
+} from "@djonnyx/tornado-types";
 import { SideMenu } from "./side-menu";
 import { NavMenu } from "./nav-menu";
 import { MenuButton } from "./MenuButton";
 import { CtrlMenuButton } from "./CtrlMenuButton";
 import { theme } from "../../theme";
 import { ModifiersEditor } from "./modifiers";
+import { MenuNode } from "../../core/menu/MenuNode";
 
 interface IMenuProps {
-    menu: ICompiledMenu;
+    menu: MenuNode;
     currency: ICurrency;
     language: ICompiledLanguage;
     width: number;
     height: number;
 
     cancelOrder: () => void;
-    addPosition: (productNode: ICompiledMenuNode<ICompiledProduct>) => void;
+    addPosition: (productNode: MenuNode) => void;
 }
 
 const sideMenuWidth = 180;
@@ -32,7 +35,7 @@ export const Menu = React.memo(({
     let menuAnimation: Animated.CompositeAnimation;
     let screenAnimation: Animated.CompositeAnimation;
 
-    const setSelectedCategory = (category: ICompiledMenuNode) => {
+    const setSelectedCategory = (category: MenuNode) => {
         _setSelectedCategory(previouse => {
 
             if (category.index > previouse.current.index) {
@@ -51,22 +54,22 @@ export const Menu = React.memo(({
         });
     };
 
-    const selectSideMenuCategoryHandler = useCallback((node: ICompiledMenuNode) => {
+    const selectSideMenuCategoryHandler = useCallback((node: MenuNode) => {
         navigateTo(node);
     }, [selected]);
 
-    const selectNavMenuCategoryHandler = useCallback((node: ICompiledMenuNode) => {
+    const selectNavMenuCategoryHandler = useCallback((node: MenuNode) => {
         navigateTo(node);
     }, [selected]);
 
     // навигация / добавление продукта
-    const navigateTo = (node: ICompiledMenuNode) => {
+    const navigateTo = (node: MenuNode) => {
         if (node.type === NodeTypes.SELECTOR || node.type === NodeTypes.SELECTOR_NODE) {
 
             // навигация по категории
             setSelectedCategory(node);
         } else if (node.type === NodeTypes.PRODUCT) {
-            const productNode = node as ICompiledMenuNode<ICompiledProduct>;
+            const productNode = node;
 
             // добавление позиции
             addPosition(productNode);
@@ -164,7 +167,7 @@ export const Menu = React.memo(({
                         <View style={{ flex: 1 }}></View>
                         <Text style={{ textTransform: "uppercase", fontWeight: "bold", color: theme.themes[theme.name].menu.header.titleColor, fontSize: 32, marginRight: 24 }}>
                             {
-                                selected.current.content?.contents[language.code]?.name || "Меню"
+                                selected.current.__rawNode__.content?.contents[language.code]?.name || "Меню"
                             }
                         </Text>
                     </View>
@@ -181,7 +184,8 @@ export const Menu = React.memo(({
                         }),
                     }}>
                         <View style={{ flex: 1, flexGrow: 1, margin: "auto" }}>
-                            <SideMenu menu={menu} language={language} selected={selected.current} onPress={selectSideMenuCategoryHandler}></SideMenu>
+                            <SideMenu menu={menu} language={language} selected={selected.current}
+                                onPress={selectSideMenuCategoryHandler}></SideMenu>
                         </View>
                         <View style={{ flex: 0, width: "100%", height: 192, margin: "auto", padding: 24 }}>
                             <CtrlMenuButton

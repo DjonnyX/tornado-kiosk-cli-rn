@@ -1,7 +1,7 @@
 import React, { Component, Dispatch, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { IAppState } from "../store/state";
-import { ICompiledLanguage, ICurrency } from "@djonnyx/tornado-types";
+import { IBusinessPeriod, ICompiledLanguage, ICurrency } from "@djonnyx/tornado-types";
 import { OrderWizard } from "./order/OrderWizard";
 import { OrderWizardEventTypes } from "./order/events";
 import { MyOrderActions, NotificationActions } from "../store/actions";
@@ -17,10 +17,11 @@ interface IOrderServiceProps {
     _orderStateId?: number;
     _language?: ICompiledLanguage;
     _currency?: ICurrency;
+    _businessPeriods?: Array<IBusinessPeriod>;
 }
 
 export const OrderServiceContainer = React.memo(({ _orderStateId, _language,
-    _currency, _snackOpen, _onUpdateStateId }: IOrderServiceProps) => {
+    _currency, _businessPeriods, _snackOpen, _onUpdateStateId }: IOrderServiceProps) => {
     const [orderWizard, setOrderWizard] = useState<IOrderWizard | undefined>(undefined);
     const [previousLastPosition, setPreviousLastPosition] = useState<IPositionWizard | null>(null);
 
@@ -40,18 +41,19 @@ export const OrderServiceContainer = React.memo(({ _orderStateId, _language,
     }, [orderWizard]);
 
     useEffect(() => {
-        if (!!_language && !!_currency) {
+        if (!!_language && !!_currency && !!_businessPeriods) {
 
             if (!orderWizard) {
-                const ow = new OrderWizard(_currency, _language);
+                const ow = new OrderWizard(_currency, _businessPeriods, _language);
                 setOrderWizard(ow);
 
             } else {
                 orderWizard.currency = _currency;
                 orderWizard.language = _language;
+                orderWizard.businessPeriods = _businessPeriods;
             }
         }
-    }, [_language, _currency]);
+    }, [_language, _currency, _businessPeriods]);
 
     useEffect(() => {
         if (!!OrderWizard?.current?.lastPosition && previousLastPosition !== OrderWizard.current.lastPosition) {
@@ -75,6 +77,7 @@ const mapStateToProps = (state: IAppState) => {
     return {
         _language: CapabilitiesSelectors.selectLanguage(state),
         _currency: CombinedDataSelectors.selectDefaultCurrency(state),
+        _businessPeriods: CombinedDataSelectors.selectBusinessPeriods(state),
         _orderStateId: MyOrderSelectors.selectStateId(state),
     };
 };

@@ -1,4 +1,4 @@
-import { ICompiledMenuNode, ICompiledProduct, ICompiledSelector, ICurrency } from "@djonnyx/tornado-types";
+import { IBusinessPeriod, ICompiledMenuNode, ICompiledProduct, ICompiledSelector, ICurrency } from "@djonnyx/tornado-types";
 import EventEmitter from "eventemitter3";
 import { priceFormatter } from "../../utils/price";
 import { PositionWizardModes, PositionWizardTypes } from "../enums";
@@ -13,7 +13,9 @@ export class PositionWizardGroup extends EventEmitter implements IPositionWizard
 
     protected _positions = new Array<IPositionWizard>();
 
-    get positions() { return this._positions; }
+    get positions() { return this._positions.filter(p => p.active); }
+
+    get allPositions() { return this._positions; }
 
     get currency() { return this._currency; }
 
@@ -24,6 +26,16 @@ export class PositionWizardGroup extends EventEmitter implements IPositionWizard
         }
     }
     get isValid() { return this._isValid; }
+
+    protected _active: boolean = true;
+    set active(v: boolean) {
+        if (this._active !== v) {
+            this._active = v;
+
+            this.recalculate();
+        }
+    }
+    get active() { return this._active; }
 
     protected _sum: number = 0;
     get sum() { return this._sum; }
@@ -43,12 +55,13 @@ export class PositionWizardGroup extends EventEmitter implements IPositionWizard
         protected _index: number,
         protected _groupNode: ICompiledMenuNode<ICompiledSelector>,
         protected _currency: ICurrency,
+        protected _businessPeriods: Array<IBusinessPeriod>,
     ) {
         super();
 
         this._groupNode.children.forEach((p, index) => {
             const position = new PositionWizard(PositionWizardModes.EDIT, p as ICompiledMenuNode<ICompiledProduct>,
-                this._currency, PositionWizardTypes.MODIFIER);
+                this._currency, PositionWizardTypes.MODIFIER, _businessPeriods);
             position.addListener(PositionWizardEventTypes.CHANGE, this.onChangePositionState);
             position.addListener(PositionWizardEventTypes.EDIT, this.onPositionEdit);
 
@@ -60,11 +73,17 @@ export class PositionWizardGroup extends EventEmitter implements IPositionWizard
 
     protected recalculate() {
         let sum = 0;
-        this._positions.forEach(p => {
+        this.positions.forEach(p => {
             sum += p.sum;
         });
 
         this._sum = sum;
+    }
+
+    checkActivity(): void {
+        this._positions.forEach(p => {
+            p.checkActivity();
+        });
     }
 
     getFormatedSum(withCurrency: boolean = false): string {
