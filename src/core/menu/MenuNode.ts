@@ -1,8 +1,9 @@
-import { IBusinessPeriod, ICompiledLanguage, ICompiledMenuNode, ICurrency } from "@djonnyx/tornado-types";
+import { IBusinessPeriod, ICompiledLanguage, ICompiledMenuNode, ICompiledProduct, ICompiledSelector, ICurrency, NodeTypes } from "@djonnyx/tornado-types";
 import EventEmitter from "eventemitter3";
+import { ScenarioProcessing } from "../scenarios";
 import { MenuNodeEventTypes } from "./events";
 
-export class MenuNode extends EventEmitter {
+export class MenuNode<T = ICompiledSelector | ICompiledProduct | any> extends EventEmitter {
     protected static __id = 0;
 
     protected _id: number = 0;
@@ -42,12 +43,15 @@ export class MenuNode extends EventEmitter {
             this.emit(MenuNodeEventTypes.CHANGE);
         }
     }
+    public get active() { return this._active; }
+
+    get scenarios() { return this.__rawNode__.scenarios; }
 
     private changeMenuNodeHandler = () => {
         this.emit(MenuNodeEventTypes.CHANGE);
     }
 
-    constructor(public readonly __rawNode__: ICompiledMenuNode, protected _parent: MenuNode | null, protected _businessPeriods: Array<IBusinessPeriod>,
+    constructor(public readonly __rawNode__: ICompiledMenuNode<T>, protected _parent: MenuNode | null, protected _businessPeriods: Array<IBusinessPeriod>,
         protected _language: ICompiledLanguage, protected _currency: ICurrency) {
         super();
 
@@ -58,6 +62,19 @@ export class MenuNode extends EventEmitter {
             const node = new MenuNode(n, this, _businessPeriods, _language, _currency);
             node.addListener(MenuNodeEventTypes.CHANGE, this.changeMenuNodeHandler);
             this._children.push(node);
+        });
+
+        if (this.__rawNode__.type === NodeTypes.PRODUCT) {
+            const p: ICompiledMenuNode<ICompiledProduct> = this.__rawNode__ as any;
+            p.content.structure.children.forEach(n => {
+                const node = new MenuNode(n, this, _businessPeriods, _language, _currency);
+                node.addListener(MenuNodeEventTypes.CHANGE, this.changeMenuNodeHandler);
+                this._children.push(node);
+            });
+        }
+
+        ScenarioProcessing.applyPeriodicScenariosForNode(this, {
+            businessPeriods: this._businessPeriods,
         });
     }
 
@@ -70,9 +87,9 @@ export class MenuNode extends EventEmitter {
             n.checkActivity();
         })
 
-        /*ScenarioProcessing.applyPeriodicScenariosForPosition(this, {
+        ScenarioProcessing.applyPeriodicScenariosForNode(this, {
             businessPeriods: this._businessPeriods,
-        });*/
+        });
     }
 
     dispose(): void {

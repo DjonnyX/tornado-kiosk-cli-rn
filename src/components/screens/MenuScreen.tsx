@@ -2,7 +2,7 @@ import React, { Dispatch, useState, useCallback, useEffect } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
 import { View, Dimensions, ScaledSize } from "react-native";
 import { connect } from "react-redux";
-import { ICurrency, ICompiledLanguage, ICompiledOrderType, ICompiledProduct, ICompiledMenuNode } from "@djonnyx/tornado-types";
+import { ICurrency, ICompiledLanguage, ICompiledOrderType, ICompiledProduct } from "@djonnyx/tornado-types";
 import { MainNavigationScreenTypes } from "../navigation";
 import { IAppState } from "../../store/state";
 import { CombinedDataSelectors, MenuSelectors, MyOrderSelectors } from "../../store/selectors";
@@ -125,8 +125,8 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
         _onChangeOrderType: (orderType: ICompiledOrderType) => {
             dispatch(CapabilitiesActions.setOrderType(orderType));
         },
-        _onAddOrderPosition: (productNode: MenuNode) => {
-            dispatch(MyOrderActions.edit(productNode.__rawNode__ as ICompiledMenuNode<ICompiledProduct>));
+        _onAddOrderPosition: (productNode: MenuNode<ICompiledProduct>) => {
+            dispatch(MyOrderActions.edit(productNode));
         },
         _onResetOrder: () => {
             dispatch(MyOrderActions.reset());

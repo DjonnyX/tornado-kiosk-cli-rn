@@ -120,10 +120,10 @@ export const ModifiersEditorContainer = React.memo(({ _orderStateId, _language, 
                                     disabled={position.currentGroup === 0} onPress={onPreviousGroup}></SimpleButton>
                                 <View style={{ flex: 1 }}>
                                     <Text style={{ fontSize: 24, fontWeight: "bold", color: "#ffffff", textAlign: "center", textTransform: "uppercase" }}>{
-                                        position.groups[position.currentGroup].__groupNode__.content?.contents[_language.code]?.name
+                                        position.groups[position.currentGroup].__node__.__rawNode__.content?.contents[_language.code]?.name
                                     }</Text>
                                     <Text style={{ fontSize: 14, color: position.groups[position.currentGroup].isValid ? "#ffffff" : "#ff4e4e", textAlign: "center", textTransform: "uppercase" }}>{
-                                        position.groups[position.currentGroup].__groupNode__.content?.contents[_language.code]?.description
+                                        position.groups[position.currentGroup].__node__.__rawNode__.content?.contents[_language.code]?.description
                                     }</Text>
                                 </View>
                                 <SimpleButton title={position.currentGroup === position.groups.length - 1 ? "Готово" : "Далее"}
