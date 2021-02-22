@@ -3,6 +3,7 @@ import EventEmitter from "eventemitter3";
 import { interval, Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { config } from "../../Config";
+import { Debounse } from "../../utils/debounse";
 import { MenuWizardEventTypes, MenuNodeEventTypes } from "./events";
 import { MenuNode } from "./MenuNode";
 
@@ -51,8 +52,14 @@ export class MenuWizard extends EventEmitter {
     private menuChangeHandler = () => {
         this.update();
 
+        this._changeDebounse.call();
+    }
+
+    protected emitChangeState = (): void => {
         this.emit(MenuWizardEventTypes.CHANGE);
     }
+
+    protected _changeDebounse = new Debounse(this.emitChangeState, 10);
 
     protected _unsubscribe$ = new Subject<void>();
 

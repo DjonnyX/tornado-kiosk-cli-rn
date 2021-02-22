@@ -27,9 +27,7 @@ export const OrderServiceContainer = React.memo(({ _orderStateId, _language, _cu
     useEffect(() => {
         if (orderWizard) {
             const onOrderWizardChange = () => {
-                setTimeout(() => {
-                    _onUpdateStateId(orderWizard?.stateId || 0);
-                });
+                _onUpdateStateId(orderWizard?.stateId || 0);
             }
 
             orderWizard.addListener(OrderWizardEventTypes.CHANGE, onOrderWizardChange);

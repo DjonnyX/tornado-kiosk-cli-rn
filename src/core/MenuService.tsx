@@ -7,6 +7,8 @@ import { MenuWizardEventTypes } from "./menu/events";
 import { MenuActions, NotificationActions } from "../store/actions";
 import { CapabilitiesSelectors, CombinedDataSelectors, MenuSelectors } from "../store/selectors";
 import { ISnackState } from "../interfaces";
+import { OrderWizard } from "./order/OrderWizard";
+import { MainNavigationScreenTypes } from "../components/navigation";
 
 interface IMenuServiceProps {
     // store
@@ -18,18 +20,21 @@ interface IMenuServiceProps {
     _language?: ICompiledLanguage;
     _currency?: ICurrency;
     _businessPeriods?: Array<IBusinessPeriod>;
+    _currentScreen?: MainNavigationScreenTypes;
 }
 
 export const MenuServiceContainer = React.memo(({ _menuStateId, _menu, _language,
-    _currency, _businessPeriods, _snackOpen, _onUpdateStateId }: IMenuServiceProps) => {
+    _currency, _businessPeriods, _currentScreen, _snackOpen, _onUpdateStateId }: IMenuServiceProps) => {
     const [menuWizard, setMenuWizard] = useState<MenuWizard | undefined>(undefined);
 
     useEffect(() => {
         if (menuWizard) {
             const onMenuWizardChange = () => {
-                setTimeout(() => {
-                    _onUpdateStateId(menuWizard?.stateId || 0);
-                });
+                _onUpdateStateId(menuWizard?.stateId || 0);
+
+                if (!!OrderWizard.current) {
+                    OrderWizard.current.fireChangeMenu();
+                }
             }
 
             menuWizard.addListener(MenuWizardEventTypes.CHANGE, onMenuWizardChange);
@@ -57,10 +62,13 @@ export const MenuServiceContainer = React.memo(({ _menuStateId, _menu, _language
     }, [_language, _currency, _businessPeriods]);
 
     useEffect(() => {
-        _snackOpen({
-            message: "Изменение в меню! Некоторые позиции в заказе могут стать недоступны.",
-            duration: 5000,
-        });
+        if ((_currentScreen === MainNavigationScreenTypes.MENU || _currentScreen === MainNavigationScreenTypes.CONFIRMATION_ORDER)
+            && !!OrderWizard.current) {
+            _snackOpen({
+                message: "Изменение в меню! Некоторые позиции в заказе могут стать недоступны.",
+                duration: 5000,
+            });
+        }
     }, [_menuStateId]);
 
     return <></>;
@@ -73,6 +81,7 @@ const mapStateToProps = (state: IAppState) => {
         _currency: CombinedDataSelectors.selectDefaultCurrency(state),
         _businessPeriods: CombinedDataSelectors.selectBusinessPeriods(state),
         _menuStateId: MenuSelectors.selectStateId(state),
+        _currentScreen: CapabilitiesSelectors.selectCurrentScreen(state),
     };
 };
 
