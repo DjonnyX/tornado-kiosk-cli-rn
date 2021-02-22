@@ -1,15 +1,16 @@
 import React from "react";
 import { SafeAreaView } from "react-native";
-import { ICompiledMenu, ICompiledMenuNode, ICurrency, ICompiledLanguage } from "@djonnyx/tornado-types";
+import { ICurrency, ICompiledLanguage } from "@djonnyx/tornado-types";
 import { NavMenuItem } from "./NavMenuItem";
 import { ScrollView } from "react-native-gesture-handler";
 import { GridList } from "../../layouts/GridList";
+import { MenuNode } from "../../../core/menu/MenuNode";
 
 interface INavMenuProps {
-    node: ICompiledMenu;
+    node: MenuNode;
     currency: ICurrency;
     language: ICompiledLanguage;
-    onPress: (node: ICompiledMenuNode) => void;
+    onPress: (node: MenuNode) => void;
 }
 
 export const NavMenu = React.memo(({ currency, language, node, onPress }: INavMenuProps) => {
