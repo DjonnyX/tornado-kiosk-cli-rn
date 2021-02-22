@@ -33,6 +33,9 @@ export class MenuNode<T = ICompiledSelector | ICompiledProduct | any> extends Ev
     protected _children = new Array<MenuNode>();
     get children() { return this._children; }
 
+    protected _activeChildren = new Array<MenuNode>();
+    get activeChildren() { return this._children.filter(c => c.active); }
+
     protected _active: boolean = true;
     public set active(v: boolean) {
         if (this._active !== v) {
