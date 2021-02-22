@@ -19,7 +19,9 @@ export class ScenarioProcessing {
         const scenarios: Array<IScenario> = position.__node__.scenarios;
         if (!!scenarios && scenarios.length > 0) {
             scenarios.forEach(s => {
-                ScenarioProcessing.setupPositionLimits(position, s);
+                if (s.active) {
+                    ScenarioProcessing.setupPositionLimits(position, s);
+                }
             });
         }
 
@@ -30,8 +32,10 @@ export class ScenarioProcessing {
                         ScenarioProcessing.setupPosition(p);
 
                         g.__node__.scenarios.forEach(s => {
-                            // Мержинг лимитов группы
-                            ScenarioProcessing.mergePositionLimitsWithGroup(p, s);
+                            if (s.active) {
+                                // Мержинг лимитов группы
+                                ScenarioProcessing.mergePositionLimitsWithGroup(p, s);
+                            }
                         });
                     });
                 }
@@ -47,22 +51,24 @@ export class ScenarioProcessing {
         const scenarios: Array<IScenario> = position.__node__.scenarios;
         if (!!scenarios && scenarios.length > 0) {
             scenarios.forEach(s => {
-                switch (s.action) {
-                    case ScenarioProductActionTypes.DOWN_LIMIT: {
-                        const normalizedValue = ScenarioProcessing.getNormalizedDownLimit(parseInt(s.value as any));
-                        const isValid = position.quantity >= normalizedValue;
-                        if (!isValid) {
-                            isPositionValid = false;
+                if (s.active) {
+                    switch (s.action) {
+                        case ScenarioProductActionTypes.DOWN_LIMIT: {
+                            const normalizedValue = ScenarioProcessing.getNormalizedDownLimit(parseInt(s.value as any));
+                            const isValid = position.quantity >= normalizedValue;
+                            if (!isValid) {
+                                isPositionValid = false;
+                            }
+                            break;
                         }
-                        break;
-                    }
-                    case ScenarioProductActionTypes.UP_LIMIT: {
-                        const normalizedValue = ScenarioProcessing.getNormalizedUpLimit(parseInt(s.value as any));
-                        const isValid = position.quantity <= normalizedValue;
-                        if (!isValid) {
-                            isPositionValid = false;
+                        case ScenarioProductActionTypes.UP_LIMIT: {
+                            const normalizedValue = ScenarioProcessing.getNormalizedUpLimit(parseInt(s.value as any));
+                            const isValid = position.quantity <= normalizedValue;
+                            if (!isValid) {
+                                isPositionValid = false;
+                            }
+                            break;
                         }
-                        break;
                     }
                 }
             });
@@ -75,39 +81,41 @@ export class ScenarioProcessing {
                 if (!!g.__node__.scenarios && g.__node__.scenarios.length > 0) {
                     let groupTotalQnt: number = -1;
                     g.__node__.scenarios.forEach(s => {
-                        switch (s.action) {
-                            case "min-usage": {//ScenarioSelectorActionTypes.MIN_USAGE: {
-                                if (groupTotalQnt === -1) {
-                                    groupTotalQnt = ScenarioProcessing.getTotalProductsQuantity(g);
+                        if (s.active) {
+                            switch (s.action) {
+                                case "min-usage": {//ScenarioSelectorActionTypes.MIN_USAGE: {
+                                    if (groupTotalQnt === -1) {
+                                        groupTotalQnt = ScenarioProcessing.getTotalProductsQuantity(g);
+                                    }
+                                    const val = ScenarioProcessing.getNormalizedDownLimit(parseInt(s.value as any));
+                                    /*const diff = val - groupTotalQnt;
+                                    g.positions.forEach(p => {
+                                        p.actualUpLimit = Math.min(diff, p.upLimit);
+                                    });*/
+                                    const isValid = groupTotalQnt >= val;
+                                    if (!isValid) {
+                                        isGroupValid = false;
+                                    }
+                                    break;
                                 }
-                                const val = ScenarioProcessing.getNormalizedDownLimit(parseInt(s.value as any));
-                                /*const diff = val - groupTotalQnt;
-                                g.positions.forEach(p => {
-                                    p.actualUpLimit = Math.min(diff, p.upLimit);
-                                });*/
-                                const isValid = groupTotalQnt >= val;
-                                if (!isValid) {
-                                    isGroupValid = false;
-                                }
-                                break;
-                            }
-                            case ScenarioSelectorActionTypes.MAX_USAGE: {
-                                if (groupTotalQnt === -1) {
-                                    groupTotalQnt = ScenarioProcessing.getTotalProductsQuantity(g);
-                                }
-                                const val = ScenarioProcessing.getNormalizedUpLimit(parseInt(s.value as any));
+                                case ScenarioSelectorActionTypes.MAX_USAGE: {
+                                    if (groupTotalQnt === -1) {
+                                        groupTotalQnt = ScenarioProcessing.getTotalProductsQuantity(g);
+                                    }
+                                    const val = ScenarioProcessing.getNormalizedUpLimit(parseInt(s.value as any));
 
-                                const diff = val - groupTotalQnt;
-                                g.positions.forEach(p => {
-                                    // динамическое обновление верхнего предела
-                                    p.actualUpLimit = Math.min(p.quantity + diff, p.upLimit);
-                                });
+                                    const diff = val - groupTotalQnt;
+                                    g.positions.forEach(p => {
+                                        // динамическое обновление верхнего предела
+                                        p.actualUpLimit = Math.min(p.quantity + diff, p.upLimit);
+                                    });
 
-                                const isValid = groupTotalQnt <= val;
-                                if (!isValid) {
-                                    isGroupValid = false;
+                                    const isValid = groupTotalQnt <= val;
+                                    if (!isValid) {
+                                        isGroupValid = false;
+                                    }
+                                    break;
                                 }
-                                break;
                             }
                         }
                     });
@@ -183,11 +191,13 @@ export class ScenarioProcessing {
         const scenarios: Array<IScenario> = node.__rawNode__.scenarios;
         if (!!scenarios && scenarios.length > 0) {
             scenarios.forEach(s => {
-                switch (s.action) {
-                    case ScenarioCommonActionTypes.VISIBLE_BY_BUSINESS_PERIOD: {
-                        const isActive = ScenarioProcessing.checkBusinessPeriod(s.value as Array<string>, periodicData);
-                        node.active = isActive;
-                        break;
+                if (s.active) {
+                    switch (s.action) {
+                        case ScenarioCommonActionTypes.VISIBLE_BY_BUSINESS_PERIOD: {
+                            const isActive = ScenarioProcessing.checkBusinessPeriod(s.value as Array<string>, periodicData);
+                            node.active = isActive;
+                            break;
+                        }
                     }
                 }
             });
@@ -197,11 +207,13 @@ export class ScenarioProcessing {
             node.children.forEach(c => {
                 if (!!c.__rawNode__.scenarios && c.__rawNode__.scenarios.length > 0) {
                     c.__rawNode__.scenarios.forEach(s => {
-                        switch (s.action) {
-                            case ScenarioCommonActionTypes.VISIBLE_BY_BUSINESS_PERIOD: {
-                                const isActive = ScenarioProcessing.checkBusinessPeriod(s.value as Array<string>, periodicData);
-                                c.active = isActive;
-                                break;
+                        if (s.active) {
+                            switch (s.action) {
+                                case ScenarioCommonActionTypes.VISIBLE_BY_BUSINESS_PERIOD: {
+                                    const isActive = ScenarioProcessing.checkBusinessPeriod(s.value as Array<string>, periodicData);
+                                    c.active = isActive;
+                                    break;
+                                }
                             }
                         }
                     });
@@ -215,21 +227,23 @@ export class ScenarioProcessing {
     }
 
     private static setupPositionLimits(p: IPositionWizard, s: IScenario): void {
-        switch (s.action) {
-            case ScenarioProductActionTypes.DOWN_LIMIT: {
-                const normalizedValue = ScenarioProcessing.getNormalizedDownLimit(parseInt(s.value as any));
-                p.downLimit = normalizedValue;
+        if (s.active) {
+            switch (s.action) {
+                case ScenarioProductActionTypes.DOWN_LIMIT: {
+                    const normalizedValue = ScenarioProcessing.getNormalizedDownLimit(parseInt(s.value as any));
+                    p.downLimit = normalizedValue;
 
-                // Выставляется дефолтовое минимальное количество,
-                // которое нельзя уменьшать. Это формирование позиции
-                // с предустановленным выбором
-                p.quantity = p.downLimit;
-                break;
-            }
-            case ScenarioProductActionTypes.UP_LIMIT: {
-                const normalizedValue = ScenarioProcessing.getNormalizedUpLimit(parseInt(s.value as any));
-                p.upLimit = normalizedValue;
-                break;
+                    // Выставляется дефолтовое минимальное количество,
+                    // которое нельзя уменьшать. Это формирование позиции
+                    // с предустановленным выбором
+                    p.quantity = p.downLimit;
+                    break;
+                }
+                case ScenarioProductActionTypes.UP_LIMIT: {
+                    const normalizedValue = ScenarioProcessing.getNormalizedUpLimit(parseInt(s.value as any));
+                    p.upLimit = normalizedValue;
+                    break;
+                }
             }
         }
     }
@@ -239,15 +253,17 @@ export class ScenarioProcessing {
      * Мержится только верхний предел
      */
     private static mergePositionLimitsWithGroup(p: IPositionWizard, s: IScenario): void {
-        switch (s.action) {
-            case "min-usage": {//ScenarioSelectorActionTypes.MIN_USAGE: {
-                // p.downLimit = Math.max(p.downLimit, normalizedValue);
-                break;
-            }
-            case ScenarioSelectorActionTypes.MAX_USAGE: {
-                const normalizedValue = ScenarioProcessing.getNormalizedUpLimit(parseInt(s.value as any));
-                p.upLimit = Math.min(p.upLimit, normalizedValue);
-                break;
+        if (s.active) {
+            switch (s.action) {
+                case "min-usage": {//ScenarioSelectorActionTypes.MIN_USAGE: {
+                    // p.downLimit = Math.max(p.downLimit, normalizedValue);
+                    break;
+                }
+                case ScenarioSelectorActionTypes.MAX_USAGE: {
+                    const normalizedValue = ScenarioProcessing.getNormalizedUpLimit(parseInt(s.value as any));
+                    p.upLimit = Math.min(p.upLimit, normalizedValue);
+                    break;
+                }
             }
         }
     }
