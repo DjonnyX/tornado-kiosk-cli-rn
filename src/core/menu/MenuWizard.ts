@@ -60,6 +60,8 @@ export class MenuWizard extends EventEmitter {
         protected _language: ICompiledLanguage) {
         super();
         MenuWizard.current = this;
+
+        this.startUpdatingTimer();
     }
 
     protected startUpdatingTimer(): void {
@@ -78,7 +80,7 @@ export class MenuWizard extends EventEmitter {
         this.updateStateId();
     }
 
-    dispose() {
+    dispose(): void {
         this._unsubscribe$.next();
         this._unsubscribe$.complete();
 

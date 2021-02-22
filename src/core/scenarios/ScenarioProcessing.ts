@@ -1,5 +1,6 @@
 import { IBusinessPeriod, IScenario, ScenarioCommonActionTypes, ScenarioProductActionTypes, ScenarioSelectorActionTypes } from "@djonnyx/tornado-types";
 import { IPositionWizard, IPositionWizardGroup } from "../interfaces";
+import { MenuNode } from "../menu/MenuNode";
 
 interface IPeriodicData {
     businessPeriods: Array<IBusinessPeriod>;
@@ -15,7 +16,7 @@ export class ScenarioProcessing {
     }
 
     static setupPosition(position: IPositionWizard): void {
-        const scenarios: Array<IScenario> = position.__productNode__.scenarios;
+        const scenarios: Array<IScenario> = position.__node__.scenarios;
         if (!!scenarios && scenarios.length > 0) {
             scenarios.forEach(s => {
                 ScenarioProcessing.setupPositionLimits(position, s);
@@ -28,7 +29,7 @@ export class ScenarioProcessing {
                     g.positions.forEach(p => {
                         ScenarioProcessing.setupPosition(p);
 
-                        g.__groupNode__.scenarios.forEach(s => {
+                        g.__node__.scenarios.forEach(s => {
                             // Мержинг лимитов группы
                             ScenarioProcessing.mergePositionLimitsWithGroup(p, s);
                         });
@@ -43,7 +44,7 @@ export class ScenarioProcessing {
      */
     static validatePosition(position: IPositionWizard): boolean {
         let isPositionValid = true;
-        const scenarios: Array<IScenario> = position.__productNode__.scenarios;
+        const scenarios: Array<IScenario> = position.__node__.scenarios;
         if (!!scenarios && scenarios.length > 0) {
             scenarios.forEach(s => {
                 switch (s.action) {
@@ -71,9 +72,9 @@ export class ScenarioProcessing {
             position.groups.forEach(g => {
                 let isGroupValid = true;
                 let isModifiersValid = true;
-                if (!!g.__groupNode__.scenarios && g.__groupNode__.scenarios.length > 0) {
+                if (!!g.__node__.scenarios && g.__node__.scenarios.length > 0) {
                     let groupTotalQnt: number = -1;
-                    g.__groupNode__.scenarios.forEach(s => {
+                    g.__node__.scenarios.forEach(s => {
                         switch (s.action) {
                             case "min-usage": {//ScenarioSelectorActionTypes.MIN_USAGE: {
                                 if (groupTotalQnt === -1) {
@@ -178,36 +179,36 @@ export class ScenarioProcessing {
     /**
      * Применение периодичных сценариев 
      */
-    static applyPeriodicScenariosForPosition(position: IPositionWizard, periodicData: IPeriodicData): void {
-        const scenarios: Array<IScenario> = position.__productNode__.scenarios;
+    static applyPeriodicScenariosForNode(node: MenuNode, periodicData: IPeriodicData): void {
+        const scenarios: Array<IScenario> = node.__rawNode__.scenarios;
         if (!!scenarios && scenarios.length > 0) {
             scenarios.forEach(s => {
                 switch (s.action) {
                     case ScenarioCommonActionTypes.VISIBLE_BY_BUSINESS_PERIOD: {
                         const isActive = ScenarioProcessing.checkBusinessPeriod(s.value as Array<string>, periodicData);
-                        position.active = isActive;
+                        node.active = isActive;
                         break;
                     }
                 }
             });
         }
 
-        if (!!position.groups && position.groups.length > 0) {
-            position.groups.forEach(g => {
-                if (!!g.__groupNode__.scenarios && g.__groupNode__.scenarios.length > 0) {
-                    g.__groupNode__.scenarios.forEach(s => {
+        if (!!node.children && node.children.length > 0) {
+            node.children.forEach(c => {
+                if (!!c.__rawNode__.scenarios && c.__rawNode__.scenarios.length > 0) {
+                    c.__rawNode__.scenarios.forEach(s => {
                         switch (s.action) {
                             case ScenarioCommonActionTypes.VISIBLE_BY_BUSINESS_PERIOD: {
                                 const isActive = ScenarioProcessing.checkBusinessPeriod(s.value as Array<string>, periodicData);
-                                g.active = isActive;
+                                c.active = isActive;
                                 break;
                             }
                         }
                     });
                 }
 
-                g.positions.forEach(p => {
-                    ScenarioProcessing.applyPeriodicScenariosForPosition(p, periodicData);
+                c.children.forEach(p => {
+                    ScenarioProcessing.applyPeriodicScenariosForNode(p, periodicData);
                 });
             });
         }

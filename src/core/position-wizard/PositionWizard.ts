@@ -6,6 +6,8 @@ import { PositionWizardEventTypes } from "./events";
 import { PositionWizardGroup } from "./PositionWizardGroup";
 import { priceFormatter } from "../../utils/price";
 import { ScenarioProcessing } from "../scenarios";
+import { MenuNode } from "../menu/MenuNode";
+import { MenuNodeEventTypes } from "../menu/events";
 
 
 export class PositionWizard extends EventEmitter implements IPositionWizard {
@@ -14,8 +16,8 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
     protected static __id = 0;
 
     static from(position: IPositionWizard, mode: PositionWizardModes): IPositionWizard {
-        const editedPosition = new PositionWizard(mode, position.__productNode__ as ICompiledMenuNode<ICompiledProduct>,
-            position.currency, PositionWizardTypes.PRODUCT, position.businessPeriods);
+        const editedPosition = new PositionWizard(mode, position.__node__,
+            position.currency, PositionWizardTypes.PRODUCT);
 
         PositionWizard.copyAttributes(position, editedPosition);
 
@@ -64,16 +66,14 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
 
     get currency() { return this._currency; }
 
-    get businessPeriods() { return this._businessPeriods; }
-
     protected _quantity: number = 0;
     get quantity() { return this._quantity; }
     set quantity(v: number) {
         if (this._quantity !== v) {
             this._quantity = v;
 
-            this.recalculate();
             this.validate();
+            this.recalculate();
             this.update();
 
             this.emit(PositionWizardEventTypes.CHANGE);
@@ -101,8 +101,8 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
             // т.к. группа с индексом может стать неактивной и произойдет ошибка
             this._currentGroup = 0;
 
-            this.recalculate();
             this.validate();
+            this.recalculate();
             this.update();
 
             this.emit(PositionWizardEventTypes.CHANGE);
@@ -179,11 +179,15 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
     private onChangePositionState = () => {
         // etc
 
-        this.recalculate();
         this.validate();
+        this.recalculate();
         this.update();
 
         this.emit(PositionWizardEventTypes.CHANGE);
+    }
+
+    private onChangeRawState = () => {
+        this.active = this.__node__.active;
     }
 
     private onEditPosition = (target: IPositionWizard) => {
@@ -194,21 +198,20 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
 
     constructor(
         protected _mode: PositionWizardModes,
-        public readonly __productNode__: ICompiledMenuNode<ICompiledProduct>,
+        public readonly __node__: MenuNode<ICompiledProduct>,
         protected _currency: ICurrency,
         protected _type: PositionWizardTypes,
-        protected _businessPeriods: Array<IBusinessPeriod>,
     ) {
         super();
 
         PositionWizard.__id++;
         this._id = PositionWizard.__id;
 
-        this._product = __productNode__.content;
+        this._product = __node__.__rawNode__.content;
 
-        this._product.structure.children.forEach((s, index) => {
-            const group = new PositionWizardGroup(index, s as ICompiledMenuNode<ICompiledSelector>,
-                this._currency, this._businessPeriods);
+        this.__node__.children.forEach((s, index) => {
+            const group = new PositionWizardGroup(index, s as MenuNode<ICompiledSelector>,
+                this._currency);
             group.addListener(PositionWizardEventTypes.CHANGE, this.onChangePositionState);
             group.addListener(PositionWizardEventTypes.EDIT, this.onEditPosition);
 
@@ -217,13 +220,14 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
 
         if (this._type === PositionWizardTypes.PRODUCT) {
             ScenarioProcessing.setupPosition(this);
-            ScenarioProcessing.applyPeriodicScenariosForPosition(this, {
-                businessPeriods: this._businessPeriods,
-            });
         }
 
-        this.recalculate();
+        this.__node__.addListener(MenuNodeEventTypes.CHANGE, this.onChangeRawState);
+
+        this.active = this.__node__.active;
+
         this.validate();
+        this.recalculate();
         this.update();
     }
 
@@ -256,16 +260,6 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
 
     protected update(): void {
         this._stateId++;
-    }
-
-    checkActivity(): void {
-        this._groups.forEach(g => {
-            g.checkActivity();
-        })
-
-        ScenarioProcessing.applyPeriodicScenariosForPosition(this, {
-            businessPeriods: this._businessPeriods,
-        });
     }
 
     edit() {
@@ -303,6 +297,8 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
     }
 
     dispose() {
+        this.__node__.removeListener(MenuNodeEventTypes.CHANGE, this.onChangeRawState);
+
         this._groups.forEach(g => {
             g.removeAllListeners();
             g.dispose();
