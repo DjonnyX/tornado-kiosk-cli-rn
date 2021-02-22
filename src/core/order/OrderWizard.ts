@@ -1,5 +1,8 @@
-import { ICompiledLanguage, ICompiledMenuNode, ICompiledProduct, ICurrency } from "@djonnyx/tornado-types";
+import { IBusinessPeriod, ICompiledLanguage, ICompiledMenuNode, ICompiledProduct, ICurrency } from "@djonnyx/tornado-types";
 import EventEmitter from "eventemitter3";
+import { interval, Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
+import { config } from "../../Config";
 import { priceFormatter } from "../../utils/price";
 import { PositionWizardModes, PositionWizardTypes } from "../enums";
 import { IOrderWizard, IPositionWizard } from "../interfaces";
@@ -34,6 +37,12 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
         }
     }
 
+    set businessPeriods(v: Array<IBusinessPeriod>) {
+        if (this._businessPeriods !== v) {
+            this._businessPeriods = v;
+        }
+    }
+
     set language(v: ICompiledLanguage) {
         if (this._language !== v) {
             this._language = v;
@@ -65,9 +74,26 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
         }
     }
 
-    constructor(protected _currency: ICurrency, protected _language: ICompiledLanguage) {
+    protected _unsubscribe$ = new Subject<void>();
+
+    constructor(protected _currency: ICurrency, protected _businessPeriods: Array<IBusinessPeriod>,
+        protected _language: ICompiledLanguage) {
         super();
         OrderWizard.current = this;
+    }
+
+    protected startUpdatingTimer(): void {
+        interval(config.capabilities.checkActivityInterval).pipe(
+            takeUntil(this._unsubscribe$),
+        ).subscribe(() => {
+            this._positions.forEach(p => {
+                p.checkActivity();
+            });
+
+            this._editingPositions.forEach(p => {
+                p.checkActivity();
+            });
+        });
     }
 
     protected recalculate() {
@@ -142,7 +168,8 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
     }
 
     editProduct(productNode: ICompiledMenuNode<ICompiledProduct>) {
-        const position = new PositionWizard(PositionWizardModes.NEW, productNode, this._currency);
+        const position = new PositionWizard(PositionWizardModes.NEW, productNode, this._currency,
+            PositionWizardTypes.PRODUCT, this._businessPeriods);
         position.addListener(PositionWizardEventTypes.EDIT, this.onEditPosition);
         position.quantity = 1;
 
@@ -248,6 +275,9 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
     }
 
     dispose() {
+        this._unsubscribe$.next();
+        this._unsubscribe$.complete();
+
         this._positions.forEach(p => {
             p.removeAllListeners();
             p.dispose();

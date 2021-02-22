@@ -1,5 +1,9 @@
-import { IScenario, ScenarioProductActionTypes, ScenarioSelectorActionTypes } from "@djonnyx/tornado-types";
+import { IBusinessPeriod, IScenario, ScenarioCommonActionTypes, ScenarioProductActionTypes, ScenarioSelectorActionTypes } from "@djonnyx/tornado-types";
 import { IPositionWizard, IPositionWizardGroup } from "../interfaces";
+
+interface IPeriodicData {
+    businessPeriods: Array<IBusinessPeriod>;
+}
 
 export class ScenarioProcessing {
     static getNormalizedDownLimit(value: number): number {
@@ -91,7 +95,7 @@ export class ScenarioProcessing {
                                     groupTotalQnt = ScenarioProcessing.getTotalProductsQuantity(g);
                                 }
                                 const val = ScenarioProcessing.getNormalizedUpLimit(parseInt(s.value as any));
-                                
+
                                 const diff = val - groupTotalQnt;
                                 g.positions.forEach(p => {
                                     // динамическое обновление верхнего предела
@@ -123,6 +127,90 @@ export class ScenarioProcessing {
         position.isValid = isPositionValid;
 
         return position.isValid;
+    }
+
+    static normalizeTime(time?: number): number {
+        const date = time !== undefined ? new Date(time) : new Date();
+
+        const dayTime = (time !== undefined ? date.getUTCMinutes() : date.getMinutes()) * 60000
+            + (time !== undefined ? date.getUTCHours() : date.getHours()) * 3600000;
+
+        return dayTime;
+    }
+
+    static checkBusinessPeriod = (ids: Array<string>, periodicData: IPeriodicData): boolean => {
+        if (!ids || !ids.length) {
+            return false;
+        }
+
+        const bps = periodicData.businessPeriods.filter(bp => ids.indexOf(bp.id || "") > -1);
+        const activities = new Array<boolean>();
+        for (let i = 0, l1 = bps.length; i < l1; i++) {
+            const bp = bps[i];
+            for (let j = 0, l2 = bp.schedule.length; j < l2; j++) {
+                const schedule = bp.schedule[j];
+
+                const date = new Date();
+                const current = ScenarioProcessing.normalizeTime();
+
+                const start = ScenarioProcessing.normalizeTime(schedule?.time?.start);
+                const end = ScenarioProcessing.normalizeTime(schedule?.time?.end);
+
+                const isDayChecked = !!schedule.weekDays && schedule.weekDays.indexOf(date.getDay()) > -1;
+                const isTimeChecked = start <= current && current <= end;
+
+                activities.push(!!isDayChecked && !!isTimeChecked);
+            }
+        }
+
+        let result = false;
+        if (activities.length > 0) {
+            activities.forEach(a => {
+                if (a) {
+                    result = true;
+                }
+            });
+        }
+
+        return result;
+    }
+
+    /**
+     * Применение периодичных сценариев 
+     */
+    static applyPeriodicScenariosForPosition(position: IPositionWizard, periodicData: IPeriodicData): void {
+        const scenarios: Array<IScenario> = position.__productNode__.scenarios;
+        if (!!scenarios && scenarios.length > 0) {
+            scenarios.forEach(s => {
+                switch (s.action) {
+                    case ScenarioCommonActionTypes.VISIBLE_BY_BUSINESS_PERIOD: {
+                        const isActive = ScenarioProcessing.checkBusinessPeriod(s.value as Array<string>, periodicData);
+                        position.active = isActive;
+                        break;
+                    }
+                }
+            });
+        }
+
+        if (!!position.groups && position.groups.length > 0) {
+            position.groups.forEach(g => {
+                if (!!g.__groupNode__.scenarios && g.__groupNode__.scenarios.length > 0) {
+                    g.__groupNode__.scenarios.forEach(s => {
+                        switch (s.action) {
+                            case ScenarioCommonActionTypes.VISIBLE_BY_BUSINESS_PERIOD: {
+                                const isActive = ScenarioProcessing.checkBusinessPeriod(s.value as Array<string>, periodicData);
+                                g.active = isActive;
+                                break;
+                            }
+                        }
+                    });
+                }
+
+                g.positions.forEach(p => {
+                    ScenarioProcessing.applyPeriodicScenariosForPosition(p, periodicData);
+                });
+            });
+        }
     }
 
     private static setupPositionLimits(p: IPositionWizard, s: IScenario): void {
