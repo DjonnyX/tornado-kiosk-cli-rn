@@ -1,11 +1,10 @@
-import { IBusinessPeriod, ICompiledLanguage, ICompiledProduct, ICurrency } from "@djonnyx/tornado-types";
+import { ICompiledLanguage, ICompiledProduct, ICurrency } from "@djonnyx/tornado-types";
 import EventEmitter from "eventemitter3";
+import { Debounse } from "../../utils/debounse";
 import { priceFormatter } from "../../utils/price";
 import { PositionWizardModes, PositionWizardTypes } from "../enums";
 import { IOrderWizard, IPositionWizard } from "../interfaces";
-import { MenuWizardEventTypes } from "../menu/events";
 import { MenuNode } from "../menu/MenuNode";
-import { MenuWizard } from "../menu/MenuWizard";
 import { PositionWizard } from "../position-wizard";
 import { PositionWizardEventTypes } from "../position-wizard/events";
 import { OrderWizardEventTypes } from "./events";
@@ -46,23 +45,23 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
     protected _sum: number = 0;
     get sum() { return this._sum; }
 
-    private menuChangeHandler = () => {
+    public readonly fireChangeMenu = () => {
         const currentPosition = this.currentPosition;
-        if (!currentPosition) {
-            return;
+        if (currentPosition) {
+            if (currentPosition.groups.length === 0) {
+                this.editCancel();
+            } else {
+                this.resetAndEdit();
+            }
         }
 
-        if (currentPosition.groups.length === 0) {
-            this.editCancel();
-        } else {
-            this.resetAndEdit();
-        }
+        this.removeInvalidOrders();
     }
 
     private onChangePosition = () => {
         this.update();
 
-        this.emit(OrderWizardEventTypes.CHANGE);
+        this._changeDebounse.call();
     }
 
     private onEditPosition = (position: IPositionWizard) => {
@@ -81,11 +80,15 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
         }
     }
 
+    protected emitChangeState = (): void => {
+        this.emit(OrderWizardEventTypes.CHANGE);
+    }
+
+    protected _changeDebounse = new Debounse(this.emitChangeState, 10);
+
     constructor(protected _currency: ICurrency, protected _language: ICompiledLanguage) {
         super();
         OrderWizard.current = this;
-
-        MenuWizard.current.addListener(MenuWizardEventTypes.CHANGE, this.menuChangeHandler);
     }
 
     protected resetAndEdit() {
@@ -120,6 +123,20 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
         this.updateStateId();
     }
 
+    protected removeInvalidOrders(): void {
+        const positions = [...this._positions];
+
+        console.warn(positions.length)
+
+        while (positions.length > 0) {
+            const p = positions.pop();
+            console.warn(p?.isValid)
+            if (p && !p.isValid) {
+                this.remove(p);
+            }
+        }
+    }
+
     gotoPreviousGroup(): void {
         if (!this.currentPosition) {
             return;
@@ -130,7 +147,7 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
 
             this.updateStateId();
 
-            this.emit(OrderWizardEventTypes.CHANGE);
+            this._changeDebounse.call();
         }
     }
 
@@ -145,7 +162,7 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
 
             this.updateStateId();
 
-            this.emit(OrderWizardEventTypes.CHANGE);
+            this._changeDebounse.call();
         } else {
             if (currentPosition.type !== PositionWizardTypes.MODIFIER) {
                 if (currentPosition.mode === PositionWizardModes.EDIT) {
@@ -170,7 +187,7 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
         this._stateId = 1;
         this._sum = 0;
 
-        this.emit(OrderWizardEventTypes.CHANGE);
+        this._changeDebounse.call();
     }
 
     editProduct(productNode: MenuNode<ICompiledProduct>) {
@@ -187,7 +204,7 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
 
             this.update();
 
-            this.emit(OrderWizardEventTypes.CHANGE);
+            this._changeDebounse.call();
         }
     }
 
@@ -196,7 +213,7 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
 
         this.update();
 
-        this.emit(OrderWizardEventTypes.CHANGE);
+        this._changeDebounse.call();
     }
 
     editCancel(clearOriginal: boolean = true): void {
@@ -219,7 +236,7 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
 
         this.update();
 
-        this.emit(OrderWizardEventTypes.CHANGE);
+        this._changeDebounse.call();
     }
 
     add(position: IPositionWizard, isTemp: boolean = false): IPositionWizard {
@@ -236,7 +253,7 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
 
         this.update();
 
-        this.emit(OrderWizardEventTypes.CHANGE);
+        this._changeDebounse.call();
 
         return editedPosition;
     }
@@ -249,7 +266,7 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
 
         this.update();
 
-        this.emit(OrderWizardEventTypes.CHANGE);
+        this._changeDebounse.call();
     }
 
     reset(): void {
@@ -272,7 +289,7 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
         this._stateId = 0;
         this._sum = 0;
 
-        this.emit(OrderWizardEventTypes.CHANGE);
+        this._changeDebounse.call();
     }
 
     getFormatedSum(withCurrency: boolean = false): string {

@@ -3,6 +3,7 @@ import EventEmitter from "eventemitter3";
 import { priceFormatter } from "../../utils/price";
 import { PositionWizardModes, PositionWizardTypes } from "../enums";
 import { IPositionWizard, IPositionWizardGroup } from "../interfaces";
+import { MenuNodeEventTypes } from "../menu/events";
 import { MenuNode } from "../menu/MenuNode";
 import { PositionWizardEventTypes } from "./events";
 import { PositionWizard } from "./PositionWizard";
@@ -34,6 +35,7 @@ export class PositionWizardGroup extends EventEmitter implements IPositionWizard
             this._active = v;
 
             this.recalculate();
+            this.emit(PositionWizardEventTypes.CHANGE);
         }
     }
     get active() { return this._active; }
@@ -46,6 +48,10 @@ export class PositionWizardGroup extends EventEmitter implements IPositionWizard
 
         this.recalculate();
         this.emit(PositionWizardEventTypes.CHANGE);
+    }
+
+    private onChangeRawState = () => {
+        this.active = this.__node__.active;
     }
 
     private onPositionEdit = (target: IPositionWizard) => {
@@ -64,6 +70,8 @@ export class PositionWizardGroup extends EventEmitter implements IPositionWizard
                 this._currency, PositionWizardTypes.MODIFIER);
             position.addListener(PositionWizardEventTypes.CHANGE, this.onChangePositionState);
             position.addListener(PositionWizardEventTypes.EDIT, this.onPositionEdit);
+
+            this.__node__.addListener(MenuNodeEventTypes.CHANGE, this.onChangeRawState);
 
             this._positions.push(position);
         });
@@ -91,6 +99,8 @@ export class PositionWizardGroup extends EventEmitter implements IPositionWizard
     }
 
     dispose() {
+        this.__node__.removeListener(MenuNodeEventTypes.CHANGE, this.onChangeRawState);
+
         this._positions.forEach(p => {
             p.removeAllListeners();
             p.dispose();
