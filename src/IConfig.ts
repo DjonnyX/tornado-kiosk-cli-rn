@@ -6,5 +6,6 @@ export interface IConfig {
     capabilities: {
         userIdleTimeout: number;
         priceDigest: number;
+        checkActivityInterval: number;
     };
 }

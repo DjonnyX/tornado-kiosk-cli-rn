@@ -1,5 +1,5 @@
 import EventEmitter from "eventemitter3";
-import { ICompiledMenuNode, ICompiledProduct, ICompiledSelector, ICurrency } from "@djonnyx/tornado-types";
+import { IBusinessPeriod, ICompiledMenuNode, ICompiledProduct, ICompiledSelector, ICurrency } from "@djonnyx/tornado-types";
 import { PositionWizardModes, PositionWizardTypes } from "../enums";
 import { IPositionWizard, IPositionWizardGroup } from "../interfaces";
 import { PositionWizardEventTypes } from "./events";
@@ -15,7 +15,7 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
 
     static from(position: IPositionWizard, mode: PositionWizardModes): IPositionWizard {
         const editedPosition = new PositionWizard(mode, position.__productNode__ as ICompiledMenuNode<ICompiledProduct>,
-            position.currency);
+            position.currency, PositionWizardTypes.PRODUCT, position.businessPeriods);
 
         PositionWizard.copyAttributes(position, editedPosition);
 
@@ -25,9 +25,9 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
     static copyAttributes(src: IPositionWizard, position: IPositionWizard) {
         position.quantity = src.quantity;
 
-        position.groups.forEach((g, i) => {
-            g.positions.forEach((p, j) => {
-                PositionWizard.copyAttributes(src.groups[i].positions[j], p);
+        position.allGroups.forEach((g, i) => {
+            g.allPositions.forEach((p, j) => {
+                PositionWizard.copyAttributes(src.allGroups[i].allPositions[j], p);
             });
         });
     }
@@ -64,6 +64,8 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
 
     get currency() { return this._currency; }
 
+    get businessPeriods() { return this._businessPeriods; }
+
     protected _quantity: number = 0;
     get quantity() { return this._quantity; }
     set quantity(v: number) {
@@ -86,7 +88,27 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
 
     protected _groups = new Array<IPositionWizardGroup>();
 
-    get groups() { return this._groups; }
+    get groups() { return this._groups.filter(g => g.active); }
+
+    get allGroups() { return this._groups; }
+
+    protected _active: boolean = true;
+    set active(v: boolean) {
+        if (this._active !== v) {
+            this._active = v;
+
+            // При смене например БП, нужно сбрасывать индекс текущей группы
+            // т.к. группа с индексом может стать неактивной и произойдет ошибка
+            this._currentGroup = 0;
+
+            this.recalculate();
+            this.validate();
+            this.update();
+
+            this.emit(PositionWizardEventTypes.CHANGE);
+        }
+    }
+    get active() { return this._active; }
 
     protected _isValid: boolean = true;
     set isValid(v: boolean) {
@@ -142,7 +164,7 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
 
     get nestedPositions() {
         const result = new Array<IPositionWizard>();
-        this._groups.forEach(g => {
+        this.groups.forEach(g => {
             g.positions.forEach(p => {
                 if (p.quantity > 0) {
                     result.push(p);
@@ -174,7 +196,8 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
         protected _mode: PositionWizardModes,
         public readonly __productNode__: ICompiledMenuNode<ICompiledProduct>,
         protected _currency: ICurrency,
-        protected _type: PositionWizardTypes = PositionWizardTypes.PRODUCT,
+        protected _type: PositionWizardTypes,
+        protected _businessPeriods: Array<IBusinessPeriod>,
     ) {
         super();
 
@@ -184,7 +207,8 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
         this._product = __productNode__.content;
 
         this._product.structure.children.forEach((s, index) => {
-            const group = new PositionWizardGroup(index, s as ICompiledMenuNode<ICompiledSelector>, this._currency);
+            const group = new PositionWizardGroup(index, s as ICompiledMenuNode<ICompiledSelector>,
+                this._currency, this._businessPeriods);
             group.addListener(PositionWizardEventTypes.CHANGE, this.onChangePositionState);
             group.addListener(PositionWizardEventTypes.EDIT, this.onEditPosition);
 
@@ -193,6 +217,9 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
 
         if (this._type === PositionWizardTypes.PRODUCT) {
             ScenarioProcessing.setupPosition(this);
+            ScenarioProcessing.applyPeriodicScenariosForPosition(this, {
+                businessPeriods: this._businessPeriods,
+            });
         }
 
         this.recalculate();
@@ -202,7 +229,7 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
 
     protected recalculate() {
         let sum = 0;
-        this._groups.forEach(g => {
+        this.groups.forEach(g => {
             sum += g.sum;
         });
 
@@ -231,12 +258,22 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
         this._stateId++;
     }
 
+    checkActivity(): void {
+        this._groups.forEach(g => {
+            g.checkActivity();
+        })
+
+        ScenarioProcessing.applyPeriodicScenariosForPosition(this, {
+            businessPeriods: this._businessPeriods,
+        });
+    }
+
     edit() {
         if (this._mode === PositionWizardModes.NEW) {
             throw Error("Position with mode \"new\" cannot be edited.");
         }
 
-        if (this._groups.length > 0) {
+        if (this.groups.length > 0) {
             this.emit(PositionWizardEventTypes.EDIT, this);
         }
     }
