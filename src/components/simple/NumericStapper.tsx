@@ -37,7 +37,7 @@ interface INumericStapperProps {
     buttonStyle?: StyleProp<ViewStyle | TextStyle>;
     disabledButtonStyle?: StyleProp<ViewStyle | TextStyle>;
     buttonTextStyle: StyleProp<TextStyle>;
-    disabledButtonTextStyle: StyleProp<TextStyle>;
+    disabledButtonTextStyle?: StyleProp<TextStyle>;
     containerStyle?: StyleProp<ViewStyle>;
     iconDecrement?: string;
     iconIncrement?: string;
