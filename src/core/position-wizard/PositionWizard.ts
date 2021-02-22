@@ -262,6 +262,12 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
         this._stateId++;
     }
 
+    updateState() {
+        this.update();
+
+        this.emit(PositionWizardEventTypes.CHANGE);
+    }
+
     edit() {
         if (this._mode === PositionWizardModes.NEW) {
             throw Error("Position with mode \"new\" cannot be edited.");

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { View, Text, Animated, Easing } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import {
@@ -14,6 +14,7 @@ import { MenuNode } from "../../core/menu/MenuNode";
 
 interface IMenuProps {
     menu: MenuNode;
+    menuStateId: number;
     currency: ICurrency;
     language: ICompiledLanguage;
     width: number;
@@ -26,7 +27,7 @@ interface IMenuProps {
 const sideMenuWidth = 180;
 
 export const Menu = React.memo(({
-    menu, language, currency, width, height,
+    menu, menuStateId, language, currency, width, height,
     cancelOrder, addPosition,
 }: IMenuProps) => {
     const [selected, _setSelectedCategory] = useState({ current: menu, previouse: menu });
@@ -61,6 +62,14 @@ export const Menu = React.memo(({
     const selectNavMenuCategoryHandler = useCallback((node: MenuNode) => {
         navigateTo(node);
     }, [selected]);
+
+    // Сброс на первую активную группу, при изменении бизнесс-периода
+    useEffect(() => {
+        const activeChildren = menu.activeChildren;
+        const node = activeChildren.length > 0 ? activeChildren[0] : menu;
+
+        navigateTo(node);
+    }, [menuStateId]);
 
     // навигация / добавление продукта
     const navigateTo = (node: MenuNode) => {
@@ -184,7 +193,7 @@ export const Menu = React.memo(({
                         }),
                     }}>
                         <View style={{ flex: 1, flexGrow: 1, margin: "auto" }}>
-                            <SideMenu menu={menu} language={language} selected={selected.current}
+                            <SideMenu menu={menu} menuStateId={menuStateId} language={language} selected={selected.current}
                                 onPress={selectSideMenuCategoryHandler}></SideMenu>
                         </View>
                         <View style={{ flex: 0, width: "100%", height: 192, margin: "auto", padding: 24 }}>

@@ -18,6 +18,7 @@ interface IConfirmationOrderScreenSelfProps {
     // store props
     _alertOpen: (alert: IAlertState) => void;
     _orderStateId: number;
+    _menuStateId: number;
     _banners: Array<ICompiledAd>;
     _language: ICompiledLanguage;
     _currency: ICurrency;
@@ -27,7 +28,7 @@ interface IConfirmationOrderScreenSelfProps {
 
 interface IConfirmationOrderScreenProps extends StackScreenProps<any, MainNavigationScreenTypes.INTRO>, IConfirmationOrderScreenSelfProps { }
 
-const ConfirmationOrderScreenContainer = React.memo(({ _language, _banners, _currency, _orderStateId, navigation,
+const ConfirmationOrderScreenContainer = React.memo(({ _language, _banners, _currency, _orderStateId, _menuStateId, navigation,
     _alertOpen }: IConfirmationOrderScreenProps) => {
 
     const selectAdHandler = useCallback((ad: ICompiledAd) => {
@@ -56,10 +57,11 @@ const ConfirmationOrderScreenContainer = React.memo(({ _language, _banners, _cur
             <View style={{ flex: 1, flexDirection: "column", width: "100%", height: "100%", maxHeight: _banners.length > 0 ? "90%" : "100%" }}>
                 <View style={{ flex: 1 }}>
                     <SafeAreaView style={{ flex: 1, width: "100%" }}>
-                        <FlatList persistentScrollbar updateCellsBatchingPeriod={10} style={{ flex: 1, margin: 20 }} data={OrderWizard.current.positions} renderItem={({ item }) => {
-                            return <ConfirmationOrderListItem key={item.id} stateId={item.stateId} position={item} currency={_currency} language={_language}
-                                imageHeight={64} alertOpen={_alertOpen} />
-                        }}
+                        <FlatList persistentScrollbar updateCellsBatchingPeriod={10} style={{ flex: 1, margin: 20 }} data={OrderWizard.current.positions}
+                            renderItem={({ item }) => {
+                                return <ConfirmationOrderListItem key={item.id} stateId={item.stateId} position={item} currency={_currency} language={_language}
+                                    imageHeight={64} alertOpen={_alertOpen} />
+                            }}
                             keyExtractor={(item, index) => index.toString()}>
                         </FlatList>
                     </SafeAreaView>

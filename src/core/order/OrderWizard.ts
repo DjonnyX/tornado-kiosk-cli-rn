@@ -3,7 +3,9 @@ import EventEmitter from "eventemitter3";
 import { priceFormatter } from "../../utils/price";
 import { PositionWizardModes, PositionWizardTypes } from "../enums";
 import { IOrderWizard, IPositionWizard } from "../interfaces";
+import { MenuWizardEventTypes } from "../menu/events";
 import { MenuNode } from "../menu/MenuNode";
+import { MenuWizard } from "../menu/MenuWizard";
 import { PositionWizard } from "../position-wizard";
 import { PositionWizardEventTypes } from "../position-wizard/events";
 import { OrderWizardEventTypes } from "./events";
@@ -44,6 +46,19 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
     protected _sum: number = 0;
     get sum() { return this._sum; }
 
+    private menuChangeHandler = () => {
+        const currentPosition = this.currentPosition;
+        if (!currentPosition) {
+            return;
+        }
+
+        if (currentPosition.groups.length === 0) {
+            this.editCancel();
+        } else {
+            this.resetAndEdit();
+        }
+    }
+
     private onChangePosition = () => {
         this.update();
 
@@ -69,6 +84,22 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
     constructor(protected _currency: ICurrency, protected _language: ICompiledLanguage) {
         super();
         OrderWizard.current = this;
+
+        MenuWizard.current.addListener(MenuWizardEventTypes.CHANGE, this.menuChangeHandler);
+    }
+
+    protected resetAndEdit() {
+        const currentPosition = this.currentPosition;
+        if (!currentPosition) {
+            return;
+        }
+
+        const pos = PositionWizard.from(currentPosition, currentPosition.mode);
+        pos.addListener(PositionWizardEventTypes.EDIT, this.onEditPosition);
+
+        this.editCancel(false);
+
+        this.edit(pos);
     }
 
     protected recalculate() {
@@ -168,7 +199,7 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
         this.emit(OrderWizardEventTypes.CHANGE);
     }
 
-    editCancel(): void {
+    editCancel(clearOriginal: boolean = true): void {
         const currentPosition = this.currentPosition;
 
         if (!currentPosition) {
@@ -181,7 +212,10 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
         currentPosition.dispose();
 
         this._editingPositions.splice(this._editingPositions.findIndex(ep => ep === currentPosition), 1);
-        this._originalEditingPosition = null;
+
+        if (clearOriginal) {
+            this._originalEditingPosition = null;
+        }
 
         this.update();
 
