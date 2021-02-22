@@ -3,13 +3,14 @@ import EventEmitter from "eventemitter3";
 import { priceFormatter } from "../../utils/price";
 import { PositionWizardModes, PositionWizardTypes } from "../enums";
 import { IPositionWizard, IPositionWizardGroup } from "../interfaces";
+import { MenuNode } from "../menu/MenuNode";
 import { PositionWizardEventTypes } from "./events";
 import { PositionWizard } from "./PositionWizard";
 
 export class PositionWizardGroup extends EventEmitter implements IPositionWizardGroup {
     get index() { return this._index; }
 
-    get __groupNode__() { return this._groupNode; }
+    get __node__() { return this._groupNode; }
 
     protected _positions = new Array<IPositionWizard>();
 
@@ -53,20 +54,21 @@ export class PositionWizardGroup extends EventEmitter implements IPositionWizard
 
     constructor(
         protected _index: number,
-        protected _groupNode: ICompiledMenuNode<ICompiledSelector>,
+        protected _groupNode: MenuNode<ICompiledSelector>,
         protected _currency: ICurrency,
-        protected _businessPeriods: Array<IBusinessPeriod>,
     ) {
         super();
 
         this._groupNode.children.forEach((p, index) => {
-            const position = new PositionWizard(PositionWizardModes.EDIT, p as ICompiledMenuNode<ICompiledProduct>,
-                this._currency, PositionWizardTypes.MODIFIER, _businessPeriods);
+            const position = new PositionWizard(PositionWizardModes.EDIT, p as MenuNode<ICompiledProduct>,
+                this._currency, PositionWizardTypes.MODIFIER);
             position.addListener(PositionWizardEventTypes.CHANGE, this.onChangePositionState);
             position.addListener(PositionWizardEventTypes.EDIT, this.onPositionEdit);
 
             this._positions.push(position);
         });
+
+        this.active = this.__node__.active;
 
         this.recalculate();
     }
@@ -78,12 +80,6 @@ export class PositionWizardGroup extends EventEmitter implements IPositionWizard
         });
 
         this._sum = sum;
-    }
-
-    checkActivity(): void {
-        this._positions.forEach(p => {
-            p.checkActivity();
-        });
     }
 
     getFormatedSum(withCurrency: boolean = false): string {
