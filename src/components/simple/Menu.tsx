@@ -14,7 +14,6 @@ import { MenuNode } from "../../core/menu/MenuNode";
 
 interface IMenuProps {
     menu: MenuNode;
-    menuStateId: number;
     currency: ICurrency;
     language: ICompiledLanguage;
     width: number;
@@ -27,52 +26,63 @@ interface IMenuProps {
 const sideMenuWidth = 180;
 
 export const Menu = React.memo(({
-    menu, menuStateId, language, currency, width, height,
+    menu, language, currency, width, height,
     cancelOrder, addPosition,
 }: IMenuProps) => {
-    const [selected, _setSelectedCategory] = useState({ current: menu, previouse: menu });
-    const [menuPosition, _setMenuPosition] = useState(new Animated.Value(1));
-    const [screenPosition, _setScreenPosition] = useState(new Animated.Value(0));
+    const [currentCategory, setCurrentCategory] = useState<MenuNode>(menu);
+    const [previousCategory, setPreviousCategory] = useState<MenuNode>(menu);
+    const [menuPosition, setMenuPosition] = useState(new Animated.Value(1));
+    const [screenPosition, setScreenPosition] = useState(new Animated.Value(0));
     let menuAnimation: Animated.CompositeAnimation;
     let screenAnimation: Animated.CompositeAnimation;
 
-    const setSelectedCategory = (category: MenuNode) => {
-        _setSelectedCategory(previouse => {
-
-            if (category.index > previouse.current.index) {
+    useEffect(() => {
+        if (currentCategory.__rawNode__.id !== previousCategory.__rawNode__.id) {
+            if (currentCategory.index > previousCategory.index) {
                 screenFadeOut();
             } else {
                 screenFadeIn();
             }
 
-            if (category === menu) {
+            if (currentCategory.id === menu.id) {
                 sideMenuFadeOut();
             } else {
                 sideMenuFadeIn();
             }
+        }
+    }, [currentCategory, previousCategory]);
 
-            return { current: category, previouse: previouse.current };
+    const setSelectedCategory = useCallback((category: MenuNode) => {
+        setCurrentCategory(prev => {
+            setPreviousCategory(prev);
+            return category;
         });
-    };
+    }, [currentCategory]);
 
     const selectSideMenuCategoryHandler = useCallback((node: MenuNode) => {
         navigateTo(node);
-    }, [selected]);
+    }, []);
 
     const selectNavMenuCategoryHandler = useCallback((node: MenuNode) => {
         navigateTo(node);
-    }, [selected]);
+    }, []);
 
     // Сброс на первую активную группу, при изменении бизнесс-периода
     useEffect(() => {
         const activeChildren = menu.activeChildren;
-        const node = activeChildren.length > 0 ? activeChildren[0] : menu;
-
-        navigateTo(node);
-    }, [menuStateId]);
+        const activeItem = activeChildren.find(node => node.__rawNode__.id === currentCategory.__rawNode__.id);
+        if (!!activeItem) {
+            navigateTo(activeItem);
+        } else if (currentCategory.__rawNode__.id === menu.__rawNode__.id) {
+            navigateTo(menu);
+        } else {
+            const node = activeChildren.length > 0 ? activeChildren[0] : menu;
+            navigateTo(menu);
+        }
+    }, [menu]);
 
     // навигация / добавление продукта
-    const navigateTo = (node: MenuNode) => {
+    const navigateTo = useCallback((node: MenuNode) => {
         if (node.type === NodeTypes.SELECTOR || node.type === NodeTypes.SELECTOR_NODE) {
 
             // навигация по категории
@@ -83,12 +93,12 @@ export const Menu = React.memo(({
             // добавление позиции
             addPosition(productNode);
         }
-    }
+    }, []);
 
     // возврат к предидущей категории
     const onBack = useCallback(() => {
-        setSelectedCategory(selected.current.parent || menu);
-    }, [selected]);
+        setSelectedCategory(currentCategory.parent || menu);
+    }, [currentCategory, previousCategory]);
 
     // анимация скрытия бокового меню
     const sideMenuFadeOut = useCallback(() => {
@@ -176,7 +186,7 @@ export const Menu = React.memo(({
                         <View style={{ flex: 1 }}></View>
                         <Text style={{ textTransform: "uppercase", fontWeight: "bold", color: theme.themes[theme.name].menu.header.titleColor, fontSize: 32, marginRight: 24 }}>
                             {
-                                selected.current.__rawNode__.content?.contents[language.code]?.name || "Меню"
+                                currentCategory.__rawNode__.content?.contents[language.code]?.name || "Меню"
                             }
                         </Text>
                     </View>
@@ -193,7 +203,7 @@ export const Menu = React.memo(({
                         }),
                     }}>
                         <View style={{ flex: 1, flexGrow: 1, margin: "auto" }}>
-                            <SideMenu menu={menu} menuStateId={menuStateId} language={language} selected={selected.current}
+                            <SideMenu menu={menu} language={language} selected={currentCategory}
                                 onPress={selectSideMenuCategoryHandler}></SideMenu>
                         </View>
                         <View style={{ flex: 0, width: "100%", height: 192, margin: "auto", padding: 24 }}>
@@ -227,7 +237,8 @@ export const Menu = React.memo(({
                                 outputRange: [0, height],
                             }),
                         }}>
-                            <NavMenu node={selected.previouse.index <= selected.current.index ? selected.current : selected.previouse}
+                            <NavMenu
+                                node={previousCategory.index <= currentCategory.index ? currentCategory : previousCategory}
                                 language={language} currency={currency} onPress={selectNavMenuCategoryHandler}></NavMenu>
                         </Animated.View>
 
@@ -240,7 +251,8 @@ export const Menu = React.memo(({
                                 outputRange: [-height, 0],
                             }),
                         }}>
-                            <NavMenu node={selected.previouse.index > selected.current.index ? selected.current : selected.previouse}
+                            <NavMenu
+                                node={previousCategory.index > currentCategory.index ? currentCategory : previousCategory}
                                 language={language} currency={currency} onPress={selectNavMenuCategoryHandler}></NavMenu>
                         </Animated.View>
                     </Animated.View>

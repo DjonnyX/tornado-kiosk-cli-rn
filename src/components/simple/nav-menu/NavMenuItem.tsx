@@ -15,7 +15,8 @@ interface INavMenuItemProps {
     onPress: (node: MenuNode) => void;
 }
 
-export const NavMenuItem = React.memo(({ thumbnailHeight, currency, language, node, onPress }: INavMenuItemProps) => {
+export const NavMenuItem = React.memo(({ thumbnailHeight, currency, language, node,
+    onPress }: INavMenuItemProps) => {
 
     const pressHandler = useCallback((e: GestureResponderEvent) => {
         if (!!onPress) {
@@ -27,8 +28,8 @@ export const NavMenuItem = React.memo(({ thumbnailHeight, currency, language, no
     const currentAdAsset = currentContent?.resources?.icon;
 
     const tags = node.type === NodeTypes.PRODUCT && (node.__rawNode__.content as ICompiledProduct).tags?.length > 0
-    ? (node.__rawNode__.content as ICompiledProduct).tags
-    : undefined;
+        ? (node.__rawNode__.content as ICompiledProduct).tags
+        : undefined;
 
     return (
         <View style={{ flex: 1, backgroundColor: theme.themes[theme.name].menu.navMenu.item.backgroundColor, /*backgroundColor: Color.rgb(currentContent.color).alpha(0.05).toString(),*/ borderRadius: 16, padding: 22 }}>

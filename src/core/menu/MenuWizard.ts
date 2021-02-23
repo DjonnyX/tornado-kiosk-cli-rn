@@ -43,6 +43,9 @@ export class MenuWizard extends EventEmitter {
 
             this._menu = new MenuNode(this._rawMenu, null, this._businessPeriods, this._language, this._currency);
             this._menu.addListener(MenuNodeEventTypes.CHANGE, this.menuChangeHandler);
+
+            this.update();
+            this._changeDebounse.call();
         }
     }
 

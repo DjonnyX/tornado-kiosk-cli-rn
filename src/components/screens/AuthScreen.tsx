@@ -1,5 +1,5 @@
 import React, { Dispatch, useCallback, useEffect, useState } from "react";
-import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
+import { StackScreenProps } from "@react-navigation/stack";
 import { ProgressBar } from "@react-native-community/progress-bar-android";
 import { Picker } from '@react-native-community/picker';
 import { View, TextInput } from "react-native";
@@ -9,13 +9,11 @@ import { connect } from "react-redux";
 import { CombinedDataSelectors, SystemSelectors } from "../../store/selectors";
 import { CommonActions } from "@react-navigation/native";
 import { theme } from "../../theme";
-import { CapabilitiesActions, NotificationActions } from "../../store/actions";
-import { assetsService, refApiService } from "../../services";
-import { map, switchMap, take } from "rxjs/operators";
+import { NotificationActions } from "../../store/actions";
+import { refApiService } from "../../services";
+import { take } from "rxjs/operators";
 import { SystemActions } from "../../store/actions/SystemAction";
 import { SimpleButton } from "../simple";
-import { ExternalStorage } from "../../native";
-import { from, of } from "rxjs";
 import { IStore } from "@djonnyx/tornado-types";
 import { IAlertState } from "../../interfaces";
 
@@ -32,43 +30,6 @@ interface IAuthSelfProps {
     _currentScreen: MainNavigationScreenTypes | undefined;
 
     // self props
-}
-
-const getStorageAssetsPath = async (): Promise<string> => {
-    let userDataPath: string | undefined = undefined;
-
-    const isStorageAvailable = await ExternalStorage.isStorageAvailable();
-    const isStorageWritable = await ExternalStorage.isStorageWritable();
-
-    if (isStorageAvailable && !isStorageWritable) {
-        userDataPath = await ExternalStorage.getPath();
-    }
-
-    return `${userDataPath}/assets`;
-}
-
-const mkdir = async (path: string): Promise<void> => {
-    try {
-        if (!await assetsService.exists(path)) {
-            await assetsService.mkdir(path);
-        }
-    } catch (err) {
-        console.warn(err, path);
-    }
-}
-
-function createAssetsClientDir<T extends { clientId: string }>(v: T) {
-    return of(v).pipe(
-        switchMap(_ => {
-            return from(getStorageAssetsPath()).pipe(
-                switchMap(path => {
-                    return from(mkdir(`${path}/${v?.clientId}`)).pipe(
-                        map(_ => v),
-                    )
-                })
-            )
-        }),
-    );
 }
 
 interface IAuthProps extends StackScreenProps<any, MainNavigationScreenTypes.LOADING>, IAuthSelfProps { }
@@ -92,7 +53,6 @@ const AuthScreenContainer = React.memo(({ _serialNumber, _setupStep, _terminalId
 
                 refApiService.terminalLicenseVerify(_serialNumber).pipe(
                     take(1),
-                    switchMap(l => createAssetsClientDir(l)),
                 ).subscribe(
                     l => {
                         setLicenseValid(true);
@@ -178,7 +138,6 @@ const AuthScreenContainer = React.memo(({ _serialNumber, _setupStep, _terminalId
         setShowProgressBar(true);
         refApiService.terminalRegistration(serialNumber).pipe(
             take(1),
-            switchMap(t => createAssetsClientDir(t)),
         ).subscribe(
             t => {
                 _onChangeTerminalId(t.id || "");

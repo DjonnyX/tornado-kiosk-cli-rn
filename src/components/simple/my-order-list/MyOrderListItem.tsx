@@ -10,6 +10,7 @@ import { IAlertState } from "../../../interfaces";
 
 interface IMyOrderListItemItemProps {
     stateId: number;
+    menuStateId: number;
     imageHeight: number;
     position: IPositionWizard;
     currency: ICurrency;
@@ -17,7 +18,7 @@ interface IMyOrderListItemItemProps {
     alertOpen: (alert: IAlertState) => void;
 }
 
-export const MyOrderListItem = React.memo(({ stateId, imageHeight, currency, language, position,
+export const MyOrderListItem = React.memo(({ stateId, menuStateId, imageHeight, currency, language, position,
     alertOpen }: IMyOrderListItemItemProps) => {
     const currentContent = position.__product__?.contents[language?.code];
     const currentAdAsset = currentContent?.resources?.icon;
