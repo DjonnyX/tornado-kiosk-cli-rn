@@ -188,20 +188,27 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
     }
 
     editProduct(productNode: MenuNode<ICompiledProduct>) {
-        const position = new PositionWizard(PositionWizardModes.NEW, productNode, this._currency,
-            PositionWizardTypes.PRODUCT);
-        position.addListener(PositionWizardEventTypes.EDIT, this.onEditPosition);
-        position.quantity = 1;
-
-        if (position.groups.length === 0) {
-            this.add(position);
-            position.dispose();
+        const existsProduct = this._positions.find(pos => pos.__node__.__rawNode__.id === productNode.__rawNode__.id);
+        if (!!existsProduct && existsProduct.groups.length === 0) {
+            // Добавление количества к существующему продукту,
+            // у которого не возможны модификации
+            existsProduct.quantity ++;
         } else {
-            this._editingPositions.push(position);
+            const position = new PositionWizard(PositionWizardModes.NEW, productNode, this._currency,
+                PositionWizardTypes.PRODUCT);
+            position.addListener(PositionWizardEventTypes.EDIT, this.onEditPosition);
+            position.quantity = 1;
 
-            this.update();
-
-            this._changeDebounse.call();
+            if (position.groups.length === 0) {
+                // Добавление нового продукта
+                this.add(position);
+                position.dispose();
+            } else {
+                // Открытие конфигуратора добавляемого продукта
+                this._editingPositions.push(position);
+                this.update();
+                this._changeDebounse.call();
+            }
         }
     }
 
