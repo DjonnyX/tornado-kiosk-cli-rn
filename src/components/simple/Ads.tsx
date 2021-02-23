@@ -6,12 +6,13 @@ import { ICompiledAd } from "@djonnyx/tornado-types/dist/interfaces/ICompiledAd"
 import { ICompiledLanguage, AssetExtensions } from "@djonnyx/tornado-types";
 
 interface IAdsProps {
+    menuStateId: number;
     ads: Array<ICompiledAd>;
     language: ICompiledLanguage;
     onPress: (ad: ICompiledAd) => void;
 }
 
-export const Ads = React.memo(({ language, ads, onPress }: IAdsProps) => {
+export const Ads = React.memo(({ menuStateId, language, ads, onPress }: IAdsProps) => {
     const [currentAdIndex, _setCurrentAdIndex] = useState(0);
 
     const nextCurrentAdIndex = () => {
