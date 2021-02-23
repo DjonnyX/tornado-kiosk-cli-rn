@@ -126,11 +126,8 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
     protected removeInvalidOrders(): void {
         const positions = [...this._positions];
 
-        console.warn(positions.length)
-
         while (positions.length > 0) {
             const p = positions.pop();
-            console.warn(p?.isValid)
             if (p && !p.isValid) {
                 this.remove(p);
             }

@@ -49,7 +49,7 @@ const ConfirmationOrderScreenContainer = React.memo(({ _language, _banners, _cur
                 _banners.length > 0
                     ?
                     <View style={{ display: "flex", height: "10%", width: "100%", minHeight: 144 }}>
-                        <Ads ads={_banners} language={_language} onPress={selectAdHandler} />
+                        <Ads ads={_banners} menuStateId={_menuStateId} language={_language} onPress={selectAdHandler} />
                     </View>
                     :
                     undefined

@@ -83,7 +83,7 @@ export class ScenarioProcessing {
                     g.__node__.scenarios.forEach(s => {
                         if (s.active) {
                             switch (s.action) {
-                                case "min-usage": {//ScenarioSelectorActionTypes.MIN_USAGE: {
+                                case ScenarioSelectorActionTypes.MIN_USAGE: {
                                     if (groupTotalQnt === -1) {
                                         groupTotalQnt = ScenarioProcessing.getTotalProductsQuantity(g);
                                     }
@@ -255,7 +255,7 @@ export class ScenarioProcessing {
     private static mergePositionLimitsWithGroup(p: IPositionWizard, s: IScenario): void {
         if (s.active) {
             switch (s.action) {
-                case "min-usage": {//ScenarioSelectorActionTypes.MIN_USAGE: {
+                case ScenarioSelectorActionTypes.MIN_USAGE: {
                     // p.downLimit = Math.max(p.downLimit, normalizedValue);
                     break;
                 }

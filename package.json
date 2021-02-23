@@ -8,6 +8,7 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "start:reset-cache": "npm start -- --reset-cache",
+    "cache:clean": "del %appdata%\\Temp\\react-native-* & cd android & gradlew clean & cd .. & del node_modules/ & npm cache clean --force & npm install & npm start -- --reset-cache",
     "build:android": "cd android && gradlew assembleRelease",
     "setdeviceowner": "adb shell dpm set-device-owner com.tornadokiosk/.TornadoDeviceAdminReceiver",
     "removedeviceowner": "adb shell dpm remove-active-admin com.tornadokiosk/.TornadoDeviceAdminReceiver",
@@ -18,7 +19,7 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
-    "@djonnyx/tornado-assets-store": "0.1.4",
+    "@djonnyx/tornado-assets-store": "0.1.10",
     "@djonnyx/tornado-refs-processor": "^1.1.18",
     "@djonnyx/tornado-types": "^1.3.65",
     "@react-native-community/masked-view": "^0.1.10",
@@ -45,8 +46,8 @@
     "rxjs": "^6.6.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.8.4",
-    "@babel/runtime": "^7.8.4",
+    "@babel/core": "^7.13.1",
+    "@babel/runtime": "^7.13.4",
     "@react-native-community/eslint-config": "^1.1.0",
     "@types/base-64": "^0.1.3",
     "@types/color": "^3.0.1",
@@ -56,15 +57,15 @@
     "@types/react-native-video": "^5.0.3",
     "@types/react-redux": "^7.1.9",
     "@types/react-test-renderer": "^16.9.2",
-    "@typescript-eslint/eslint-plugin": "^2.27.0",
-    "@typescript-eslint/parser": "^2.27.0",
+    "@typescript-eslint/eslint-plugin": "^4.15.2",
+    "@typescript-eslint/parser": "^4.15.2",
     "babel-jest": "^25.1.0",
     "babel-plugin-transform-remove-console": "^6.9.4",
-    "eslint": "^6.5.1",
+    "eslint": "^7.20.0",
     "jest": "^25.1.0",
-    "metro-react-native-babel-preset": "^0.59.0",
+    "metro-react-native-babel-preset": "^0.65.1",
     "react-test-renderer": "16.13.1",
-    "typescript": "^3.8.3"
+    "typescript": "^4.1.5"
   },
   "jest": {
     "preset": "react-native",
