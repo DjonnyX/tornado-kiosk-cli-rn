@@ -64,7 +64,8 @@ interface ISideMenuItemProps {
     onPress: (node: MenuNode) => void;
 }
 
-export const SideMenuItem = React.memo(({ depth = 0, height = 0, selected, language, node, onPress }: ISideMenuItemProps) => {
+export const SideMenuItem = React.memo(({ depth = 0, height = 0, selected, language, node,
+    onPress }: ISideMenuItemProps) => {
     const [itemHeight, _setItemHeight] = useState(0);
     const [subMenuSize, _setSubMenuSize] = useState(new Animated.Value(1));
     let subMenuSizeAnimation: Animated.CompositeAnimation;

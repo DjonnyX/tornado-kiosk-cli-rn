@@ -30,11 +30,11 @@ export const MenuServiceContainer = React.memo(({ _menuStateId, _menu, _language
     useEffect(() => {
         if (menuWizard) {
             const onMenuWizardChange = () => {
-                _onUpdateStateId(menuWizard?.stateId || 0);
-
                 if (!!OrderWizard.current) {
                     OrderWizard.current.fireChangeMenu();
                 }
+
+                _onUpdateStateId(menuWizard?.stateId || 0);
             }
 
             menuWizard.addListener(MenuWizardEventTypes.CHANGE, onMenuWizardChange);
@@ -45,7 +45,7 @@ export const MenuServiceContainer = React.memo(({ _menuStateId, _menu, _language
     }, [menuWizard]);
 
     useEffect(() => {
-        if (!!_language && !!_currency && !!_businessPeriods) {
+        if (!!_language && !!_currency && !!_businessPeriods && !!_menu) {
 
             if (!menuWizard) {
                 const mw = new MenuWizard(_currency, _businessPeriods, _language);
@@ -59,7 +59,7 @@ export const MenuServiceContainer = React.memo(({ _menuStateId, _menu, _language
                 menuWizard.businessPeriods = _businessPeriods;
             }
         }
-    }, [_language, _currency, _businessPeriods]);
+    }, [_language, _currency, _businessPeriods, _menu]);
 
     useEffect(() => {
         if ((_currentScreen === MainNavigationScreenTypes.MENU || _currentScreen === MainNavigationScreenTypes.CONFIRMATION_ORDER)
