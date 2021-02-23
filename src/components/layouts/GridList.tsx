@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 import { View, LayoutChangeEvent, StyleProp, ViewStyle, Animated, Easing } from "react-native";
 
 interface IGridListProps<T = any> {
@@ -15,10 +15,10 @@ interface IGridListProps<T = any> {
 
 const FPS = 1000 / 60;
 
-export const GridList = React.memo(({ data, renderItem, style, keyExtractor, spacing = 0, padding = 0, animationSkipFrames = 0, itemDimension }: IGridListProps) => {
+export const GridList = ({ data, renderItem, style, keyExtractor, spacing = 0, padding = 0, animationSkipFrames = 0, itemDimension }: IGridListProps) => {
     const [cellWidth, _setCellWidth] = useState(new Animated.Value(1));
     const [gap, _setGap] = useState(spacing * 0.5);
-    
+
     let cellAnimation: Animated.CompositeAnimation;
 
     cellAnimation = Animated.timing(cellWidth, {
@@ -53,7 +53,8 @@ export const GridList = React.memo(({ data, renderItem, style, keyExtractor, spa
             <View style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
                 {
                     data.map((item, index) =>
-                        <Animated.View key={(keyExtractor(item, index))} style={{ width: cellWidth, margin: gap, justifyContent: "center", overflow: "hidden" }}>
+                        <Animated.View key={(keyExtractor(item, index))}
+                            style={{ width: cellWidth, margin: gap, justifyContent: "center", overflow: "hidden" }}>
                             {
                                 renderItem({ item, index })
                             }
@@ -63,4 +64,4 @@ export const GridList = React.memo(({ data, renderItem, style, keyExtractor, spa
             </View>
         </View>
     )
-})
+}
