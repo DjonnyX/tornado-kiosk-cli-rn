@@ -59,24 +59,30 @@ export const Menu = React.memo(({
         });
     }, [currentCategory]);
 
-    const selectSideMenuCategoryHandler = (node: MenuNode) => {
+    const selectSideMenuCategoryHandler = useCallback((node: MenuNode) => {
         navigateTo(node);
-    };
+    }, []);
 
-    const selectNavMenuCategoryHandler = (node: MenuNode) => {
+    const selectNavMenuCategoryHandler = useCallback((node: MenuNode) => {
         navigateTo(node);
-    };
+    }, []);
 
     // Сброс на первую активную группу, при изменении бизнесс-периода
     useEffect(() => {
         const activeChildren = menu.activeChildren;
-        const node = activeChildren.length > 0 ? activeChildren[0] : menu;
-
-        navigateTo(node);
+        const activeItem = activeChildren.find(node => node.__rawNode__.id === currentCategory.__rawNode__.id);
+        if (!!activeItem) {
+            navigateTo(activeItem);
+        } else if (currentCategory.__rawNode__.id === menu.__rawNode__.id) {
+            navigateTo(menu);
+        } else {
+            const node = activeChildren.length > 0 ? activeChildren[0] : menu;
+            navigateTo(menu);
+        }
     }, [menu]);
 
     // навигация / добавление продукта
-    const navigateTo = (node: MenuNode) => {
+    const navigateTo = useCallback((node: MenuNode) => {
         if (node.type === NodeTypes.SELECTOR || node.type === NodeTypes.SELECTOR_NODE) {
 
             // навигация по категории
@@ -87,7 +93,7 @@ export const Menu = React.memo(({
             // добавление позиции
             addPosition(productNode);
         }
-    }
+    }, []);
 
     // возврат к предидущей категории
     const onBack = useCallback(() => {
