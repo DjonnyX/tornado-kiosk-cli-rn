@@ -36,7 +36,7 @@ const ConfirmationOrderScreenContainer = React.memo(({ _language, _banners, _cur
     }, []);
 
     const onNext = useCallback(() => {
-        // etc...
+        navigation.navigate(MainNavigationScreenTypes.PAY_STATUS);
     }, []);
 
     const onPrevious = useCallback(() => {
