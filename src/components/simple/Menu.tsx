@@ -77,7 +77,7 @@ export const Menu = React.memo(({
             navigateTo(menu);
         } else {
             const node = activeChildren.length > 0 ? activeChildren[0] : menu;
-            navigateTo(menu);
+            navigateTo(node);
         }
     }, [menu]);
 
