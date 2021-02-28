@@ -79,6 +79,8 @@ const parseResponse = (res: Response) => {
             switchMap(text => {
                 const errType = extractErrorType(text);
                 switch (errType) {
+                    case "License already in use":
+                        return throwError(Error("Лицензия уже используется"));
                     case "TokenBadFormat":
                         return throwError(Error("Неверный формат токена"));
                     case "LicenseNotFound":
