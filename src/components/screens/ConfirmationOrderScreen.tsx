@@ -44,7 +44,7 @@ const ConfirmationOrderScreenContainer = React.memo(({ _language, _banners, _cur
     }, []);
 
     return (
-        <View style={{ flex: 1, backgroundColor: theme.themes[theme.name].myOrder.background }}>
+        <View style={{ flex: 1, backgroundColor: theme.themes[theme.name].confirmation.background }}>
             {
                 _banners.length > 0
                     ?
@@ -57,9 +57,10 @@ const ConfirmationOrderScreenContainer = React.memo(({ _language, _banners, _cur
             <View style={{ flex: 1, flexDirection: "column", width: "100%", height: "100%", maxHeight: _banners.length > 0 ? "90%" : "100%" }}>
                 <View style={{ flex: 1 }}>
                     <SafeAreaView style={{ flex: 1, width: "100%" }}>
-                        <FlatList persistentScrollbar updateCellsBatchingPeriod={10} style={{ flex: 1, margin: 20 }} data={OrderWizard.current.positions}
-                            renderItem={({ item }) => {
-                                return <ConfirmationOrderListItem key={item.id} stateId={item.stateId} position={item} currency={_currency} language={_language}
+                        <FlatList updateCellsBatchingPeriod={10} style={{ flex: 1, margin: 20 }}
+                            data={OrderWizard.current.positions} renderItem={({ item }) => {
+                                return <ConfirmationOrderListItem key={item.id} stateId={item.stateId} position={item}
+                                    currency={_currency} language={_language}
                                     imageHeight={64} alertOpen={_alertOpen} />
                             }}
                             keyExtractor={(item, index) => index.toString()}>
@@ -69,18 +70,24 @@ const ConfirmationOrderScreenContainer = React.memo(({ _language, _banners, _cur
                 <View style={{ width: "100%", flexDirection: "row", paddingLeft: 40, paddingRight: 40, paddingTop: 30, paddingBottom: 30 }}>
                     <SimpleButton title="Назад"
                         styleView={{ opacity: 1 }}
-                        style={{ backgroundColor: "#30a02a", borderRadius: 8, padding: 20 }}
-                        textStyle={{ fontWeight: "bold", color: "#ffffff", fontSize: 26 }}
+                        style={{ backgroundColor: theme.themes[theme.name].confirmation.backButton.backgroundColor, borderRadius: 8, padding: 20 }}
+                        textStyle={{ fontWeight: "bold", color: theme.themes[theme.name].confirmation.backButton.textColor, fontSize: 26 }}
                         onPress={onPrevious}></SimpleButton>
                     <View style={{ flex: 1, alignContent: "center", justifyContent: "center" }}>
-                        <Text style={{ fontSize: 34, fontWeight: "bold", color: "#ffffff", textAlign: "center", textTransform: "uppercase" }}>{
-                            `Итого: ${OrderWizard.current.getFormatedSum(true)}`
-                        }</Text>
+                        <Text style={{
+                            fontSize: 34, fontWeight: "bold", color: theme.themes[theme.name].confirmation.summaryPrice.textColor,
+                            textAlign: "center", textTransform: "uppercase"
+                        }}>{
+                                `Итого: ${OrderWizard.current.getFormatedSum(true)}`
+                            }</Text>
                     </View>
                     <SimpleButton title="Далее"
                         styleView={{ opacity: 1 }}
-                        style={{ backgroundColor: "#30a02a", borderRadius: 8, padding: 20 }}
-                        textStyle={{ fontWeight: "bold", color: "#ffffff", fontSize: 26, textTransform: "uppercase" }}
+                        style={{ backgroundColor: theme.themes[theme.name].confirmation.nextButton.backgroundColor, borderRadius: 8, padding: 20 }}
+                        textStyle={{
+                            fontWeight: "bold", color: theme.themes[theme.name].confirmation.nextButton.textColor,
+                            fontSize: 26, textTransform: "uppercase"
+                        }}
                         onPress={onNext}></SimpleButton>
                 </View>
             </View>

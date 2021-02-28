@@ -7,6 +7,8 @@ import { MainNavigationScreenTypes } from "../navigation";
 import { CapabilitiesSelectors } from "../../store/selectors/CapabilitiesSelector";
 import { ICompiledLanguage } from "@djonnyx/tornado-types";
 import { theme } from "../../theme";
+import FastImage from "react-native-fast-image";
+import { config } from "../../Config";
 
 interface IPayStatusScreenSelfProps {
     // store props
@@ -24,9 +26,14 @@ const PayStatusScreenContainer = React.memo(({ _language, navigation }: IPayStat
             backgroundColor: theme.themes[theme.name].intro.background
         }}>
             <View style={{ width: "100%", alignItems: "center" }}>
-                <Text style={{ color: "#ffffff" }}>
+                <Text style={{ fontSize: 20, fontWeight: "bold", color: "rgba(0,0,0,0.75)" }}>
                     Следуйте указаниям на экране платежного терминала
                 </Text>
+                <View style={{ flex: 1, width: "100%", height: 192 }}>
+                    <FastImage style={{ width: "100%", height: "100%" }} source={{
+                        uri: `${config.refServer.address}/assets/processing-indicator.gif`,
+                    }} resizeMode={FastImage.resizeMode.contain}></FastImage>
+                </View>
             </View>
         </View >
     );

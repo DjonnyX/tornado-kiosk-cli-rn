@@ -1,14 +1,14 @@
 import { IKioskTheme } from "@djonnyx/tornado-types";
 
 export const theme: IKioskTheme = {
-    name: "dark",
+    name: "light",
     themes: {
         ["light"]: {
             common: {
                 modal: {
-                    background: "#fff",
+                    background: "#e3e3e3",
                     window: {
-                        background: "#fff",
+                        background: "transparent",
                     }
                 },
                 modalTransparent: {
@@ -27,17 +27,23 @@ export const theme: IKioskTheme = {
                 },
                 notificationAlert: {
                     textColor: "rgba(255,255,255,0.75)",
+                },
+                alert: {
+                    titleColor: "rgba(0,0,0,0.75)",
+                    messageColor: "rgba(0,0,0,0.75)",
+                    buttonColor: "#30a02a",
+                    buttonTextColor: "rgba(255,255,255,1)",
                 }
             },
             languageModal: {
                 item: {
-                    borderColor: "rgba(0,0,0,0.15)",
+                    borderColor: "transparent",
                     textColor: "rgba(0,0,0,0.75)",
                 }
             },
             orderTypeModal: {
                 item: {
-                    borderColor: "rgba(0,0,0,0.15)",
+                    borderColor: "transparent",
                     textColor: "rgba(0,0,0,0.75)",
                 }
             },
@@ -111,17 +117,104 @@ export const theme: IKioskTheme = {
                 },
                 ctrls: {
                     cancelButton: {
-                        backgroundColor: ["rgb(49, 211, 48)", "rgb(126, 216, 59)"],
+                        backgroundColor: ["rgb(242, 62, 26)", "rgb(242, 62, 26)"],
                         disabledBackgroundColor: ["rgba(0, 0, 0, 0.15)", "rgba(0, 0, 0, 0.1)"],
                     },
                     confirmButton: {
-                        backgroundColor: ["rgb(240, 30, 26)", "rgb(242, 62, 26)"],
+                        backgroundColor: ["#30a02a", "#30a02a"],
                         disabledBackgroundColor: ["rgba(0, 0, 0, 0.15)", "rgba(0, 0, 0, 0.1)"],
                     }
                 }
             },
-            myOrder: {
+            modifiers: {
+                backgroundColor: "#fff",
+                nameColor: "rgba(0,0,0,0.75)",
+                descriptionColor: "rgba(0,0,0,0.75)",
+                price: {
+                    borderColor: "rgba(0,0,0,0.5)",
+                    textColor: "rgba(0,0,0,0.75)",
+                },
+                group: {
+                    nameColor: "rgba(0,0,0,0.75)",
+                    descriptionColor: "rgba(0,0,0,0.75)",
+                    descriptionInvalidColor: "#ff4e4e",
+                    buttonPrevious: {
+                        backgroundColor: "#30a02a",
+                        disabledBackgroundColor: "transparent",
+                        borderColor: "transparent",
+                        disabledBorderColor: "rgba(0,0,0,0.1)",
+                        textColor: "rgba(255,255,255,1)",
+                        disabledTextColor: "rgba(0,0,0,0.1)",
+                    },
+                    buttonNext: {
+                        backgroundColor: "#30a02a",
+                        disabledBackgroundColor: "transparent",
+                        borderColor: "transparent",
+                        disabledBorderColor: "rgba(0,0,0,0.1)",
+                        textColor: "rgba(255,255,255,1)",
+                        disabledTextColor: "rgba(0,0,0,0.1)",
+                    },
+                    indicator: {
+                        currentValidColor: "#30a02a",
+                        currentInvalidColor: "#ff4e4e",
+                        otherColor: "rgba(0,0,0,0.25)",
+                    }
+                },
+                item: {
+                    backgroundColor: "transparent",
+                    nameColor: "rgba(0,0,0,0.75)",
+                    descriptionColor: "rgba(0,0,0,0.5)",
+                    quantityStepper: {
+                        buttons: {
+                            backgroundColor: "transparent",
+                            disabledBackgroundColor: "transparent",
+                            borderColor: "rgba(0,0,0,0.75)",
+                            disabledBorderColor: "rgba(0,0,0,0.75)",
+                            textColor: "rgba(0,0,0,0.75)",
+                            disabledTextColor: "rgba(0,0,0,0.75)",
+                        },
+                        indicator: {
+                            textColor: "rgba(0,0,0,0.75)",
+                        }
+                    }
+                }
+            },
+            confirmation: {
                 background: "#fff",
+                backButton: {
+                    backgroundColor: "#30a02a",
+                    textColor: "#ffffff",
+                },
+                nextButton: {
+                    backgroundColor: "#30a02a",
+                    textColor: "#ffffff",
+                },
+                summaryPrice: {
+                    textColor: "#rgba(0,0,0,0.75)",
+                },
+                nestedItem: {
+                    backgroundColor: "transparent",
+                    nameColor: "green",
+                    price: {
+                        textColor: "rgba(0,0,0,0.75)",
+                    },
+                },
+                item: {
+                    backgroundColor: "transparent",
+                    nameColor: "rgba(0,0,0,0.75)",
+                    price: {
+                        textColor: "rgba(0,0,0,0.75)",
+                    },
+                    quantityStepper: {
+                        buttons: {
+                            borderColor: "rgba(0,0,0,0.75)",
+                            textColor: "rgba(0,0,0,0.75)",
+                        },
+                        indicator: {
+                            textColor: "rgba(0,0,0,0.75)",
+                        }
+                    }
+                }
             },
         },
         ["dark"]: {
@@ -148,11 +241,17 @@ export const theme: IKioskTheme = {
                 },
                 notificationAlert: {
                     textColor: "rgba(0,0,0,0.75)",
+                },
+                alert: {
+                    titleColor: "rgba(255,255,255,0.75)",
+                    messageColor: "rgba(255,255,255,0.75)",
+                    buttonColor: "yellow",
+                    buttonTextColor: "rgba(0,0,0,0.75)",
                 }
             },
             languageModal: {
                 item: {
-                    borderColor: "rgba(255,255,255,0.15)",
+                    borderColor: "transparent",
                     textColor: "rgba(255,255,255,0.75)",
                 }
             },
@@ -241,8 +340,95 @@ export const theme: IKioskTheme = {
                     }
                 }
             },
-            myOrder: {
+            modifiers: {
+                backgroundColor: "#000",
+                nameColor: "rgba(255,255,255,0.75)",
+                descriptionColor: "rgba(255,255,255,0.5)",
+                price: {
+                    borderColor: "rgba(255,255,255,0.5)",
+                    textColor: "rgba(255,255,255,0.5)",
+                },
+                group: {
+                    nameColor: "rgba(255,255,255,0.75)",
+                    descriptionColor: "rgba(255,255,255,0.75)",
+                    descriptionInvalidColor: "#ff4e4e",
+                    buttonPrevious: {
+                        backgroundColor: "#30a02a",
+                        disabledBackgroundColor: "transparent",
+                        borderColor: "transparent",
+                        disabledBorderColor: "rgba(255,255,255,0.1)",
+                        textColor: "rgba(255,255,255,0.75)",
+                        disabledTextColor: "rgba(255,255,255,0.1)",
+                    },
+                    buttonNext: {
+                        backgroundColor: "#30a02a",
+                        disabledBackgroundColor: "transparent",
+                        borderColor: "transparent",
+                        disabledBorderColor: "rgba(255,255,255,0.1)",
+                        textColor: "rgba(255,255,255,0.75)",
+                        disabledTextColor: "rgba(255,255,255,0.1)",
+                    },
+                    indicator: {
+                        currentValidColor: "#30a02a",
+                        currentInvalidColor: "#ff4e4e",
+                        otherColor: "rgba(255,255,255,0.25)",
+                    }
+                },
+                item: {
+                    backgroundColor: "transparent",
+                    nameColor: "rgba(255,255,255,0.75)",
+                    descriptionColor: "rgba(255,255,255,0.5)",
+                    quantityStepper: {
+                        buttons: {
+                            backgroundColor: "transparent",
+                            disabledBackgroundColor: "transparent",
+                            borderColor: "rgba(255,255,255,0.75)",
+                            disabledBorderColor: "rgba(255,255,255,0.75)",
+                            textColor: "rgba(255,255,255,0.75)",
+                            disabledTextColor: "rgba(255,255,255,0.75)",
+                        },
+                        indicator: {
+                            textColor: "rgba(255,255,255,0.75)",
+                        }
+                    }
+                }
+            },
+            confirmation: {
                 background: "#000",
+                backButton: {
+                    backgroundColor: "#30a02a",
+                    textColor: "#ffffff",
+                },
+                nextButton: {
+                    backgroundColor: "#30a02a",
+                    textColor: "#ffffff",
+                },
+                summaryPrice: {
+                    textColor: "#ffffff",
+                },
+                nestedItem: {
+                    backgroundColor: "transparent",
+                    nameColor: "green",
+                    price: {
+                        textColor: "rgba(255,255,255,0.5)",
+                    },
+                },
+                item: {
+                    backgroundColor: "transparent",
+                    nameColor: "rgba(255,255,255,0.75)",
+                    price: {
+                        textColor: "rgba(255,255,255,0.5)",
+                    },
+                    quantityStepper: {
+                        buttons: {
+                            borderColor: "rgba(255,255,255,0.75)",
+                            textColor: "rgba(255,255,255,0.75)",
+                        },
+                        indicator: {
+                            textColor: "rgba(255,255,255,0.75)",
+                        }
+                    }
+                }
             },
         }
     }

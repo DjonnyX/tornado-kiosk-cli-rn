@@ -146,7 +146,10 @@ export const SideMenuItem = React.memo(({ depth = 0, height = 0, selected, langu
                     <FastImage style={{ width: "100%", height: 56 - offset, marginBottom: 5 }} source={{
                         uri: `file://${currentAdAsset?.mipmap.x128}`,
                     }} resizeMode={FastImage.resizeMode.contain}></FastImage>
-                    <Text style={{ fontSize: 12, color: theme.themes[theme.name].menu.sideMenu.item.nameColor, fontWeight: "bold", textTransform: "uppercase" }}>
+                    <Text style={{
+                        fontSize: 12, color: theme.themes[theme.name].menu.sideMenu.item.nameColor, fontWeight: "bold",
+                        textTransform: "uppercase"
+                    }}>
                         {
                             currentContent.name
                         }
@@ -168,7 +171,9 @@ export const SideMenuItem = React.memo(({ depth = 0, height = 0, selected, langu
                             {
                                 // onLayout={layoutChangeHandler}
                                 children.map(child =>
-                                    <SideMenuItem key={child.id} depth={depth + 1} height={subItemHeight * (getChainChildren(child, selected).length + 1)} node={child} selected={selected} language={language} onPress={onPress}></SideMenuItem>
+                                    <SideMenuItem key={child.id} depth={depth + 1}
+                                        height={subItemHeight * (getChainChildren(child, selected).length + 1)}
+                                        node={child} selected={selected} language={language} onPress={onPress}></SideMenuItem>
                                 )
                             }
                         </View>
