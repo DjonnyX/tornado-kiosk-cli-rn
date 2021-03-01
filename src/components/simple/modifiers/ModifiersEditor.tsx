@@ -1,6 +1,6 @@
 import { ICompiledLanguage, ICurrency } from "@djonnyx/tornado-types";
 import React, { Dispatch, useCallback, useEffect, useState } from "react";
-import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, LayoutChangeEvent, FlatList } from "react-native";
+import { View, Text, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
 import FastImage from "react-native-fast-image";
 import { connect } from "react-redux";
 import { PositionWizardModes } from "../../../core/enums";
@@ -16,7 +16,6 @@ import { SimpleButton } from "../SimpleButton";
 import { ModifierListItem } from "./ModifierListItem";
 
 const MODIFIER_ITEM_WIDTH = 218;
-const MODIFIER_ITEM_HEIGHT = 218;
 
 interface IBound {
     x: number;
@@ -204,7 +203,7 @@ export const ModifiersEditorContainer = React.memo(({ _orderStateId, _language, 
                                 flex: 1, width: "100%",
                             }}>
                                 <ScrollView style={{ flex: 1, marginTop: 68 }} persistentScrollbar>
-                                        <GridList style={{ flex: 1 }}
+                                        <GridList style={{ flex: 1 }} disbleStartAnimation
                                             padding={10} spacing={6} data={position.groups[position.currentGroup].positions}
                                             itemDimension={MODIFIER_ITEM_WIDTH} animationSkipFrames={10} renderItem={({ item }) => {
                                                 return <ModifierListItem key={item.id} position={item} currency={_currency} language={_language}
