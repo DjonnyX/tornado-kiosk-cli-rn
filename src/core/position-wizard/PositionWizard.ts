@@ -15,9 +15,9 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
 
     protected static __id = 0;
 
-    static from(position: IPositionWizard, mode: PositionWizardModes): IPositionWizard {
+    static from(position: IPositionWizard, mode: PositionWizardModes, type: PositionWizardTypes = PositionWizardTypes.PRODUCT): IPositionWizard {
         const editedPosition = new PositionWizard(mode, position.__node__,
-            position.currency, PositionWizardTypes.PRODUCT);
+            position.currency, type);
 
         PositionWizard.copyAttributes(position, editedPosition);
 
