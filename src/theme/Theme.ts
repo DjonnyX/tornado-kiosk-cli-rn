@@ -239,6 +239,11 @@ export const theme: IKioskTheme = {
             payStatus: {
                 primaryMessageColor: "rgba(0,0,0,0.75)",
                 secondaryMessageColor: "rgba(0,0,0,0.5)",
+            },
+            payConfirmation: {
+                numberColor: "rgba(0,0,0,1)",
+                primaryMessageColor: "rgba(0,0,0,0.75)",
+                secondaryMessageColor: "rgba(0,0,0,0.5)",
             }
         },
         ["dark"]: {
@@ -475,6 +480,11 @@ export const theme: IKioskTheme = {
                 }
             },
             payStatus: {
+                primaryMessageColor: "rgba(255,255,255,0.75)",
+                secondaryMessageColor: "rgba(255,255,255,0.5)",
+            },
+            payConfirmation: {
+                numberColor: "rgba(255,255,255,1)",
                 primaryMessageColor: "rgba(255,255,255,0.75)",
                 secondaryMessageColor: "rgba(255,255,255,0.5)",
             }

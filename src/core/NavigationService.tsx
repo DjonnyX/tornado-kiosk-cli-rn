@@ -26,7 +26,8 @@ export const NavigationServiceContainer = React.memo(({ onNavigate, _orderStateI
 
     useEffect(() => {
         if (_orderStateId === 0 && (_currentScreen === MainNavigationScreenTypes.MENU
-            || _currentScreen === MainNavigationScreenTypes.CONFIRMATION_ORDER)) {
+            || _currentScreen === MainNavigationScreenTypes.CONFIRMATION_ORDER
+            || _currentScreen === MainNavigationScreenTypes.PAY_CONFIRMATION)) {
 
             if (_alertClose !== undefined) _alertClose();
             if (_snackClose !== undefined) _snackClose();
