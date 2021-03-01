@@ -40,6 +40,7 @@ class UserIdleServiceContainer extends PureComponent<IUserIdleServiceProps, IUse
             case MainNavigationScreenTypes.INTRO:
             case MainNavigationScreenTypes.AUTH:
             case MainNavigationScreenTypes.PAY_STATUS:
+            case MainNavigationScreenTypes.PAY_CONFIRMATION:
                 this.resetTimer();
                 break;
             default: {
