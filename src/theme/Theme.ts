@@ -47,6 +47,26 @@ export const theme: IKioskTheme = {
                     textColor: "rgba(0,0,0,0.75)",
                 }
             },
+            service: {
+                errorLabel: {
+                    textColor: "red",
+                },
+                textInput: {
+                    placeholderColor: "rgba(#30a02a, 0.75)",
+                    selectionColor: "#30a02a",
+                    underlineColor: "#30a02a",
+                    underlineWrongColor: "red",
+                    textColor: "#rgba(0,0,0,1)",
+                },
+                picker: {
+                    textColor: "#rgba(0,0,0,1)",
+                    placeholderColor: "gray",
+                },
+                button: {
+                    backgroundColor: "#30a02a",
+                    textColor: "rgba(255,255,255,1)",
+                }
+            },
             loading: {
                 background: "#fff",
                 progressBar: {
@@ -259,6 +279,26 @@ export const theme: IKioskTheme = {
                 item: {
                     borderColor: "rgba(255,255,255,0.15)",
                     textColor: "rgba(255,255,255,0.75)",
+                }
+            },
+            service: {
+                errorLabel: {
+                    textColor: "red",
+                },
+                textInput: {
+                    placeholderColor: "#fff7009c",
+                    selectionColor: "#fff700",
+                    underlineColor: "#fff700",
+                    underlineWrongColor: "red",
+                    textColor: "#ffffff",
+                },
+                picker: {
+                    textColor: "#fff7009c",
+                    placeholderColor: "gray",
+                },
+                button: {
+                    backgroundColor: "yellow",
+                    textColor: "rgba(0,0,0,0.75)",
                 }
             },
             loading: {
