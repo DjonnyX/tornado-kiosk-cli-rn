@@ -102,15 +102,15 @@ export class ScenarioProcessing {
                                     if (groupTotalQnt === -1) {
                                         groupTotalQnt = ScenarioProcessing.getTotalProductsQuantity(g);
                                     }
-                                    const val = ScenarioProcessing.getNormalizedUpLimit(parseInt(s.value as any));
+                                    const upLimit = ScenarioProcessing.getNormalizedUpLimit(parseInt(s.value as any));
 
-                                    const diff = val - groupTotalQnt;
+                                    const diff = (upLimit - groupTotalQnt) < 0 ? 0 : upLimit - groupTotalQnt;
                                     g.positions.forEach(p => {
                                         // динамическое обновление верхнего предела
                                         p.actualUpLimit = Math.min(p.quantity + diff, p.upLimit);
                                     });
 
-                                    const isValid = groupTotalQnt <= val;
+                                    const isValid = groupTotalQnt <= upLimit;
                                     if (!isValid) {
                                         isGroupValid = false;
                                     }
