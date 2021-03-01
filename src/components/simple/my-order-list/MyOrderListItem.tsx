@@ -86,7 +86,7 @@ export const MyOrderListItem = React.memo(({ stateId, menuStateId, imageHeight, 
             <NumericStapper
                 value={position.quantity}
                 buttonStyle={{
-                    width: 32, height: 32, borderStyle: "solid", borderWidth: 1, borderRadius: 3,
+                    width: 32, height: 32, borderStyle: "solid", borderWidth: 1, borderRadius: 4,
                     borderColor: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.borderColor,
                     padding: 6
                 }}

@@ -1,7 +1,7 @@
 import { IKioskTheme } from "@djonnyx/tornado-types";
 
 export const theme: IKioskTheme = {
-    name: "light",
+    name: "dark",
     themes: {
         ["light"]: {
             common: {
@@ -12,7 +12,7 @@ export const theme: IKioskTheme = {
                     }
                 },
                 modalTransparent: {
-                    background: "rgba(255,255,255,0.75)",
+                    background: "rgba(0,0,0,0.5)",
                     window: {
                         background: "#fff",
                         borderColor: "rgba(0,0,0,0.1)"
@@ -52,11 +52,11 @@ export const theme: IKioskTheme = {
                     textColor: "red",
                 },
                 textInput: {
-                    placeholderColor: "rgba(#30a02a, 0.75)",
+                    placeholderColor: "rgba(0,0,0,0.5)",
                     selectionColor: "#30a02a",
                     underlineColor: "#30a02a",
                     underlineWrongColor: "red",
-                    textColor: "#rgba(0,0,0,1)",
+                    textColor: "rgba(0,0,0,1)",
                 },
                 picker: {
                     textColor: "rgba(0,0,0,1)",
@@ -210,7 +210,7 @@ export const theme: IKioskTheme = {
                     textColor: "#ffffff",
                 },
                 summaryPrice: {
-                    textColor: "#rgba(0,0,0,0.75)",
+                    textColor: "rgba(0,0,0,0.75)",
                 },
                 nestedItem: {
                     backgroundColor: "transparent",
@@ -236,6 +236,10 @@ export const theme: IKioskTheme = {
                     }
                 }
             },
+            payStatus: {
+                primaryMessageColor: "rgba(0,0,0,0.75)",
+                secondaryMessageColor: "rgba(0,0,0,0.5)",
+            }
         },
         ["dark"]: {
             common: {
@@ -265,7 +269,7 @@ export const theme: IKioskTheme = {
                 alert: {
                     titleColor: "rgba(255,255,255,0.75)",
                     messageColor: "rgba(255,255,255,0.75)",
-                    buttonColor: "yellow",
+                    buttonColor: "#30a02a",
                     buttonTextColor: "rgba(0,0,0,0.75)",
                 }
             },
@@ -286,19 +290,19 @@ export const theme: IKioskTheme = {
                     textColor: "red",
                 },
                 textInput: {
-                    placeholderColor: "#fff7009c",
-                    selectionColor: "#fff700",
-                    underlineColor: "#fff700",
+                    placeholderColor: "rgba(255,255,255,0.5)",
+                    selectionColor: "#30a02a",
+                    underlineColor: "#30a02a",
                     underlineWrongColor: "red",
-                    textColor: "#ffffff",
+                    textColor: "rgba(255,255,255,1)",
                 },
                 picker: {
-                    textColor: "#fff7009c",
+                    textColor: "rgba(255,255,255,1)",
                     placeholderColor: "gray",
                 },
                 button: {
-                    backgroundColor: "yellow",
-                    textColor: "rgba(0,0,0,0.75)",
+                    backgroundColor: "#30a02a",
+                    textColor: "rgba(255,255,255,1)",
                 }
             },
             loading: {
@@ -470,6 +474,10 @@ export const theme: IKioskTheme = {
                     }
                 }
             },
+            payStatus: {
+                primaryMessageColor: "rgba(255,255,255,0.75)",
+                secondaryMessageColor: "rgba(255,255,255,0.5)",
+            }
         }
     }
 };

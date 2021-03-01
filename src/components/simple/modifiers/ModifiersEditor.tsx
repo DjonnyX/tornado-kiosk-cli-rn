@@ -2,6 +2,7 @@ import { ICompiledLanguage, ICurrency } from "@djonnyx/tornado-types";
 import React, { Dispatch, useCallback, useEffect, useState } from "react";
 import { View, Text, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
 import FastImage from "react-native-fast-image";
+import LinearGradient from "react-native-linear-gradient";
 import { connect } from "react-redux";
 import { PositionWizardModes } from "../../../core/enums";
 import { IPositionWizard } from "../../../core/interfaces";
@@ -74,7 +75,7 @@ export const ModifiersEditorContainer = React.memo(({ _orderStateId, _language, 
 
     return (
         <ModalRollTop visible={!!position}>
-            <View style={{ flex: 1, width: "100%", padding: 34 }}>
+            <View style={{ flex: 1, width: "100%", paddingLeft: 34, paddingRight: 34, paddingTop: 34 }}>
                 {
                     !!position && !!_language && !!_currency &&
                     <View style={{ flex: 1, width: "100%" }}>
@@ -132,7 +133,7 @@ export const ModifiersEditorContainer = React.memo(({ _orderStateId, _language, 
                                     }
                                 </View>
                             </View>
-                            <View style={{ width: "100%", flexDirection: "row" }}>
+                            <View style={{ width: "100%", flexDirection: "row", marginBottom: -40, zIndex: 2 }}>
                                 <SimpleButton title="Назад"
                                     styleView={{ opacity: 1 }}
                                     style={{
@@ -199,10 +200,16 @@ export const ModifiersEditorContainer = React.memo(({ _orderStateId, _language, 
                                     }}
                                     disabled={!position.groups[position.currentGroup].isValid} onPress={onNextGroup}></SimpleButton>
                             </View>
-                            <SafeAreaView style={{
-                                flex: 1, width: "100%",
-                            }}>
-                                <ScrollView style={{ flex: 1, marginTop: 68 }} persistentScrollbar>
+                            <View style={{ flex: 1, width: "100%" }}>
+                                <LinearGradient
+                                    colors={theme.themes[theme.name].menu.header.background}
+                                    style={{ display: "flex", position: "absolute", width: "100%", height: 96, zIndex: 1 }}
+                                >
+                                </LinearGradient>
+                                <SafeAreaView style={{
+                                    flex: 1, width: "100%",
+                                }}>
+                                    <ScrollView style={{ flex: 1, marginTop: 68 }} persistentScrollbar>
                                         <GridList style={{ flex: 1 }} disbleStartAnimation
                                             padding={10} spacing={6} data={position.groups[position.currentGroup].positions}
                                             itemDimension={MODIFIER_ITEM_WIDTH} animationSkipFrames={10} renderItem={({ item }) => {
@@ -211,8 +218,9 @@ export const ModifiersEditorContainer = React.memo(({ _orderStateId, _language, 
                                             }}
                                             keyExtractor={(item, index) => item.id}>
                                         </GridList>
-                                </ScrollView>
-                            </SafeAreaView>
+                                    </ScrollView>
+                                </SafeAreaView>
+                            </View>
                         </View>
                     </View>
                 }

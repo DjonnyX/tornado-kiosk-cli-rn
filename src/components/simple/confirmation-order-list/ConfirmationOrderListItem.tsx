@@ -119,7 +119,7 @@ export const ConfirmationOrderListItem = React.memo(({ stateId, imageHeight, cur
                 <NumericStapper
                     value={position.quantity}
                     buttonStyle={{
-                        width: 44, height: 44, borderStyle: "solid", borderWidth: 2, borderRadius: 3,
+                        width: 44, height: 44, borderStyle: "solid", borderWidth: 2, borderRadius: 6,
                         borderColor: theme.themes[theme.name].confirmation.item.quantityStepper.buttons.borderColor,
                         padding: 6
                     }}
