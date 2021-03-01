@@ -42,7 +42,7 @@ export const NavMenuItem = React.memo(({ thumbnailHeight, currency, language, no
                         !!tags &&
                         <TagList tags={tags} language={language} />
                     }
-                    <View style={{ width: "100%", height: thumbnailHeight, marginBottom: 5 }} renderToHardwareTextureAndroid={true}>
+                    <View style={{ width: "100%", height: thumbnailHeight, marginBottom: 5 }}>
                         <FastImage style={{ width: "100%", height: "100%" }} source={{
                             uri: `file://${currentAdAsset?.mipmap.x128}`,
                         }} resizeMode={FastImage.resizeMode.contain}></FastImage>
