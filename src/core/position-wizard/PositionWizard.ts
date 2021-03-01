@@ -268,14 +268,17 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
         this.emit(PositionWizardEventTypes.CHANGE);
     }
 
-    edit() {
+    edit(): boolean {
         if (this._mode === PositionWizardModes.NEW) {
             throw Error("Position with mode \"new\" cannot be edited.");
         }
 
         if (this.groups.length > 0) {
             this.emit(PositionWizardEventTypes.EDIT, this);
+            return true;
         }
+
+        return false;
     }
 
     getFormatedPrice(withCurrency: boolean = false): string {

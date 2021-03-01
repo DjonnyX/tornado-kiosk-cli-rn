@@ -161,7 +161,11 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
 
             this._changeDebounse.call();
         } else {
-            if (currentPosition.type !== PositionWizardTypes.MODIFIER) {
+            if (currentPosition.type === PositionWizardTypes.MODIFIER) {
+                if (currentPosition.quantity === 0) {
+                    currentPosition.quantity = 1;
+                }
+            } else {
                 if (currentPosition.mode === PositionWizardModes.EDIT) {
                     if (!!this._originalEditingPosition) {
                         PositionWizard.copyAttributes(currentPosition, this._originalEditingPosition);
@@ -229,7 +233,8 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
 
         currentPosition.currentGroup = 0;
 
-        currentPosition.removeAllListeners();
+        currentPosition.removeListener(PositionWizardEventTypes.CHANGE, this.onChangePosition);
+        currentPosition.removeListener(PositionWizardEventTypes.EDIT, this.onEditPosition);
         currentPosition.dispose();
 
         this._editingPositions.splice(this._editingPositions.findIndex(ep => ep === currentPosition), 1);

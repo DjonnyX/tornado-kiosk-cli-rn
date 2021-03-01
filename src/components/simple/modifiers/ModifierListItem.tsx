@@ -18,8 +18,8 @@ interface IModifierListItemProps {
 export const ModifierListItem = React.memo(({ thumbnailHeight, currency, language, position, stateId }: IModifierListItemProps) => {
 
     const pressHandler = useCallback((e: GestureResponderEvent) => {
-        position.edit();
-        if (position.quantity < position.availableQuantitiy) {
+        const hasEdit = position.edit();
+        if (!hasEdit && position.quantity < position.availableQuantitiy) {
             position.quantity++;
         }
     }, []);
