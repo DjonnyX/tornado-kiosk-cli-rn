@@ -39,10 +39,11 @@ class UserIdleServiceContainer extends PureComponent<IUserIdleServiceProps, IUse
             case MainNavigationScreenTypes.LOADING:
             case MainNavigationScreenTypes.INTRO:
             case MainNavigationScreenTypes.AUTH:
+            case MainNavigationScreenTypes.PAY_STATUS:
                 this.resetTimer();
                 break;
             default: {
-                if (this.props.onIdle) {
+                if (this.props.onIdle !== undefined) {
                     this.props.onIdle();
                 }
 
@@ -66,12 +67,12 @@ class UserIdleServiceContainer extends PureComponent<IUserIdleServiceProps, IUse
             this.showAlert();
         });
     }
-    
+
     private _alertResetAction = () => {
         this.resetHandler();
         this.props._alertClose();
     };
-    
+
     private _alertCancelAction = () => {
         this.cancelResetHandler();
         this.props._alertClose();
