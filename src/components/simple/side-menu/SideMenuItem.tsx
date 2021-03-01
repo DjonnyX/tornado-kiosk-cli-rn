@@ -157,6 +157,8 @@ export const SideMenuItem = React.memo(({ depth = 0, height = 0, selected, langu
                 </TouchableOpacity>
             </View>
             {
+                /*
+                 Отображение подкатегорий
                 children.length > 0
                     ?
                     <Animated.View style={{
@@ -180,6 +182,7 @@ export const SideMenuItem = React.memo(({ depth = 0, height = 0, selected, langu
                     </Animated.View>
                     :
                     undefined
+                */
             }
         </View>
     );
