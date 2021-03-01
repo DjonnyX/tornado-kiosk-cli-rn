@@ -13,7 +13,6 @@ import android.provider.Settings;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
@@ -124,23 +123,18 @@ public class MainActivity extends ReactActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         // Блокировка кнопки "назад"
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            Toast.makeText(getApplicationContext(), "Back button is disabled", Toast.LENGTH_SHORT).show();
             return true;
         }
 
         // Блокировка кнопки громкости
         if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-            Toast.makeText(getApplicationContext(), "Volume button is disabled", Toast.LENGTH_SHORT).show();
             return true;
         }
 
         // Блокировка кнопки громкости
         if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-            Toast.makeText(getApplicationContext(), "Volume button is disabled", Toast.LENGTH_SHORT).show();
             return true;
         }
-
-        Toast.makeText(getApplicationContext(), keyCode, Toast.LENGTH_SHORT).show();
 
         return super.onKeyDown(keyCode, event);
     }

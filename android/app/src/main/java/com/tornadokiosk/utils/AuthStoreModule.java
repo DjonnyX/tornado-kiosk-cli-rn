@@ -1,12 +1,15 @@
 package com.tornadokiosk.utils;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.util.Log;
+
+import androidx.core.app.ActivityCompat;
 
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -103,13 +106,15 @@ public class AuthStoreModule extends ReactContextBaseJavaModule {
                     this.reactContext.getContentResolver(),
                     Settings.Secure.ANDROID_ID);
         } else {
-            final TelephonyManager mTelephony = (TelephonyManager) this.reactContext.getSystemService(Context.TELEPHONY_SERVICE);
-            if (mTelephony.getDeviceId() != null) {
-                deviceId = mTelephony.getDeviceId();
+            if (ActivityCompat.checkSelfPermission(this.reactContext, android.Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+                TelephonyManager telephonyMgr = (TelephonyManager) this.reactContext.getSystemService(Context.TELEPHONY_SERVICE);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    deviceId = telephonyMgr.getImei();
+                } else {
+                    deviceId = telephonyMgr.getDeviceId();
+                }
             } else {
-                deviceId = Settings.Secure.getString(
-                        this.reactContext.getContentResolver(),
-                        Settings.Secure.ANDROID_ID);
+                deviceId = Settings.Secure.getString(this.reactContext.getContentResolver(), Settings.Secure.ANDROID_ID);;
             }
         }
         return deviceId;
