@@ -29,11 +29,12 @@ export const MyOrderListContainer = React.memo(({ _currency, _language, _alertOp
 
     return (
         <SafeAreaView style={{ flex: 1, width: "100%" }}>
-            <FlatList ref={flatListRef as any} onContentSizeChange={contentSizeChangeHandler} persistentScrollbar updateCellsBatchingPeriod={10} style={{ flex: 1 }} data={OrderWizard.current.positions} renderItem={({ item }) => {
-                return <MyOrderListItem key={item.id} position={item} currency={_currency as ICurrency}
-                    language={_language as ICompiledLanguage} imageHeight={48} stateId={item.stateId} menuStateId={_menuStateId}
-                    alertOpen={_alertOpen as any} />
-            }}
+            <FlatList ref={flatListRef as any} onContentSizeChange={contentSizeChangeHandler} persistentScrollbar
+                updateCellsBatchingPeriod={10} style={{ flex: 1 }} data={OrderWizard.current.positions} renderItem={({ item }) => {
+                    return <MyOrderListItem key={item.id} position={item} currency={_currency as ICurrency}
+                        language={_language as ICompiledLanguage} imageHeight={48} stateId={item.stateId} menuStateId={_menuStateId as number}
+                        alertOpen={_alertOpen as any} />
+                }}
                 keyExtractor={(item, index) => index.toString()}>
             </FlatList>
         </SafeAreaView>

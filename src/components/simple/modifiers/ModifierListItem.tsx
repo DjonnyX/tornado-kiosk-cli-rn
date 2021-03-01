@@ -18,7 +18,10 @@ interface IModifierListItemProps {
 export const ModifierListItem = React.memo(({ thumbnailHeight, currency, language, position, stateId }: IModifierListItemProps) => {
 
     const pressHandler = useCallback((e: GestureResponderEvent) => {
-        position.edit();
+        const hasEdit = position.edit();
+        if (!hasEdit && position.quantity < position.availableQuantitiy) {
+            position.quantity++;
+        }
     }, []);
 
     const changeQuantityHandler = (qnt: number) => {
@@ -33,20 +36,20 @@ export const ModifierListItem = React.memo(({ thumbnailHeight, currency, languag
         : undefined;
 
     return (
-        <View style={{ flex: 1, backgroundColor: theme.themes[theme.name].menu.navMenu.item.backgroundColor, /*backgroundColor: Color.rgb(currentContent.color).alpha(0.05).toString(),*/ borderRadius: 16, padding: 22 }}>
+        <View style={{ flex: 1, backgroundColor: theme.themes[theme.name].modifiers.item.backgroundColor, borderRadius: 16, padding: 22 }}>
             <TouchableOpacity style={{ alignItems: "center", flex: 1 }} onPress={pressHandler}>
                 {
                     !!tags &&
                     <TagList tags={tags} language={language} />
                 }
-                <View style={{ width: "100%", height: thumbnailHeight, marginBottom: 5 }} renderToHardwareTextureAndroid={true}>
+                <View style={{ width: "100%", height: thumbnailHeight, marginBottom: 5 }}>
                     <FastImage style={{ width: "100%", height: "100%" }} source={{
                         uri: `file://${currentAdAsset?.mipmap.x128}`,
                     }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                 </View>
                 <Text textBreakStrategy="simple" numberOfLines={2} ellipsizeMode="tail"
                     style={{
-                        textAlign: "center", fontSize: 20, marginBottom: 6, color: theme.themes[theme.name].menu.navMenu.item.nameColor,
+                        textAlign: "center", fontSize: 20, marginBottom: 6, color: theme.themes[theme.name].modifiers.item.nameColor,
                         fontWeight: "bold", textTransform: "uppercase"
                     }}>
                     {
@@ -54,8 +57,8 @@ export const ModifierListItem = React.memo(({ thumbnailHeight, currency, languag
                     }
                 </Text>
                 <Text textBreakStrategy="simple" numberOfLines={2} ellipsizeMode="tail" style={{
-                    textAlign: "center", fontSize: 10,
-                    color: theme.themes[theme.name].menu.navMenu.item.descriptionColor, textTransform: "uppercase",
+                    textAlign: "center", fontSize: 12,
+                    color: theme.themes[theme.name].modifiers.item.descriptionColor, textTransform: "uppercase",
                     marginBottom: 12
                 }}>
                     {
@@ -66,23 +69,25 @@ export const ModifierListItem = React.memo(({ thumbnailHeight, currency, languag
             <NumericStapper
                 value={position.quantity}
                 buttonStyle={{
-                    width: 48, height: 48, borderStyle: "solid", borderWidth: 0.5, borderRadius: 3,
-                    borderColor: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.borderColor,
+                    width: 48, height: 48, borderStyle: "solid", borderWidth: 2, borderRadius: 3,
+                    backgroundColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.backgroundColor,
+                    borderColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.borderColor,
                     padding: 6
                 }}
                 disabledButtonStyle={{
                     width: 48, height: 48, borderStyle: "solid", borderWidth: 0.5, borderRadius: 3,
-                    borderColor: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.borderColor,
+                    backgroundColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.disabledBackgroundColor,
+                    borderColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.disabledBorderColor,
                     padding: 6,
                     opacity: 0.25
                 }}
                 buttonTextStyle={{
-                    color: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.textColor as any,
+                    color: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.textColor as any,
                 }}
                 disabledButtonTextStyle={{
-                    color: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.textColor as any,
+                    color: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.disabledTextColor as any,
                 }}
-                textStyle={{ color: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.indicator.textColor }}
+                textStyle={{ color: theme.themes[theme.name].modifiers.item.quantityStepper.indicator.textColor }}
                 iconDecrement="-"
                 iconIncrement="+"
                 onChange={changeQuantityHandler}

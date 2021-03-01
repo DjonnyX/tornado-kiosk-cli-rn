@@ -46,10 +46,16 @@ export const OrderTypesPicker = React.memo(({ language, orderTypes, style, textS
                         selectHandler(item);
                     }}>
                         <View style={{ flexDirection: "column", alignItems: "center", justifyContent: "center", marginBottom: 32 }}>
-                            <FastImage style={{ width: 128, height: 128, borderWidth: 1, borderColor: theme.themes[theme.name].orderTypeModal.item.borderColor, marginBottom: 8 }} source={{
+                            <FastImage style={{
+                                width: 128, height: 128, borderWidth: 1,
+                                borderColor: theme.themes[theme.name].orderTypeModal.item.borderColor, marginBottom: 8
+                            }} source={{
                                 uri: `file://${item.contents[language?.code]?.resources?.main?.mipmap.x128}`,
                             }} resizeMode={FastImage.resizeMode.contain}></FastImage>
-                            <Text style={{ fontSize: 16, color: theme.themes[theme.name].orderTypeModal.item.textColor }}>
+                            <Text style={{
+                                fontSize: 16, fontWeight: "bold",
+                                color: theme.themes[theme.name].orderTypeModal.item.textColor
+                            }}>
                                 {
                                     item.contents[language?.code]?.name
                                 }
@@ -59,8 +65,9 @@ export const OrderTypesPicker = React.memo(({ language, orderTypes, style, textS
                 }}>
                 </FlatList>
             </ModalSolid>
-            <TouchableOpacity style={{ flex: 1, justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }} onPress={pressHandler}>
-                <View style={{ flexDirection: "row", alignItems: "center", borderWidth: 0.5, borderRadius: 6, padding: 8, ...style as any }}>
+            <TouchableOpacity style={{ flex: 1, justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}
+                onPress={pressHandler}>
+                <View style={{ flexDirection: "row", alignItems: "center", borderWidth: 2, borderRadius: 6, padding: 8, ...style as any }}>
                     {
                         /*
                         <Image style={{ width: 32, height: 32, marginRight: 8 }} source={{

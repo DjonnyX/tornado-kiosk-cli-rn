@@ -1,11 +1,15 @@
 package com.tornadokiosk.utils;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.util.Log;
+
+import androidx.core.app.ActivityCompat;
 
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -96,14 +100,23 @@ public class AuthStoreModule extends ReactContextBaseJavaModule {
      * @return unique identifier for the device
      */
     public String getDeviceIMEI() {
-        String deviceUniqueIdentifier = null;
-        TelephonyManager tm = (TelephonyManager) this.reactContext.getSystemService(Context.TELEPHONY_SERVICE);
-        if (tm != null) {
-            deviceUniqueIdentifier = tm.getDeviceId();
+        String deviceId;
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            deviceId = Settings.Secure.getString(
+                    this.reactContext.getContentResolver(),
+                    Settings.Secure.ANDROID_ID);
+        } else {
+            if (ActivityCompat.checkSelfPermission(this.reactContext, android.Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+                TelephonyManager telephonyMgr = (TelephonyManager) this.reactContext.getSystemService(Context.TELEPHONY_SERVICE);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    deviceId = telephonyMgr.getImei();
+                } else {
+                    deviceId = telephonyMgr.getDeviceId();
+                }
+            } else {
+                deviceId = Settings.Secure.getString(this.reactContext.getContentResolver(), Settings.Secure.ANDROID_ID);;
+            }
         }
-        if (deviceUniqueIdentifier == null || deviceUniqueIdentifier.length() == 0) {
-            deviceUniqueIdentifier = Settings.Secure.getString(this.reactContext.getContentResolver(), Settings.Secure.ANDROID_ID);
-        }
-        return deviceUniqueIdentifier;
+        return deviceId;
     }
 }

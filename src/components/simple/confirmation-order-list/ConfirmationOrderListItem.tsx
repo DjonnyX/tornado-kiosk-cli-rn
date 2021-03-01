@@ -68,7 +68,7 @@ export const ConfirmationOrderListItem = React.memo(({ stateId, imageHeight, cur
                         <View style={{ flex: 1 }}>
                             <Text numberOfLines={3} ellipsizeMode="tail" style={{
                                 textAlign: "left", fontSize: 20,
-                                color: theme.themes[theme.name].menu.draftOrder.item.nameColor, textTransform: "uppercase", fontWeight: "bold"
+                                color: theme.themes[theme.name].confirmation.item.nameColor, textTransform: "uppercase", fontWeight: "bold"
                             }}>
                                 {
                                     currentContent?.name
@@ -78,7 +78,7 @@ export const ConfirmationOrderListItem = React.memo(({ stateId, imageHeight, cur
                         <View style={{ width: 192 }}>
                             <Text style={{
                                 textAlign: "right", fontSize: 24,
-                                color: theme.themes[theme.name].menu.draftOrder.item.nameColor, fontWeight: "bold"
+                                color: theme.themes[theme.name].confirmation.item.price.textColor, fontWeight: "bold"
                             }}>
                                 {
                                     `${position.quantity}x${position.getFormatedSumPerOne(true)}`
@@ -91,7 +91,8 @@ export const ConfirmationOrderListItem = React.memo(({ stateId, imageHeight, cur
                             <View style={{ flex: 1 }}>
                                 <Text numberOfLines={1} ellipsizeMode="tail" style={{
                                     textAlign: "left", fontSize: 12,
-                                    color: "green", textTransform: "uppercase", fontWeight: "bold"
+                                    color: theme.themes[theme.name].confirmation.nestedItem.nameColor,
+                                    textTransform: "uppercase", fontWeight: "bold"
                                 }}>
                                     {
                                         p.__product__?.contents[language?.code].name
@@ -101,7 +102,7 @@ export const ConfirmationOrderListItem = React.memo(({ stateId, imageHeight, cur
                             <View style={{ width: 192 }}>
                                 <Text numberOfLines={1} ellipsizeMode="tail" style={{
                                     textAlign: "right", fontSize: 12,
-                                    color: "green", fontWeight: "bold"
+                                    color: theme.themes[theme.name].confirmation.nestedItem.price.textColor, fontWeight: "bold"
                                 }}>
                                     {
                                         `${p.quantity}x${p.getFormatedPrice(true)}`
@@ -118,14 +119,17 @@ export const ConfirmationOrderListItem = React.memo(({ stateId, imageHeight, cur
                 <NumericStapper
                     value={position.quantity}
                     buttonStyle={{
-                        width: 44, height: 44, borderStyle: "solid", borderWidth: 0.5, borderRadius: 3,
-                        borderColor: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.borderColor,
+                        width: 44, height: 44, borderStyle: "solid", borderWidth: 2, borderRadius: 3,
+                        borderColor: theme.themes[theme.name].confirmation.item.quantityStepper.buttons.borderColor,
                         padding: 6
                     }}
                     buttonTextStyle={{
-                        color: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.textColor as any,
+                        color: theme.themes[theme.name].confirmation.item.quantityStepper.buttons.textColor as any,
                     }}
-                    textStyle={{ width: 44, color: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.indicator.textColor }}
+                    textStyle={{
+                        width: 44, fontSize: 16,
+                        color: theme.themes[theme.name].confirmation.item.quantityStepper.indicator.textColor
+                    }}
                     iconDecrement="-"
                     iconIncrement="+"
                     min={0}

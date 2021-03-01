@@ -16,7 +16,7 @@ interface ISimpleButtonProps {
 export const SimpleButton = ({ title, style, styleDisabled, textStyle, textStyleDisabled, styleView, styleViewDisabled, disabled = false, onPress }: ISimpleButtonProps) => {
     let sView: StyleProp<ViewStyle> = { borderRadius: 3, overflow: "hidden", opacity: disabled ? 0.35 : 1, ...styleView as any};
 
-    let sLayout: StyleProp<ViewStyle> = { paddingLeft: 18, paddingRight: 18, paddingTop: 10, paddingBottom: 10, ...style as any };
+    let sLayout: StyleProp<ViewStyle> = { paddingLeft: 22, paddingRight: 22, paddingTop: 16, paddingBottom: 16, ...style as any };
 
     let sText: StyleProp<TextStyle> = { fontWeight: "bold", ...textStyle as any };
 

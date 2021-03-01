@@ -39,7 +39,7 @@ export const GridList = ({ data, renderItem, style, keyExtractor, spacing = 0, p
         cellAnimation = Animated.timing(cellWidth, {
             useNativeDriver: false,
             toValue: actualItemWidth,
-            duration: 50,
+            duration: 200,
             easing: Easing.cubic,
         });
         cellAnimation.start();

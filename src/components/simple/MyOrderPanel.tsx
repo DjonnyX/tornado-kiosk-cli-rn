@@ -37,8 +37,8 @@ export const MyOrderPanel = React.memo(({ orderStateId, currency, language, lang
                         textStyle={{ color: theme.themes[theme.name].menu.orderType.textColor }} />
                 </View>
                 <View style={{ margin: "auto", marginBottom: 20, alignItems: "center" }}>
-                    <Text style={{ textTransform: "uppercase", fontSize: 11, color: theme.themes[theme.name].menu.sum.description.textColor }}>
-                        Сумма заказа
+                    <Text style={{ textTransform: "uppercase", fontSize: 18, color: theme.themes[theme.name].menu.sum.description.textColor }}>
+                        Итого
                     </Text>
                     <Text style={{ fontWeight: "bold", fontSize: 18, color: theme.themes[theme.name].menu.sum.price.textColor }}>
                         {
