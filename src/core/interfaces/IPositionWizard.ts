@@ -26,7 +26,7 @@ export interface IPositionWizard extends EventEmitter {
     currentGroup: number;
     quantity: number;
     updateState: () => void;
-    edit: () => void;
+    edit: () => boolean;
     getFormatedPrice: (withCurrency?: boolean) => string;
     getFormatedSum: (withCurrency?: boolean) => string;
     getFormatedSumPerOne: (withCurrency?: boolean) => string;

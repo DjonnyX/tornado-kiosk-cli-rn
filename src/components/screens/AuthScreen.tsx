@@ -75,6 +75,12 @@ const AuthScreenContainer = React.memo(({ _serialNumber, _setupStep, _terminalId
                         _alertOpen({
                             title: "Ошибка", message: err.message ? err.message : err, buttons: [
                                 {
+                                    title: "Отмена",
+                                    action: () => {
+                                        _onChangeSetupStep(0);
+                                    }
+                                },
+                                {
                                     title: "Повторить",
                                     action: () => {
                                         retryVerificationHandler();
@@ -105,6 +111,10 @@ const AuthScreenContainer = React.memo(({ _serialNumber, _setupStep, _terminalId
                 err => {
                     _alertOpen({
                         title: "Ошибка", message: err.message ? err.message : err, buttons: [
+                            {
+                                title: "Отмена",
+                                action: () => {}
+                            },
                             {
                                 title: "Повторить",
                                 action: () => {
