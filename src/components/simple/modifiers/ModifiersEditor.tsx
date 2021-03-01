@@ -1,8 +1,7 @@
 import { ICompiledLanguage, ICurrency } from "@djonnyx/tornado-types";
 import React, { Dispatch, useCallback, useEffect, useState } from "react";
-import { View, Text, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
+import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, LayoutChangeEvent, FlatList } from "react-native";
 import FastImage from "react-native-fast-image";
-import { FlatList } from "react-native-gesture-handler";
 import { connect } from "react-redux";
 import { PositionWizardModes } from "../../../core/enums";
 import { IPositionWizard } from "../../../core/interfaces";
@@ -11,9 +10,20 @@ import { PositionWizardEventTypes } from "../../../core/position-wizard/events";
 import { CapabilitiesSelectors, CombinedDataSelectors, MyOrderSelectors } from "../../../store/selectors";
 import { IAppState } from "../../../store/state";
 import { Icons, theme } from "../../../theme";
+import { GridList } from "../../layouts/GridList";
 import { ModalRollTop } from "../ModalRollTop";
 import { SimpleButton } from "../SimpleButton";
 import { ModifierListItem } from "./ModifierListItem";
+
+const MODIFIER_ITEM_WIDTH = 218;
+const MODIFIER_ITEM_HEIGHT = 218;
+
+interface IBound {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+}
 
 interface IModifiersEditorProps {
     _language?: ICompiledLanguage;
@@ -69,21 +79,21 @@ export const ModifiersEditorContainer = React.memo(({ _orderStateId, _language, 
                 {
                     !!position && !!_language && !!_currency &&
                     <View style={{ flex: 1, width: "100%" }}>
-                        <View style={{ flexDirection: "row", width: "100%" }}>
-                            <View style={{ flex: 1, width: "100%", flexDirection: "row", marginRight: 48 }}>
-                                <View style={{ marginBottom: 5 }} renderToHardwareTextureAndroid={true}>
-                                    <FastImage style={{ width: 192, height: 192 }} source={{
+                        <View style={{ flexDirection: "row", width: "100%", maxHeight: "20%", marginBottom: 32 }}>
+                            <View style={{ flex: 1, width: "100%", flexDirection: "row", alignItems: "flex-start", marginRight: 48 }}>
+                                <View>
+                                    <FastImage style={{ width: 192, height: "100%" }} source={{
                                         uri: `file://${position.__product__?.contents[_language?.code]?.resources?.icon.path}`,
                                     }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                                 </View>
-                                <View style={{ flex: 1, marginRight: 30 }}>
+                                <View style={{ flex: 1, marginLeft: 30, marginRight: 30 }}>
                                     <Text style={{
                                         fontSize: 32, fontWeight: "bold", color: theme.themes[theme.name].modifiers.nameColor,
                                         textTransform: "uppercase"
                                     }}>{
                                             position.__product__?.contents[_language.code]?.name
                                         }</Text>
-                                    <Text style={{
+                                    <Text textBreakStrategy="simple" numberOfLines={7} ellipsizeMode="tail" style={{
                                         fontSize: 14, color: theme.themes[theme.name].modifiers.descriptionColor,
                                         textTransform: "uppercase"
                                     }}>{
@@ -106,9 +116,8 @@ export const ModifiersEditorContainer = React.memo(({ _orderStateId, _language, 
                         </View>
                         <View style={{
                             flex: 1, width: "100%", backgroundColor: theme.themes[theme.name].modifiers.backgroundColor,
-                            borderTopLeftRadius: 8, borderTopRightRadius: 8
                         }}>
-                            <View style={{ width: "100%", alignItems: "center", marginBottom: 8 }}>
+                            <View style={{ width: "100%", alignItems: "center", marginBottom: 10 }}>
                                 <View style={{ width: "100%", flexDirection: "row", height: 4, maxWidth: 300, }}>
                                     {
                                         position.groups.map((gr, i) =>
@@ -194,14 +203,15 @@ export const ModifiersEditorContainer = React.memo(({ _orderStateId, _language, 
                             <SafeAreaView style={{
                                 flex: 1, width: "100%",
                             }}>
-                                <ScrollView style={{ flex: 1, marginTop: 68 }} horizontal={true}>
-                                    <FlatList persistentScrollbar horizontal={true}
-                                        updateCellsBatchingPeriod={10} style={{ flex: 1 }} data={position.groups[position.currentGroup].positions} renderItem={({ item }) => {
-                                            return <ModifierListItem width={256} key={item.id} position={item} currency={_currency} language={_language}
-                                                thumbnailHeight={128} stateId={item.stateId} />
-                                        }}
-                                        keyExtractor={(item, index) => index.toString()}>
-                                    </FlatList>
+                                <ScrollView style={{ flex: 1, marginTop: 68 }} persistentScrollbar>
+                                        <GridList style={{ flex: 1 }}
+                                            padding={10} spacing={6} data={position.groups[position.currentGroup].positions}
+                                            itemDimension={MODIFIER_ITEM_WIDTH} animationSkipFrames={10} renderItem={({ item }) => {
+                                                return <ModifierListItem key={item.id} position={item} currency={_currency} language={_language}
+                                                    thumbnailHeight={128} stateId={item.stateId}></ModifierListItem>
+                                            }}
+                                            keyExtractor={(item, index) => item.id}>
+                                        </GridList>
                                 </ScrollView>
                             </SafeAreaView>
                         </View>
@@ -222,7 +232,7 @@ const CloseButton = ({ onPress }: ICloseButtonProps) => {
             <View
                 style={{ borderRadius: 16 }}
             >
-                <Icons name="Close" fill={theme.themes[theme.name].menu.backButton.iconColor} width={44} height={44} ></Icons>
+                <Icons name="Close" fill={theme.themes[theme.name].menu.backButton.iconColor} width={34} height={34} ></Icons>
             </View>
         </TouchableOpacity>
     )

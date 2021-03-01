@@ -9,18 +9,19 @@ import { TagList } from "../TagList";
 
 interface IModifierListItemProps {
     stateId: number;
-    width: number;
     thumbnailHeight: number;
     position: IPositionWizard;
     currency: ICurrency;
     language: ICompiledLanguage;
 }
 
-export const ModifierListItem = React.memo(({ width, thumbnailHeight, currency, language, position, stateId }: IModifierListItemProps) => {
+export const ModifierListItem = React.memo(({ thumbnailHeight, currency, language, position, stateId }: IModifierListItemProps) => {
 
     const pressHandler = useCallback((e: GestureResponderEvent) => {
         position.edit();
-        position.quantity ++;
+        if (position.quantity < position.availableQuantitiy) {
+            position.quantity++;
+        }
     }, []);
 
     const changeQuantityHandler = (qnt: number) => {
@@ -35,13 +36,13 @@ export const ModifierListItem = React.memo(({ width, thumbnailHeight, currency, 
         : undefined;
 
     return (
-        <View style={{ width, flex: 1, backgroundColor: theme.themes[theme.name].modifiers.item.backgroundColor, borderRadius: 16, padding: 22 }}>
+        <View style={{ flex: 1, backgroundColor: theme.themes[theme.name].modifiers.item.backgroundColor, borderRadius: 16, padding: 22 }}>
             <TouchableOpacity style={{ alignItems: "center", flex: 1 }} onPress={pressHandler}>
                 {
                     !!tags &&
                     <TagList tags={tags} language={language} />
                 }
-                <View style={{ width: "100%", height: thumbnailHeight, marginBottom: 5 }} renderToHardwareTextureAndroid={true}>
+                <View style={{ width: "100%", height: thumbnailHeight, marginBottom: 5 }}>
                     <FastImage style={{ width: "100%", height: "100%" }} source={{
                         uri: `file://${currentAdAsset?.mipmap.x128}`,
                     }} resizeMode={FastImage.resizeMode.contain}></FastImage>
