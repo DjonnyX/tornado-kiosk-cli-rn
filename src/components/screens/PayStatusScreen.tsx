@@ -8,7 +8,6 @@ import { CapabilitiesSelectors } from "../../store/selectors/CapabilitiesSelecto
 import { ICompiledLanguage } from "@djonnyx/tornado-types";
 import { theme } from "../../theme";
 import FastImage from "react-native-fast-image";
-import { config } from "../../Config";
 
 interface IPayStatusScreenSelfProps {
     // store props
@@ -25,15 +24,16 @@ const PayStatusScreenContainer = React.memo(({ _language, navigation }: IPayStat
             flex: 1, justifyContent: "center", alignItems: "center", width: "100%", height: "100%",
             backgroundColor: theme.themes[theme.name].intro.background
         }}>
-            <View style={{ width: "100%", alignItems: "center" }}>
-                <Text style={{ fontSize: 20, fontWeight: "bold", color: "rgba(0,0,0,0.75)" }}>
+            <View style={{alignItems: "center", width: 620 }}>
+                <Text style={{ fontSize: 40, fontWeight: "bold", textAlign: "center", color: "rgba(0,0,0,0.75)" }}>
                     Следуйте указаниям на экране платежного терминала
                 </Text>
-                <View style={{ flex: 1, width: "100%", height: 192 }}>
-                    <FastImage style={{ width: "100%", height: "100%" }} source={{
-                        uri: `${config.refServer.address}/assets/processing-indicator.gif`,
-                    }} resizeMode={FastImage.resizeMode.contain}></FastImage>
-                </View>
+                <Text style={{ fontSize: 20, fontWeight: "bold", textAlign: "center", color: "rgba(0,0,0,0.5)", marginBottom: 40 }}>
+                    Follow the instructions on the payment terminal
+                </Text>
+                <FastImage style={{ width: 128, height: 128 }}
+                    source={require("./imgs/processing-indicator.gif")}
+                    resizeMode="contain" />
             </View>
         </View >
     );
