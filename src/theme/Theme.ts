@@ -59,7 +59,7 @@ export const theme: IKioskTheme = {
                     textColor: "#rgba(0,0,0,1)",
                 },
                 picker: {
-                    textColor: "#rgba(0,0,0,1)",
+                    textColor: "rgba(0,0,0,1)",
                     placeholderColor: "gray",
                 },
                 button: {

@@ -278,7 +278,7 @@ const AuthScreenContainer = React.memo(({ _serialNumber, _setupStep, _terminalId
                                         }
                                     }}
                                 >
-                                    <Picker.Item color={theme.themes[theme.name].service.textInput.placeholderColor} value=""
+                                    <Picker.Item color={theme.themes[theme.name].service.picker.placeholderColor} value=""
                                         label='Выберите магазин' />
                                     {
                                         stores.map(store => <Picker.Item color="black" label={store.name} value={store.id || ""} />)
