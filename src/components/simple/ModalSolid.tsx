@@ -32,14 +32,6 @@ export const ModalSolid = React.memo(({ children, visible }: IModalSolidProps) =
                     borderRadius: 8,
                     padding: 35,
                     alignItems: "center",
-                    shadowColor: "#000",
-                    shadowOffset: {
-                        width: 0,
-                        height: 2,
-                    },
-                    shadowOpacity: 0.25,
-                    shadowRadius: 3.84,
-                    elevation: 8,
                 }}>
                     {
                         children

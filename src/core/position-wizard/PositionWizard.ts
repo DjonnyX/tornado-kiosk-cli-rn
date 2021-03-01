@@ -15,9 +15,9 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
 
     protected static __id = 0;
 
-    static from(position: IPositionWizard, mode: PositionWizardModes): IPositionWizard {
+    static from(position: IPositionWizard, mode: PositionWizardModes, type: PositionWizardTypes = PositionWizardTypes.PRODUCT): IPositionWizard {
         const editedPosition = new PositionWizard(mode, position.__node__,
-            position.currency, PositionWizardTypes.PRODUCT);
+            position.currency, type);
 
         PositionWizard.copyAttributes(position, editedPosition);
 
@@ -137,7 +137,7 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
     protected _actualUpLimit: number = PositionWizard.MAX_AVAILABLE_LIMIT;
     set actualUpLimit(v: number) {
         if (this._actualUpLimit !== v) {
-            this._actualUpLimit = v === 0 ? PositionWizard.MAX_AVAILABLE_LIMIT : v;
+            this._actualUpLimit = v;
             this.update();
         }
     }
@@ -268,14 +268,17 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
         this.emit(PositionWizardEventTypes.CHANGE);
     }
 
-    edit() {
+    edit(): boolean {
         if (this._mode === PositionWizardModes.NEW) {
             throw Error("Position with mode \"new\" cannot be edited.");
         }
 
         if (this.groups.length > 0) {
             this.emit(PositionWizardEventTypes.EDIT, this);
+            return true;
         }
+
+        return false;
     }
 
     getFormatedPrice(withCurrency: boolean = false): string {

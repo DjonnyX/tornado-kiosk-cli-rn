@@ -45,10 +45,16 @@ export const LanguagePicker = React.memo(({ language, languages, onSelect }: ILa
                         selectHandler(item);
                     }}>
                         <View style={{ flexDirection: "column", alignItems: "center", justifyContent: "center", marginBottom: 32 }}>
-                            <FastImage style={{ width: 128, height: 128, borderWidth: 1, borderColor: theme.themes[theme.name].languageModal.item.borderColor, marginBottom: 8 }} source={{
+                            <FastImage style={{
+                                width: 128, height: 128, borderWidth: 1,
+                                borderColor: theme.themes[theme.name].languageModal.item.borderColor, marginBottom: 8
+                            }} source={{
                                 uri: `file://${item?.resources?.main?.mipmap.x128}`,
                             }} resizeMode={FastImage.resizeMode.contain}></FastImage>
-                            <Text style={{ fontSize: 16, color: theme.themes[theme.name].languageModal.item.textColor }}>
+                            <Text style={{
+                                fontSize: 16, fontWeight: "bold",
+                                color: theme.themes[theme.name].languageModal.item.textColor
+                            }}>
                                 {
                                     item?.name
                                 }
@@ -58,8 +64,13 @@ export const LanguagePicker = React.memo(({ language, languages, onSelect }: ILa
                 }}>
                 </FlatList>
             </ModalSolid>
-            <TouchableOpacity style={{ flex: 1, justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }} onPress={pressHandler}>
-                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", borderWidth: 0.5, borderColor: theme.themes[theme.name].languageModal.item.borderColor, padding: 8, overflow: "hidden", width: 44, height: 44, borderRadius: 32 }}>
+            <TouchableOpacity style={{ flex: 1, justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}
+                onPress={pressHandler}>
+                <View style={{
+                    flexDirection: "row", alignItems: "center", justifyContent: "center", borderWidth: 2,
+                    borderColor: theme.themes[theme.name].languageModal.item.borderColor, padding: 8, overflow: "hidden",
+                    width: 44, height: 44, borderRadius: 32
+                }}>
                     <FastImage style={{ position: "absolute", width: 64, height: 64 }} source={{
                         uri: `file://${currentLanguage?.resources?.main?.mipmap.x128}`,
                     }} resizeMode={FastImage.resizeMode.contain}></FastImage>

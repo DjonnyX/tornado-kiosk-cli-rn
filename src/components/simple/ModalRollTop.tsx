@@ -21,10 +21,10 @@ export const ModalRollTop = React.memo(({ children, visible }: IModalRollTopProp
                 justifyContent: "flex-end",
                 alignItems: "center",
                 position: "absolute",
-                top: 20,
+                top: 0,
                 bottom: 0,
-                left: 20,
-                right: 20,
+                left: 0,
+                right: 0,
                 //backgroundColor: "#ffffff",//theme.themes[theme.name].common.modalTransparent.background,
             }}>
                 <View style={{

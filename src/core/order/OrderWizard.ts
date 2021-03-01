@@ -25,7 +25,11 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
     protected _editingPositions = new Array<IPositionWizard>();
     get editingPositions() { return this._editingPositions; }
 
-    protected _originalEditingPosition?: IPositionWizard | null;
+    protected _originalEditingPositions = new Array<IPositionWizard>();
+
+    get originalEditingPosition() {
+        return this._originalEditingPositions.length > 0 ? this._originalEditingPositions[this._originalEditingPositions.length - 1] : null;
+    }
 
     protected _lastPosition: IPositionWizard | null = null;
     get lastPosition() { return this._lastPosition; }
@@ -71,11 +75,15 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
 
         if (position.groups.length > 0) {
             if (position.type === PositionWizardTypes.MODIFIER) {
-                this.edit(position);
+                this._originalEditingPositions.push(position);
+                const editedPosition = PositionWizard.from(position, PositionWizardModes.EDIT, position.type);
+                editedPosition.addListener(PositionWizardEventTypes.CHANGE, this.onChangePosition);
+                editedPosition.addListener(PositionWizardEventTypes.EDIT, this.onEditPosition);
+                this.edit(editedPosition);
             } else
                 if (position.type === PositionWizardTypes.PRODUCT) {
-                    const editingPosition = this.add(position, true);
-                    this.edit(editingPosition);
+                    const editedPosition = this.add(position, true);
+                    this.edit(editedPosition);
                 }
         }
     }
@@ -161,16 +169,19 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
 
             this._changeDebounse.call();
         } else {
-            if (currentPosition.type !== PositionWizardTypes.MODIFIER) {
-                if (currentPosition.mode === PositionWizardModes.EDIT) {
-                    if (!!this._originalEditingPosition) {
-                        PositionWizard.copyAttributes(currentPosition, this._originalEditingPosition);
-                    }
-                } else
-                    if (currentPosition.mode === PositionWizardModes.NEW) {
-                        this.add(currentPosition);
-                    }
+            if (currentPosition.type === PositionWizardTypes.MODIFIER) {
+                if (currentPosition.quantity === 0) {
+                    currentPosition.quantity = 1;
+                }
             }
+            if (currentPosition.mode === PositionWizardModes.EDIT) {
+                if (!!this.originalEditingPosition) {
+                    PositionWizard.copyAttributes(currentPosition, this.originalEditingPosition);
+                }
+            } else
+                if (currentPosition.mode === PositionWizardModes.NEW) {
+                    this.add(currentPosition);
+                }
 
             this.editCancel();
         }
@@ -192,7 +203,7 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
         if (!!existsProduct && existsProduct.groups.length === 0) {
             // Добавление количества к существующему продукту,
             // у которого не возможны модификации
-            existsProduct.quantity ++;
+            existsProduct.quantity++;
         } else {
             const position = new PositionWizard(PositionWizardModes.NEW, productNode, this._currency,
                 PositionWizardTypes.PRODUCT);
@@ -235,7 +246,9 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
         this._editingPositions.splice(this._editingPositions.findIndex(ep => ep === currentPosition), 1);
 
         if (clearOriginal) {
-            this._originalEditingPosition = null;
+            if (this._originalEditingPositions.length > 0) {
+                this._originalEditingPositions.pop();
+            }
         }
 
         this.update();
@@ -249,7 +262,7 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
         editedPosition.addListener(PositionWizardEventTypes.EDIT, this.onEditPosition);
 
         if (isTemp) {
-            this._originalEditingPosition = position;
+            this._originalEditingPositions.push(position);
         } else {
             this._positions.push(editedPosition);
             this._lastPosition = editedPosition;
@@ -286,7 +299,7 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
         });
         this._editingPositions = [];
 
-        this._originalEditingPosition = null;
+        this._originalEditingPositions = [];
 
         this._lastPosition = null;
 
@@ -315,7 +328,7 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
             p.dispose();
         });
 
-        this._originalEditingPosition = null;
+        this._originalEditingPositions = [];
 
         this._lastPosition = null;
     }

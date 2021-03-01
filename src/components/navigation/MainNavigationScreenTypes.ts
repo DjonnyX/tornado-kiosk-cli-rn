@@ -4,4 +4,5 @@ export enum MainNavigationScreenTypes {
     INTRO = "intro",
     MENU = "menu",
     CONFIRMATION_ORDER = "confirmation-order",
+    PAY_STATUS = "pay-status",
 }
