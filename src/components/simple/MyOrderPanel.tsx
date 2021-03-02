@@ -25,7 +25,7 @@ export const MyOrderPanel = React.memo(({ orderStateId, currency, language, lang
 }: IMyOrderPanelProps) => {
     return (
         <View
-            style={{ flex: 1, backgroundColor: "rgba(0, 0, 0, 0.05)" }}
+            style={{ flex: 1, backgroundColor: theme.themes[theme.name].menu.orderPanel.backgroundColor }}
         >
             <View style={{ padding: 16, alignItems: "center" }}>
                 <View style={{ margin: "auto", marginTop: 12, marginBottom: 12, alignItems: "center" }}>
@@ -33,11 +33,17 @@ export const MyOrderPanel = React.memo(({ orderStateId, currency, language, lang
                 </View>
                 <View style={{ margin: "auto", marginBottom: 12, alignItems: "center" }}>
                     <OrderTypesPicker language={language} orderTypes={orderTypes} onSelect={onChangeOrderType}
-                        style={{ borderColor: theme.themes[theme.name].menu.orderType.borderColor }}
-                        textStyle={{ color: theme.themes[theme.name].menu.orderType.textColor }} />
+                        style={{
+                            backgroundColor: theme.themes[theme.name].orderTypePicker.backgroundColor,
+                            borderColor: theme.themes[theme.name].orderTypePicker.borderColor
+                        }}
+                        textStyle={{ color: theme.themes[theme.name].orderTypePicker.textColor }} />
                 </View>
                 <View style={{ margin: "auto", marginBottom: 20, alignItems: "center" }}>
-                    <Text style={{ textTransform: "uppercase", fontSize: 18, color: theme.themes[theme.name].menu.sum.description.textColor }}>
+                    <Text style={{
+                        textTransform: "uppercase", fontWeight: "bold", fontSize: 18,
+                        color: theme.themes[theme.name].menu.sum.description.textColor
+                    }}>
                         Итого
                     </Text>
                     <Text style={{ fontWeight: "bold", fontSize: 18, color: theme.themes[theme.name].menu.sum.price.textColor }}>

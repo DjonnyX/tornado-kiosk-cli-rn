@@ -17,7 +17,7 @@ export const AlertContent = React.memo(({ title, message, buttons }: IAlertConte
                 <Text style={{ fontSize: 20, fontWeight: "bold", textTransform: "uppercase", color: theme.themes[theme.name].common.alert.titleColor }}>
                     {title}
                 </Text>
-                <Text style={{ fontSize: 18, color: theme.themes[theme.name].common.alert.messageColor }}>
+                <Text style={{ fontSize: 18, fontWeight: "bold", color: theme.themes[theme.name].common.alert.messageColor }}>
                     {message}
                 </Text>
             </View>

@@ -1,9 +1,11 @@
 import React, { useState, useCallback } from "react";
-import { View, Text, Modal, TouchableOpacity, StyleProp, ViewStyle, TextStyle } from "react-native";
+import { View, Text, TouchableOpacity, StyleProp, ViewStyle, TextStyle } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import FastImage from "react-native-fast-image";
+import DropShadow from "react-native-drop-shadow";
 import { ICompiledOrderType, ICompiledLanguage } from "@djonnyx/tornado-types";
 import { theme } from "../../theme";
+import { uiutils } from "../../utils/ui";
 import { ModalSolid } from "./ModalSolid";
 
 interface IOrderTypesPickerProps {
@@ -18,23 +20,15 @@ export const OrderTypesPicker = React.memo(({ language, orderTypes, style, textS
     const [currentOrderType, _setCurrentOrderTypes] = useState(orderTypes[0]);
     const [modalVisible, _setModalVisible] = useState(false);
 
-    const setCurrentOrderTypes = (orderType: ICompiledOrderType) => {
-        _setCurrentOrderTypes(prevOrderType => {
-            return orderType;
-        });
-    };
+    const shadow = uiutils.createShadow((style as any)?.backgroundColor, 1, 0.45);
 
-    const setModalVisible = (value: boolean) => {
-        _setModalVisible(prevVisibility => value);
-    }
-
-    const pressHandler = useCallback(() => {
-        setModalVisible(true);
+    const onPressHandler = useCallback(() => {
+        _setModalVisible(true);
     }, []);
 
-    const selectHandler = useCallback((orderType: ICompiledOrderType) => {
-        setCurrentOrderTypes(orderType);
-        setModalVisible(false);
+    const onSelectHandler = useCallback((orderType: ICompiledOrderType) => {
+        _setCurrentOrderTypes(orderType);
+        _setModalVisible(false);
         onSelect(orderType);
     }, []);
 
@@ -43,7 +37,7 @@ export const OrderTypesPicker = React.memo(({ language, orderTypes, style, textS
             <ModalSolid visible={modalVisible}>
                 <FlatList style={{ flexGrow: 0, padding: 12 }} data={orderTypes} renderItem={({ item }) => {
                     return <TouchableOpacity onPress={() => {
-                        selectHandler(item);
+                        onSelectHandler(item);
                     }}>
                         <View style={{ flexDirection: "column", alignItems: "center", justifyContent: "center", marginBottom: 32 }}>
                             <FastImage style={{
@@ -66,8 +60,12 @@ export const OrderTypesPicker = React.memo(({ language, orderTypes, style, textS
                 </FlatList>
             </ModalSolid>
             <TouchableOpacity style={{ flex: 1, justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}
-                onPress={pressHandler}>
-                <View style={{ flexDirection: "row", alignItems: "center", borderWidth: 2, borderRadius: 6, padding: 8, ...style as any }}>
+                onPress={onPressHandler}>
+                    <DropShadow style={shadow}>
+                <View style={{
+                    flexDirection: "row", alignItems: "center", borderRadius: 10, paddingLeft: 16,
+                    paddingRight: 16, paddingTop: 12, paddingBottom: 12, ...style as any
+                }}>
                     {
                         /*
                         <Image style={{ width: 32, height: 32, marginRight: 8 }} source={{
@@ -75,12 +73,13 @@ export const OrderTypesPicker = React.memo(({ language, orderTypes, style, textS
                         }}></Image>
                         */
                     }
-                    <Text style={{ textTransform: "uppercase", ...textStyle as any }}>
+                    <Text style={{ textAlign: "center", textTransform: "uppercase", ...textStyle as any }}>
                         {
                             currentOrderType?.contents[language?.code]?.name
                         }
                     </Text>
                 </View>
+                </DropShadow>
             </TouchableOpacity>
         </View>
     );

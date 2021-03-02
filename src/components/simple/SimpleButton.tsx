@@ -15,7 +15,7 @@ interface ISimpleButtonProps {
     onPress: () => void;
 }
 
-export const SimpleButton = ({ title, style, styleDisabled, textStyle, textStyleDisabled, styleView, styleViewDisabled, disabled = false, onPress }: ISimpleButtonProps) => {
+export const SimpleButton = React.memo(({ title, style, styleDisabled, textStyle, textStyleDisabled, styleView, styleViewDisabled, disabled = false, onPress }: ISimpleButtonProps) => {
     const shadow = uiutils.createShadow((style as any)?.backgroundColor);
 
     let sView: StyleProp<ViewStyle> = { borderRadius: 3, overflow: "hidden", opacity: disabled ? 0.35 : 1, ...styleView as any };
@@ -49,4 +49,4 @@ export const SimpleButton = ({ title, style, styleDisabled, textStyle, textStyle
             </TouchableOpacity>
         </DropShadow>
     )
-}
+});

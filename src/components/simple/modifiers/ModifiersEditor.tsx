@@ -179,23 +179,23 @@ export const ModifiersEditorContainer = React.memo(({ _orderStateId, _language, 
                                 <SimpleButton title={position.currentGroup === position.groups.length - 1 ? "Готово" : "Далее"}
                                     styleView={{ opacity: 1 }}
                                     style={{
-                                        backgroundColor: theme.themes[theme.name].modifiers.group.buttonPrevious.backgroundColor,
-                                        borderColor: theme.themes[theme.name].modifiers.group.buttonPrevious.borderColor,
+                                        backgroundColor: theme.themes[theme.name].modifiers.group.buttonNext.backgroundColor,
+                                        borderColor: theme.themes[theme.name].modifiers.group.buttonNext.borderColor,
                                         borderRadius: 8, padding: 20
                                     }}
                                     styleDisabled={{
-                                        backgroundColor: theme.themes[theme.name].modifiers.group.buttonPrevious.disabledBackgroundColor,
+                                        backgroundColor: theme.themes[theme.name].modifiers.group.buttonNext.disabledBackgroundColor,
                                         borderRadius: 8, borderWidth: 2,
-                                        borderColor: theme.themes[theme.name].modifiers.group.buttonPrevious.disabledBorderColor,
+                                        borderColor: theme.themes[theme.name].modifiers.group.buttonNext.disabledBorderColor,
                                     }}
                                     textStyle={{
                                         fontWeight: "bold",
-                                        color: theme.themes[theme.name].modifiers.group.buttonPrevious.textColor,
+                                        color: theme.themes[theme.name].modifiers.group.buttonNext.textColor,
                                         fontSize: 26
                                     }}
                                     textStyleDisabled={{
                                         fontWeight: "bold",
-                                        color: theme.themes[theme.name].modifiers.group.buttonPrevious.disabledTextColor,
+                                        color: theme.themes[theme.name].modifiers.group.buttonNext.disabledTextColor,
                                         fontSize: 26
                                     }}
                                     disabled={!position.groups[position.currentGroup].isValid} onPress={onNextGroup}></SimpleButton>

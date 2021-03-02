@@ -48,9 +48,8 @@ export const NavMenuItem = React.memo(({ thumbnailHeight, currency, language, no
                         }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                     </View>
                     <Text textBreakStrategy="simple" numberOfLines={2} ellipsizeMode="tail" style={{
-                        textAlign: "center",
-                        fontSize: 20, marginBottom: 6, color: theme.themes[theme.name].menu.navMenu.item.nameColor, fontWeight: "bold",
-                        textTransform: "uppercase"
+                        textAlign: "center", fontSize: 20, marginBottom: 6, fontWeight: "bold", textTransform: "uppercase",
+                        color: theme.themes[theme.name].menu.navMenu.item.nameColor,
                     }}>
                         {
                             currentContent.name

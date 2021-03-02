@@ -13,7 +13,7 @@ interface ICtrlMenuButtonProps {
 }
 
 export const CtrlMenuButton = React.memo(({ onPress, text, disabled = false, gradient, gradientDisabled }: ICtrlMenuButtonProps) => {
-    const shadow = uiutils.createShadow((gradient as any)[0]);
+    const shadow = disabled ? {} : uiutils.createShadow((gradient as any)[0]);
     console.warn((gradient as any)[0])
 
     return (

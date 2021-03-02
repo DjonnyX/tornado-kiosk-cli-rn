@@ -1,10 +1,12 @@
 import React, { useState, useCallback } from "react";
-import { View, Text, TouchableOpacity, GestureResponderEvent, LayoutChangeEvent, Animated, Easing } from "react-native";
+import { View, Text, TouchableOpacity, GestureResponderEvent, Animated, Easing } from "react-native";
 import * as Color from "color";
+import DropShadow from "react-native-drop-shadow";
 import FastImage from "react-native-fast-image";
 import { NodeTypes, ICompiledLanguage } from "@djonnyx/tornado-types";
 import { theme } from "../../../theme";
 import { MenuNode } from "../../../core/menu/MenuNode";
+import { uiutils } from "../../../utils/ui";
 
 const getSelectedDepth = (node: MenuNode, selected: MenuNode, depth: number = 0): number => {
     let result = -1;
@@ -107,7 +109,10 @@ export const SideMenuItem = React.memo(({ depth = 0, height = 0, selected, langu
     const currentContent = node.__rawNode__.content?.contents[language?.code];
     const currentAdAsset = currentContent?.resources?.icon;
     const color = theme.themes[theme.name].menu.sideMenu.item.backgroundColor; //currentContent.color;
+    const actualColor = node === selected ? Color.rgb(color).lightness(85).toString() : Color.rgb(color).lightness(95).toString();
     const isExpanded = node === selected || node.children.filter(child => child === selected).length > 0;
+
+    const shadow = uiutils.createShadow(actualColor);
 
     if (isExpanded) {
         expand();
@@ -136,25 +141,29 @@ export const SideMenuItem = React.memo(({ depth = 0, height = 0, selected, langu
         <View style={{ flex: 1, alignContent: "flex-start", alignItems: "stretch", minHeight: height }}>
             <View style={{
                 flex: 1,
-                overflow: "hidden"
+                // overflow: "hidden"
             }}>
-                <TouchableOpacity style={{
-                    flex: 1, justifyContent: "center", alignItems: "center",
-                    margin: 8 * size, marginBottom: 4, marginTop: depth === 0 ? 5 : 0, padding: 8, borderRadius: 14,
-                    backgroundColor: node === selected ? Color.rgb(color).alpha(0.15).toString() : Color.rgb(color).alpha(0.025).toString(),
-                }} onPress={pressHandler}>
-                    <FastImage style={{ width: "100%", height: 56 - offset, marginBottom: 5 }} source={{
-                        uri: `file://${currentAdAsset?.mipmap.x128}`,
-                    }} resizeMode={FastImage.resizeMode.contain}></FastImage>
-                    <Text style={{
-                        fontSize: 14, color: theme.themes[theme.name].menu.sideMenu.item.nameColor, fontWeight: "bold",
-                        textTransform: "uppercase"
-                    }}>
-                        {
-                            currentContent.name
-                        }
-                    </Text>
-                </TouchableOpacity>
+                <DropShadow style={shadow}>
+                    <TouchableOpacity style={{
+                        flex: 1, justifyContent: "center", alignItems: "center",
+                        margin: 8 * size, marginBottom: 4, marginTop: depth === 0 ? 5 : 0, borderRadius: 14,
+                        backgroundColor: actualColor,
+                    }} onPress={pressHandler}>
+                        <View style={{ padding: 8, width: "100%", justifyContent: "center", alignItems: "center", }}>
+                            <FastImage style={{ width: "100%", height: 56 - offset, marginBottom: 5 }} source={{
+                                uri: `file://${currentAdAsset?.mipmap.x128}`,
+                            }} resizeMode={FastImage.resizeMode.contain}></FastImage>
+                            <Text style={{
+                                fontSize: 14, color: theme.themes[theme.name].menu.sideMenu.item.nameColor, fontWeight: "bold",
+                                textTransform: "uppercase"
+                            }}>
+                                {
+                                    currentContent.name
+                                }
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
+                </DropShadow>
             </View>
             {
                 /*
