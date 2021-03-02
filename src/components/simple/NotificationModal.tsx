@@ -62,12 +62,12 @@ export const NotificationModal = React.memo(({ children, visible }: INotificatio
             zIndex: 5,
         }}>
             <View style={{
-                margin: 20,
+                margin: 40,
                 borderWidth: 1,
                 borderColor: theme.themes[theme.name].common.modalNotification.window.borderColor,
                 backgroundColor: theme.themes[theme.name].common.modalNotification.window.background,
                 borderRadius: 8,
-                padding: 35,
+                padding: 44,
                 alignItems: "center",
             }}>
                 {

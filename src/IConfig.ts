@@ -7,5 +7,6 @@ export interface IConfig {
         userIdleTimeout: number;
         priceDigest: number;
         checkActivityInterval: number;
+        resetTimeoutAfterPay: number;
     };
 }

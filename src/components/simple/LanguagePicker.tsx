@@ -1,10 +1,11 @@
 import React, { useState, useCallback } from "react";
-import { View, Text, Modal, TouchableOpacity, Dimensions } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import FastImage from "react-native-fast-image";
+import DropShadow from "react-native-drop-shadow";
 import { ICompiledLanguage } from "@djonnyx/tornado-types";
-import Color from "color";
 import { theme } from "../../theme";
+import { uiutils } from "../../utils/ui";
 import { ModalSolid } from "./ModalSolid";
 
 interface ILanguagePickerProps {
@@ -17,23 +18,15 @@ export const LanguagePicker = React.memo(({ language, languages, onSelect }: ILa
     const [currentLanguage, _setCurrentLanguage] = useState(languages.find(lang => lang.code === language.code));
     const [modalVisible, _setModalVisible] = useState(false);
 
-    const setCurrentLanguage = useCallback((lang: ICompiledLanguage) => {
-        _setCurrentLanguage(prevLang => {
-            return lang;
-        });
+    const shadow = uiutils.createShadow(theme.themes[theme.name].languagePicker.borderColor, 1, 0.45);
+
+    const onPressHandler = useCallback(() => {
+        _setModalVisible(true);
     }, []);
 
-    const setModalVisible = useCallback((value: boolean) => {
-        _setModalVisible(prevVisibility => value);
-    }, []);
-
-    const pressHandler = useCallback(() => {
-        setModalVisible(true);
-    }, []);
-
-    const selectHandler = useCallback((lang: ICompiledLanguage) => {
-        setCurrentLanguage(lang);
-        setModalVisible(false);
+    const onSelectHandler = useCallback((lang: ICompiledLanguage) => {
+        _setCurrentLanguage(lang);
+        _setModalVisible(false);
         onSelect(lang);
     }, []);
 
@@ -42,7 +35,7 @@ export const LanguagePicker = React.memo(({ language, languages, onSelect }: ILa
             <ModalSolid visible={modalVisible}>
                 <FlatList style={{ flexGrow: 0, padding: 12 }} data={languages} renderItem={({ item }) => {
                     return <TouchableOpacity onPress={() => {
-                        selectHandler(item);
+                        onSelectHandler(item);
                     }}>
                         <View style={{ flexDirection: "column", alignItems: "center", justifyContent: "center", marginBottom: 32 }}>
                             <FastImage style={{
@@ -65,16 +58,17 @@ export const LanguagePicker = React.memo(({ language, languages, onSelect }: ILa
                 </FlatList>
             </ModalSolid>
             <TouchableOpacity style={{ flex: 1, justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}
-                onPress={pressHandler}>
-                <View style={{
-                    flexDirection: "row", alignItems: "center", justifyContent: "center", borderWidth: 2,
-                    borderColor: theme.themes[theme.name].languageModal.item.borderColor, padding: 8, overflow: "hidden",
-                    width: 44, height: 44, borderRadius: 32
-                }}>
-                    <FastImage style={{ position: "absolute", width: 64, height: 64 }} source={{
-                        uri: `file://${currentLanguage?.resources?.main?.mipmap.x128}`,
-                    }} resizeMode={FastImage.resizeMode.contain}></FastImage>
-                </View>
+                onPress={onPressHandler}>
+                <DropShadow style={shadow}>
+                    <View style={{
+                        flexDirection: "row", alignItems: "center", justifyContent: "center", padding: 8, overflow: "hidden",
+                        width: 44, height: 44, borderRadius: 32
+                    }}>
+                        <FastImage style={{ position: "absolute", width: 64, height: 64 }} source={{
+                            uri: `file://${currentLanguage?.resources?.main?.mipmap.x128}`,
+                        }} resizeMode={FastImage.resizeMode.contain}></FastImage>
+                    </View>
+                </DropShadow>
             </TouchableOpacity>
         </View>
     );

@@ -10,6 +10,7 @@ import { MenuScreen } from "../screens/MenuScreen";
 import { ConfirmationOrderScreen } from "../screens/ConfirmationOrderScreen";
 import { AuthScreen } from "../screens/AuthScreen";
 import { PayStatusScreen } from "../screens/PayStatusScreen";
+import { PayConfirmationScreenScreen } from "../screens/PayConfirmationScreen";
 
 const Stack = createStackNavigator();
 
@@ -58,6 +59,13 @@ export const MainNavigationStack = () => {
       <Stack.Screen
         name={MainNavigationScreenTypes.PAY_STATUS}
         component={PayStatusScreen}
+        options={{
+          gestureEnabled: true,
+        }}
+      />
+      <Stack.Screen
+        name={MainNavigationScreenTypes.PAY_CONFIRMATION}
+        component={PayConfirmationScreenScreen}
         options={{
           gestureEnabled: true,
         }}

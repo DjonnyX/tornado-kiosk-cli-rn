@@ -13,11 +13,11 @@ interface IAlertContentProps {
 export const AlertContent = React.memo(({ title, message, buttons }: IAlertContentProps) => {
     return (
         <View style={{ flexDirection: "column" }}>
-            <View style={{ flexDirection: "column", marginBottom: 20 }}>
-                <Text style={{ fontSize: 20, textTransform: "uppercase", color: theme.themes[theme.name].common.alert.titleColor }}>
+            <View style={{ flexDirection: "column", marginBottom: 32 }}>
+                <Text style={{ fontSize: 20, fontWeight: "bold", textTransform: "uppercase", color: theme.themes[theme.name].common.alert.titleColor }}>
                     {title}
                 </Text>
-                <Text style={{ fontSize: 16, color: theme.themes[theme.name].common.alert.messageColor }}>
+                <Text style={{ fontSize: 18, fontWeight: "bold", color: theme.themes[theme.name].common.alert.messageColor }}>
                     {message}
                 </Text>
             </View>
@@ -25,7 +25,8 @@ export const AlertContent = React.memo(({ title, message, buttons }: IAlertConte
                 {
                     buttons.map((b, i) =>
                         <SimpleButton key={i} style={{
-                            backgroundColor: theme.themes[theme.name].common.alert.buttonColor, marginLeft: i > 0 ? 10 : 0
+                            borderRadius: 6,
+                            backgroundColor: theme.themes[theme.name].common.alert.buttonColor, marginLeft: i > 0 ? 12 : 0
                         }}
                             textStyle={{
                                 textTransform: "uppercase",
