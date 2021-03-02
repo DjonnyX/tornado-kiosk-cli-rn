@@ -12,7 +12,7 @@ export const theme: IKioskTheme = {
                     }
                 },
                 modalTransparent: {
-                    background: "rgba(255,255,255,0.75)",
+                    background: "rgba(0,0,0,0.5)",
                     window: {
                         background: "#fff",
                         borderColor: "rgba(0,0,0,0.1)"
@@ -31,7 +31,7 @@ export const theme: IKioskTheme = {
                 alert: {
                     titleColor: "rgba(0,0,0,0.75)",
                     messageColor: "rgba(0,0,0,0.75)",
-                    buttonColor: "#30a02a",
+                    buttonColor: "#ffa000",
                     buttonTextColor: "rgba(255,255,255,1)",
                 }
             },
@@ -41,10 +41,38 @@ export const theme: IKioskTheme = {
                     textColor: "rgba(0,0,0,0.75)",
                 }
             },
+            languagePicker: {
+                borderColor: "rgba(0,0,0,0.75)",
+            },
             orderTypeModal: {
                 item: {
                     borderColor: "transparent",
                     textColor: "rgba(0,0,0,0.75)",
+                }
+            },
+            orderTypePicker: {
+                backgroundColor: "#212121",
+                borderColor: "transparent",
+                textColor: "rgba(255,255,255,1)",
+            },
+            service: {
+                errorLabel: {
+                    textColor: "red",
+                },
+                textInput: {
+                    placeholderColor: "rgba(0,0,0,0.5)",
+                    selectionColor: "#30a02a",
+                    underlineColor: "#30a02a",
+                    underlineWrongColor: "red",
+                    textColor: "rgba(0,0,0,1)",
+                },
+                picker: {
+                    textColor: "rgba(0,0,0,1)",
+                    placeholderColor: "gray",
+                },
+                button: {
+                    backgroundColor: "#30a02a",
+                    textColor: "rgba(255,255,255,1)",
                 }
             },
             loading: {
@@ -64,12 +92,15 @@ export const theme: IKioskTheme = {
                     background: ["rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 0)"],
                     titleColor: "rgba(0,0,0,0.75)",
                 },
+                orderPanel: {
+                    backgroundColor: "rgba(0,0,0,0.025)",
+                },
                 backButton: {
                     iconColor: "rgba(0,0,0,0.75)",
                 },
                 sideMenu: {
                     item: {
-                        backgroundColor: "transparent",
+                        backgroundColor: "#000",
                         nameColor: "rgba(0,0,0,0.75)",
                     },
                 },
@@ -106,8 +137,12 @@ export const theme: IKioskTheme = {
                         },
                         quantityStepper: {
                             buttons: {
+                                backgroundColor: "#ffa000",
+                                disabledBackgroundColor: "rgba(255,160,0,0.25)",
                                 borderColor: "rgba(0,0,0,0.75)",
-                                textColor: "rgba(0,0,0,0.75)",
+                                disabledBorderColor: "rgba(0,0,0,0.75)",
+                                textColor: "rgba(255,255,255,1)",
+                                disabledTextColor: "rgba(255,255,255,0.75)",
                             },
                             indicator: {
                                 textColor: "rgba(0,0,0,0.75)",
@@ -117,12 +152,12 @@ export const theme: IKioskTheme = {
                 },
                 ctrls: {
                     cancelButton: {
-                        backgroundColor: ["rgb(242, 62, 26)", "rgb(242, 62, 26)"],
+                        backgroundColor: ["#212121", "rgb(242, 62, 26)"],
                         disabledBackgroundColor: ["rgba(0, 0, 0, 0.15)", "rgba(0, 0, 0, 0.1)"],
                     },
                     confirmButton: {
-                        backgroundColor: ["#30a02a", "#30a02a"],
-                        disabledBackgroundColor: ["rgba(0, 0, 0, 0.15)", "rgba(0, 0, 0, 0.1)"],
+                        backgroundColor: ["#ffa000", "#30a02a"],
+                        disabledBackgroundColor: ["ffa00040", "rgba(0, 0, 0, 0.1)"],
                     }
                 }
             },
@@ -139,7 +174,7 @@ export const theme: IKioskTheme = {
                     descriptionColor: "rgba(0,0,0,0.75)",
                     descriptionInvalidColor: "#ff4e4e",
                     buttonPrevious: {
-                        backgroundColor: "#30a02a",
+                        backgroundColor: "#212121",
                         disabledBackgroundColor: "transparent",
                         borderColor: "transparent",
                         disabledBorderColor: "rgba(0,0,0,0.1)",
@@ -147,7 +182,7 @@ export const theme: IKioskTheme = {
                         disabledTextColor: "rgba(0,0,0,0.1)",
                     },
                     buttonNext: {
-                        backgroundColor: "#30a02a",
+                        backgroundColor: "#ffa000",
                         disabledBackgroundColor: "transparent",
                         borderColor: "transparent",
                         disabledBorderColor: "rgba(0,0,0,0.1)",
@@ -155,9 +190,9 @@ export const theme: IKioskTheme = {
                         disabledTextColor: "rgba(0,0,0,0.1)",
                     },
                     indicator: {
-                        currentValidColor: "#30a02a",
+                        currentValidColor: "#ffa000",
                         currentInvalidColor: "#ff4e4e",
-                        otherColor: "rgba(0,0,0,0.25)",
+                        otherColor: "#212121",
                     }
                 },
                 item: {
@@ -167,11 +202,17 @@ export const theme: IKioskTheme = {
                     quantityStepper: {
                         buttons: {
                             backgroundColor: "transparent",
+                            selectedBackgroundColor: "#ffa000",
                             disabledBackgroundColor: "transparent",
+                            disabledSelectedBackgroundColor: "rgba(255,160,0,0.25)",
                             borderColor: "rgba(0,0,0,0.75)",
+                            selectedBorderColor: "transparent",
                             disabledBorderColor: "rgba(0,0,0,0.75)",
+                            disabledSelectedBorderColor: "transparent",
                             textColor: "rgba(0,0,0,0.75)",
+                            selectedTextColor: "rgba(255,255,255,0.75)",
                             disabledTextColor: "rgba(0,0,0,0.75)",
+                            disabledSelectedTextColor: "rgba(255,255,255,0.75)",
                         },
                         indicator: {
                             textColor: "rgba(0,0,0,0.75)",
@@ -182,33 +223,38 @@ export const theme: IKioskTheme = {
             confirmation: {
                 background: "#fff",
                 backButton: {
-                    backgroundColor: "#30a02a",
+                    backgroundColor: "#212121",
                     textColor: "#ffffff",
                 },
                 nextButton: {
-                    backgroundColor: "#30a02a",
+                    backgroundColor: "#ffa000",
                     textColor: "#ffffff",
                 },
                 summaryPrice: {
-                    textColor: "#rgba(0,0,0,0.75)",
+                    textColor: "rgba(0,0,0,0.75)",
                 },
                 nestedItem: {
                     backgroundColor: "transparent",
-                    nameColor: "green",
+                    nameColor: "#212121",
                     price: {
                         textColor: "rgba(0,0,0,0.75)",
                     },
                 },
                 item: {
                     backgroundColor: "transparent",
+                    oddBackgroundColor: "rgba(0,0,0,0.025)",
                     nameColor: "rgba(0,0,0,0.75)",
                     price: {
                         textColor: "rgba(0,0,0,0.75)",
                     },
                     quantityStepper: {
                         buttons: {
+                            backgroundColor: "#ffa000",
+                            disabledBackgroundColor: "rgba(255,160,0,0.25)",
                             borderColor: "rgba(0,0,0,0.75)",
-                            textColor: "rgba(0,0,0,0.75)",
+                            disabledBorderColor: "rgba(0,0,0,0.75)",
+                            textColor: "rgba(255,255,255,1)",
+                            disabledTextColor: "rgba(255,255,255,0.75)",
                         },
                         indicator: {
                             textColor: "rgba(0,0,0,0.75)",
@@ -216,6 +262,15 @@ export const theme: IKioskTheme = {
                     }
                 }
             },
+            payStatus: {
+                primaryMessageColor: "rgba(0,0,0,0.75)",
+                secondaryMessageColor: "rgba(0,0,0,0.5)",
+            },
+            payConfirmation: {
+                numberColor: "rgba(0,0,0,1)",
+                primaryMessageColor: "rgba(0,0,0,0.75)",
+                secondaryMessageColor: "rgba(0,0,0,0.5)",
+            }
         },
         ["dark"]: {
             common: {
@@ -245,7 +300,7 @@ export const theme: IKioskTheme = {
                 alert: {
                     titleColor: "rgba(255,255,255,0.75)",
                     messageColor: "rgba(255,255,255,0.75)",
-                    buttonColor: "yellow",
+                    buttonColor: "#30a02a",
                     buttonTextColor: "rgba(0,0,0,0.75)",
                 }
             },
@@ -255,10 +310,38 @@ export const theme: IKioskTheme = {
                     textColor: "rgba(255,255,255,0.75)",
                 }
             },
+            languagePicker: {
+                borderColor: "rgba(255,255,255,0.15)",
+            },
             orderTypeModal: {
                 item: {
                     borderColor: "rgba(255,255,255,0.15)",
                     textColor: "rgba(255,255,255,0.75)",
+                }
+            },
+            orderTypePicker: {
+                backgroundColor: "#ffa000",
+                borderColor: "transparent",
+                textColor: "rgba(255,255,255,1)",
+            },
+            service: {
+                errorLabel: {
+                    textColor: "red",
+                },
+                textInput: {
+                    placeholderColor: "rgba(255,255,255,0.5)",
+                    selectionColor: "#30a02a",
+                    underlineColor: "#30a02a",
+                    underlineWrongColor: "red",
+                    textColor: "rgba(255,255,255,1)",
+                },
+                picker: {
+                    textColor: "rgba(255,255,255,1)",
+                    placeholderColor: "gray",
+                },
+                button: {
+                    backgroundColor: "#30a02a",
+                    textColor: "rgba(255,255,255,1)",
                 }
             },
             loading: {
@@ -277,6 +360,9 @@ export const theme: IKioskTheme = {
                 header: {
                     background: ["rgba(0, 0, 0, 1)", "rgba(0, 0, 0, 1)", "rgba(0, 0, 0, 1)", "rgba(0, 0, 0, 1)", "rgba(0, 0, 0, 0)"],
                     titleColor: "rgba(255,255,255,0.75)",
+                },
+                orderPanel: {
+                    backgroundColor: "rgba(255,255,255,0.025)",
                 },
                 backButton: {
                     iconColor: "rgba(255,255,255,0.75)",
@@ -320,8 +406,12 @@ export const theme: IKioskTheme = {
                         },
                         quantityStepper: {
                             buttons: {
+                                backgroundColor: "transparent",
+                                disabledBackgroundColor: "transparent",
                                 borderColor: "rgba(255,255,255,0.75)",
+                                disabledBorderColor: "rgba(255,255,255,0.75)",
                                 textColor: "rgba(255,255,255,0.75)",
+                                disabledTextColor: "rgba(255,255,255,0.75)",
                             },
                             indicator: {
                                 textColor: "rgba(255,255,255,0.75)",
@@ -381,11 +471,17 @@ export const theme: IKioskTheme = {
                     quantityStepper: {
                         buttons: {
                             backgroundColor: "transparent",
+                            selectedBackgroundColor: "#30a02a",
                             disabledBackgroundColor: "transparent",
+                            disabledSelectedBackgroundColor: "#30a02a40",
                             borderColor: "rgba(255,255,255,0.75)",
+                            selectedBorderColor: "transparent",
                             disabledBorderColor: "rgba(255,255,255,0.75)",
+                            disabledSelectedBorderColor: "transparent",
                             textColor: "rgba(255,255,255,0.75)",
+                            selectedTextColor: "rgba(255,255,255,0.75)",
                             disabledTextColor: "rgba(255,255,255,0.75)",
+                            disabledSelectedTextColor: "rgba(255,255,255,0.75)",
                         },
                         indicator: {
                             textColor: "rgba(255,255,255,0.75)",
@@ -415,14 +511,19 @@ export const theme: IKioskTheme = {
                 },
                 item: {
                     backgroundColor: "transparent",
+                    oddBackgroundColor: "rgba(255,255,255,0.025)",
                     nameColor: "rgba(255,255,255,0.75)",
                     price: {
                         textColor: "rgba(255,255,255,0.5)",
                     },
                     quantityStepper: {
                         buttons: {
+                            backgroundColor: "black",
+                            disabledBackgroundColor: "transparent",
                             borderColor: "rgba(255,255,255,0.75)",
+                            disabledBorderColor: "rgba(255,255,255,0.75)",
                             textColor: "rgba(255,255,255,0.75)",
+                            disabledTextColor: "rgba(255,255,255,0.75)",
                         },
                         indicator: {
                             textColor: "rgba(255,255,255,0.75)",
@@ -430,6 +531,15 @@ export const theme: IKioskTheme = {
                     }
                 }
             },
+            payStatus: {
+                primaryMessageColor: "rgba(255,255,255,0.75)",
+                secondaryMessageColor: "rgba(255,255,255,0.5)",
+            },
+            payConfirmation: {
+                numberColor: "rgba(255,255,255,1)",
+                primaryMessageColor: "rgba(255,255,255,0.75)",
+                secondaryMessageColor: "rgba(255,255,255,0.5)",
+            }
         }
     }
 };

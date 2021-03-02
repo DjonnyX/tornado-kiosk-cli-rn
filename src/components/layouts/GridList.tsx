@@ -5,6 +5,7 @@ interface IGridListProps<T = any> {
     children?: never[];
     style?: StyleProp<ViewStyle>;
     padding?: number;
+    disbleStartAnimation?: boolean;
     data: Array<T>;
     itemDimension: number;
     spacing?: number;
@@ -15,18 +16,22 @@ interface IGridListProps<T = any> {
 
 const FPS = 1000 / 60;
 
-export const GridList = ({ data, renderItem, style, keyExtractor, spacing = 0, padding = 0, animationSkipFrames = 0, itemDimension }: IGridListProps) => {
+export const GridList = ({ data, renderItem, style, keyExtractor, spacing = 0, padding = 0,
+    animationSkipFrames = 0, disbleStartAnimation = false, itemDimension }: IGridListProps) => {
+    const [isInit, _setIsInit] = useState(false);
     const [cellWidth, _setCellWidth] = useState(new Animated.Value(1));
     const [gap, _setGap] = useState(spacing * 0.5);
 
     let cellAnimation: Animated.CompositeAnimation;
 
-    cellAnimation = Animated.timing(cellWidth, {
-        useNativeDriver: false,
-        toValue: 0,
-        duration: 250,
-        easing: Easing.cubic,
-    });
+    if (!disbleStartAnimation) {
+        cellAnimation = Animated.timing(cellWidth, {
+            useNativeDriver: false,
+            toValue: 0,
+            duration: 250,
+            easing: Easing.cubic,
+        });
+    }
 
     const changeLayoutHandler = useCallback((event: LayoutChangeEvent) => {
         const { x, y, width, height } = event.nativeEvent.layout;
@@ -39,10 +44,11 @@ export const GridList = ({ data, renderItem, style, keyExtractor, spacing = 0, p
         cellAnimation = Animated.timing(cellWidth, {
             useNativeDriver: false,
             toValue: actualItemWidth,
-            duration: 200,
+            duration: !disbleStartAnimation || (disbleStartAnimation && isInit) ? 200 : 0,
             easing: Easing.cubic,
         });
         cellAnimation.start();
+        _setIsInit(true);
     }, []);
 
     return (

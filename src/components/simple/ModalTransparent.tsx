@@ -28,20 +28,20 @@ export const ModalTransparent = React.memo(({ children, visible }: IModalTranspa
                 backgroundColor: theme.themes[theme.name].common.modalTransparent.background,
             }}>
                 <View style={{
-                    margin: 20,
-                    borderWidth: 1,
+                    margin: 40,
+                    borderWidth: 0,
                     borderColor: theme.themes[theme.name].common.modalTransparent.window.borderColor,
                     backgroundColor: theme.themes[theme.name].common.modalTransparent.window.background,
                     borderRadius: 8,
-                    padding: 35,
+                    padding: 44,
                     alignItems: "center",
                     shadowColor: "#000",
                     shadowOffset: {
                         width: 0,
                         height: 2,
                     },
-                    shadowOpacity: 0.25,
-                    shadowRadius: 3.84,
+                    shadowOpacity: 0.05,
+                    shadowRadius: 8.84,
                     elevation: 8,
                 }}>
                     {

@@ -65,7 +65,7 @@ export const MyOrderListItem = React.memo(({ stateId, menuStateId, imageHeight, 
                     }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                 </View>
                 <Text numberOfLines={3} ellipsizeMode="tail" style={{
-                    textAlign: "center", fontSize: 14,
+                    textAlign: "center", fontSize: 14, fontWeight: "bold",
                     color: theme.themes[theme.name].menu.draftOrder.item.nameColor, textTransform: "uppercase", fontWeight: "bold"
                 }}>
                     {
@@ -74,7 +74,7 @@ export const MyOrderListItem = React.memo(({ stateId, menuStateId, imageHeight, 
                 </Text>
                 <View style={{ alignItems: "center", justifyContent: "center", marginBottom: 1 }}>
                     <Text style={{
-                        textAlign: "center", fontSize: 14, paddingTop: 4, paddingBottom: 4, paddingLeft: 6, paddingRight: 6,
+                        textAlign: "center", fontWeight: "bold", fontSize: 14, paddingTop: 4, paddingBottom: 4, paddingLeft: 6, paddingRight: 6,
                         color: theme.themes[theme.name].menu.draftOrder.item.price.textColor
                     }}>
                         {
@@ -86,16 +86,28 @@ export const MyOrderListItem = React.memo(({ stateId, menuStateId, imageHeight, 
             <NumericStapper
                 value={position.quantity}
                 buttonStyle={{
-                    width: 32, height: 32, borderStyle: "solid", borderWidth: 1, borderRadius: 3,
+                    width: 32, height: 32, borderRadius: 10,
+                    backgroundColor: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.backgroundColor,
                     borderColor: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.borderColor,
                     padding: 6
                 }}
+                disabledButtonStyle={{
+                    width: 32, height: 32, borderRadius: 10,
+                    backgroundColor: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.disabledBackgroundColor,
+                    borderColor: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.disabledBorderColor,
+                    padding: 6
+                }}
                 buttonTextStyle={{
+                    fontWeight: "bold",
                     color: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.textColor as any,
+                }}
+                disabledButtonTextStyle={{
+                    fontWeight: "bold",
+                    color: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.disabledTextColor as any,
                 }}
                 textStyle={{
                     width: 44,
-                    fontSize: 14,
+                    fontSize: 14, fontWeight: "bold",
                     color: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.indicator.textColor
                 }}
                 iconDecrement="-"

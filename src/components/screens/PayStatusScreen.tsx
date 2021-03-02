@@ -1,4 +1,4 @@
-import React, { Dispatch } from "react";
+import React, { Dispatch, useEffect } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
 import { View, Text } from "react-native";
 import { connect } from "react-redux";
@@ -19,20 +19,34 @@ interface IPayStatusScreenSelfProps {
 interface IPayStatusScreenProps extends StackScreenProps<any, MainNavigationScreenTypes.PAY_STATUS>, IPayStatusScreenSelfProps { }
 
 const PayStatusScreenContainer = React.memo(({ _language, navigation }: IPayStatusScreenProps) => {
+    useEffect(() => {
+        setTimeout(() => {
+            navigation.navigate(MainNavigationScreenTypes.PAY_CONFIRMATION);
+        }, 1000);
+    }, []);
+
     return (
         <View style={{
             flex: 1, justifyContent: "center", alignItems: "center", width: "100%", height: "100%",
             backgroundColor: theme.themes[theme.name].intro.background
         }}>
-            <View style={{alignItems: "center", width: 620 }}>
-                <Text style={{ fontSize: 40, fontWeight: "bold", textAlign: "center", color: "rgba(0,0,0,0.75)" }}>
+            <View style={{ alignItems: "center", width: "80%", maxWidth: 620 }}>
+                <Text style={{
+                    fontSize: 40, fontWeight: "bold", textAlign: "center",
+                    color: theme.themes[theme.name].payStatus.primaryMessageColor
+                }}>
                     Следуйте указаниям на экране платежного терминала
                 </Text>
-                <Text style={{ fontSize: 20, fontWeight: "bold", textAlign: "center", color: "rgba(0,0,0,0.5)", marginBottom: 40 }}>
+                <Text style={{
+                    fontSize: 20, fontWeight: "bold", textAlign: "center",
+                    color: theme.themes[theme.name].payStatus.secondaryMessageColor, marginBottom: 40
+                }}>
                     Follow the instructions on the payment terminal
                 </Text>
                 <FastImage style={{ width: 128, height: 128 }}
-                    source={require("./imgs/processing-indicator.gif")}
+                    source={theme.name === 'light'
+                        ? require("./imgs/processing-indicator-light.gif")
+                        : require("./imgs/processing-indicator-dark.gif")}
                     resizeMode="contain" />
             </View>
         </View >

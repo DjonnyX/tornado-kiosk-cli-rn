@@ -184,7 +184,11 @@ export const Menu = React.memo(({
                             <MenuButton onPress={onBack}></MenuButton>
                         </Animated.View>
                         <View style={{ flex: 1 }}></View>
-                        <Text style={{ textTransform: "uppercase", fontWeight: "bold", color: theme.themes[theme.name].menu.header.titleColor, fontSize: 32, marginRight: 24 }}>
+                        <Text style={{
+                            textTransform: "uppercase", fontWeight: "bold",
+                            color: theme.themes[theme.name].menu.header.titleColor,
+                            fontSize: 32, marginRight: 24
+                        }}>
                             {
                                 currentCategory.__rawNode__.content?.contents[language.code]?.name || "Меню"
                             }

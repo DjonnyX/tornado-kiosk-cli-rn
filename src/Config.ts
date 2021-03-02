@@ -11,6 +11,7 @@ class Config implements IConfig {
         userIdleTimeout: 60000,
         priceDigest: 0,
         checkActivityInterval: 1000,
+        resetTimeoutAfterPay: 20,
     };
 }
 
