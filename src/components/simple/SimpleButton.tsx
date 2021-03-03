@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { View, TouchableOpacity, StyleProp, ViewStyle, TextStyle, Text } from "react-native";
 import DropShadow from "react-native-drop-shadow";
 import { uiutils } from "../../utils/ui";
@@ -34,9 +34,16 @@ export const SimpleButton = React.memo(({ title, style, styleDisabled, textStyle
             sText = { ...sText as any, ...textStyleDisabled as any };
         }
     }
+
+    const onPressHandler = useCallback(() => {
+        if (!disabled) {
+            onPress();
+        }
+    }, [disabled, title]);
+
     return (
         <DropShadow style={shadow}>
-            <TouchableOpacity style={sView} onPress={onPress} disabled={disabled}>
+            <TouchableOpacity style={sView} onPress={onPressHandler} disabled={disabled}>
                 <View
                     style={sLayout}
                 >
