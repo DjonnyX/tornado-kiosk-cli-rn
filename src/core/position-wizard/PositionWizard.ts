@@ -62,7 +62,7 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
 
     get __product__() { return this._product; }
 
-    get price() { return this.__product__.prices[this._currency.id || ""]?.value || 0; }
+    get price() { return this.__node__.price; }
 
     get currency() { return this._currency; }
 
@@ -188,6 +188,12 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
 
     private onChangeRawState = () => {
         this.active = this.__node__.active;
+
+        this.validate();
+        this.recalculate();
+        this.update();
+
+        this.emit(PositionWizardEventTypes.CHANGE);
     }
 
     private onEditPosition = (target: IPositionWizard) => {
