@@ -34,6 +34,7 @@ export const Menu = React.memo(({
     const [previousCategory, setPreviousCategory] = useState<MenuNode>(menu);
     const [menuPosition, setMenuPosition] = useState(new Animated.Value(1));
     const [screenPosition, setScreenPosition] = useState(new Animated.Value(0));
+    const [navMenuWidth, setNavMenuWidth] = useState(width);
     let menuAnimation: Animated.CompositeAnimation;
     let screenAnimation: Animated.CompositeAnimation;
 
@@ -103,6 +104,8 @@ export const Menu = React.memo(({
 
     // анимация скрытия бокового меню
     const sideMenuFadeOut = useCallback(() => {
+        setNavMenuWidth(width);
+
         if (menuAnimation) {
             menuAnimation.stop();
         }
@@ -118,6 +121,8 @@ export const Menu = React.memo(({
 
     // анимация отображения бокового меню
     const sideMenuFadeIn = useCallback(() => {
+        setNavMenuWidth(width - sideMenuWidth)
+
         if (menuAnimation) {
             menuAnimation.stop();
         }
@@ -236,7 +241,7 @@ export const Menu = React.memo(({
                         <Animated.View style={{
                             position: "absolute",
                             height: "100%",
-                            width: "100%",
+                            width: navMenuWidth,
                             top: screenPosition.interpolate({
                                 inputRange: [0, 1],
                                 outputRange: [0, height],
@@ -250,7 +255,7 @@ export const Menu = React.memo(({
                         <Animated.View style={{
                             position: "absolute",
                             height: "100%",
-                            width: "100%",
+                            width: navMenuWidth,
                             top: screenPosition.interpolate({
                                 inputRange: [0, 1],
                                 outputRange: [-height, 0],
