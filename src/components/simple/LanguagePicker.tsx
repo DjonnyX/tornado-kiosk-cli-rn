@@ -40,10 +40,11 @@ export const LanguagePicker = React.memo(({ language, languages, onSelect }: ILa
                         <View style={{ flexDirection: "column", alignItems: "center", justifyContent: "center", marginBottom: 32 }}>
                             <FastImage style={{
                                 width: 128, height: 128, borderWidth: 1,
-                                borderColor: theme.themes[theme.name].languageModal.item.borderColor, marginBottom: 8
+                                borderColor: theme.themes[theme.name].languageModal.item.borderColor,
+                                borderRadius: 16, marginBottom: 8
                             }} source={{
-                                uri: `file://${item?.resources?.main?.mipmap.x128}`,
-                            }} resizeMode={FastImage.resizeMode.contain}></FastImage>
+                                uri: `file://${item?.resources?.main?.path}`,
+                            }} resizeMode={FastImage.resizeMode.cover}></FastImage>
                             <Text style={{
                                 fontSize: 16, fontWeight: "bold",
                                 color: theme.themes[theme.name].languageModal.item.textColor
