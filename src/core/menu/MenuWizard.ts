@@ -1,9 +1,10 @@
-import { IBusinessPeriod, ICompiledLanguage, ICompiledMenu, ICurrency, NodeTypes } from "@djonnyx/tornado-types";
+import { IBusinessPeriod, ICompiledLanguage, ICompiledMenu, ICompiledOrderType, ICurrency } from "@djonnyx/tornado-types";
 import EventEmitter from "eventemitter3";
 import { interval, Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { config } from "../../Config";
 import { Debounse } from "../../utils/debounse";
+import { ScenarioProcessing } from "../scenarios";
 import { MenuWizardEventTypes, MenuNodeEventTypes } from "./events";
 import { MenuNode } from "./MenuNode";
 
@@ -16,18 +17,44 @@ export class MenuWizard extends EventEmitter {
     set currency(v: ICurrency) {
         if (this._currency !== v) {
             this._currency = v;
+
+            if (!!this._menu) {
+                this._menu.currency = v;
+            }
         }
     }
 
     set businessPeriods(v: Array<IBusinessPeriod>) {
         if (this._businessPeriods !== v) {
             this._businessPeriods = v;
+
+            if (!!this._menu) {
+                this._menu.businessPeriods = v;
+            }
+        }
+    }
+
+    set orderType(v: ICompiledOrderType) {
+        if (this._orderType !== v) {
+            this._orderType = v;
+
+            if (!!this._menu) {
+                this._menu.orderType = v;
+                ScenarioProcessing.checkOrderTypeActivity(this._menu, {
+                    businessPeriods: this._businessPeriods,
+                    orderType: this._orderType,
+                });
+            }
         }
     }
 
     set language(v: ICompiledLanguage) {
         if (this._language !== v) {
             this._language = v;
+
+            if (!!this._menu) {
+                this._menu.language = v;
+            }
         }
     }
 
@@ -41,7 +68,19 @@ export class MenuWizard extends EventEmitter {
                 this._menu.dispose();
             }
 
-            this._menu = new MenuNode(this._rawMenu, null, this._businessPeriods, this._language, this._currency);
+            this._menu = new MenuNode(this._rawMenu, null,
+                this._businessPeriods,
+                this._orderType,
+                this._language,
+                this._currency);
+
+            if (!!this._orderType) {
+                ScenarioProcessing.checkOrderTypeActivity(this._menu, {
+                    businessPeriods: this._businessPeriods,
+                    orderType: this._orderType,
+                });
+            }
+
             this._menu.addListener(MenuNodeEventTypes.CHANGE, this.menuChangeHandler);
 
             this.update();
@@ -66,7 +105,9 @@ export class MenuWizard extends EventEmitter {
 
     protected _unsubscribe$ = new Subject<void>();
 
-    constructor(protected _currency: ICurrency, protected _businessPeriods: Array<IBusinessPeriod>,
+    constructor(protected _currency: ICurrency,
+        protected _businessPeriods: Array<IBusinessPeriod>,
+        protected _orderType: ICompiledOrderType,
         protected _language: ICompiledLanguage) {
         super();
         MenuWizard.current = this;

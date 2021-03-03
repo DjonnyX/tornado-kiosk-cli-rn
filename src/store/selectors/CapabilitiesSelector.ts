@@ -8,6 +8,10 @@ export namespace CapabilitiesSelectors {
         return state?.language;
     });
 
+    export const selectOrderType = createSelector(getCapabilities, (state) => {
+        return state?.orderType;
+    });
+
     export const selectCurrentScreen = createSelector(getCapabilities, (state) => {
         return state?.currentScreen;
     });
