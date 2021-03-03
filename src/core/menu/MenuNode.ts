@@ -1,8 +1,9 @@
 import {
     IBusinessPeriod, ICompiledLanguage, ICompiledMenuNode, ICompiledOrderType, ICompiledProduct, ICompiledSelector,
-    ICurrency, NodeTypes
+    ICurrency, IScenario, NodeTypes
 } from "@djonnyx/tornado-types";
 import EventEmitter from "eventemitter3";
+import { priceFormatter } from "../../utils/price";
 import { ScenarioProcessing } from "../scenarios";
 import { MenuNodeEventTypes } from "./events";
 
@@ -29,6 +30,18 @@ export class MenuNode<T = ICompiledSelector | ICompiledProduct | any> extends Ev
 
     protected _stateId: number = 0;
 
+    protected _price: number = 0;
+    set price(v: number) {
+        if (this._price !== v) {
+            this._price = v;
+
+            this.update();
+
+            this.emit(MenuNodeEventTypes.CHANGE);
+        }
+    }
+    get price() { return this._price; }
+
     get stateId() {
         return this._stateId;
     }
@@ -42,6 +55,7 @@ export class MenuNode<T = ICompiledSelector | ICompiledProduct | any> extends Ev
             });
         }
     }
+    get currency() { return this._currency; }
 
     set businessPeriods(v: Array<IBusinessPeriod>) {
         if (this._businessPeriods !== v) {
@@ -52,16 +66,18 @@ export class MenuNode<T = ICompiledSelector | ICompiledProduct | any> extends Ev
             });
         }
     }
+    get businessPeriods() { return this._businessPeriods; }
 
-    set orderTypes(v: Array<ICompiledOrderType>) {
-        if (this._orderTypes !== v) {
-            this._orderTypes = v;
+    set orderType(v: ICompiledOrderType) {
+        if (this._orderType !== v) {
+            this._orderType = v;
 
             this._children.forEach(c => {
-                c.orderTypes = v;
+                c.orderType = v;
             });
         }
     }
+    get orderType() { return this._orderType; }
 
     set language(v: ICompiledLanguage) {
         if (this._language !== v) {
@@ -72,6 +88,7 @@ export class MenuNode<T = ICompiledSelector | ICompiledProduct | any> extends Ev
             });
         }
     }
+    get language() { return this._language; }
 
     protected _children = new Array<MenuNode>();
     get children() { return this._children; }
@@ -119,7 +136,7 @@ export class MenuNode<T = ICompiledSelector | ICompiledProduct | any> extends Ev
 
     constructor(public readonly __rawNode__: ICompiledMenuNode<T>, protected _parent: MenuNode | null,
         protected _businessPeriods: Array<IBusinessPeriod>,
-        protected _orderTypes: Array<ICompiledOrderType>,
+        protected _orderType: ICompiledOrderType,
         protected _language: ICompiledLanguage,
         protected _currency: ICurrency) {
         super();
@@ -128,7 +145,7 @@ export class MenuNode<T = ICompiledSelector | ICompiledProduct | any> extends Ev
         this._id = MenuNode.__id;
 
         this.__rawNode__.children.forEach(n => {
-            const node = new MenuNode(n, this, _businessPeriods, _orderTypes, _language, _currency);
+            const node = new MenuNode(n, this, _businessPeriods, _orderType, _language, _currency);
             node.addListener(MenuNodeEventTypes.CHANGE, this.changeMenuNodeHandler);
             this._children.push(node);
         });
@@ -136,19 +153,33 @@ export class MenuNode<T = ICompiledSelector | ICompiledProduct | any> extends Ev
         if (this.__rawNode__.type === NodeTypes.PRODUCT) {
             const p: ICompiledMenuNode<ICompiledProduct> = this.__rawNode__ as any;
             p.content.structure.children.forEach(n => {
-                const node = new MenuNode(n, this, _businessPeriods, _orderTypes, _language, _currency);
+                const node = new MenuNode(n, this, _businessPeriods, _orderType, _language, _currency);
                 node.addListener(MenuNodeEventTypes.CHANGE, this.changeMenuNodeHandler);
                 this._children.push(node);
+            });
+
+            ScenarioProcessing.applyCalculatedPrice(this as unknown as MenuNode<ICompiledProduct>, {
+                businessPeriods: this._businessPeriods,
+                orderType: this._orderType,
             });
         }
 
         ScenarioProcessing.applyPeriodicScenariosForNode(this, {
             businessPeriods: this._businessPeriods,
+            orderType: this._orderType,
         });
     }
 
     protected update(): void {
         this._stateId++;
+    }
+
+    getFormatedPrice(withCurrency: boolean = false): string {
+        let s = priceFormatter(this._price);
+        if (withCurrency) {
+            s += this._currency.symbol;
+        }
+        return s;
     }
 
     checkActivity(): void {
@@ -158,6 +189,7 @@ export class MenuNode<T = ICompiledSelector | ICompiledProduct | any> extends Ev
 
         ScenarioProcessing.applyPeriodicScenariosForNode(this, {
             businessPeriods: this._businessPeriods,
+            orderType: this._orderType,
         });
     }
 

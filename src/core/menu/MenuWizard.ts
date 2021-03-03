@@ -34,12 +34,16 @@ export class MenuWizard extends EventEmitter {
         }
     }
 
-    set orderTypes(v: Array<ICompiledOrderType>) {
-        if (this._orderTypes !== v) {
-            this._orderTypes = v;
+    set orderType(v: ICompiledOrderType) {
+        if (this._orderType !== v) {
+            this._orderType = v;
 
             if (!!this._menu) {
-                this._menu.orderTypes = v;
+                this._menu.orderType = v;
+                ScenarioProcessing.checkOrderTypeActivity(this._menu, {
+                    businessPeriods: this._businessPeriods,
+                    orderType: this._orderType,
+                });
             }
         }
     }
@@ -50,17 +54,6 @@ export class MenuWizard extends EventEmitter {
 
             if (!!this._menu) {
                 this._menu.language = v;
-            }
-        }
-    }
-
-    protected _currentOrderType: ICompiledOrderType | undefined = undefined;
-    set currentOrderType(v: ICompiledOrderType) {
-        if (this._currentOrderType !== v) {
-            this._currentOrderType = v;
-
-            if (!!this._menu) {
-                ScenarioProcessing.checkOrderTypeActivity(this._menu, this._currentOrderType);
             }
         }
     }
@@ -77,12 +70,15 @@ export class MenuWizard extends EventEmitter {
 
             this._menu = new MenuNode(this._rawMenu, null,
                 this._businessPeriods,
-                this._orderTypes,
+                this._orderType,
                 this._language,
                 this._currency);
 
-            if (!!this._currentOrderType) {
-                ScenarioProcessing.checkOrderTypeActivity(this._menu, this._currentOrderType);
+            if (!!this._orderType) {
+                ScenarioProcessing.checkOrderTypeActivity(this._menu, {
+                    businessPeriods: this._businessPeriods,
+                    orderType: this._orderType,
+                });
             }
 
             this._menu.addListener(MenuNodeEventTypes.CHANGE, this.menuChangeHandler);
@@ -111,7 +107,7 @@ export class MenuWizard extends EventEmitter {
 
     constructor(protected _currency: ICurrency,
         protected _businessPeriods: Array<IBusinessPeriod>,
-        protected _orderTypes: Array<ICompiledOrderType>,
+        protected _orderType: ICompiledOrderType,
         protected _language: ICompiledLanguage) {
         super();
         MenuWizard.current = this;

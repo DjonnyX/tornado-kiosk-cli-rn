@@ -55,12 +55,12 @@ export const MenuServiceContainer = React.memo(({ _menuStateId, _menu, _language
             if (!menuWizard) {
                 const mw = new MenuWizard(_currency,
                     _businessPeriods,
-                    _orderTypes,
+                    orderType,
                     _language,
                 );
 
                 mw.rawMenu = _menu as ICompiledMenu;
-                mw.currentOrderType = orderType;
+                mw.orderType = orderType;
                 setMenuWizard(mw);
 
             } else {
@@ -68,8 +68,7 @@ export const MenuServiceContainer = React.memo(({ _menuStateId, _menu, _language
                 menuWizard.currency = _currency;
                 menuWizard.language = _language;
                 menuWizard.businessPeriods = _businessPeriods;
-                menuWizard.orderTypes = _orderTypes;
-                menuWizard.currentOrderType = orderType;
+                menuWizard.orderType = orderType;
             }
         }
     }, [_language, _currency, _businessPeriods, _orderTypes, _currentOrderType, _menu]);
