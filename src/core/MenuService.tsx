@@ -1,7 +1,7 @@
-import React, { Component, Dispatch, useEffect, useState } from "react";
+import React, { Dispatch, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { IAppState } from "../store/state";
-import { IBusinessPeriod, ICompiledLanguage, ICompiledMenu, ICurrency } from "@djonnyx/tornado-types";
+import { IBusinessPeriod, ICompiledLanguage, ICompiledMenu, ICompiledOrderType, ICurrency } from "@djonnyx/tornado-types";
 import { MenuWizard } from "./menu/MenuWizard";
 import { MenuWizardEventTypes } from "./menu/events";
 import { MenuActions, NotificationActions } from "../store/actions";
@@ -17,14 +17,17 @@ interface IMenuServiceProps {
 
     _menuStateId?: number;
     _menu?: ICompiledMenu;
-    _language?: ICompiledLanguage;
     _currency?: ICurrency;
     _businessPeriods?: Array<IBusinessPeriod>;
-    _currentScreen?: MainNavigationScreenTypes;
+    _orderTypes?: Array<ICompiledOrderType>;
+
+    _language?: ICompiledLanguage;
+    _currentOrderType?: ICompiledOrderType;
+    _currentScreen: MainNavigationScreenTypes;
 }
 
-export const MenuServiceContainer = React.memo(({ _menuStateId, _menu, _language,
-    _currency, _businessPeriods, _currentScreen, _snackOpen, _onUpdateStateId }: IMenuServiceProps) => {
+export const MenuServiceContainer = React.memo(({ _menuStateId, _menu, _language, _currentOrderType,
+    _currency, _businessPeriods, _orderTypes, _currentScreen, _snackOpen, _onUpdateStateId }: IMenuServiceProps) => {
     const [menuWizard, setMenuWizard] = useState<MenuWizard | undefined>(undefined);
 
     useEffect(() => {
@@ -45,11 +48,19 @@ export const MenuServiceContainer = React.memo(({ _menuStateId, _menu, _language
     }, [menuWizard]);
 
     useEffect(() => {
-        if (!!_language && !!_currency && !!_businessPeriods && !!_menu) {
+        if (!!_language && !!_currency && !!_businessPeriods && !!_orderTypes && !!_menu) {
+
+            const orderType = _currentOrderType || (_orderTypes.length > 0 ? _orderTypes[0] : {} as any);
 
             if (!menuWizard) {
-                const mw = new MenuWizard(_currency, _businessPeriods, _language);
+                const mw = new MenuWizard(_currency,
+                    _businessPeriods,
+                    _orderTypes,
+                    _language,
+                );
+
                 mw.rawMenu = _menu as ICompiledMenu;
+                mw.currentOrderType = orderType;
                 setMenuWizard(mw);
 
             } else {
@@ -57,9 +68,11 @@ export const MenuServiceContainer = React.memo(({ _menuStateId, _menu, _language
                 menuWizard.currency = _currency;
                 menuWizard.language = _language;
                 menuWizard.businessPeriods = _businessPeriods;
+                menuWizard.orderTypes = _orderTypes;
+                menuWizard.currentOrderType = orderType;
             }
         }
-    }, [_language, _currency, _businessPeriods, _menu]);
+    }, [_language, _currency, _businessPeriods, _orderTypes, _currentOrderType, _menu]);
 
     useEffect(() => {
         if ((_currentScreen === MainNavigationScreenTypes.MENU || _currentScreen === MainNavigationScreenTypes.CONFIRMATION_ORDER)
@@ -80,8 +93,10 @@ const mapStateToProps = (state: IAppState) => {
         _menu: CombinedDataSelectors.selectMenu(state),
         _currency: CombinedDataSelectors.selectDefaultCurrency(state),
         _businessPeriods: CombinedDataSelectors.selectBusinessPeriods(state),
+        _orderTypes: CombinedDataSelectors.selectOrderTypes(state),
         _menuStateId: MenuSelectors.selectStateId(state),
         _currentScreen: CapabilitiesSelectors.selectCurrentScreen(state),
+        _currentOrderType: CapabilitiesSelectors.selectOrderType(state),
     };
 };
 
@@ -96,4 +111,4 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => {
     };
 };
 
-export const MenuService = connect(mapStateToProps, mapDispatchToProps)(MenuServiceContainer);
+export const MenuService = connect(mapStateToProps, mapDispatchToProps)(MenuServiceContainer as any);

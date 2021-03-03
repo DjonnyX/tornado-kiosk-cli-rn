@@ -1,4 +1,4 @@
-import { IBusinessPeriod, IScenario, ScenarioCommonActionTypes, ScenarioProductActionTypes, ScenarioSelectorActionTypes } from "@djonnyx/tornado-types";
+import { IBusinessPeriod, ICompiledOrderType, IScenario, ScenarioCommonActionTypes, ScenarioProductActionTypes, ScenarioSelectorActionTypes } from "@djonnyx/tornado-types";
 import { IPositionWizard, IPositionWizardGroup } from "../interfaces";
 import { MenuNode } from "../menu/MenuNode";
 
@@ -184,6 +184,43 @@ export class ScenarioProcessing {
         return result;
     }
 
+    static checkOrderTypeActivity(node: MenuNode, orderType: ICompiledOrderType): void {
+        const scenarios: Array<IScenario> = node.__rawNode__.scenarios;
+        if (!!scenarios && scenarios.length > 0) {
+            scenarios.forEach(s => {
+                if (s.active) {
+                    switch (s.action) {
+                        case ScenarioCommonActionTypes.VISIBLE_BY_ORDER_TYPE: {
+                            node.visibleByOrderType = (s.value as Array<string>).indexOf(orderType.id as string) > -1;
+                            break;
+                        }
+                    }
+                }
+            });
+        }
+
+        if (!!node.children && node.children.length > 0) {
+            node.children.forEach(c => {
+                if (!!c.__rawNode__.scenarios && c.__rawNode__.scenarios.length > 0) {
+                    c.__rawNode__.scenarios.forEach(s => {
+                        if (s.active) {
+                            switch (s.action) {
+                                case ScenarioCommonActionTypes.VISIBLE_BY_ORDER_TYPE: {
+                                    c.visibleByOrderType = (s.value as Array<string>).indexOf(orderType.id as string) > -1;
+                                    break;
+                                }
+                            }
+                        }
+                    });
+                }
+
+                c.children.forEach(p => {
+                    ScenarioProcessing.checkOrderTypeActivity(p, orderType);
+                });
+            });
+        }
+    }
+
     /**
      * Применение периодичных сценариев 
      */
@@ -195,7 +232,7 @@ export class ScenarioProcessing {
                     switch (s.action) {
                         case ScenarioCommonActionTypes.VISIBLE_BY_BUSINESS_PERIOD: {
                             const isActive = ScenarioProcessing.checkBusinessPeriod(s.value as Array<string>, periodicData);
-                            node.active = isActive;
+                            node.visibleByBusinessPeriod = isActive;
                             break;
                         }
                     }
@@ -211,7 +248,7 @@ export class ScenarioProcessing {
                             switch (s.action) {
                                 case ScenarioCommonActionTypes.VISIBLE_BY_BUSINESS_PERIOD: {
                                     const isActive = ScenarioProcessing.checkBusinessPeriod(s.value as Array<string>, periodicData);
-                                    c.active = isActive;
+                                    c.visibleByBusinessPeriod = isActive;
                                     break;
                                 }
                             }

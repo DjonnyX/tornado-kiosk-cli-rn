@@ -13,6 +13,7 @@ import { ModifiersEditor } from "./modifiers";
 import { MenuNode } from "../../core/menu/MenuNode";
 
 interface IMenuProps {
+    menuStateId: number;
     menu: MenuNode;
     currency: ICurrency;
     language: ICompiledLanguage;
@@ -26,7 +27,7 @@ interface IMenuProps {
 const sideMenuWidth = 180;
 
 export const Menu = React.memo(({
-    menu, language, currency, width, height,
+    menu, menuStateId, language, currency, width, height,
     cancelOrder, addPosition,
 }: IMenuProps) => {
     const [currentCategory, setCurrentCategory] = useState<MenuNode>(menu);
@@ -241,7 +242,7 @@ export const Menu = React.memo(({
                                 outputRange: [0, height],
                             }),
                         }}>
-                            <NavMenu
+                            <NavMenu menuStateId={menuStateId}
                                 node={previousCategory.index <= currentCategory.index ? currentCategory : previousCategory}
                                 language={language} currency={currency} onPress={selectNavMenuCategoryHandler}></NavMenu>
                         </Animated.View>
@@ -255,7 +256,7 @@ export const Menu = React.memo(({
                                 outputRange: [-height, 0],
                             }),
                         }}>
-                            <NavMenu
+                            <NavMenu menuStateId={menuStateId}
                                 node={previousCategory.index > currentCategory.index ? currentCategory : previousCategory}
                                 language={language} currency={currency} onPress={selectNavMenuCategoryHandler}></NavMenu>
                         </Animated.View>

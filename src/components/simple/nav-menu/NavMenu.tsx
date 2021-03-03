@@ -7,13 +7,14 @@ import { GridList } from "../../layouts/GridList";
 import { MenuNode } from "../../../core/menu/MenuNode";
 
 interface INavMenuProps {
+    menuStateId: number;
     node: MenuNode;
     currency: ICurrency;
     language: ICompiledLanguage;
     onPress: (node: MenuNode) => void;
 }
 
-export const NavMenu = React.memo(({ currency, language, node, onPress }: INavMenuProps) => {
+export const NavMenu = React.memo(({ currency, language, node, menuStateId, onPress }: INavMenuProps) => {
     return (
         <SafeAreaView style={{ flex: 1, width: "100%" }}>
             <ScrollView style={{ flex: 1, marginTop: 68 }} horizontal={false}
