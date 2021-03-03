@@ -3,19 +3,19 @@ import { View, Text, TouchableOpacity, GestureResponderEvent } from "react-nativ
 import FastImage from "react-native-fast-image";
 import { NodeTypes, ICompiledProduct, ICurrency, ICompiledLanguage } from "@djonnyx/tornado-types";
 import { theme } from "../../../theme";
-import { priceFormatter } from "../../../utils/price";
 import { TagList } from "../TagList";
 import { MenuNode } from "../../../core/menu/MenuNode";
 
 interface INavMenuItemProps {
     thumbnailHeight: number;
     node: MenuNode;
+    stateId: number;
     currency: ICurrency;
     language: ICompiledLanguage;
     onPress: (node: MenuNode) => void;
 }
 
-export const NavMenuItem = React.memo(({ thumbnailHeight, currency, language, node,
+export const NavMenuItem = React.memo(({ thumbnailHeight, currency, language, node, stateId,
     onPress }: INavMenuItemProps) => {
 
     const pressHandler = useCallback((e: GestureResponderEvent) => {
@@ -78,7 +78,7 @@ export const NavMenuItem = React.memo(({ thumbnailHeight, currency, language, no
                                 paddingRight: 14, color: theme.themes[theme.name].menu.navMenu.item.price.textColor
                             }}>
                                 {
-                                    `${priceFormatter((node.__rawNode__.content as ICompiledProduct).prices[currency.id as string]?.value)} ${currency.symbol}`
+                                    node.getFormatedPrice(true)
                                 }
                             </Text>
                         </View>

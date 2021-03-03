@@ -1,9 +1,14 @@
-import { IBusinessPeriod, IScenario, ScenarioCommonActionTypes, ScenarioProductActionTypes, ScenarioSelectorActionTypes } from "@djonnyx/tornado-types";
+import {
+    IBusinessPeriod, ICompiledOrderType, ICompiledProduct, IScenario, IScenarioPriceValue, NodeTypes, ScenarioCommonActionTypes,
+    ScenarioPriceActionTypes,
+    ScenarioProductActionTypes, ScenarioSelectorActionTypes
+} from "@djonnyx/tornado-types";
 import { IPositionWizard, IPositionWizardGroup } from "../interfaces";
 import { MenuNode } from "../menu/MenuNode";
 
 interface IPeriodicData {
     businessPeriods: Array<IBusinessPeriod>;
+    orderType: ICompiledOrderType;
 }
 
 export class ScenarioProcessing {
@@ -147,7 +152,7 @@ export class ScenarioProcessing {
         return dayTime;
     }
 
-    static checkBusinessPeriod = (ids: Array<string>, periodicData: IPeriodicData): boolean => {
+    static checkBusinessPeriod = (ids: Array<string> | undefined, periodicData: IPeriodicData): boolean => {
         if (!ids || !ids.length) {
             return false;
         }
@@ -184,18 +189,16 @@ export class ScenarioProcessing {
         return result;
     }
 
-    /**
-     * Применение периодичных сценариев 
-     */
-    static applyPeriodicScenariosForNode(node: MenuNode, periodicData: IPeriodicData): void {
+    static checkOrderTypeActivity(node: MenuNode, periodicData: IPeriodicData): void {
+        ScenarioProcessing.applyCalculatedPrice(node, periodicData);
+
         const scenarios: Array<IScenario> = node.__rawNode__.scenarios;
         if (!!scenarios && scenarios.length > 0) {
             scenarios.forEach(s => {
                 if (s.active) {
                     switch (s.action) {
-                        case ScenarioCommonActionTypes.VISIBLE_BY_BUSINESS_PERIOD: {
-                            const isActive = ScenarioProcessing.checkBusinessPeriod(s.value as Array<string>, periodicData);
-                            node.active = isActive;
+                        case ScenarioCommonActionTypes.VISIBLE_BY_ORDER_TYPE: {
+                            node.visibleByOrderType = (s.value as Array<string>).indexOf(periodicData.orderType.id as string) > -1;
                             break;
                         }
                     }
@@ -205,23 +208,96 @@ export class ScenarioProcessing {
 
         if (!!node.children && node.children.length > 0) {
             node.children.forEach(c => {
-                if (!!c.__rawNode__.scenarios && c.__rawNode__.scenarios.length > 0) {
-                    c.__rawNode__.scenarios.forEach(s => {
-                        if (s.active) {
-                            switch (s.action) {
-                                case ScenarioCommonActionTypes.VISIBLE_BY_BUSINESS_PERIOD: {
-                                    const isActive = ScenarioProcessing.checkBusinessPeriod(s.value as Array<string>, periodicData);
-                                    c.active = isActive;
-                                    break;
+                c.children.forEach(p => {
+                    ScenarioProcessing.checkOrderTypeActivity(p, periodicData);
+                });
+            });
+        }
+    }
+
+    static getPriceValue(priceValue: IScenarioPriceValue, startValue: number): number {
+        let result = startValue;
+
+        if (priceValue.isStatic) {
+            result = priceValue.value;
+        } else {
+            if (priceValue.isPersentage) {
+                result = result * priceValue.value * 0.01;
+            } else {
+                result += priceValue.value;
+            }
+        }
+
+        return result;
+    }
+
+    static applyCalculatedPrice(node: MenuNode<ICompiledProduct>, periodicData: IPeriodicData): void {
+        if (node.__rawNode__.type !== NodeTypes.PRODUCT) {
+            return;
+        }
+
+        let result = !!node.__rawNode__.content.prices && !!node.__rawNode__.content.prices[node.currency.id as string]
+            ? node.__rawNode__.content.prices[node.currency.id as string].value
+            : 0;
+
+        const scenarios: Array<IScenario> = node.__rawNode__.scenarios;
+        if (!!scenarios && scenarios.length > 0) {
+            scenarios.forEach(s => {
+                const priceVal = s.value as IScenarioPriceValue;
+                if (s.active) {
+                    switch (s.action) {
+                        case ScenarioPriceActionTypes.PRICE: {
+                            result = ScenarioProcessing.getPriceValue(priceVal, result);
+                            break;
+                        }
+                        case ScenarioPriceActionTypes.PRICE_BY_BUSINESS_PERIOD: {
+                            if (ScenarioProcessing.checkBusinessPeriod(priceVal.entities, periodicData)) {
+                                result = ScenarioProcessing.getPriceValue(priceVal, result);
+                            }
+                            break;
+                        }
+                        case ScenarioPriceActionTypes.PRICE_BY_ORDER_TYPE: {
+                            if (priceVal.entities !== undefined && priceVal.entities.length > 0) {
+                                const allow = (priceVal.entities as Array<string>).indexOf(periodicData.orderType.id) > -1;
+                                if (allow) {
+                                    result = ScenarioProcessing.getPriceValue(priceVal, result);
                                 }
                             }
+                            break;
                         }
-                    });
+                    }
                 }
+            });
+        }
 
-                c.children.forEach(p => {
-                    ScenarioProcessing.applyPeriodicScenariosForNode(p, periodicData);
-                });
+        node.price = result;
+    }
+
+    /**
+     * Применение периодичных сценариев 
+     */
+    static applyPeriodicScenariosForNode(node: MenuNode, periodicData: IPeriodicData): void {
+        // Расчет цены с учетом сценариев
+        ScenarioProcessing.applyCalculatedPrice(node, periodicData);
+
+        const scenarios: Array<IScenario> = node.__rawNode__.scenarios;
+        if (!!scenarios && scenarios.length > 0) {
+            scenarios.forEach(s => {
+                if (s.active) {
+                    switch (s.action) {
+                        case ScenarioCommonActionTypes.VISIBLE_BY_BUSINESS_PERIOD: {
+                            const isActive = ScenarioProcessing.checkBusinessPeriod(s.value as Array<string>, periodicData);
+                            node.visibleByBusinessPeriod = isActive;
+                            break;
+                        }
+                    }
+                }
+            });
+        }
+
+        if (!!node.children && node.children.length > 0) {
+            node.children.forEach(c => {
+                ScenarioProcessing.applyPeriodicScenariosForNode(c, periodicData);
             });
         }
     }

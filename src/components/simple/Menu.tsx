@@ -13,6 +13,7 @@ import { ModifiersEditor } from "./modifiers";
 import { MenuNode } from "../../core/menu/MenuNode";
 
 interface IMenuProps {
+    menuStateId: number;
     menu: MenuNode;
     currency: ICurrency;
     language: ICompiledLanguage;
@@ -26,13 +27,14 @@ interface IMenuProps {
 const sideMenuWidth = 180;
 
 export const Menu = React.memo(({
-    menu, language, currency, width, height,
+    menu, menuStateId, language, currency, width, height,
     cancelOrder, addPosition,
 }: IMenuProps) => {
     const [currentCategory, setCurrentCategory] = useState<MenuNode>(menu);
     const [previousCategory, setPreviousCategory] = useState<MenuNode>(menu);
     const [menuPosition, setMenuPosition] = useState(new Animated.Value(1));
     const [screenPosition, setScreenPosition] = useState(new Animated.Value(0));
+    const [navMenuWidth, setNavMenuWidth] = useState(width);
     let menuAnimation: Animated.CompositeAnimation;
     let screenAnimation: Animated.CompositeAnimation;
 
@@ -102,6 +104,8 @@ export const Menu = React.memo(({
 
     // анимация скрытия бокового меню
     const sideMenuFadeOut = useCallback(() => {
+        setNavMenuWidth(width);
+
         if (menuAnimation) {
             menuAnimation.stop();
         }
@@ -117,6 +121,8 @@ export const Menu = React.memo(({
 
     // анимация отображения бокового меню
     const sideMenuFadeIn = useCallback(() => {
+        setNavMenuWidth(width - sideMenuWidth)
+
         if (menuAnimation) {
             menuAnimation.stop();
         }
@@ -235,13 +241,13 @@ export const Menu = React.memo(({
                         <Animated.View style={{
                             position: "absolute",
                             height: "100%",
-                            width: "100%",
+                            width: navMenuWidth,
                             top: screenPosition.interpolate({
                                 inputRange: [0, 1],
                                 outputRange: [0, height],
                             }),
                         }}>
-                            <NavMenu
+                            <NavMenu menuStateId={menuStateId}
                                 node={previousCategory.index <= currentCategory.index ? currentCategory : previousCategory}
                                 language={language} currency={currency} onPress={selectNavMenuCategoryHandler}></NavMenu>
                         </Animated.View>
@@ -249,13 +255,13 @@ export const Menu = React.memo(({
                         <Animated.View style={{
                             position: "absolute",
                             height: "100%",
-                            width: "100%",
+                            width: navMenuWidth,
                             top: screenPosition.interpolate({
                                 inputRange: [0, 1],
                                 outputRange: [-height, 0],
                             }),
                         }}>
-                            <NavMenu
+                            <NavMenu menuStateId={menuStateId}
                                 node={previousCategory.index > currentCategory.index ? currentCategory : previousCategory}
                                 language={language} currency={currency} onPress={selectNavMenuCategoryHandler}></NavMenu>
                         </Animated.View>
