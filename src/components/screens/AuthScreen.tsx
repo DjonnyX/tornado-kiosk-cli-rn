@@ -22,11 +22,13 @@ interface IAuthSelfProps {
     _onChangeSerialNumber: (serialNumber: string) => void;
     _onChangeSetupStep: (setupStep: number) => void;
     _onChangeTerminalId: (terminalId: string) => void;
+    _onChangeStoreId: (storeId: string) => void;
     _alertOpen: (alert: IAlertState) => void;
     _progress: number;
     _serialNumber: string;
     _setupStep: number;
     _terminalId: string;
+    _storeId: string;
     _currentScreen: MainNavigationScreenTypes | undefined;
 
     // self props
@@ -34,13 +36,13 @@ interface IAuthSelfProps {
 
 interface IAuthProps extends StackScreenProps<any, MainNavigationScreenTypes.LOADING>, IAuthSelfProps { }
 
-const AuthScreenContainer = React.memo(({ _serialNumber, _setupStep, _terminalId, navigation,
-    _alertOpen, _onChangeSerialNumber, _onChangeSetupStep, _onChangeTerminalId,
+const AuthScreenContainer = React.memo(({ _serialNumber, _setupStep, _terminalId, _storeId, navigation,
+    _alertOpen, _onChangeSerialNumber, _onChangeSetupStep, _onChangeTerminalId, _onChangeStoreId,
 }: IAuthProps) => {
     const [stores, setStores] = useState<Array<IStore>>([]);
     const [serialNumber, setSerialNumber] = useState<string>(_serialNumber);
     const [terminalName, setTerminalName] = useState<string>("");
-    const [storeId, setStoreId] = useState<string>("");
+    const [storeId, setStoreId] = useState<string>(_storeId);
     const [isLicenseValid, setLicenseValid] = useState<boolean>(false);
     const [showProgressBar, setShowProgressBar] = useState<boolean>(false);
     const [retryVerificationId, setRetryVerificationId] = useState<number>(0);
@@ -183,6 +185,7 @@ const AuthScreenContainer = React.memo(({ _serialNumber, _setupStep, _terminalId
                 setShowProgressBar(false);
 
                 _onChangeTerminalId(_terminalId);
+                _onChangeStoreId(storeId);
 
                 _onChangeSetupStep(2);
             },
@@ -317,6 +320,7 @@ const mapStateToProps = (state: IAppState, ownProps: IAuthProps) => {
         _serialNumber: SystemSelectors.selectSerialNumber(state),
         _setupStep: SystemSelectors.selectSetupStep(state),
         _terminalId: SystemSelectors.selectTerminalId(state),
+        _storeId: SystemSelectors.selectStoreId(state),
     };
 };
 
@@ -330,6 +334,9 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
         },
         _onChangeTerminalId: (terminalId: string) => {
             dispatch(SystemActions.setTerminalId(terminalId));
+        },
+        _onChangeStoreId: (storeId: string) => {
+            dispatch(SystemActions.setStoreId(storeId));
         },
         _alertOpen: (alert: IAlertState) => {
             dispatch(NotificationActions.alertOpen(alert));
