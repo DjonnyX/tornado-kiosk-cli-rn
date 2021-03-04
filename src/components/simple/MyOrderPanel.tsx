@@ -13,6 +13,7 @@ interface IMyOrderPanelProps {
     currency: ICurrency;
     language: ICompiledLanguage;
     languages: Array<ICompiledLanguage>;
+    orderType: ICompiledOrderType;
     orderTypes: Array<ICompiledOrderType>;
 
     onChangeLanguage: (lang: ICompiledLanguage) => void;
@@ -20,7 +21,7 @@ interface IMyOrderPanelProps {
     onConfirm: () => void;
 }
 
-export const MyOrderPanel = React.memo(({ orderStateId, currency, language, languages, orderTypes,
+export const MyOrderPanel = React.memo(({ orderStateId, currency, language, languages, orderType, orderTypes,
     onChangeLanguage, onChangeOrderType, onConfirm,
 }: IMyOrderPanelProps) => {
     return (
@@ -31,14 +32,17 @@ export const MyOrderPanel = React.memo(({ orderStateId, currency, language, lang
                 <View style={{ margin: "auto", marginTop: 12, marginBottom: 12, alignItems: "center" }}>
                     <LanguagePicker language={language} languages={languages} onSelect={onChangeLanguage}></LanguagePicker>
                 </View>
-                <View style={{ margin: "auto", marginBottom: 12, alignItems: "center" }}>
-                    <OrderTypesPicker language={language} orderTypes={orderTypes} onSelect={onChangeOrderType}
-                        style={{
-                            backgroundColor: theme.themes[theme.name].orderTypePicker.backgroundColor,
-                            borderColor: theme.themes[theme.name].orderTypePicker.borderColor
-                        }}
-                        textStyle={{ color: theme.themes[theme.name].orderTypePicker.textColor }} />
-                </View>
+                {
+                    !!orderTypes && orderTypes.length > 0 &&
+                    <View style={{ margin: "auto", marginBottom: 12, alignItems: "center" }}>
+                        <OrderTypesPicker language={language} orderType={orderType} orderTypes={orderTypes} onSelect={onChangeOrderType}
+                            style={{
+                                backgroundColor: theme.themes[theme.name].orderTypePicker.backgroundColor,
+                                borderColor: theme.themes[theme.name].orderTypePicker.borderColor
+                            }}
+                            textStyle={{ color: theme.themes[theme.name].orderTypePicker.textColor }} />
+                    </View>
+                }
                 <View style={{ margin: "auto", marginBottom: 20, alignItems: "center" }}>
                     <Text style={{
                         textTransform: "uppercase", fontWeight: "bold", fontSize: 18,
