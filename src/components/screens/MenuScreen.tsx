@@ -24,6 +24,7 @@ interface IMenuSelfProps {
     _language: ICompiledLanguage;
     _orderType: ICompiledOrderType;
     _orderStateId: number;
+    _isShowOrderTypes: boolean;
     _alertOpen: (alert: IAlertState) => void;
 
     // store dispatches
@@ -39,7 +40,7 @@ interface IMenuProps extends StackScreenProps<any, MainNavigationScreenTypes.MEN
 
 const MenuScreenContainer = React.memo(({
     _languages, _orderTypes, _defaultCurrency, _orderType,
-    _menuStateId, _language, _orderStateId, _onResetOrder, _alertOpen,
+    _menuStateId, _language, _orderStateId, _isShowOrderTypes, _onResetOrder, _alertOpen,
     _onChangeLanguage, _onChangeOrderType, _onAddOrderPosition, navigation,
 }: IMenuProps) => {
     const [windowSize, _setWindowSize] = useState({ width: Dimensions.get("window").width, height: Dimensions.get("window").height });
@@ -100,7 +101,7 @@ const MenuScreenContainer = React.memo(({
                 ></Menu>
             </View>
             <View style={{ position: "absolute", width: myOrderWidth, height: "100%", left: menuWidth, zIndex: 2 }}>
-                <MyOrderPanel orderStateId={_orderStateId} currency={_defaultCurrency} language={_language} languages={_languages}
+                <MyOrderPanel isShowOrderTypes={_isShowOrderTypes} orderStateId={_orderStateId} currency={_defaultCurrency} language={_language} languages={_languages}
                     orderType={_orderType} orderTypes={_orderTypes}
                     onChangeLanguage={_onChangeLanguage} onChangeOrderType={_onChangeOrderType} onConfirm={confirmHandler}></MyOrderPanel>
             </View>
@@ -117,6 +118,7 @@ const mapStateToProps = (state: IAppState, ownProps: IMenuProps) => {
         _language: CapabilitiesSelectors.selectLanguage(state),
         _orderType: CapabilitiesSelectors.selectOrderType(state),
         _orderStateId: MyOrderSelectors.selectStateId(state),
+        _isShowOrderTypes: MyOrderSelectors.selectShowOrderTypes(state),
     };
 };
 
@@ -127,6 +129,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
         },
         _onChangeOrderType: (orderType: ICompiledOrderType) => {
             dispatch(CapabilitiesActions.setOrderType(orderType));
+            dispatch(MyOrderActions.updateShowOrderTypes(false));
         },
         _onAddOrderPosition: (productNode: MenuNode<ICompiledProduct>) => {
             dispatch(MyOrderActions.edit(productNode));
