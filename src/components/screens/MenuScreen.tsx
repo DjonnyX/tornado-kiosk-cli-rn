@@ -22,6 +22,7 @@ interface IMenuSelfProps {
     _defaultCurrency: ICurrency;
     _menuStateId: number;
     _language: ICompiledLanguage;
+    _orderType: ICompiledOrderType;
     _orderStateId: number;
     _alertOpen: (alert: IAlertState) => void;
 
@@ -37,7 +38,7 @@ interface IMenuSelfProps {
 interface IMenuProps extends StackScreenProps<any, MainNavigationScreenTypes.MENU>, IMenuSelfProps { }
 
 const MenuScreenContainer = React.memo(({
-    _languages, _orderTypes, _defaultCurrency,
+    _languages, _orderTypes, _defaultCurrency, _orderType,
     _menuStateId, _language, _orderStateId, _onResetOrder, _alertOpen,
     _onChangeLanguage, _onChangeOrderType, _onAddOrderPosition, navigation,
 }: IMenuProps) => {
@@ -100,7 +101,7 @@ const MenuScreenContainer = React.memo(({
             </View>
             <View style={{ position: "absolute", width: myOrderWidth, height: "100%", left: menuWidth, zIndex: 2 }}>
                 <MyOrderPanel orderStateId={_orderStateId} currency={_defaultCurrency} language={_language} languages={_languages}
-                    orderTypes={_orderTypes}
+                    orderType={_orderType} orderTypes={_orderTypes}
                     onChangeLanguage={_onChangeLanguage} onChangeOrderType={_onChangeOrderType} onConfirm={confirmHandler}></MyOrderPanel>
             </View>
         </View>
@@ -114,6 +115,7 @@ const mapStateToProps = (state: IAppState, ownProps: IMenuProps) => {
         _languages: CombinedDataSelectors.selectLangages(state),
         _orderTypes: CombinedDataSelectors.selectOrderTypes(state),
         _language: CapabilitiesSelectors.selectLanguage(state),
+        _orderType: CapabilitiesSelectors.selectOrderType(state),
         _orderStateId: MyOrderSelectors.selectStateId(state),
     };
 };

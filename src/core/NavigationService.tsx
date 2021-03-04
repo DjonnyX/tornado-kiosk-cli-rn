@@ -4,7 +4,7 @@ import { ICompiledLanguage, ICompiledOrderType } from "@djonnyx/tornado-types";
 import { IAppState } from "../store/state";
 import { CapabilitiesSelectors, CombinedDataSelectors, MyOrderSelectors } from "../store/selectors";
 import { MainNavigationScreenTypes } from "../components/navigation";
-import { CapabilitiesActions, CombinedDataActions, NotificationActions } from "../store/actions";
+import { CapabilitiesActions, NotificationActions } from "../store/actions";
 
 interface INavigationServiceProps {
     // store
@@ -38,7 +38,7 @@ export const NavigationServiceContainer = React.memo(({ onNavigate, _orderStateI
                 }
             }
             if (_setOrderType !== undefined) {
-                const defaultOrderType = !!_orderTypes && _orderTypes?.length > 0 ? _orderTypes[0] : undefined;
+                const defaultOrderType = _orderTypes?.find(ot => ot.isDefault);
                 if (!!defaultOrderType) {
                     _setOrderType(defaultOrderType);
                 }

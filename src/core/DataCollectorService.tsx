@@ -187,7 +187,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => {
         _onChange: (data: ICompiledData) => {
             dispatch(CombinedDataActions.setData(data));
             dispatch(CapabilitiesActions.setLanguage(data.refs.defaultLanguage));
-            dispatch(CapabilitiesActions.setOrderType(data.refs.orderTypes[0]));
+            dispatch(CapabilitiesActions.setOrderType(data.refs.defaultOrderType));
         },
         _onProgress: (progress: IProgress) => {
             dispatch(CombinedDataActions.setProgress(progress));

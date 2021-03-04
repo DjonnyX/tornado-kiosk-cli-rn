@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import FastImage from "react-native-fast-image";
@@ -15,17 +15,20 @@ interface ILanguagePickerProps {
 }
 
 export const LanguagePicker = React.memo(({ language, languages, onSelect }: ILanguagePickerProps) => {
-    const [currentLanguage, _setCurrentLanguage] = useState(languages.find(lang => lang.code === language.code));
+    const [currentLanguage, _setCurrentLanguage] = useState(language);
     const [modalVisible, _setModalVisible] = useState(false);
 
     const shadow = uiutils.createShadow(theme.themes[theme.name].languagePicker.borderColor, 1, 0.45);
+
+    useEffect(() => {
+        _setCurrentLanguage(language);
+    }, [language]);
 
     const onPressHandler = useCallback(() => {
         _setModalVisible(true);
     }, []);
 
     const onSelectHandler = useCallback((lang: ICompiledLanguage) => {
-        _setCurrentLanguage(lang);
         _setModalVisible(false);
         onSelect(lang);
     }, []);

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleProp, ViewStyle, TextStyle } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import FastImage from "react-native-fast-image";
@@ -11,23 +11,27 @@ import { ModalSolid } from "./ModalSolid";
 interface IOrderTypesPickerProps {
     orderTypes: Array<ICompiledOrderType>;
     language: ICompiledLanguage;
+    orderType: ICompiledOrderType;
     onSelect: (orderType: ICompiledOrderType) => void;
     style: StyleProp<ViewStyle>;
     textStyle: StyleProp<TextStyle>;
 }
 
-export const OrderTypesPicker = React.memo(({ language, orderTypes, style, textStyle, onSelect }: IOrderTypesPickerProps) => {
-    const [currentOrderType, _setCurrentOrderTypes] = useState(orderTypes[0]);
+export const OrderTypesPicker = React.memo(({ language, orderType, orderTypes, style, textStyle, onSelect }: IOrderTypesPickerProps) => {
+    const [currentOrderType, _setCurrentOrderTypes] = useState(orderType);
     const [modalVisible, _setModalVisible] = useState(false);
 
     const shadow = uiutils.createShadow((style as any)?.backgroundColor, 1, 0.45);
+
+    useEffect(() => {
+        _setCurrentOrderTypes(orderType);
+    }, [orderType]);
 
     const onPressHandler = useCallback(() => {
         _setModalVisible(true);
     }, []);
 
     const onSelectHandler = useCallback((orderType: ICompiledOrderType) => {
-        _setCurrentOrderTypes(orderType);
         _setModalVisible(false);
         onSelect(orderType);
     }, []);
