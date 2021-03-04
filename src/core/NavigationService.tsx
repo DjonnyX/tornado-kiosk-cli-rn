@@ -4,10 +4,11 @@ import { ICompiledLanguage, ICompiledOrderType } from "@djonnyx/tornado-types";
 import { IAppState } from "../store/state";
 import { CapabilitiesSelectors, CombinedDataSelectors, MyOrderSelectors } from "../store/selectors";
 import { MainNavigationScreenTypes } from "../components/navigation";
-import { CapabilitiesActions, NotificationActions } from "../store/actions";
+import { CapabilitiesActions, MyOrderActions, NotificationActions } from "../store/actions";
 
 interface INavigationServiceProps {
     // store
+    _showOrderTypes?: () => void;
     _setLanguage?: (language: ICompiledLanguage) => void;
     _setOrderType?: (orderType: ICompiledOrderType) => void;
     _snackClose?: () => void;
@@ -22,7 +23,7 @@ interface INavigationServiceProps {
 }
 
 export const NavigationServiceContainer = React.memo(({ onNavigate, _orderStateId, _currentScreen, _languages, _orderTypes,
-    _setLanguage, _setOrderType, _alertClose, _snackClose }: INavigationServiceProps) => {
+    _setLanguage, _setOrderType, _showOrderTypes, _alertClose, _snackClose }: INavigationServiceProps) => {
 
     useEffect(() => {
         if (_orderStateId === 0 && (_currentScreen === MainNavigationScreenTypes.MENU
@@ -47,7 +48,12 @@ export const NavigationServiceContainer = React.memo(({ onNavigate, _orderStateI
         }
         else
             if (_orderStateId === 1 && _currentScreen !== MainNavigationScreenTypes.MENU) {
-                if (onNavigate !== undefined) onNavigate(MainNavigationScreenTypes.MENU);
+                if (_showOrderTypes !== undefined) {
+                    _showOrderTypes();
+                }
+                if (onNavigate !== undefined) {
+                    onNavigate(MainNavigationScreenTypes.MENU);
+                }
             }
     }, [_orderStateId, _currentScreen, onNavigate]);
 
@@ -78,6 +84,9 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => {
         _alertClose: () => {
             dispatch(NotificationActions.alertClose());
         },
+        _showOrderTypes: () => {
+            dispatch(MyOrderActions.updateShowOrderTypes(true));
+        }
     };
 };
 

@@ -9,6 +9,7 @@ import { uiutils } from "../../utils/ui";
 import { ModalSolid } from "./ModalSolid";
 
 interface IOrderTypesPickerProps {
+    isShow: boolean;
     orderTypes: Array<ICompiledOrderType>;
     language: ICompiledLanguage;
     orderType: ICompiledOrderType;
@@ -17,7 +18,8 @@ interface IOrderTypesPickerProps {
     textStyle: StyleProp<TextStyle>;
 }
 
-export const OrderTypesPicker = React.memo(({ language, orderType, orderTypes, style, textStyle, onSelect }: IOrderTypesPickerProps) => {
+export const OrderTypesPicker = React.memo(({ language, isShow, orderType, orderTypes, style,
+    textStyle, onSelect }: IOrderTypesPickerProps) => {
     const [currentOrderType, _setCurrentOrderTypes] = useState(orderType);
     const [modalVisible, _setModalVisible] = useState(false);
 
@@ -26,6 +28,12 @@ export const OrderTypesPicker = React.memo(({ language, orderType, orderTypes, s
     useEffect(() => {
         _setCurrentOrderTypes(orderType);
     }, [orderType]);
+
+    useEffect(() => {
+        if (isShow) {
+            _setModalVisible(true);
+        }
+    }, [isShow]);
 
     const onPressHandler = useCallback(() => {
         _setModalVisible(true);

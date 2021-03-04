@@ -11,6 +11,7 @@ export enum MyOrderActionTypes {
     REMOVE = "TORNADO/my-order/remove",
     RESET = "TORNADO/my-order/reset",
     UPDATE_STATE_ID = "TORNADO/my-order/update-state-id",
+    SHOW_ORDER_TYPES = "TORNADO/my-order/show-order-types",
 }
 
 interface IMyOrderActionEdit extends Action<MyOrderActionTypes.EDIT_PRODUCT> {
@@ -39,10 +40,19 @@ interface IMyOrderActionUpdateStateId extends Action<MyOrderActionTypes.UPDATE_S
     stateId: number;
 }
 
+interface IMyOrderActionShowOrderTypes extends Action<MyOrderActionTypes.SHOW_ORDER_TYPES> {
+    showOrderTypes: boolean;
+}
+
 export class MyOrderActions {
     static updateStateId = (stateId: number): IMyOrderActionUpdateStateId => ({
         type: MyOrderActionTypes.UPDATE_STATE_ID,
         stateId,
+    });
+
+    static updateShowOrderTypes = (showOrderTypes: boolean): IMyOrderActionShowOrderTypes => ({
+        type: MyOrderActionTypes.SHOW_ORDER_TYPES,
+        showOrderTypes,
     });
 
     static edit = (productNode: MenuNode<ICompiledProduct>): IMyOrderActionEdit => ({
@@ -71,4 +81,4 @@ export class MyOrderActions {
 }
 
 export type TMyOrderActions = IMyOrderActionEdit | IMyOrderActionEditCancel | IMyOrderActionAdd | IMyOrderActionRemove
-    | IMyOrderActionUpdateStateId | IMyOrderActionReset;
+    | IMyOrderActionUpdateStateId | IMyOrderActionReset | IMyOrderActionShowOrderTypes;
