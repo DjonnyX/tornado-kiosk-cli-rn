@@ -15,14 +15,15 @@ interface IMyOrderPanelProps {
     languages: Array<ICompiledLanguage>;
     orderType: ICompiledOrderType;
     orderTypes: Array<ICompiledOrderType>;
+    isShowOrderTypes: boolean;
 
     onChangeLanguage: (lang: ICompiledLanguage) => void;
-    onChangeOrderType: (lang: ICompiledOrderType) => void;
+    onChangeOrderType: (orderType: ICompiledOrderType) => void;
     onConfirm: () => void;
 }
 
 export const MyOrderPanel = React.memo(({ orderStateId, currency, language, languages, orderType, orderTypes,
-    onChangeLanguage, onChangeOrderType, onConfirm,
+    isShowOrderTypes, onChangeLanguage, onChangeOrderType, onConfirm,
 }: IMyOrderPanelProps) => {
     return (
         <View
@@ -35,7 +36,8 @@ export const MyOrderPanel = React.memo(({ orderStateId, currency, language, lang
                 {
                     !!orderTypes && orderTypes.length > 0 &&
                     <View style={{ margin: "auto", marginBottom: 12, alignItems: "center" }}>
-                        <OrderTypesPicker language={language} orderType={orderType} orderTypes={orderTypes} onSelect={onChangeOrderType}
+                        <OrderTypesPicker isShow={isShowOrderTypes} language={language} orderType={orderType}
+                            orderTypes={orderTypes} onSelect={onChangeOrderType}
                             style={{
                                 backgroundColor: theme.themes[theme.name].orderTypePicker.backgroundColor,
                                 borderColor: theme.themes[theme.name].orderTypePicker.borderColor

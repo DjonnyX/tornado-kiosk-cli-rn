@@ -5,6 +5,7 @@ import { IMyOrderState } from "../state";
 
 const initialState: IMyOrderState = {
     stateId: -1,
+    showOrderTypes: true,
 };
 
 const myOrderReducer: Reducer<IMyOrderState, TMyOrderActions> = (
@@ -27,6 +28,11 @@ const myOrderReducer: Reducer<IMyOrderState, TMyOrderActions> = (
         case MyOrderActionTypes.RESET:
             OrderWizard.current.reset();
             return state;
+        case MyOrderActionTypes.SHOW_ORDER_TYPES:
+            return {
+                ...state,
+                showOrderTypes: action.showOrderTypes,
+            };
         case MyOrderActionTypes.UPDATE_STATE_ID:
             return {
                 ...state,
