@@ -5,6 +5,7 @@ import { ISystemState } from "../state";
 const initialState: ISystemState = {
     serialNumber: undefined,
     terminalId: undefined,
+    storeId: undefined,
     setupStep: 0,
 };
 
@@ -22,6 +23,11 @@ const systemReducer: Reducer<ISystemState, TSystemActions> = (
             return {
                 ...state,
                 terminalId: action.terminalId,
+            };
+        case SystemActionTypes.SET_STORE_ID:
+            return {
+                ...state,
+                storeId: action.storeId,
             };
         case SystemActionTypes.SET_SETUP_STEP:
             return {

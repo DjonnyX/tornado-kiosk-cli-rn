@@ -21,6 +21,8 @@ interface IDataCollectorServiceProps {
 
     // self
     _serialNumber?: string | undefined;
+    _terminalId?: string | undefined;
+    _storeId?: string | undefined;
     _currentScreen?: string | undefined;
 }
 
@@ -135,7 +137,7 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
             take(1),
             takeUntil(this._unsubscribe$ as any),
         ).subscribe(() => {
-            this._dataCombiner?.init(this._savedData as any);
+            this._dataCombiner?.init(this.props._storeId as string, this._savedData as any);
         });
     }
 
@@ -144,7 +146,7 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
             this._serialNumber$.next(this.props._serialNumber);
         }
 
-        if (nextProps._currentScreen === MainNavigationScreenTypes.LOADING) {
+        if (nextProps._currentScreen === MainNavigationScreenTypes.LOADING && !!nextProps._storeId) {
             this.load();
         }
 
@@ -178,6 +180,8 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
 const mapStateToProps = (state: IAppState) => {
     return {
         _serialNumber: SystemSelectors.selectSerialNumber(state),
+        _terminalId: SystemSelectors.selectTerminalId(state),
+        _storeId: SystemSelectors.selectStoreId(state),
         _currentScreen: CapabilitiesSelectors.selectCurrentScreen(state),
     };
 };
