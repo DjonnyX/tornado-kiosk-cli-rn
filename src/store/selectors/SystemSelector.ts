@@ -15,4 +15,8 @@ export namespace SystemSelectors {
     export const selectTerminalId = createSelector(getSystem, (state) => {
         return state.terminalId;
     });
+    
+    export const selectStoreId = createSelector(getSystem, (state) => {
+        return state.storeId;
+    });
 }

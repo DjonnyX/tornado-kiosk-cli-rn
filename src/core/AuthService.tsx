@@ -17,6 +17,7 @@ interface IAuthServiceProps {
     // self
     _serialNumber: string | undefined;
     _terminalId: string | undefined;
+    _storId: string | undefined;
     _setupStep: number;
 }
 
@@ -46,7 +47,8 @@ class AuthServiceContainer extends Component<IAuthServiceProps, IAuthServiceStat
     shouldComponentUpdate(nextProps: Readonly<IAuthServiceProps>, nextState: Readonly<IAuthServiceState>, nextContext: any) {
         if (this.props._serialNumber !== nextProps._serialNumber
             || this.props._setupStep !== nextProps._setupStep
-            || this.props._terminalId !== nextProps._terminalId) {
+            || this.props._terminalId !== nextProps._terminalId
+            || this.props._storId !== nextProps._storId) {
 
             refApiService.serial = nextProps._serialNumber || "";
 
@@ -54,6 +56,7 @@ class AuthServiceContainer extends Component<IAuthServiceProps, IAuthServiceStat
                 ...this._deviceInfo,
                 serialNumber: nextProps._serialNumber,
                 terminalId: nextProps._terminalId,
+                storeId: nextProps._storId,
                 setupStep: nextProps._setupStep,
             });
         }
@@ -113,6 +116,7 @@ const mapStateToProps = (state: IAppState) => {
     return {
         _serialNumber: SystemSelectors.selectSerialNumber(state),
         _terminalId: SystemSelectors.selectTerminalId(state),
+        _storId: SystemSelectors.selectStoreId(state),
         _setupStep: SystemSelectors.selectSetupStep(state),
     };
 };
@@ -123,6 +127,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => {
             dispatch(SystemActions.setSerialNumber(data?.serialNumber));
             dispatch(SystemActions.setSetupStep(data?.setupStep || 0));
             dispatch(SystemActions.setTerminalId(data?.terminalId));
+            dispatch(SystemActions.setStoreId(data?.storeId));
         },
         _onProgress: (progress: IProgress) => {
             dispatch(CombinedDataActions.setProgress(progress));
