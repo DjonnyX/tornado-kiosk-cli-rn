@@ -222,7 +222,7 @@ export class ScenarioProcessing {
             result = priceValue.value;
         } else {
             if (priceValue.isPersentage) {
-                result = result * priceValue.value * 0.01;
+                result = result + result * priceValue.value * 0.01;
             } else {
                 result += priceValue.value;
             }
