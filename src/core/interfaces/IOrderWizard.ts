@@ -1,5 +1,5 @@
 import EventEmitter from "eventemitter3";
-import { IBusinessPeriod, ICompiledLanguage, ICompiledProduct, ICurrency } from "@djonnyx/tornado-types";
+import { ICompiledLanguage, ICompiledProduct, ICurrency } from "@djonnyx/tornado-types";
 import { IPositionWizard } from "./IPositionWizard";
 import { MenuNode } from "../menu/MenuNode";
 

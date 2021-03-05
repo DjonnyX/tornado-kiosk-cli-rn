@@ -64,6 +64,20 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
 
     get price() { return this.__node__.price; }
 
+    get discount() { return this.__node__.discount; }
+
+    get discountPerOne() {
+        let discount = 0;
+        this.groups.forEach(g => {
+            discount += g.discount;
+        });
+        return discount + this.discount;
+    }
+
+    get discountSum() {
+        return this.discountPerOne * this._quantity;
+    }
+
     get currency() { return this._currency; }
 
     protected _quantity: number = 0;
@@ -305,6 +319,26 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
 
     getFormatedSumPerOne(withCurrency: boolean = false): string {
         let s = priceFormatter(this._sumPerOne);
+        if (withCurrency) {
+            s += this._currency.symbol;
+        }
+        return s;
+    }
+
+    getFormatedDiscount(withCurrency: boolean = false): string {
+        return this.__node__.getFormatedDiscount(withCurrency);
+    }
+
+    getFormatedDiscountSum(withCurrency: boolean = false): string {
+        let s = priceFormatter(this.discountSum);
+        if (withCurrency) {
+            s += this._currency.symbol;
+        }
+        return s;
+    }
+
+    getFormatedDiscountPerOne(withCurrency: boolean = false): string {
+        let s = priceFormatter(this.discountPerOne);
         if (withCurrency) {
             s += this._currency.symbol;
         }

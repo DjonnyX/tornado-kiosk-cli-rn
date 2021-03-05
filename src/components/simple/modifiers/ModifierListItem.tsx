@@ -38,10 +38,36 @@ export const ModifierListItem = React.memo(({ thumbnailHeight, currency, languag
     return (
         <View style={{ flex: 1, backgroundColor: theme.themes[theme.name].modifiers.item.backgroundColor, borderRadius: 16, padding: 22 }}>
             <TouchableOpacity style={{ alignItems: "center", flex: 1 }} onPress={pressHandler}>
-                {
-                    !!tags &&
-                    <TagList tags={tags} language={language} />
-                }
+                <View style={{
+                    flexDirection: "row", alignItems: "baseline", justifyContent: !!tags ? "space-around" : "flex-end",
+                    width: "100%"
+                }}>
+                    {
+                        !!tags &&
+                        <View style={{ flex: 1 }}>
+                            <TagList tags={tags} language={language} />
+                        </View>
+                    }
+                    {
+                        position.discountPerOne < 0 &&
+                        <View style={{
+                            width: "auto"
+                        }}>
+                            <Text style={{
+                                borderRadius: 8,
+                                paddingHorizontal: 8,
+                                paddingVertical: 4,
+                                backgroundColor: "red",
+                                fontSize: 12, fontWeight: "bold",
+                                color: "white", //theme.themes[theme.name].menu.navMenu.item.price.textColor
+                            }}>
+                                {
+                                    position.getFormatedDiscountPerOne(true)
+                                }
+                            </Text>
+                        </View>
+                    }
+                </View>
                 <View style={{ width: "100%", height: thumbnailHeight, marginBottom: 5 }}>
                     <FastImage style={{ width: "100%", height: "100%" }} source={{
                         uri: `file://${currentAdAsset?.mipmap.x128}`,
