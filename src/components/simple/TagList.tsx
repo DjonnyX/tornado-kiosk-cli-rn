@@ -10,7 +10,7 @@ interface ITagListProps {
 
 export const TagList = React.memo(({ tags, language }: ITagListProps) => {
 
-    return (<View style={{ position: "absolute", zIndex: 1, width: "100%", flexDirection: "row", flexWrap: "wrap", marginTop: -16 }}>
+    return (<View style={{ width: "100%", flexDirection: "row", flexWrap: "wrap" }}>
         {
             tags?.map(tag =>
                 tag?.contents[language.code]?.resources?.main?.mipmap?.x32
