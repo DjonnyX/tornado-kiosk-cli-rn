@@ -21,6 +21,15 @@ export class PositionWizardGroup extends EventEmitter implements IPositionWizard
 
     get currency() { return this._currency; }
 
+    get discount() {
+        let discount = 0;
+        this.positions.forEach(p => {
+            discount += p.discount;
+        });
+
+        return discount;
+    }
+
     protected _isValid: boolean = true;
     set isValid(v: boolean) {
         if (this._isValid !== v) {

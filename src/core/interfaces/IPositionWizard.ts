@@ -1,4 +1,4 @@
-import { IBusinessPeriod, ICompiledProduct, ICompiledSelector, ICurrency } from "@djonnyx/tornado-types";
+import { ICompiledProduct, ICompiledSelector, ICurrency } from "@djonnyx/tornado-types";
 import EventEmitter from "eventemitter3";
 import { PositionWizardModes, PositionWizardTypes } from "../enums";
 import { MenuNode } from "../menu/MenuNode";
@@ -18,6 +18,9 @@ export interface IPositionWizard extends EventEmitter {
     readonly allGroups: Array<IPositionWizardGroup>;
     readonly price: number;
     readonly sum: number;
+    readonly discount: number;
+    readonly discountPerOne: number;
+    readonly discountSum: number;
     active: boolean;
     actualUpLimit: number;
     upLimit: number;
@@ -30,6 +33,9 @@ export interface IPositionWizard extends EventEmitter {
     getFormatedPrice: (withCurrency?: boolean) => string;
     getFormatedSum: (withCurrency?: boolean) => string;
     getFormatedSumPerOne: (withCurrency?: boolean) => string;
+    getFormatedDiscount: (withCurrency?: boolean) => string;
+    getFormatedDiscountSum: (withCurrency?: boolean) => string;
+    getFormatedDiscountPerOne: (withCurrency?: boolean) => string;
     dispose: () => void;
 }
 
@@ -40,6 +46,7 @@ export interface IPositionWizardGroup extends EventEmitter {
     readonly allPositions: Array<IPositionWizard>;
     readonly __node__: MenuNode<ICompiledSelector>;
     readonly sum: number;
+    readonly discount: number;
     active: boolean;
     isValid: boolean;
     getFormatedSum: (withCurrency?: boolean) => string;

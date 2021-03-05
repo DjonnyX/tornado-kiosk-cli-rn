@@ -1,6 +1,6 @@
 import {
-    IBusinessPeriod, ICompiledLanguage, ICompiledMenuNode, ICompiledOrderType, ICompiledProduct, ICompiledSelector,
-    ICurrency, IScenario, NodeTypes
+    IBusinessPeriod, ICompiledLanguage, ICompiledMenu, ICompiledMenuNode, ICompiledOrderType, ICompiledProduct, ICompiledSelector,
+    ICurrency, NodeTypes
 } from "@djonnyx/tornado-types";
 import EventEmitter from "eventemitter3";
 import { priceFormatter } from "../../utils/price";
@@ -41,6 +41,19 @@ export class MenuNode<T = ICompiledSelector | ICompiledProduct | any> extends Ev
         }
     }
     get price() { return this._price; }
+
+    get discount() {
+        const product = this.__rawNode__.type === NodeTypes.PRODUCT
+            ? this.__rawNode__.content as unknown as ICompiledProduct
+            : undefined;
+        if (!!product) {
+            const discount = this._price - (product.prices[this._currency.id as string]?.value || 0);
+            if (discount < 0) {
+                return discount;
+            }
+        }
+        return 0;
+    }
 
     get stateId() {
         return this._stateId;
@@ -176,6 +189,14 @@ export class MenuNode<T = ICompiledSelector | ICompiledProduct | any> extends Ev
 
     getFormatedPrice(withCurrency: boolean = false): string {
         let s = priceFormatter(this._price);
+        if (withCurrency) {
+            s += this._currency.symbol;
+        }
+        return s;
+    }
+
+    getFormatedDiscount(withCurrency: boolean = false): string {
+        let s = priceFormatter(this.discount);
         if (withCurrency) {
             s += this._currency.symbol;
         }
