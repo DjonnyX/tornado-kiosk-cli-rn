@@ -189,7 +189,13 @@ export class ScenarioProcessing {
         return result;
     }
 
-    static checkOrderTypeActivity(node: MenuNode, periodicData: IPeriodicData): void {
+    static checkOrderTypeActivity(node: MenuNode, periodicData: IPeriodicData, dictionary: { [id: string]: MenuNode } = {}): void {
+        if (dictionary[node.__rawNode__.id]) {
+            return;
+        }
+
+        dictionary[node.__rawNode__.id] = node;
+
         ScenarioProcessing.applyCalculatedPrice(node, periodicData);
 
         const scenarios: Array<IScenario> = node.__rawNode__.scenarios;
@@ -209,7 +215,7 @@ export class ScenarioProcessing {
         if (!!node.children && node.children.length > 0) {
             node.children.forEach(c => {
                 c.children.forEach(p => {
-                    ScenarioProcessing.checkOrderTypeActivity(p, periodicData);
+                    ScenarioProcessing.checkOrderTypeActivity(p, periodicData, dictionary);
                 });
             });
         }
@@ -276,7 +282,13 @@ export class ScenarioProcessing {
     /**
      * Применение периодичных сценариев 
      */
-    static applyPeriodicScenariosForNode(node: MenuNode, periodicData: IPeriodicData): void {
+    static applyPeriodicScenariosForNode(node: MenuNode, periodicData: IPeriodicData, dictionary: { [id: string]: MenuNode } = {}): void {
+        if (dictionary[node.__rawNode__.id]) {
+            return;
+        }
+
+        dictionary[node.__rawNode__.id] = node;
+
         // Расчет цены с учетом сценариев
         ScenarioProcessing.applyCalculatedPrice(node, periodicData);
 
@@ -297,7 +309,7 @@ export class ScenarioProcessing {
 
         if (!!node.children && node.children.length > 0) {
             node.children.forEach(c => {
-                ScenarioProcessing.applyPeriodicScenariosForNode(c, periodicData);
+                ScenarioProcessing.applyPeriodicScenariosForNode(c, periodicData, dictionary);
             });
         }
     }
