@@ -9,6 +9,13 @@ import { ScenarioProcessing } from "../scenarios";
 import { MenuNode } from "../menu/MenuNode";
 import { MenuNodeEventTypes } from "../menu/events";
 
+/**
+ * Максимальная глубина рекурсии
+ * Это значение реализует бесконечную рекурсию добвления циклических модификаторов
+ * 
+ * !!!при расчете цены, ошибка скидки
+ */
+const MAX_RECURTION_DEPTH = 2;
 
 export class PositionWizard extends EventEmitter implements IPositionWizard {
     static MAX_AVAILABLE_LIMIT = 99;
@@ -29,7 +36,9 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
 
         position.allGroups.forEach((g, i) => {
             g.allPositions.forEach((p, j) => {
-                PositionWizard.copyAttributes(src.allGroups[i].allPositions[j], p);
+                if (!!src?.allGroups[i]?.allPositions[j] && !!p) {
+                    PositionWizard.copyAttributes(src.allGroups[i].allPositions[j], p);
+                }
             });
         });
     }
@@ -221,6 +230,7 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
         public readonly __node__: MenuNode<ICompiledProduct>,
         protected _currency: ICurrency,
         protected _type: PositionWizardTypes,
+        protected _recurtionPass = MAX_RECURTION_DEPTH,
     ) {
         super();
 
@@ -229,14 +239,16 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
 
         this._product = __node__.__rawNode__.content;
 
-        this.__node__.children.forEach((s, index) => {
-            const group = new PositionWizardGroup(index, s as MenuNode<ICompiledSelector>,
-                this._currency);
-            group.addListener(PositionWizardEventTypes.CHANGE, this.onChangePositionState);
-            group.addListener(PositionWizardEventTypes.EDIT, this.onEditPosition);
+        if (_recurtionPass > 0) {
+            this.__node__.children.forEach((s, index) => {
+                const group = new PositionWizardGroup(index, s as MenuNode<ICompiledSelector>,
+                    this._currency, _recurtionPass - 1);
+                group.addListener(PositionWizardEventTypes.CHANGE, this.onChangePositionState);
+                group.addListener(PositionWizardEventTypes.EDIT, this.onEditPosition);
 
-            this._groups.push(group);
-        });
+                this._groups.push(group);
+            });
+        }
 
         if (this._type === PositionWizardTypes.PRODUCT) {
             ScenarioProcessing.setupPosition(this);
