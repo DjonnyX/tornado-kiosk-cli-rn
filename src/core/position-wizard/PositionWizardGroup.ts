@@ -71,12 +71,13 @@ export class PositionWizardGroup extends EventEmitter implements IPositionWizard
         protected _index: number,
         protected _groupNode: MenuNode<ICompiledSelector>,
         protected _currency: ICurrency,
+        protected _recurtionPass: number,
     ) {
         super();
 
         this._groupNode.children.forEach((p, index) => {
             const position = new PositionWizard(PositionWizardModes.EDIT, p as MenuNode<ICompiledProduct>,
-                this._currency, PositionWizardTypes.MODIFIER);
+                this._currency, PositionWizardTypes.MODIFIER, _recurtionPass);
             position.addListener(PositionWizardEventTypes.CHANGE, this.onChangePositionState);
             position.addListener(PositionWizardEventTypes.EDIT, this.onPositionEdit);
 

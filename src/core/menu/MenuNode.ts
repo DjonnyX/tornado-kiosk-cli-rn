@@ -1,5 +1,5 @@
 import {
-    IBusinessPeriod, ICompiledLanguage, ICompiledMenu, ICompiledMenuNode, ICompiledOrderType, ICompiledProduct, ICompiledSelector,
+    IBusinessPeriod, ICompiledLanguage, ICompiledMenuNode, ICompiledOrderType, ICompiledProduct, ICompiledSelector,
     ICurrency, NodeTypes
 } from "@djonnyx/tornado-types";
 import EventEmitter from "eventemitter3";
@@ -8,7 +8,13 @@ import { ScenarioProcessing } from "../scenarios";
 import { MenuNodeEventTypes } from "./events";
 
 export class MenuNode<T = ICompiledSelector | ICompiledProduct | any> extends EventEmitter {
+    protected static __dictionary: { [id: string]: MenuNode } = {};
     protected static __id = 0;
+
+    public static reset() {
+        MenuNode.__dictionary = {};
+        MenuNode.__id = 0;
+    }
 
     protected _id: number = 0;
 
@@ -157,16 +163,18 @@ export class MenuNode<T = ICompiledSelector | ICompiledProduct | any> extends Ev
         MenuNode.__id++;
         this._id = MenuNode.__id;
 
+        MenuNode.__dictionary[__rawNode__.id] = this;
+
         this.__rawNode__.children.forEach(n => {
-            const node = new MenuNode(n, this, _businessPeriods, _orderType, _language, _currency);
+            const node = MenuNode.__dictionary[n.id] || new MenuNode(n, this, _businessPeriods, _orderType, _language, _currency);
             node.addListener(MenuNodeEventTypes.CHANGE, this.changeMenuNodeHandler);
             this._children.push(node);
         });
 
         if (this.__rawNode__.type === NodeTypes.PRODUCT) {
-            const p: ICompiledMenuNode<ICompiledProduct> = this.__rawNode__ as any;
+            const p: ICompiledMenuNode<ICompiledProduct> = this.__rawNode__ as unknown as ICompiledMenuNode<ICompiledProduct>;
             p.content.structure.children.forEach(n => {
-                const node = new MenuNode(n, this, _businessPeriods, _orderType, _language, _currency);
+                const node = MenuNode.__dictionary[n.id] || new MenuNode(n, this, _businessPeriods, _orderType, _language, _currency);
                 node.addListener(MenuNodeEventTypes.CHANGE, this.changeMenuNodeHandler);
                 this._children.push(node);
             });
@@ -203,9 +211,15 @@ export class MenuNode<T = ICompiledSelector | ICompiledProduct | any> extends Ev
         return s;
     }
 
-    checkActivity(): void {
+    checkActivity(dictionary: { [id: string]: MenuNode } = {}): void {
+        if (dictionary[this.__rawNode__.id]) {
+            return;
+        }
+
+        dictionary[this.__rawNode__.id] = this;
+
         this._children.forEach(n => {
-            n.checkActivity();
+            n.checkActivity(dictionary);
         })
 
         ScenarioProcessing.applyPeriodicScenariosForNode(this, {
