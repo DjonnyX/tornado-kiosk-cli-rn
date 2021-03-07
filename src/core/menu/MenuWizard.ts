@@ -66,6 +66,8 @@ export class MenuWizard extends EventEmitter {
             if (!!this._menu) {
                 this._menu.removeAllListeners();
                 this._menu.dispose();
+
+                MenuNode.reset();
             }
 
             this._menu = new MenuNode(this._rawMenu, null,
