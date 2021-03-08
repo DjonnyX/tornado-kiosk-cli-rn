@@ -161,6 +161,11 @@ export class ScenarioProcessing {
         const activities = new Array<boolean>();
         for (let i = 0, l1 = bps.length; i < l1; i++) {
             const bp = bps[i];
+
+            if (!bp.active) {
+                continue;
+            }
+
             for (let j = 0, l2 = bp.schedule.length; j < l2; j++) {
                 const schedule = bp.schedule[j];
 
