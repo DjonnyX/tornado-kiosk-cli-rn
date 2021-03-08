@@ -201,7 +201,7 @@ export class ScenarioProcessing {
         const scenarios: Array<IScenario> = node.__rawNode__.scenarios;
         if (!!scenarios && scenarios.length > 0) {
             scenarios.forEach(s => {
-                if (s.active) {
+                if (!!s.active) {
                     switch (s.action) {
                         case ScenarioCommonActionTypes.VISIBLE_BY_ORDER_TYPE: {
                             node.visibleByOrderType = (s.value as Array<string>).indexOf(periodicData.orderType.id as string) > -1;
@@ -214,9 +214,7 @@ export class ScenarioProcessing {
 
         if (!!node.children && node.children.length > 0) {
             node.children.forEach(c => {
-                c.children.forEach(p => {
-                    ScenarioProcessing.checkOrderTypeActivity(p, periodicData, dictionary);
-                });
+                ScenarioProcessing.checkOrderTypeActivity(c, periodicData, dictionary);
             });
         }
     }

@@ -19,7 +19,7 @@ export class MenuWizard extends EventEmitter {
             this._currency = v;
 
             if (!!this._menu) {
-                this._menu.currency = v;
+                this._menu.setCurrency(v);
             }
         }
     }
@@ -29,7 +29,7 @@ export class MenuWizard extends EventEmitter {
             this._businessPeriods = v;
 
             if (!!this._menu) {
-                this._menu.businessPeriods = v;
+                this._menu.setBusinessPeriods(v);
             }
         }
     }
@@ -39,7 +39,7 @@ export class MenuWizard extends EventEmitter {
             this._orderType = v;
 
             if (!!this._menu) {
-                this._menu.orderType = v;
+                this._menu.setOrderType(v);
                 ScenarioProcessing.checkOrderTypeActivity(this._menu, {
                     businessPeriods: this._businessPeriods,
                     orderType: this._orderType,
@@ -53,7 +53,7 @@ export class MenuWizard extends EventEmitter {
             this._language = v;
 
             if (!!this._menu) {
-                this._menu.language = v;
+                this._menu.setLanguage(v);
             }
         }
     }
@@ -85,7 +85,6 @@ export class MenuWizard extends EventEmitter {
 
             this._menu.addListener(MenuNodeEventTypes.CHANGE, this.menuChangeHandler);
 
-            this.update();
             this._changeDebounse.call();
         }
     }
@@ -94,12 +93,12 @@ export class MenuWizard extends EventEmitter {
     get menu() { return this._menu; }
 
     private menuChangeHandler = () => {
-        this.update();
-
         this._changeDebounse.call();
     }
 
     protected emitChangeState = (): void => {
+        this.update();
+
         this.emit(MenuWizardEventTypes.CHANGE);
     }
 
