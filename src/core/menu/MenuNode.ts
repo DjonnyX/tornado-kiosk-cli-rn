@@ -211,6 +211,13 @@ export class MenuNode<T = ICompiledSelector | ICompiledProduct | any> extends Ev
         return s;
     }
 
+    /**
+     * Проверка активности
+     * Проверяются периодические сценарии
+     * 
+     * dictionary нужен, чтобы предотвратить бесконечный вызов
+     * на рекурсивных модификаторах
+     */
     checkActivity(dictionary: { [id: string]: MenuNode } = {}): void {
         if (dictionary[this.__rawNode__.id]) {
             return;
@@ -228,11 +235,23 @@ export class MenuNode<T = ICompiledSelector | ICompiledProduct | any> extends Ev
         });
     }
 
-    dispose(): void {
+    /**
+     * Полная очистка
+     * 
+     * dictionary нужен, чтобы предотвратить бесконечный вызов
+     * на рекурсивных модификаторах
+     */
+    dispose(dictionary: { [id: string]: MenuNode } = {}): void {
+        if (dictionary[this.__rawNode__.id]) {
+            return;
+        }
+
+        dictionary[this.__rawNode__.id] = this;
+
         this.removeAllListeners();
 
         this._children.forEach(node => {
-            node.dispose();
+            node.dispose(dictionary);
         });
     }
 }
