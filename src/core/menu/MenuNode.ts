@@ -65,45 +65,69 @@ export class MenuNode<T = ICompiledSelector | ICompiledProduct | any> extends Ev
         return this._stateId;
     }
 
-    set currency(v: ICurrency) {
+    setCurrency(v: ICurrency, dictionary: { [id: string]: MenuNode } = {}) {
+        if (dictionary[this.__rawNode__.id]) {
+            return;
+        }
+
+        dictionary[this.__rawNode__.id] = this;
+
         if (this._currency !== v) {
             this._currency = v;
 
             this._children.forEach(c => {
-                c.currency = v;
+                c.setCurrency(v, dictionary);
             });
         }
     }
     get currency() { return this._currency; }
 
-    set businessPeriods(v: Array<IBusinessPeriod>) {
+    setBusinessPeriods(v: Array<IBusinessPeriod>, dictionary: { [id: string]: MenuNode } = {}) {
+        if (dictionary[this.__rawNode__.id]) {
+            return;
+        }
+
+        dictionary[this.__rawNode__.id] = this;
+
         if (this._businessPeriods !== v) {
             this._businessPeriods = v;
 
             this._children.forEach(c => {
-                c.businessPeriods = v;
+                c.setBusinessPeriods(v, dictionary);
             });
         }
     }
     get businessPeriods() { return this._businessPeriods; }
 
-    set orderType(v: ICompiledOrderType) {
+    setOrderType(v: ICompiledOrderType, dictionary: { [id: string]: MenuNode } = {}) {
+        if (dictionary[this.__rawNode__.id]) {
+            return;
+        }
+
+        dictionary[this.__rawNode__.id] = this;
+
         if (this._orderType !== v) {
             this._orderType = v;
 
             this._children.forEach(c => {
-                c.orderType = v;
+                c.setOrderType(v, dictionary);
             });
         }
     }
     get orderType() { return this._orderType; }
 
-    set language(v: ICompiledLanguage) {
+    setLanguage(v: ICompiledLanguage, dictionary: { [id: string]: MenuNode } = {}) {
+        if (dictionary[this.__rawNode__.id]) {
+            return;
+        }
+
+        dictionary[this.__rawNode__.id] = this;
+
         if (this._language !== v) {
             this._language = v;
 
             this._children.forEach(c => {
-                c.language = v;
+                c.setLanguage(v, dictionary);
             });
         }
     }
@@ -166,16 +190,26 @@ export class MenuNode<T = ICompiledSelector | ICompiledProduct | any> extends Ev
         MenuNode.__dictionary[__rawNode__.id] = this;
 
         this.__rawNode__.children.forEach(n => {
-            const node = MenuNode.__dictionary[n.id] || new MenuNode(n, this, _businessPeriods, _orderType, _language, _currency);
-            node.addListener(MenuNodeEventTypes.CHANGE, this.changeMenuNodeHandler);
+            let node: MenuNode;
+            if (MenuNode.__dictionary[n.id]) {
+                node = MenuNode.__dictionary[n.id];
+            } else {
+                node = new MenuNode(n, this, _businessPeriods, _orderType, _language, _currency);
+                node.addListener(MenuNodeEventTypes.CHANGE, this.changeMenuNodeHandler);
+            }
             this._children.push(node);
         });
 
         if (this.__rawNode__.type === NodeTypes.PRODUCT) {
             const p: ICompiledMenuNode<ICompiledProduct> = this.__rawNode__ as unknown as ICompiledMenuNode<ICompiledProduct>;
             p.content.structure.children.forEach(n => {
-                const node = MenuNode.__dictionary[n.id] || new MenuNode(n, this, _businessPeriods, _orderType, _language, _currency);
-                node.addListener(MenuNodeEventTypes.CHANGE, this.changeMenuNodeHandler);
+                let node: MenuNode;
+                if (MenuNode.__dictionary[n.id]) {
+                    node = MenuNode.__dictionary[n.id];
+                } else {
+                    node = new MenuNode(n, this, _businessPeriods, _orderType, _language, _currency);
+                    node.addListener(MenuNodeEventTypes.CHANGE, this.changeMenuNodeHandler);
+                }
                 this._children.push(node);
             });
 
@@ -211,6 +245,13 @@ export class MenuNode<T = ICompiledSelector | ICompiledProduct | any> extends Ev
         return s;
     }
 
+    /**
+     * Проверка активности
+     * Проверяются периодические сценарии
+     * 
+     * dictionary нужен, чтобы предотвратить бесконечный вызов
+     * на рекурсивных модификаторах
+     */
     checkActivity(dictionary: { [id: string]: MenuNode } = {}): void {
         if (dictionary[this.__rawNode__.id]) {
             return;
@@ -228,11 +269,23 @@ export class MenuNode<T = ICompiledSelector | ICompiledProduct | any> extends Ev
         });
     }
 
-    dispose(): void {
+    /**
+     * Полная очистка
+     * 
+     * dictionary нужен, чтобы предотвратить бесконечный вызов
+     * на рекурсивных модификаторах
+     */
+    dispose(dictionary: { [id: string]: MenuNode } = {}): void {
+        if (dictionary[this.__rawNode__.id]) {
+            return;
+        }
+
+        dictionary[this.__rawNode__.id] = this;
+
         this.removeAllListeners();
 
         this._children.forEach(node => {
-            node.dispose();
+            node.dispose(dictionary);
         });
     }
 }

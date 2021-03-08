@@ -161,6 +161,11 @@ export class ScenarioProcessing {
         const activities = new Array<boolean>();
         for (let i = 0, l1 = bps.length; i < l1; i++) {
             const bp = bps[i];
+
+            if (!bp.active) {
+                continue;
+            }
+
             for (let j = 0, l2 = bp.schedule.length; j < l2; j++) {
                 const schedule = bp.schedule[j];
 
@@ -201,7 +206,7 @@ export class ScenarioProcessing {
         const scenarios: Array<IScenario> = node.__rawNode__.scenarios;
         if (!!scenarios && scenarios.length > 0) {
             scenarios.forEach(s => {
-                if (s.active) {
+                if (!!s.active) {
                     switch (s.action) {
                         case ScenarioCommonActionTypes.VISIBLE_BY_ORDER_TYPE: {
                             node.visibleByOrderType = (s.value as Array<string>).indexOf(periodicData.orderType.id as string) > -1;
@@ -214,9 +219,7 @@ export class ScenarioProcessing {
 
         if (!!node.children && node.children.length > 0) {
             node.children.forEach(c => {
-                c.children.forEach(p => {
-                    ScenarioProcessing.checkOrderTypeActivity(p, periodicData, dictionary);
-                });
+                ScenarioProcessing.checkOrderTypeActivity(c, periodicData, dictionary);
             });
         }
     }
