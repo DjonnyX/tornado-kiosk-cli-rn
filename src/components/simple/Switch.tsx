@@ -21,6 +21,7 @@ interface ISwitchProps {
     textStyleOffDisabled?: StyleProp<TextStyle>;
     value: boolean;
     onChange: (value: boolean) => void;
+    formatValueFunction?: (value: boolean) => string;
 }
 
 interface IStyles {
@@ -35,7 +36,7 @@ interface IStyles {
 export const Switch = React.memo(({ value, titleOn, titleOff,
     styleOn, styleOnDisabled, styleViewOn, styleViewOnDisabled, textStyleOn, textStyleOnDisabled,
     styleOff, styleOffDisabled, styleViewOff, styleViewOffDisabled, textStyleOff, textStyleOffDisabled,
-    disabled = false, onChange }: ISwitchProps) => {
+    disabled = false, onChange, formatValueFunction }: ISwitchProps) => {
     const [styles, setStyles] = useState<IStyles>({} as IStyles);
     const [width, setWidth] = useState<number>(0);
     const [position, setPosition] = useState(new Animated.Value(Number(value)));
@@ -44,11 +45,11 @@ export const Switch = React.memo(({ value, titleOn, titleOff,
 
     useEffect(() => {
         let sViewOn: StyleProp<ViewStyle> = { flex: 1, borderRadius: 3, overflow: "hidden", opacity: disabled ? 0.35 : 1, ...styleViewOn as any };
-        let sLayoutOn: StyleProp<ViewStyle> = { flex: 1, justifyContent: "center", paddingLeft: 22, paddingRight: 22, paddingTop: 16, paddingBottom: 16, ...styleOn as any };
+        let sLayoutOn: StyleProp<ViewStyle> = { flex: 1, flexDirection: "row", justifyContent: "space-around", paddingHorizontal: 22, paddingVertical: 16, ...styleOn as any };
         let sTextOn: StyleProp<TextStyle> = { fontSize: 14, fontWeight: "bold", ...textStyleOn as any };
 
         let sViewOff: StyleProp<ViewStyle> = { flex: 1, borderRadius: 3, overflow: "hidden", opacity: disabled ? 0.35 : 1, ...styleViewOff as any };
-        let sLayoutOff: StyleProp<ViewStyle> = { flex: 1, justifyContent: "center", paddingLeft: 22, paddingRight: 22, paddingTop: 16, paddingBottom: 16, ...styleOff as any };
+        let sLayoutOff: StyleProp<ViewStyle> = { flex: 1, flexDirection: "row", justifyContent: "space-around", paddingHorizontal: 22, paddingVertical: 16, ...styleOff as any };
         let sTextOff: StyleProp<TextStyle> = { fontSize: 14, fontWeight: "bold", ...textStyleOff as any };
 
         if (disabled) {
@@ -152,6 +153,14 @@ export const Switch = React.memo(({ value, titleOn, titleOff,
                                 titleOff
                             }
                         </Text>
+                        {
+                            !!formatValueFunction &&
+                            <Text style={styles.sTextOff}>
+                                {
+                                    formatValueFunction(value)
+                                }
+                            </Text>
+                        }
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.sViewOn} onPress={() => { onChangeHandler() }} disabled={disabled}>
@@ -163,6 +172,14 @@ export const Switch = React.memo(({ value, titleOn, titleOff,
                                 titleOn
                             }
                         </Text>
+                        {
+                            !!formatValueFunction &&
+                            <Text style={styles.sTextOn}>
+                                {
+                                    formatValueFunction(value)
+                                }
+                            </Text>
+                        }
                     </View>
                 </TouchableOpacity>
             </Animated.View>
