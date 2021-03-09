@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import { View, Text, Animated, Easing } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import {
-    NodeTypes, ICompiledLanguage, ICurrency,
+    NodeTypes, ICompiledLanguage, ICompiledOrderType, ICurrency,
 } from "@djonnyx/tornado-types";
 import { SideMenu } from "./side-menu";
 import { NavMenu } from "./nav-menu";
@@ -14,6 +14,7 @@ import { MenuNode } from "../../core/menu/MenuNode";
 
 interface IMenuProps {
     menuStateId: number;
+    orderType: ICompiledOrderType;
     menu: MenuNode;
     currency: ICurrency;
     language: ICompiledLanguage;
@@ -27,7 +28,7 @@ interface IMenuProps {
 const sideMenuWidth = 180;
 
 export const Menu = React.memo(({
-    menu, menuStateId, language, currency, width, height,
+    menu, menuStateId, orderType, language, currency, width, height,
     cancelOrder, addPosition,
 }: IMenuProps) => {
     const [currentCategory, setCurrentCategory] = useState<MenuNode>(menu);
@@ -59,15 +60,15 @@ export const Menu = React.memo(({
             setPreviousCategory(prev);
             return category;
         });
-    }, [currentCategory]);
+    }, [currentCategory, menuStateId]);
 
     const selectSideMenuCategoryHandler = useCallback((node: MenuNode) => {
         navigateTo(node);
-    }, []);
+    }, [menuStateId]);
 
     const selectNavMenuCategoryHandler = useCallback((node: MenuNode) => {
         navigateTo(node);
-    }, []);
+    }, [menuStateId]);
 
     // Сброс на первую активную группу, при изменении бизнесс-периода
     useEffect(() => {
@@ -81,7 +82,7 @@ export const Menu = React.memo(({
             const node = activeChildren.length > 0 ? activeChildren[0] : menu;
             navigateTo(node);
         }
-    }, [menu]);
+    }, [menuStateId]);
 
     // навигация / добавление продукта
     const navigateTo = useCallback((node: MenuNode) => {
@@ -247,7 +248,7 @@ export const Menu = React.memo(({
                                 outputRange: [0, height],
                             }),
                         }}>
-                            <NavMenu menuStateId={menuStateId}
+                            <NavMenu menuStateId={menuStateId} orderType={orderType}
                                 node={previousCategory.index <= currentCategory.index ? currentCategory : previousCategory}
                                 language={language} currency={currency} onPress={selectNavMenuCategoryHandler}></NavMenu>
                         </Animated.View>
@@ -261,7 +262,7 @@ export const Menu = React.memo(({
                                 outputRange: [-height, 0],
                             }),
                         }}>
-                            <NavMenu menuStateId={menuStateId}
+                            <NavMenu menuStateId={menuStateId} orderType={orderType}
                                 node={previousCategory.index > currentCategory.index ? currentCategory : previousCategory}
                                 language={language} currency={currency} onPress={selectNavMenuCategoryHandler}></NavMenu>
                         </Animated.View>
