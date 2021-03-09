@@ -1,11 +1,11 @@
 import React, { Component, Dispatch } from "react";
 import { connect } from "react-redux";
 import { Subject } from "rxjs";
+import { IProgress } from "@djonnyx/tornado-refs-processor/dist/DataCombiner";
 import { ExternalStorage } from "../native";
 import { assetsService, refApiService } from "../services";
 import { IAppState } from "../store/state";
 import { CombinedDataActions } from "../store/actions";
-import { IProgress } from "@djonnyx/tornado-refs-processor/dist/DataCombiner";
 import { SystemActions } from "../store/actions/SystemAction";
 import { SystemSelectors } from "../store/selectors";
 import { IDeviceInfo } from "./interfaces";
