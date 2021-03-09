@@ -36,12 +36,27 @@ export class ScenarioProcessing {
                     g.positions.forEach(p => {
                         ScenarioProcessing.setupPosition(p);
 
+                        let minLimit = 0;
+                        let maxLimit = Number.MAX_SAFE_INTEGER;
                         g.__node__.scenarios.forEach(s => {
                             if (s.active) {
                                 // Мержинг лимитов группы
                                 ScenarioProcessing.mergePositionLimitsWithGroup(p, s);
+
+                                switch (s.action) {
+                                    case ScenarioSelectorActionTypes.MIN_USAGE: {
+                                        minLimit = ScenarioProcessing.getNormalizedUpLimit(parseInt(s.value as any));
+                                        break;
+                                    }
+                                    case ScenarioSelectorActionTypes.MAX_USAGE: {
+                                        maxLimit = ScenarioProcessing.getNormalizedUpLimit(parseInt(s.value as any));
+                                        break;
+                                    }
+                                }
                             }
                         });
+
+                        g.isReplacement = minLimit === 1 && maxLimit === 1;
                     });
                 }
             });

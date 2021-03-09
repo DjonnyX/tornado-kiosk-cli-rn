@@ -29,6 +29,20 @@ export class PositionWizardGroup extends EventEmitter implements IPositionWizard
 
         return discount;
     }
+    
+    protected _isReplacement: boolean = false;
+    set isReplacement(v: boolean) {
+        if (this._isReplacement !== v) {
+            this._isReplacement = v;
+
+            this._positions.forEach(p => {
+                p.isReplacement = v;
+            });
+        }
+    }
+    get isReplacement() {
+        return this._isReplacement;
+    }
 
     protected _isValid: boolean = true;
     set isValid(v: boolean) {
@@ -52,11 +66,17 @@ export class PositionWizardGroup extends EventEmitter implements IPositionWizard
     protected _sum: number = 0;
     get sum() { return this._sum; }
 
-    private onChangePositionState = () => {
-        // etc
+    private onChangePositionState = (target: IPositionWizard) => {
+        if (this._isReplacement) {
+            this._positions.forEach(p => {
+                if (p !== target && target.quantity !== 0) {
+                    p.quantity = 0;
+                }
+            });
+        }
 
         this.recalculate();
-        this.emit(PositionWizardEventTypes.CHANGE);
+        this.emit(PositionWizardEventTypes.CHANGE, target);
     }
 
     private onChangeRawState = () => {

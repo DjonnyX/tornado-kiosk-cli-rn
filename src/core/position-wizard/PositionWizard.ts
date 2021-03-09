@@ -67,6 +67,16 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
         return Math.min(this.rests, this._actualUpLimit);
     }
 
+    protected _isReplacement: boolean = false;
+    set isReplacement(v: boolean) {
+        if (this._isReplacement !== v) {
+            this._isReplacement = v;
+        }
+    }
+    get isReplacement() {
+        return this._isReplacement;
+    }
+
     get mode() { return this._mode; }
 
     get __product__() { return this._product; }
@@ -99,7 +109,7 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
             this.recalculate();
             this.update();
 
-            this.emit(PositionWizardEventTypes.CHANGE);
+            this.emit(PositionWizardEventTypes.CHANGE, this);
 
             if (this.type === PositionWizardTypes.MODIFIER) {
                 if (this._quantity > 0 && this._groups.length > 0 && !this._isValid) {
@@ -128,7 +138,7 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
             this.recalculate();
             this.update();
 
-            this.emit(PositionWizardEventTypes.CHANGE);
+            this.emit(PositionWizardEventTypes.CHANGE, this);
         }
     }
     get active() { return this._active; }
@@ -206,7 +216,7 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
         this.recalculate();
         this.update();
 
-        this.emit(PositionWizardEventTypes.CHANGE);
+        this.emit(PositionWizardEventTypes.CHANGE, this);
     }
 
     private onChangeRawState = () => {
@@ -216,7 +226,7 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
         this.recalculate();
         this.update();
 
-        this.emit(PositionWizardEventTypes.CHANGE);
+        this.emit(PositionWizardEventTypes.CHANGE, this);
     }
 
     private onEditPosition = (target: IPositionWizard) => {
@@ -297,7 +307,7 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
     updateState() {
         this.update();
 
-        this.emit(PositionWizardEventTypes.CHANGE);
+        this.emit(PositionWizardEventTypes.CHANGE, this);
     }
 
     edit(): boolean {
