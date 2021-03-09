@@ -1,4 +1,4 @@
-import { IBusinessPeriod, ICompiledMenuNode, ICompiledProduct, ICompiledSelector, ICurrency } from "@djonnyx/tornado-types";
+import { NodeTypes, ICompiledProduct, ICompiledSelector, ICurrency } from "@djonnyx/tornado-types";
 import EventEmitter from "eventemitter3";
 import { priceFormatter } from "../../utils/price";
 import { PositionWizardModes, PositionWizardTypes } from "../enums";
@@ -29,7 +29,7 @@ export class PositionWizardGroup extends EventEmitter implements IPositionWizard
 
         return discount;
     }
-    
+
     protected _isReplacement: boolean = false;
     set isReplacement(v: boolean) {
         if (this._isReplacement !== v) {
@@ -96,14 +96,16 @@ export class PositionWizardGroup extends EventEmitter implements IPositionWizard
         super();
 
         this._groupNode.children.forEach((p, index) => {
-            const position = new PositionWizard(PositionWizardModes.EDIT, p as MenuNode<ICompiledProduct>,
-                this._currency, PositionWizardTypes.MODIFIER, _recurtionPass);
-            position.addListener(PositionWizardEventTypes.CHANGE, this.onChangePositionState);
-            position.addListener(PositionWizardEventTypes.EDIT, this.onPositionEdit);
+            if (p.__rawNode__.type === NodeTypes.PRODUCT) {
+                const position = new PositionWizard(PositionWizardModes.EDIT, p as MenuNode<ICompiledProduct>,
+                    this._currency, PositionWizardTypes.MODIFIER, _recurtionPass);
+                position.addListener(PositionWizardEventTypes.CHANGE, this.onChangePositionState);
+                position.addListener(PositionWizardEventTypes.EDIT, this.onPositionEdit);
 
-            this.__node__.addListener(MenuNodeEventTypes.CHANGE, this.onChangeRawState);
+                this.__node__.addListener(MenuNodeEventTypes.CHANGE, this.onChangeRawState);
 
-            this._positions.push(position);
+                this._positions.push(position);
+            }
         });
 
         this.active = this.__node__.active;
