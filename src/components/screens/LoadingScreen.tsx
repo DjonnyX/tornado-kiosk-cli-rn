@@ -23,17 +23,17 @@ interface ILoadingProps extends StackScreenProps<any, MainNavigationScreenTypes.
 const LoadingScreenContainer = React.memo(({ _progress, _loaded, navigation }: ILoadingProps) => {
   useEffect(() => {
     if (_loaded) {
-      setTimeout(() => {
-        navigation.dispatch(
-          CommonActions.reset({
-            routes: [
-              { name: MainNavigationScreenTypes.INTRO },
-            ],
-          })
-        );
-      });
+      //setTimeout(() => {
+      navigation.dispatch(
+        CommonActions.reset({
+          routes: [
+            { name: MainNavigationScreenTypes.INTRO },
+          ],
+        })
+      );
+      //});
     }
-  });
+  }, [_loaded]);
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: theme.themes[theme.name].loading.background }}>
