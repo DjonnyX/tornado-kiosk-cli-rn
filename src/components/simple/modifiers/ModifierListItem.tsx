@@ -121,17 +121,18 @@ export const ModifierListItem = React.memo(({ thumbnailHeight, currency, languag
                         styleViewOn={{}}
                         styleViewOff={{}}
                         textStyleOn={{
-                            width: "100%", textAlign: "center",
                             fontSize: 16, fontWeight: "bold",
                             color: "white", //theme.themes[theme.name].modifiers.item.quantityStepper.buttons.selectedTextColor as any,
                         }}
                         textStyleOff={{
-                            width: "100%", textAlign: "center",
                             fontSize: 16, fontWeight: "bold",
                             color: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.textColor as any,
                         }}
                         textStyleOnDisabled={{}}
-                        textStyleOffDisabled={{}} />
+                        textStyleOffDisabled={{}}
+                        formatValueFunction={(value: boolean) => {
+                            return String(position.getFormatedSumPerOne(true));
+                        }}/>
                     :
                     <NumericStapper
                         value={position.quantity}
