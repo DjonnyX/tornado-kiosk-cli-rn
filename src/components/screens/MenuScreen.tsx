@@ -96,7 +96,7 @@ const MenuScreenContainer = React.memo(({
         !!MenuWizard.current.menu &&
         <View style={{ flexDirection: "row", width: "100%", height: "100%", backgroundColor: theme.themes[theme.name].menu.background }}>
             <View style={{ position: "absolute", width: menuWidth, height: "100%", zIndex: 1 }}>
-                <Menu menuStateId={_menuStateId} currency={_defaultCurrency} language={_language} menu={MenuWizard.current.menu}
+                <Menu menuStateId={_menuStateId} orderType={_orderType} currency={_defaultCurrency} language={_language} menu={MenuWizard.current.menu}
                     width={menuWidth} height={windowSize.height} cancelOrder={cancelHandler} addPosition={addProductHandler}
                 ></Menu>
             </View>
