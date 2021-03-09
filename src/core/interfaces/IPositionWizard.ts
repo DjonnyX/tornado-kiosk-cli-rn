@@ -21,6 +21,7 @@ export interface IPositionWizard extends EventEmitter {
     readonly discount: number;
     readonly discountPerOne: number;
     readonly discountSum: number;
+    isReplacement: boolean;
     active: boolean;
     actualUpLimit: number;
     upLimit: number;
@@ -47,6 +48,7 @@ export interface IPositionWizardGroup extends EventEmitter {
     readonly __node__: MenuNode<ICompiledSelector>;
     readonly sum: number;
     readonly discount: number;
+    isReplacement: boolean;
     active: boolean;
     isValid: boolean;
     getFormatedSum: (withCurrency?: boolean) => string;

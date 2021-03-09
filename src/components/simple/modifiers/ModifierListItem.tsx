@@ -6,6 +6,7 @@ import { theme } from "../../../theme";
 import { NumericStapper } from "../NumericStapper";
 import { IPositionWizard } from "../../../core/interfaces";
 import { TagList } from "../TagList";
+import { Switch } from "../Switch";
 
 interface IModifierListItemProps {
     stateId: number;
@@ -19,13 +20,17 @@ export const ModifierListItem = React.memo(({ thumbnailHeight, currency, languag
 
     const pressHandler = useCallback((e: GestureResponderEvent) => {
         const hasEdit = position.edit();
-        if (!hasEdit && position.quantity < position.availableQuantitiy) {
-            position.quantity++;
+        if (!hasEdit) {
+            if (position.isReplacement) {
+                position.quantity = 1;
+            } else if (position.quantity < position.availableQuantitiy) {
+                position.quantity++;
+            }
         }
     }, []);
 
-    const changeQuantityHandler = (qnt: number) => {
-        position.quantity = qnt;
+    const changeQuantityHandler = (qnt: number | boolean) => {
+        position.quantity = Number(qnt);
     }
 
     const currentContent = position.__product__?.contents[language?.code];
@@ -92,66 +97,103 @@ export const ModifierListItem = React.memo(({ thumbnailHeight, currency, languag
                     }
                 </Text>
             </TouchableOpacity>
-            <NumericStapper
-                value={position.quantity}
-                buttonStyle={{
-                    width: 48, height: 48, borderStyle: "solid", borderWidth: 1, borderRadius: 16,
-                    backgroundColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.backgroundColor,
-                    borderColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.borderColor,
-                    padding: 6
-                }}
-                buttonSelectedStyle={{
-                    width: 48, height: 48, borderRadius: 16,
-                    backgroundColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.selectedBackgroundColor,
-                    borderColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.borderSelectedColor,
-                    padding: 6,
-                    opacity: 1
-                }}
-                disabledButtonStyle={{
-                    width: 48, height: 48, borderStyle: "solid", borderWidth: 1, borderRadius: 16,
-                    backgroundColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.disabledBackgroundColor,
-                    borderColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.disabledBorderColor,
-                    padding: 6,
-                    opacity: 0.25
-                }}
-                disabledSelectedButtonStyle={{
-                    width: 48, height: 48, borderRadius: 16,
-                    backgroundColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.disabledSelectedBackgroundColor,
-                    borderColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.disabledSelectedBorderColor,
-                    padding: 6,
-                    opacity: 0.25
-                }}
-                buttonTextStyle={{
-                    fontSize: 16, fontWeight: "bold",
-                    color: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.textColor as any,
-                }}
-                buttonSelectedTextStyle={{
-                    fontSize: 16, fontWeight: "bold",
-                    color: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.selectedTextColor as any,
-                }}
-                disabledButtonTextStyle={{
-                    fontSize: 16, fontWeight: "bold",
-                    color: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.disabledTextColor as any,
-                }}
-                disabledSelectedButtonTextStyle={{
-                    fontSize: 16, fontWeight: "bold",
-                    color: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.disabledSelectedTextColor as any,
-                }}
-                textStyle={{
-                    fontSize: 16, fontWeight: "bold",
-                    color: theme.themes[theme.name].modifiers.item.quantityStepper.indicator.textColor
-                }}
-                iconDecrement="-"
-                iconIncrement="+"
-                onChange={changeQuantityHandler}
-                formatValueFunction={(value: number) => {
-                    return position.sum > 0
-                        ? `${String(value)}x${position.getFormatedSumPerOne(true)}`
-                        : String(position.getFormatedSumPerOne(true));
-                }}
-                min={position.downLimit}
-                max={position.availableQuantitiy}
-            />
+            {
+                position.isReplacement
+                    ?
+                    <Switch
+                        value={Boolean(position.quantity)}
+                        onChange={changeQuantityHandler}
+                        titleOff="Не выбран"
+                        titleOn="Выбран"
+                        styleOn={{
+                            borderStyle: "solid", borderWidth: 0, borderRadius: 16,
+                            backgroundColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.selectedBackgroundColor,
+                            borderColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.borderSelectedColor,
+                            padding: 6
+                        }}
+                        styleOff={{
+                            borderStyle: "solid", borderWidth: 1, borderRadius: 16,
+                            backgroundColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.disabledBackgroundColor,
+                            borderColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.disabledBorderColor,
+                            padding: 6,
+                            opacity: 0.25
+                        }}
+                        styleViewOn={{}}
+                        styleViewOff={{}}
+                        textStyleOn={{
+                            width: "100%", textAlign: "center",
+                            fontSize: 16, fontWeight: "bold",
+                            color: "white", //theme.themes[theme.name].modifiers.item.quantityStepper.buttons.selectedTextColor as any,
+                        }}
+                        textStyleOff={{
+                            width: "100%", textAlign: "center",
+                            fontSize: 16, fontWeight: "bold",
+                            color: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.textColor as any,
+                        }}
+                        textStyleOnDisabled={{}}
+                        textStyleOffDisabled={{}} />
+                    :
+                    <NumericStapper
+                        value={position.quantity}
+                        buttonStyle={{
+                            width: 48, height: 48, borderStyle: "solid", borderWidth: 1, borderRadius: 16,
+                            backgroundColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.backgroundColor,
+                            borderColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.borderColor,
+                            padding: 6
+                        }}
+                        buttonSelectedStyle={{
+                            width: 48, height: 48, borderRadius: 16,
+                            backgroundColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.selectedBackgroundColor,
+                            borderColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.borderSelectedColor,
+                            padding: 6,
+                            opacity: 1
+                        }}
+                        disabledButtonStyle={{
+                            width: 48, height: 48, borderStyle: "solid", borderWidth: 1, borderRadius: 16,
+                            backgroundColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.disabledBackgroundColor,
+                            borderColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.disabledBorderColor,
+                            padding: 6,
+                            opacity: 0.25
+                        }}
+                        disabledSelectedButtonStyle={{
+                            width: 48, height: 48, borderRadius: 16,
+                            backgroundColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.disabledSelectedBackgroundColor,
+                            borderColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.disabledSelectedBorderColor,
+                            padding: 6,
+                            opacity: 0.25
+                        }}
+                        buttonTextStyle={{
+                            fontSize: 16, fontWeight: "bold",
+                            color: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.textColor as any,
+                        }}
+                        buttonSelectedTextStyle={{
+                            fontSize: 16, fontWeight: "bold",
+                            color: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.selectedTextColor as any,
+                        }}
+                        disabledButtonTextStyle={{
+                            fontSize: 16, fontWeight: "bold",
+                            color: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.disabledTextColor as any,
+                        }}
+                        disabledSelectedButtonTextStyle={{
+                            fontSize: 16, fontWeight: "bold",
+                            color: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.disabledSelectedTextColor as any,
+                        }}
+                        textStyle={{
+                            fontSize: 16, fontWeight: "bold",
+                            color: theme.themes[theme.name].modifiers.item.quantityStepper.indicator.textColor
+                        }}
+                        iconDecrement="-"
+                        iconIncrement="+"
+                        onChange={changeQuantityHandler}
+                        formatValueFunction={(value: number) => {
+                            return position.sum > 0
+                                ? `${String(value)}x${position.getFormatedSumPerOne(true)}`
+                                : String(position.getFormatedSumPerOne(true));
+                        }}
+                        min={position.downLimit}
+                        max={position.availableQuantitiy}
+                    />
+            }
         </View>
     );
 });
