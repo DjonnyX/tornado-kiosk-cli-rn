@@ -6,6 +6,7 @@ import { genericRetryStrategy } from "../utils/request";
 import { Log } from "./Log";
 import { AuthStore } from "../native";
 import { extractError } from "../utils/error";
+import { ApiErrorCodes } from "./ApiErrorCodes";
 
 const ERR_PATTERN = /(Error: )([\w]*)/gm;
 
@@ -47,53 +48,58 @@ const request = (observable: Observable<Response>, options?: IRequestOptions): O
 }
 
 const parseResponse = (res: Response) => {
-    if (res.ok) {
-        return from(res.json()).pipe(
-            map(data => {
-                const err = extractError(data.error);
-                if (!!err) {
-                    return throwError(err);
+    return from(res.json()).pipe(
+        catchError(err => {
+            switch (res.status) {
+                case 401:
+                    return throwError("Некорректная лицензия.");
+                case 504:
+                    return throwError("Ошибка в соединении.");
+                default:
+                    return throwError("Неизвестная ошибка.");
+            }
+        }),
+        switchMap(data => {
+            if (!!data.error && data.error.length > 0) {
+                let errText = "";
+                switch (data.error[0].code) {
+                    case ApiErrorCodes.REF_TERMINAL_TOKEN_CHECK_LICENSE_ERROR:
+                        errText = "Ошибка при проверке лицензии";
+                        break;
+                    case ApiErrorCodes.LIC_ACCOUNT_METHOD_NOT_ALLOWED:
+                        errText = "Метод не доступен";
+                        break;
+                    case ApiErrorCodes.REF_CLIENT_TOKEN_EMPTY_TOKEN:
+                    case ApiErrorCodes.LIC_ACCOUNT_TOKEN_EMPTY_TOKEN:
+                        errText = "Токен не задан";
+                        break;
+                    case ApiErrorCodes.LIC_ACCOUNT_TOKEN_VERIFICATION:
+                        errText = "Ошибка подлинности токена";
+                        break;
+                    case ApiErrorCodes.LIC_INTERNAL_TOKEN_EMPTY_TOKEN:
+                    case ApiErrorCodes.LIC_INTERNAL_TOKEN_VERIFICATION:
+                        errText = "Внутренняя ошибка сервера";
+                        break;
+                    case ApiErrorCodes.LIC_LICENSE_FINISHED:
+                        errText = "Срок действия лицензии прошел";
+                        break;
+                    case ApiErrorCodes.LIC_LICENSE_NOT_FOUND:
+                        errText = "Лицензия не найдена";
+                        break;
+                    case ApiErrorCodes.REF_TERMINAL_TOKEN_BAD_FORMAT:
+                    case ApiErrorCodes.LIC_TERMINAL_TOKEN_BAD_FORMAT:
+                    case ApiErrorCodes.LIC_TERMINAL_TOKEN_VERIFICATION:
+                        errText = "Ошибка подлинности токена";
+                        break;
+                    default: {
+                        return throwError(extractError(data.error) || `Неизвестная ошибка (${data.error[0].code})`);
+                    }
                 }
+                return throwError(`${errText} (${data.error[0].code})`);
+            }
 
-                return data;
-            }),
-        );
-    }
-
-    return of(res).pipe(
-        switchMap(res => from(res.text()).pipe(
-            catchError(err => {
-                switch (res.status) {
-                    case 504:
-                        return throwError("Ошибка в соединении.");
-                }
-                switch (res.status) {
-                    case 401:
-                        return throwError("Некорректная лицензия.");
-                    case 504:
-                        return throwError("Ошибка в соединении.");
-                }
-
-                return throwError(res.statusText);
-            }),
-            switchMap(text => {
-                const errType = extractErrorType(text);
-                switch (errType) {
-                    case "License already in use":
-                        return throwError(Error("Лицензия уже используется"));
-                    case "TokenBadFormat":
-                        return throwError(Error("Неверный формат токена"));
-                    case "LicenseNotFound":
-                        return throwError(Error("Лицензия не найдена"));
-                    case "LicensePeriodIsFinish":
-                        return throwError(Error("Истек срок действия лицензии"));
-                    case "TokenExpiredError":
-                        return throwError(Error("Ошибка проверки подлинности ключа (054)"));
-                    default:
-                        return throwError(Error("Неизвестная ошибка"));
-                }
-            }),
-        )),
+            return of(data);
+        }),
     );
 }
 
