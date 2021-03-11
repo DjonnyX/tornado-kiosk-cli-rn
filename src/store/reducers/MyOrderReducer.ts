@@ -6,6 +6,7 @@ import { IMyOrderState } from "../state";
 const initialState: IMyOrderState = {
     stateId: -1,
     showOrderTypes: true,
+    isProcessing: false,
 };
 
 const myOrderReducer: Reducer<IMyOrderState, TMyOrderActions> = (
@@ -37,6 +38,11 @@ const myOrderReducer: Reducer<IMyOrderState, TMyOrderActions> = (
             return {
                 ...state,
                 stateId: action.stateId,
+            };
+        case MyOrderActionTypes.UPDATE_IS_PROCESSING:
+            return {
+                ...state,
+                isProcessing: action.isProcessing,
             };
         default:
             return state;

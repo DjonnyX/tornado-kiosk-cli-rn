@@ -19,12 +19,6 @@ interface IPayStatusScreenSelfProps {
 interface IPayStatusScreenProps extends StackScreenProps<any, MainNavigationScreenTypes.PAY_STATUS>, IPayStatusScreenSelfProps { }
 
 const PayStatusScreenContainer = React.memo(({ _language, navigation }: IPayStatusScreenProps) => {
-    useEffect(() => {
-        setTimeout(() => {
-            navigation.navigate(MainNavigationScreenTypes.PAY_CONFIRMATION);
-        }, 1000);
-    }, []);
-
     return (
         <View style={{
             flex: 1, justifyContent: "center", alignItems: "center", width: "100%", height: "100%",
@@ -35,13 +29,13 @@ const PayStatusScreenContainer = React.memo(({ _language, navigation }: IPayStat
                     fontSize: 40, fontWeight: "bold", textAlign: "center",
                     color: theme.themes[theme.name].payStatus.primaryMessageColor
                 }}>
-                    Следуйте указаниям на экране платежного терминала
+                    Пожалуйста подождите, идет оформление заказа.
                 </Text>
                 <Text style={{
                     fontSize: 20, fontWeight: "bold", textAlign: "center",
                     color: theme.themes[theme.name].payStatus.secondaryMessageColor, marginBottom: 40
                 }}>
-                    Follow the instructions on the payment terminal
+                    Please wait, ordering
                 </Text>
                 <FastImage style={{ width: 128, height: 128 }}
                     source={theme.name === 'light'

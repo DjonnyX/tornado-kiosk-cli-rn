@@ -1,5 +1,6 @@
-import { ICompiledLanguage, ICompiledProduct, ICurrency } from "@djonnyx/tornado-types";
+import { ICompiledLanguage, ICompiledOrderType, ICompiledProduct, ICurrency, IOrder } from "@djonnyx/tornado-types";
 import EventEmitter from "eventemitter3";
+import { IOrderData, IOrderPositionData } from "../../services";
 import { Debounse } from "../../utils/debounse";
 import { priceFormatter } from "../../utils/price";
 import { PositionWizardModes, PositionWizardTypes } from "../enums";
@@ -11,6 +12,8 @@ import { OrderWizardEventTypes } from "./events";
 
 export class OrderWizard extends EventEmitter implements IOrderWizard {
     static current: OrderWizard;
+
+    public result: IOrder | undefined;
 
     protected _stateId: number = 0;
     get stateId() { return this._stateId; }
@@ -46,8 +49,17 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
         }
     }
 
+    set orderType(v: ICompiledOrderType) {
+        if (this._orderType !== v) {
+            this._orderType = v;
+        }
+    }
+
     protected _sum: number = 0;
     get sum() { return this._sum; }
+
+    protected _discount: number = 0;
+    get discount() { return this._discount; }
 
     public readonly fireChangeMenu = () => {
         const currentPosition = this.currentPosition;
@@ -94,7 +106,8 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
 
     protected _changeDebounse = new Debounse(this.emitChangeState, 10);
 
-    constructor(protected _currency: ICurrency, protected _language: ICompiledLanguage) {
+    constructor(protected _currency: ICurrency, protected _language: ICompiledLanguage,
+        protected _orderType: ICompiledOrderType) {
         super();
         OrderWizard.current = this;
     }
@@ -114,12 +127,14 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
     }
 
     protected recalculate() {
-        let sum = 0;
+        let sum = 0, discount = 0;
         this._positions.forEach(p => {
             sum += p.sum;
+            discount += p.discountSum;
         });
 
         this._sum = sum;
+        this._discount = discount;
     }
 
     protected updateStateId(): void {
@@ -302,8 +317,11 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
         this._originalEditingPositions = [];
 
         this._lastPosition = null;
+        
+        this.result = undefined;
 
         this._stateId = 0;
+        this._discount = 0;
         this._sum = 0;
 
         this._changeDebounse.call();
@@ -315,6 +333,33 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
             s += this._currency.symbol;
         }
         return s;
+    }
+
+    protected toOrderPosition(positionWizard: IPositionWizard): IOrderPositionData {
+        const nestedPositions = positionWizard.nestedPositions;
+        const position: IOrderPositionData = {
+            productId: positionWizard.__product__?.id as string,
+            price: positionWizard.price,
+            sum: positionWizard.sum,
+            discount: positionWizard.discountSum,
+            quantity: positionWizard.quantity,
+            children: nestedPositions.map(pos => this.toOrderPosition(pos)),
+        }
+
+        return position;
+    }
+
+    toOrderData(): IOrderData {
+        const positions = this._positions.map(pos => this.toOrderPosition(pos));
+        const order: IOrderData = {
+            sum: this._sum,
+            discount: this._discount,
+            currencyId: this._currency.id as string,
+            orderTypeId: this._orderType.id as string,
+            positions,
+        };
+
+        return order;
     }
 
     dispose(): void {
@@ -329,7 +374,7 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
         });
 
         this._originalEditingPositions = [];
-
         this._lastPosition = null;
+        this.result = undefined;
     }
 }

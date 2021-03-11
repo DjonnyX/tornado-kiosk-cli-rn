@@ -12,6 +12,7 @@ export enum MyOrderActionTypes {
     RESET = "TORNADO/my-order/reset",
     UPDATE_STATE_ID = "TORNADO/my-order/update-state-id",
     SHOW_ORDER_TYPES = "TORNADO/my-order/show-order-types",
+    UPDATE_IS_PROCESSING = "TORNADO/my-order/update-is-processing",
 }
 
 interface IMyOrderActionEdit extends Action<MyOrderActionTypes.EDIT_PRODUCT> {
@@ -42,6 +43,10 @@ interface IMyOrderActionUpdateStateId extends Action<MyOrderActionTypes.UPDATE_S
 
 interface IMyOrderActionShowOrderTypes extends Action<MyOrderActionTypes.SHOW_ORDER_TYPES> {
     showOrderTypes: boolean;
+}
+
+interface IMyOrderActionUpdateIsProcessing extends Action<MyOrderActionTypes.UPDATE_IS_PROCESSING> {
+    isProcessing: boolean;
 }
 
 export class MyOrderActions {
@@ -78,7 +83,12 @@ export class MyOrderActions {
     static reset = (): IMyOrderActionReset => ({
         type: MyOrderActionTypes.RESET,
     });
+
+    static isProcessing = (isProcessing: boolean): IMyOrderActionUpdateIsProcessing => ({
+        type: MyOrderActionTypes.UPDATE_IS_PROCESSING,
+        isProcessing,
+    });
 }
 
 export type TMyOrderActions = IMyOrderActionEdit | IMyOrderActionEditCancel | IMyOrderActionAdd | IMyOrderActionRemove
-    | IMyOrderActionUpdateStateId | IMyOrderActionReset | IMyOrderActionShowOrderTypes;
+    | IMyOrderActionUpdateStateId | IMyOrderActionReset | IMyOrderActionShowOrderTypes | IMyOrderActionUpdateIsProcessing;
