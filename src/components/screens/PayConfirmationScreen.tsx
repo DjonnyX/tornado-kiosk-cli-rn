@@ -71,7 +71,7 @@ const PayConfirmationScreenScreenContainer = React.memo(({ _language, _orderStat
                     fontSize: 76, fontWeight: "bold", textAlign: "center",
                     color: theme.themes[theme.name].payConfirmation.numberColor
                 }}>
-                    F450
+                    { OrderWizard.current.result?.code }
                 </Text>
                 <Text style={{
                     fontSize: 20, fontWeight: "bold", textAlign: "center",

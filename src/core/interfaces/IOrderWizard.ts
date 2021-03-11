@@ -1,7 +1,8 @@
 import EventEmitter from "eventemitter3";
-import { ICompiledLanguage, ICompiledProduct, ICurrency } from "@djonnyx/tornado-types";
+import { ICompiledLanguage, ICompiledOrderType, ICompiledProduct, ICurrency } from "@djonnyx/tornado-types";
 import { IPositionWizard } from "./IPositionWizard";
 import { MenuNode } from "../menu/MenuNode";
+import { IOrderData } from "../../services";
 
 export interface IOrderWizard extends EventEmitter {
     readonly stateId: number;
@@ -9,6 +10,7 @@ export interface IOrderWizard extends EventEmitter {
     readonly positions: Array<IPositionWizard>;
     currency: ICurrency;
     language: ICompiledLanguage;
+    orderType: ICompiledOrderType;
     editProduct: (productNode: MenuNode<ICompiledProduct>) => void;
     editCancel: () => void;
     findPosition: (position: IPositionWizard) => IPositionWizard | undefined;
@@ -16,5 +18,6 @@ export interface IOrderWizard extends EventEmitter {
     remove: (position: IPositionWizard) => void;
     reset: () => void;
     getFormatedSum: (withCurrency?: boolean) => string;
+    toOrderData: () => IOrderData;
     dispose: () => void;
 }

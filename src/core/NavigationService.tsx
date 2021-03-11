@@ -45,8 +45,7 @@ export const NavigationServiceContainer = React.memo(({ onNavigate, _orderStateI
                 }
             }
             if (onNavigate !== undefined) onNavigate(MainNavigationScreenTypes.INTRO);
-        }
-        else
+        } else
             if (_orderStateId === 1 && _currentScreen !== MainNavigationScreenTypes.MENU) {
                 if (_showOrderTypes !== undefined) {
                     _showOrderTypes();
@@ -57,6 +56,9 @@ export const NavigationServiceContainer = React.memo(({ onNavigate, _orderStateI
             }
     }, [_orderStateId, _currentScreen, onNavigate]);
 
+    useEffect(() => {
+        if (!!_currentScreen && onNavigate !== undefined) onNavigate(_currentScreen as MainNavigationScreenTypes);
+    }, [_currentScreen]);
 
     return <></>;
 });

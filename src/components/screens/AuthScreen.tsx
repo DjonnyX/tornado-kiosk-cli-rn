@@ -12,7 +12,7 @@ import { IAppState } from "../../store/state";
 import { CombinedDataSelectors, SystemSelectors } from "../../store/selectors";
 import { theme } from "../../theme";
 import { NotificationActions } from "../../store/actions";
-import { refApiService } from "../../services";
+import { orderApiService, refApiService } from "../../services";
 import { SystemActions } from "../../store/actions/SystemAction";
 import { SimpleButton } from "../simple";
 import { IAlertState } from "../../interfaces";
@@ -197,7 +197,7 @@ const AuthScreenContainer = React.memo(({ _serialNumber, _setupStep, _terminalId
 
                         setShowProgressBar(false);
 
-                        refApiService.serial = _serialNumber;
+                        refApiService.serial = orderApiService.serial = _serialNumber;
 
                         // License valid!
                         navigation.dispatch(
