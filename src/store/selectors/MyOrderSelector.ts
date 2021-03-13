@@ -11,4 +11,8 @@ export namespace MyOrderSelectors {
     export const selectShowOrderTypes = createSelector(getMyOrder, (state) => {
         return state.showOrderTypes;
     });
+
+    export const selectIsProcessing = createSelector(getMyOrder, (state) => {
+        return state.isProcessing;
+    });
 }

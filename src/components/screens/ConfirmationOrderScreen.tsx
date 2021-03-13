@@ -9,13 +9,14 @@ import { CombinedDataSelectors, MyOrderSelectors } from "../../store/selectors";
 import { CapabilitiesSelectors } from "../../store/selectors/CapabilitiesSelector";
 import { Ads, SimpleButton } from "../simple";
 import { theme } from "../../theme";
-import { NotificationActions } from "../../store/actions";
+import { MyOrderActions, NotificationActions } from "../../store/actions";
 import { ConfirmationOrderListItem } from "../simple/confirmation-order-list";
 import { OrderWizard } from "../../core/order/OrderWizard";
 import { IAlertState } from "../../interfaces";
 
 interface IConfirmationOrderScreenSelfProps {
     // store props
+    _confirmOrder: () => void;
     _alertOpen: (alert: IAlertState) => void;
     _orderStateId: number;
     _menuStateId: number;
@@ -29,14 +30,14 @@ interface IConfirmationOrderScreenSelfProps {
 interface IConfirmationOrderScreenProps extends StackScreenProps<any, MainNavigationScreenTypes.INTRO>, IConfirmationOrderScreenSelfProps { }
 
 const ConfirmationOrderScreenContainer = React.memo(({ _language, _banners, _currency, _orderStateId, _menuStateId, navigation,
-    _alertOpen }: IConfirmationOrderScreenProps) => {
+    _confirmOrder, _alertOpen }: IConfirmationOrderScreenProps) => {
 
     const selectAdHandler = useCallback((ad: ICompiledAd) => {
         // etc...
     }, []);
 
     const onNext = useCallback(() => {
-        navigation.navigate(MainNavigationScreenTypes.PAY_STATUS);
+        _confirmOrder();
     }, []);
 
     const onPrevious = useCallback(() => {
@@ -119,6 +120,9 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
     return {
         _alertOpen: (alert: IAlertState) => {
             dispatch(NotificationActions.alertOpen(alert));
+        },
+        _confirmOrder: () => {
+            dispatch(MyOrderActions.isProcessing(true));
         },
     };
 };

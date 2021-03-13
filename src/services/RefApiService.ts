@@ -8,19 +8,6 @@ import { AuthStore } from "../native";
 import { extractError } from "../utils/error";
 import { ApiErrorCodes } from "./ApiErrorCodes";
 
-const ERR_PATTERN = /(Error: )([\w]*)/gm;
-
-const extractErrorType = (err: string) => {
-    if (!!err) {
-        const s = err.match(ERR_PATTERN);
-        if (!!s && s.length > 0) {
-            return s[0].replace(/Error: /g, "");
-        }
-    }
-
-    return "Unknown error.";
-}
-
 interface IRequestOptions {
     useAttempts?: boolean;
     breakAfter?: number;

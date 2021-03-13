@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Subject } from "rxjs";
 import { IProgress } from "@djonnyx/tornado-refs-processor/dist/DataCombiner";
 import { ExternalStorage } from "../native";
-import { assetsService, refApiService } from "../services";
+import { assetsService, orderApiService, refApiService } from "../services";
 import { IAppState } from "../store/state";
 import { CombinedDataActions } from "../store/actions";
 import { SystemActions } from "../store/actions/SystemAction";
@@ -50,7 +50,7 @@ class AuthServiceContainer extends Component<IAuthServiceProps, IAuthServiceStat
             || this.props._terminalId !== nextProps._terminalId
             || this.props._storId !== nextProps._storId) {
 
-            refApiService.serial = nextProps._serialNumber || "";
+            refApiService.serial = orderApiService.serial = nextProps._serialNumber || "";
 
             this.saveDeviceInfo({
                 ...this._deviceInfo,
