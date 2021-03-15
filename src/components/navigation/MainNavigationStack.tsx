@@ -53,21 +53,21 @@ export const MainNavigationStack = () => {
         name={MainNavigationScreenTypes.CONFIRMATION_ORDER}
         component={ConfirmationOrderScreen}
         options={{
-          gestureEnabled: true,
+          gestureEnabled: false,
         }}
       />
       <Stack.Screen
         name={MainNavigationScreenTypes.PAY_STATUS}
         component={PayStatusScreen}
         options={{
-          gestureEnabled: true,
+          gestureEnabled: false,
         }}
       />
       <Stack.Screen
         name={MainNavigationScreenTypes.PAY_CONFIRMATION}
         component={PayConfirmationScreenScreen}
         options={{
-          gestureEnabled: true,
+          gestureEnabled: false,
         }}
       />
     </Stack.Navigator>
