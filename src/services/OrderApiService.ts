@@ -124,31 +124,37 @@ class OrderApiService {
 
     sendOrder(orderData: IOrderData): Observable<IOrder> {
         Log.i("OrderApiService", "sendOrder");
-        return request(
-            from(this.getAccessToken()).pipe(
-                switchMap(token => {
-                    return from(
-                        fetch(`${config.orderServer.address}/api/v1/order`,
-                            {
-                                method: "POST",
-                                headers: {
-                                    "x-access-token": token,
-                                    "content-type": "application/json",
-                                },
-                                body: JSON.stringify(orderData),
-                            }
-                        )
-                    );
+        let response: Observable<IOrder>;
+        try {
+            response = request(
+                from(this.getAccessToken()).pipe(
+                    switchMap(token => {
+                        return from(
+                            fetch(`${config.orderServer.address}/api/v1/order`,
+                                {
+                                    method: "POST",
+                                    headers: {
+                                        "x-access-token": token,
+                                        "content-type": "application/json",
+                                    },
+                                    body: JSON.stringify(orderData),
+                                }
+                            )
+                        );
+                    }),
+                ),
+            ).pipe(
+                switchMap(res => parseResponse(res)),
+                catchError(err => {
+                    Log.i("OrderApiService", "> sendOrder: " + err);
+                    return throwError(err);
                 }),
-            ),
-        ).pipe(
-            switchMap(res => parseResponse(res)),
-            catchError(err => {
-                Log.i("OrderApiService", "> sendOrder: " + err);
-                return throwError(err);
-            }),
-            map(resData => resData.data)
-        );
+                map(resData => resData.data)
+            );
+        } catch (err) {
+            return throwError(Error("Something went wrong"));
+        }
+        return response;
     }
 }
 

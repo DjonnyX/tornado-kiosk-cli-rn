@@ -107,418 +107,520 @@ class RefApiService {
 
     terminalLicenseVerify(serial: string): Observable<ILicense> {
         Log.i("RefApiService", "terminalLicenseVerify");
-        return request(
-            from(AuthStore.getToken(serial, config.refServer.apiKeyTokenSalt)).pipe(
-                switchMap(token => {
-                    return from(
-                        fetch(`${config.refServer.address}/api/v1/device/license-verify`,
-                            {
-                                method: "GET",
-                                headers: {
-                                    "x-access-token": token,
-                                },
-                            }
-                        )
-                    );
+        let response: Observable<ILicense>;
+        try {
+            response = request(
+                from(AuthStore.getToken(serial, config.refServer.apiKeyTokenSalt)).pipe(
+                    switchMap(token => {
+                        return from(
+                            fetch(`${config.refServer.address}/api/v1/device/license-verify`,
+                                {
+                                    method: "GET",
+                                    headers: {
+                                        "x-access-token": token,
+                                    },
+                                }
+                            )
+                        );
+                    }),
+                ),
+            ).pipe(
+                switchMap(res => parseResponse(res)),
+                catchError(err => {
+                    Log.i("RefApiService", "> terminalLicenseVerify: " + err);
+                    return throwError(err);
                 }),
-            ),
-        ).pipe(
-            switchMap(res => parseResponse(res)),
-            catchError(err => {
-                Log.i("RefApiService", "> terminalLicenseVerify: " + err);
-                return throwError(err);
-            }),
-            map(resData => resData.data)
-        );
+                map(resData => resData.data)
+            );
+        } catch (err) {
+            return throwError(Error("Something went wrong"));
+        }
+        return response;
     }
 
     terminalRegistration(serial: string): Observable<ITerminal> {
         Log.i("RefApiService", "terminalRegistry");
-        return request(
-            from(AuthStore.getToken(serial, config.refServer.apiKeyTokenSalt)).pipe(
-                switchMap(token => {
-                    return from(
-                        fetch(`${config.refServer.address}/api/v1/device/registration`,
-                            {
-                                method: "POST",
-                                headers: {
-                                    "x-access-token": token,
-                                    "content-type": "application/json",
-                                },
-                                body: JSON.stringify({
-                                    type: TerminalTypes.KIOSK,
-                                }),
-                            }
-                        )
-                    );
+        let response: Observable<ITerminal>;
+        try {
+            response = request(
+                from(AuthStore.getToken(serial, config.refServer.apiKeyTokenSalt)).pipe(
+                    switchMap(token => {
+                        return from(
+                            fetch(`${config.refServer.address}/api/v1/device/registration`,
+                                {
+                                    method: "POST",
+                                    headers: {
+                                        "x-access-token": token,
+                                        "content-type": "application/json",
+                                    },
+                                    body: JSON.stringify({
+                                        type: TerminalTypes.KIOSK,
+                                    }),
+                                }
+                            )
+                        );
+                    }),
+                ),
+            ).pipe(
+                switchMap(res => parseResponse(res)),
+                catchError(err => {
+                    Log.i("RefApiService", "> terminalRegistry: " + err);
+                    return throwError(err);
                 }),
-            ),
-        ).pipe(
-            switchMap(res => parseResponse(res)),
-            catchError(err => {
-                Log.i("RefApiService", "> terminalRegistry: " + err);
-                return throwError(err);
-            }),
-            map(resData => resData.data)
-        );
+                map(resData => resData.data)
+            );
+        } catch (err) {
+            return throwError(Error("Something went wrong"));
+        }
+        return response;
     }
 
     terminalSetParams(id: string, params: { name: string, storeId: string }): Observable<ITerminal> {
         Log.i("RefApiService", "terminalSetParams");
-        return request(
-            from(this.getAccessToken()).pipe(
-                switchMap(token => {
-                    return from(
-                        fetch(`${config.refServer.address}/api/v1/terminal/${id}`,
-                            {
-                                method: "PUT",
-                                headers: {
-                                    "x-access-token": token,
-                                    "content-type": "application/json",
-                                },
-                                body: JSON.stringify(params),
-                            }
-                        )
-                    );
+        let response: Observable<ITerminal>;
+        try {
+            response = request(
+                from(this.getAccessToken()).pipe(
+                    switchMap(token => {
+                        return from(
+                            fetch(`${config.refServer.address}/api/v1/terminal/${id}`,
+                                {
+                                    method: "PUT",
+                                    headers: {
+                                        "x-access-token": token,
+                                        "content-type": "application/json",
+                                    },
+                                    body: JSON.stringify(params),
+                                }
+                            )
+                        );
+                    }),
+                ),
+            ).pipe(
+                switchMap(res => parseResponse(res)),
+                catchError(err => {
+                    Log.i("RefApiService", "> terminalSetParams: " + err);
+                    return throwError(err);
                 }),
-            ),
-        ).pipe(
-            switchMap(res => parseResponse(res)),
-            catchError(err => {
-                Log.i("RefApiService", "> terminalSetParams: " + err);
-                return throwError(err);
-            }),
-            map(resData => resData.data)
-        );
+                map(resData => resData.data)
+            );
+        } catch (err) {
+            return throwError(Error("Something went wrong"));
+        }
+        return response;
     }
 
     getRefs(): Observable<Array<IRef>> {
         Log.i("RefApiService", "getRefs");
-        return request(
-            from(this.getAccessToken()).pipe(
-                switchMap(token => {
-                    return from(
-                        fetch(`${config.refServer.address}/api/v1/refs`,
-                            {
-                                method: "GET",
-                                headers: {
-                                    "x-access-token": token,
+        let response: Observable<Array<IRef>>;
+        try {
+            response = request(
+                from(this.getAccessToken()).pipe(
+                    switchMap(token => {
+                        return from(
+                            fetch(`${config.refServer.address}/api/v1/refs`,
+                                {
+                                    method: "GET",
+                                    headers: {
+                                        "x-access-token": token,
+                                    }
                                 }
-                            }
-                        )
-                    );
+                            )
+                        );
+                    }),
+                ),
+            ).pipe(
+                switchMap(res => parseResponse(res)),
+                catchError(err => {
+                    Log.i("RefApiService", "> getRefs: " + err);
+                    return throwError(err);
                 }),
-            ),
-        ).pipe(
-            switchMap(res => parseResponse(res)),
-            catchError(err => {
-                Log.i("RefApiService", "> getRefs: " + err);
-                return throwError(err);
-            }),
-            map(resData => resData.data)
-        );
+                map(resData => resData.data)
+            );
+        } catch (err) {
+            return throwError(Error("Something went wrong"));
+        }
+        return response;
     }
 
     getNodes(): Observable<Array<INode>> {
         Log.i("RefApiService", "getNodes");
-        return request(
-            from(this.getAccessToken()).pipe(
-                switchMap(token => {
-                    return from(
-                        fetch(`${config.refServer.address}/api/v1/nodes`,
-                            {
-                                method: "GET",
-                                headers: {
-                                    "x-access-token": token,
+        let response: Observable<Array<INode>>;
+        try {
+            response = request(
+                from(this.getAccessToken()).pipe(
+                    switchMap(token => {
+                        return from(
+                            fetch(`${config.refServer.address}/api/v1/nodes`,
+                                {
+                                    method: "GET",
+                                    headers: {
+                                        "x-access-token": token,
+                                    }
                                 }
-                            }
+                            )
                         )
-                    )
-                })
-            ),
-        ).pipe(
-            switchMap(res => parseResponse(res)),
-            map(resData => resData.data),
-        );
+                    })
+                ),
+            ).pipe(
+                switchMap(res => parseResponse(res)),
+                map(resData => resData.data),
+            );
+        } catch (err) {
+            return throwError(Error("Something went wrong"));
+        }
+        return response;
     }
 
     getSelectors(): Observable<Array<ISelector>> {
         Log.i("RefApiService", "getSelectors");
-        return request(
-            from(this.getAccessToken()).pipe(
-                switchMap(token => {
-                    return from(
-                        fetch(`${config.refServer.address}/api/v1/selectors`,
-                            {
-                                method: "GET",
-                                headers: {
-                                    "x-access-token": token,
+        let response: Observable<Array<ISelector>>;
+        try {
+            response = request(
+                from(this.getAccessToken()).pipe(
+                    switchMap(token => {
+                        return from(
+                            fetch(`${config.refServer.address}/api/v1/selectors`,
+                                {
+                                    method: "GET",
+                                    headers: {
+                                        "x-access-token": token,
+                                    }
                                 }
-                            }
-                        )
-                    );
-                }),
-            ),
-        ).pipe(
-            switchMap(res => parseResponse(res)),
-            map(resData => resData.data),
-        );
+                            )
+                        );
+                    }),
+                ),
+            ).pipe(
+                switchMap(res => parseResponse(res)),
+                map(resData => resData.data),
+            );
+        } catch (err) {
+            return throwError(Error("Something went wrong"));
+        }
+        return response;
     }
 
     getProducts(): Observable<Array<IProduct>> {
         Log.i("RefApiService", "getProducts");
-        return request(
-            from(this.getAccessToken()).pipe(
-                switchMap(token => {
-                    return from(
-                        fetch(`${config.refServer.address}/api/v1/products`,
-                            {
-                                method: "GET",
-                                headers: {
-                                    "x-access-token": token,
-                                }
-                            })
-                    );
-                }),
-            ),
-        ).pipe(
-            switchMap(res => parseResponse(res)),
-            map(resData => resData.data),
-        );
+        let response: Observable<Array<IProduct>>;
+        try {
+            response = request(
+                from(this.getAccessToken()).pipe(
+                    switchMap(token => {
+                        return from(
+                            fetch(`${config.refServer.address}/api/v1/products`,
+                                {
+                                    method: "GET",
+                                    headers: {
+                                        "x-access-token": token,
+                                    }
+                                })
+                        );
+                    }),
+                ),
+            ).pipe(
+                switchMap(res => parseResponse(res)),
+                map(resData => resData.data),
+            );
+        } catch (err) {
+            return throwError(Error("Something went wrong"));
+        }
+        return response;
     }
 
     getTags(): Observable<Array<ITag>> {
         Log.i("RefApiService", "getTags");
-        return request(
-            from(this.getAccessToken()).pipe(
-                switchMap(token => {
-                    return from(
-                        fetch(`${config.refServer.address}/api/v1/tags`,
-                            {
-                                method: "GET",
-                                headers: {
-                                    "x-access-token": token,
+        let response: Observable<Array<IProduct>>;
+        try {
+            response = request(
+                from(this.getAccessToken()).pipe(
+                    switchMap(token => {
+                        return from(
+                            fetch(`${config.refServer.address}/api/v1/tags`,
+                                {
+                                    method: "GET",
+                                    headers: {
+                                        "x-access-token": token,
+                                    }
                                 }
-                            }
-                        )
-                    );
-                }),
-            ),
-        ).pipe(
-            retry(5),
-            switchMap(res => parseResponse(res)),
-            map(resData => resData.data),
-        );
+                            )
+                        );
+                    }),
+                ),
+            ).pipe(
+                retry(5),
+                switchMap(res => parseResponse(res)),
+                map(resData => resData.data),
+            );
+        } catch (err) {
+            return throwError(Error("Something went wrong"));
+        }
+        return response;
     }
 
     getAssets(): Observable<Array<IAsset>> {
         Log.i("RefApiService", "getAssets");
-        return request(
-            from(this.getAccessToken()).pipe(
-                switchMap(token => {
-                    return from(
-                        fetch(`${config.refServer.address}/api/v1/assets`,
-                            {
-                                method: "GET",
-                                headers: {
-                                    "x-access-token": token,
+        let response: Observable<Array<IAsset>>;
+        try {
+            response = request(
+                from(this.getAccessToken()).pipe(
+                    switchMap(token => {
+                        return from(
+                            fetch(`${config.refServer.address}/api/v1/assets`,
+                                {
+                                    method: "GET",
+                                    headers: {
+                                        "x-access-token": token,
+                                    }
                                 }
-                            }
-                        )
-                    );
-                })
-            ),
-        ).pipe(
-            switchMap(res => parseResponse(res)),
-            map(resData => resData.data),
-        );
+                            )
+                        );
+                    })
+                ),
+            ).pipe(
+                switchMap(res => parseResponse(res)),
+                map(resData => resData.data),
+            );
+        } catch (err) {
+            return throwError(Error("Something went wrong"));
+        }
+        return response;
     }
 
     getLanguages(): Observable<Array<ILanguage>> {
         Log.i("RefApiService", "getLanguages");
-        return request(
-            from(this.getAccessToken()).pipe(
-                switchMap(token => {
-                    return from(
-                        fetch(`${config.refServer.address}/api/v1/languages`,
-                            {
-                                method: "GET",
-                                headers: {
-                                    "x-access-token": token,
+        let response: Observable<Array<ILanguage>>;
+        try {
+            response = request(
+                from(this.getAccessToken()).pipe(
+                    switchMap(token => {
+                        return from(
+                            fetch(`${config.refServer.address}/api/v1/languages`,
+                                {
+                                    method: "GET",
+                                    headers: {
+                                        "x-access-token": token,
+                                    }
                                 }
-                            }
-                        )
-                    );
-                })
-            ),
-        ).pipe(
-            switchMap(res => parseResponse(res)),
-            map(resData => resData.data),
-        );
+                            )
+                        );
+                    })
+                ),
+            ).pipe(
+                switchMap(res => parseResponse(res)),
+                map(resData => resData.data),
+            );
+        } catch (err) {
+            return throwError(Error("Something went wrong"));
+        }
+        return response;
     }
 
     getTranslations(): Observable<Array<ITranslation>> {
         Log.i("RefApiService", "getTranslations");
-        return request(
-            from(this.getAccessToken()).pipe(
-                switchMap(token => {
-                    return from(
-                        fetch(`${config.refServer.address}/api/v1/translations`,
-                            {
-                                method: "GET",
-                                headers: {
-                                    "x-access-token": token,
+        let response: Observable<Array<ITranslation>>;
+        try {
+            response = request(
+                from(this.getAccessToken()).pipe(
+                    switchMap(token => {
+                        return from(
+                            fetch(`${config.refServer.address}/api/v1/translations`,
+                                {
+                                    method: "GET",
+                                    headers: {
+                                        "x-access-token": token,
+                                    }
                                 }
-                            }
-                        )
-                    );
-                })
-            ),
-        ).pipe(
-            switchMap(res => parseResponse(res)),
-            map(resData => resData.data),
-        );
+                            )
+                        );
+                    })
+                ),
+            ).pipe(
+                switchMap(res => parseResponse(res)),
+                map(resData => resData.data),
+            );
+        } catch (err) {
+            return throwError(Error("Something went wrong"));
+        }
+        return response;
     }
 
     getBusinessPeriods(): Observable<Array<IBusinessPeriod>> {
         Log.i("RefApiService", "getBusinessPeriods");
-        return request(
-            from(this.getAccessToken()).pipe(
-                switchMap(token => {
-                    return from(
-                        fetch(`${config.refServer.address}/api/v1/business-periods`,
-                            {
-                                method: "GET",
-                                headers: {
-                                    "x-access-token": token,
+        let response: Observable<Array<IBusinessPeriod>>;
+        try {
+            response = request(
+                from(this.getAccessToken()).pipe(
+                    switchMap(token => {
+                        return from(
+                            fetch(`${config.refServer.address}/api/v1/business-periods`,
+                                {
+                                    method: "GET",
+                                    headers: {
+                                        "x-access-token": token,
+                                    }
                                 }
-                            }
-                        )
-                    );
-                })
-            ),
-        ).pipe(
-            switchMap(res => parseResponse(res)),
-            map(resData => resData.data),
-        );
+                            )
+                        );
+                    })
+                ),
+            ).pipe(
+                switchMap(res => parseResponse(res)),
+                map(resData => resData.data),
+            );
+        } catch (err) {
+            return throwError(Error("Something went wrong"));
+        }
+        return response;
     }
 
     getOrderTypes(): Observable<Array<IOrderType>> {
         Log.i("RefApiService", "getOrderTypes");
-        return request(
-            from(this.getAccessToken()).pipe(
-                switchMap(token => {
-                    return from(
-                        fetch(`${config.refServer.address}/api/v1/order-types`,
-                            {
-                                method: "GET",
-                                headers: {
-                                    "x-access-token": token,
+        let response: Observable<Array<IOrderType>>;
+        try {
+            response = request(
+                from(this.getAccessToken()).pipe(
+                    switchMap(token => {
+                        return from(
+                            fetch(`${config.refServer.address}/api/v1/order-types`,
+                                {
+                                    method: "GET",
+                                    headers: {
+                                        "x-access-token": token,
+                                    }
                                 }
-                            }
-                        )
-                    );
-                })
-            ),
-        ).pipe(
-            switchMap(res => parseResponse(res)),
-            map(resData => resData.data),
-        );
+                            )
+                        );
+                    })
+                ),
+            ).pipe(
+                switchMap(res => parseResponse(res)),
+                map(resData => resData.data),
+            );
+        } catch (err) {
+            return throwError(Error("Something went wrong"));
+        }
+        return response;
     }
 
     getCurrencies(): Observable<Array<ICurrency>> {
         Log.i("RefApiService", "getCurrencies");
-        return request(
-            from(this.getAccessToken()).pipe(
-                switchMap(token => {
-                    return from(
-                        fetch(`${config.refServer.address}/api/v1/currencies`,
-                            {
-                                method: "GET",
-                                headers: {
-                                    "x-access-token": token,
+        let response: Observable<Array<ICurrency>>;
+        try {
+            response = request(
+                from(this.getAccessToken()).pipe(
+                    switchMap(token => {
+                        return from(
+                            fetch(`${config.refServer.address}/api/v1/currencies`,
+                                {
+                                    method: "GET",
+                                    headers: {
+                                        "x-access-token": token,
+                                    }
                                 }
-                            }
-                        )
-                    );
-                })
-            ),
-        ).pipe(
-            switchMap(res => parseResponse(res)),
-            map(resData => resData.data),
-        );
+                            )
+                        );
+                    })
+                ),
+            ).pipe(
+                switchMap(res => parseResponse(res)),
+                map(resData => resData.data),
+            );
+        } catch (err) {
+            return throwError(Error("Something went wrong"));
+        }
+        return response;
     }
 
     getAds(): Observable<Array<IAd>> {
         Log.i("RefApiService", "getAds");
-        return request(
-            from(this.getAccessToken()).pipe(
-                switchMap(token => {
-                    return from(
-                        fetch(`${config.refServer.address}/api/v1/ads`,
-                            {
-                                method: "GET",
-                                headers: {
-                                    "x-access-token": token,
+        let response: Observable<Array<IAd>>;
+        try {
+            response = request(
+                from(this.getAccessToken()).pipe(
+                    switchMap(token => {
+                        return from(
+                            fetch(`${config.refServer.address}/api/v1/ads`,
+                                {
+                                    method: "GET",
+                                    headers: {
+                                        "x-access-token": token,
+                                    }
                                 }
-                            }
-                        )
-                    );
-                })
-            ),
-        ).pipe(
-            switchMap(res => parseResponse(res)),
-            map(resData => resData.data),
-        );
+                            )
+                        );
+                    })
+                ),
+            ).pipe(
+                switchMap(res => parseResponse(res)),
+                map(resData => resData.data),
+            );
+        } catch (err) {
+            return throwError(Error("Something went wrong"));
+        }
+        return response;
     }
 
     getStores(options?: IApiRequestOptions): Observable<Array<IStore>> {
         Log.i("RefApiService", "getStores");
-        return request(
-            from(this.getAccessToken(options)).pipe(
-                switchMap(token => {
-                    return from(
-                        fetch(`${config.refServer.address}/api/v1/stores`,
-                            {
-                                method: "GET",
-                                headers: {
-                                    "x-access-token": token,
+        let response: Observable<Array<IStore>>;
+        try {
+            response = request(
+                from(this.getAccessToken(options)).pipe(
+                    switchMap(token => {
+                        return from(
+                            fetch(`${config.refServer.address}/api/v1/stores`,
+                                {
+                                    method: "GET",
+                                    headers: {
+                                        "x-access-token": token,
+                                    }
                                 }
-                            }
-                        )
-                    );
-                })
-            ),
-        ).pipe(
-            catchError(err => {
-                return throwError(err);
-            }),
-            switchMap(res => parseResponse(res)),
-            map(resData => resData.data),
-        );
+                            )
+                        );
+                    })
+                ),
+            ).pipe(
+                catchError(err => {
+                    return throwError(err);
+                }),
+                switchMap(res => parseResponse(res)),
+                map(resData => resData.data),
+            );
+        } catch (err) {
+            return throwError(Error("Something went wrong"));
+        }
+        return response;
     }
 
     getTerminals(): Observable<Array<ITerminal>> {
         Log.i("RefApiService", "getTerminals");
-        return request(
-            from(this.getAccessToken()).pipe(
-                switchMap(token => {
-                    return from(
-                        fetch(`${config.refServer.address}/api/v1/terminals`,
-                            {
-                                method: "GET",
-                                headers: {
-                                    "x-access-token": token,
+        let response: Observable<Array<ITerminal>>;
+        try {
+            response = request(
+                from(this.getAccessToken()).pipe(
+                    switchMap(token => {
+                        return from(
+                            fetch(`${config.refServer.address}/api/v1/terminals`,
+                                {
+                                    method: "GET",
+                                    headers: {
+                                        "x-access-token": token,
+                                    }
                                 }
-                            }
-                        )
-                    );
-                })
-            ),
-        ).pipe(
-            switchMap(res => parseResponse(res)),
-            map(resData => resData.data),
-        );
+                            )
+                        );
+                    })
+                ),
+            ).pipe(
+                switchMap(res => parseResponse(res)),
+                map(resData => resData.data),
+            );
+        } catch (err) {
+            return throwError(Error("Something went wrong"));
+        }
+        return response;
     }
 }
 
