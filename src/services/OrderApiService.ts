@@ -20,6 +20,7 @@ export interface IOrderPositionData {
 export interface IOrderData {
     sum: number;
     discount: number;
+    storeId: string;
     currencyId: string;
     orderTypeId: string;
     positions: Array<IOrderPositionData>;
