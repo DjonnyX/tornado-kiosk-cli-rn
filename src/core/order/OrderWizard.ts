@@ -106,7 +106,7 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
 
     protected _changeDebounse = new Debounse(this.emitChangeState, 10);
 
-    constructor(protected _currency: ICurrency, protected _language: ICompiledLanguage,
+    constructor(protected _storeId: string, protected _currency: ICurrency, protected _language: ICompiledLanguage,
         protected _orderType: ICompiledOrderType) {
         super();
         OrderWizard.current = this;
@@ -354,6 +354,7 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
         const order: IOrderData = {
             sum: this._sum,
             discount: this._discount,
+            storeId: this._storeId,
             currencyId: this._currency.id as string,
             orderTypeId: this._orderType.id as string,
             positions,
