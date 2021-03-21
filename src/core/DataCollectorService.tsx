@@ -2,7 +2,7 @@ import React, { Component, Dispatch } from "react";
 import { connect } from "react-redux";
 import { BehaviorSubject, from, forkJoin, of, Subject } from "rxjs";
 import { take, takeUntil, filter } from "rxjs/operators";
-import { IAsset, ICompiledData, IRefs } from "@djonnyx/tornado-types";
+import { IAsset, ICompiledData, IRefs, RefTypes } from "@djonnyx/tornado-types";
 import { AssetsStore, IAssetsStoreResult } from "@djonnyx/tornado-assets-store";
 import { DataCombiner } from "@djonnyx/tornado-refs-processor";
 import { ExternalStorage } from "../native";
@@ -137,7 +137,24 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
             take(1),
             takeUntil(this._unsubscribe$ as any),
         ).subscribe(() => {
-            this._dataCombiner?.init(this.props._storeId as string, this._savedData as any);
+            this._dataCombiner?.init(this.props._storeId as string, {
+                refList: [
+                    RefTypes.LANGUAGES,
+                    RefTypes.TRANSLATIONS,
+                    RefTypes.NODES,
+                    RefTypes.SELECTORS,
+                    RefTypes.PRODUCTS,
+                    RefTypes.TAGS,
+                    RefTypes.ASSETS,
+                    RefTypes.STORES,
+                    // RefTypes.TERMINALS,
+                    RefTypes.BUSINESS_PERIODS,
+                    RefTypes.ORDER_TYPES,
+                    RefTypes.CURRENCIES,
+                    RefTypes.ADS,
+                ],
+                initialRefs: this._savedData as any,
+            });
         });
     }
 
