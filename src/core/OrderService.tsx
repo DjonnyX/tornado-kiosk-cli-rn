@@ -1,7 +1,7 @@
 import React, { Dispatch, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { IAppState } from "../store/state";
-import { ICompiledLanguage, ICompiledOrderType, ICurrency } from "@djonnyx/tornado-types";
+import { ICompiledLanguage, ICompiledOrderType, ICurrency, ITerminalKioskConfig } from "@djonnyx/tornado-types";
 import { OrderWizard } from "./order/OrderWizard";
 import { OrderWizardEventTypes } from "./order/events";
 import { CapabilitiesActions, MyOrderActions, NotificationActions } from "../store/actions";
@@ -21,6 +21,7 @@ interface IOrderServiceProps {
     _setCurrentScreen: (screen: MainNavigationScreenTypes) => void;
     _setIsOrderProcessing: (value: boolean) => void;
 
+    _config?: ITerminalKioskConfig;
     _orderStateId?: number;
     _storeId?: string;
     _orderType?: ICompiledOrderType,
@@ -32,7 +33,7 @@ interface IOrderServiceProps {
     onNavigate?: (screen: MainNavigationScreenTypes) => void;
 }
 
-export const OrderServiceContainer = React.memo(({ _orderStateId, _storeId, _language, _currency, _orderType, _isOrderProcessing,
+export const OrderServiceContainer = React.memo(({ _orderStateId, _storeId, _config, _language, _currency, _orderType, _isOrderProcessing,
     _setCurrentScreen, _snackOpen, _alertOpen, _onUpdateStateId, _setIsOrderProcessing, onNavigate }: IOrderServiceProps) => {
     const [orderWizard, setOrderWizard] = useState<IOrderWizard | undefined>(undefined);
     const [previousLastPosition, setPreviousLastPosition] = useState<IPositionWizard | null>(null);
@@ -96,19 +97,19 @@ export const OrderServiceContainer = React.memo(({ _orderStateId, _storeId, _lan
     }, [_isOrderProcessing]);
 
     useEffect(() => {
-        if (!!_storeId && !!_language && !!_currency && !!_orderType) {
+        if (!!_storeId && !!_config && !!_language && !!_currency && !!_orderType) {
 
             if (!orderWizard) {
-                const ow = new OrderWizard(_storeId, _currency, _language, _orderType);
+                const ow = new OrderWizard(_storeId, _config.suffix, _currency, _language, _orderType);
                 setOrderWizard(ow);
-
             } else {
                 orderWizard.orderType = _orderType;
+                orderWizard.suffix = _config.suffix;
                 orderWizard.currency = _currency;
                 orderWizard.language = _language;
             }
         }
-    }, [_storeId, _language, _orderType, _currency]);
+    }, [_storeId, _config, _language, _orderType, _currency]);
 
     useEffect(() => {
         if (!!OrderWizard?.current?.lastPosition && previousLastPosition !== OrderWizard.current.lastPosition) {
@@ -131,6 +132,7 @@ export const OrderServiceContainer = React.memo(({ _orderStateId, _storeId, _lan
 const mapStateToProps = (state: IAppState) => {
     return {
         _storeId: SystemSelectors.selectStoreId(state),
+        _config: CombinedDataSelectors.selectConfig(state),
         _language: CapabilitiesSelectors.selectLanguage(state),
         _currency: CombinedDataSelectors.selectDefaultCurrency(state),
         _orderType: CapabilitiesSelectors.selectOrderType(state),
