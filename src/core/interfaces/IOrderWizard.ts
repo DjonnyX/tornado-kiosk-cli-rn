@@ -8,6 +8,7 @@ export interface IOrderWizard extends EventEmitter {
     readonly stateId: number;
     readonly sum: number;
     readonly positions: Array<IPositionWizard>;
+    suffix: string;
     currency: ICurrency;
     language: ICompiledLanguage;
     orderType: ICompiledOrderType;

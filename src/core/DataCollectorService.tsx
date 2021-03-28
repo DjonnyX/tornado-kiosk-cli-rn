@@ -2,7 +2,7 @@ import React, { Component, Dispatch } from "react";
 import { connect } from "react-redux";
 import { BehaviorSubject, from, forkJoin, of, Subject } from "rxjs";
 import { take, takeUntil, filter } from "rxjs/operators";
-import { IAsset, ICompiledData, IRefs, RefTypes } from "@djonnyx/tornado-types";
+import { IAsset, ICompiledData, IRefs, RefTypes, ITerminal } from "@djonnyx/tornado-types";
 import { AssetsStore, IAssetsStoreResult } from "@djonnyx/tornado-assets-store";
 import { DataCombiner } from "@djonnyx/tornado-refs-processor";
 import { ExternalStorage } from "../native";
@@ -13,10 +13,12 @@ import { CombinedDataActions, CapabilitiesActions } from "../store/actions";
 import { IProgress } from "@djonnyx/tornado-refs-processor/dist/DataCombiner";
 import { CapabilitiesSelectors, SystemSelectors } from "../store/selectors";
 import { MainNavigationScreenTypes } from "../components/navigation";
+import { theme } from "../theme";
 
 interface IDataCollectorServiceProps {
     // store
     _onChange: (data: ICompiledData) => void;
+    _onChangeTerminal: (terminal: ITerminal) => void;
     _onProgress: (progress: IProgress) => void;
 
     // self
@@ -64,7 +66,7 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
         }
 
         const storePath = `${userDataPath}/assets`;
-        
+
         try {
             if (!await assetsService.exists(storePath)) {
                 await assetsService.mkdir(storePath);
@@ -101,7 +103,13 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
         ).subscribe(
             data => {
                 assetsService.writeFile(`${storePath}/${COMPILED_DATA_FILE_NAME}`, data.refs.__raw);
+
                 this.props._onChange(data);
+
+                const terminal = data.refs.__raw.terminals.find(t => t.id === this.props._terminalId);
+                if (!!terminal) {
+                    this.props._onChangeTerminal(terminal);
+                }
             },
         );
 
@@ -147,7 +155,7 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
                     RefTypes.TAGS,
                     RefTypes.ASSETS,
                     RefTypes.STORES,
-                    // RefTypes.TERMINALS,
+                    RefTypes.TERMINALS,
                     RefTypes.BUSINESS_PERIODS,
                     RefTypes.ORDER_TYPES,
                     RefTypes.CURRENCIES,
@@ -209,6 +217,11 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => {
             dispatch(CombinedDataActions.setData(data));
             dispatch(CapabilitiesActions.setLanguage(data.refs.defaultLanguage));
             dispatch(CapabilitiesActions.setOrderType(data.refs.defaultOrderType));
+        },
+        _onChangeTerminal: (terminal: ITerminal) => {
+            theme.name = terminal.config.theme;
+
+            dispatch(CombinedDataActions.setTerminal(terminal));
         },
         _onProgress: (progress: IProgress) => {
             dispatch(CombinedDataActions.setProgress(progress));
