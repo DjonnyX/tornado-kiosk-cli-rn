@@ -103,18 +103,16 @@ export const ModifierListItem = React.memo(({ thumbnailHeight, currency, languag
                     <Switch
                         value={Boolean(position.quantity)}
                         onChange={changeQuantityHandler}
-                        titleOff="Не выбран"
-                        titleOn="Выбран"
                         styleOn={{
                             borderStyle: "solid", borderWidth: 0, borderRadius: 16,
-                            backgroundColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.selectedBackgroundColor,
-                            borderColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.borderSelectedColor,
+                            backgroundColor: theme.themes[theme.name].modifiers.item.quantitySwitch.on.backgroundColor,
+                            borderColor: theme.themes[theme.name].modifiers.item.quantitySwitch.on.borderColor,
                             padding: 6
                         }}
                         styleOff={{
                             borderStyle: "solid", borderWidth: 1, borderRadius: 16,
-                            backgroundColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.disabledBackgroundColor,
-                            borderColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.disabledBorderColor,
+                            backgroundColor: theme.themes[theme.name].modifiers.item.quantitySwitch.off.backgroundColor,
+                            borderColor: theme.themes[theme.name].modifiers.item.quantitySwitch.off.borderColor,
                             padding: 6,
                             opacity: 0.25
                         }}
@@ -122,11 +120,11 @@ export const ModifierListItem = React.memo(({ thumbnailHeight, currency, languag
                         styleViewOff={{}}
                         textStyleOn={{
                             fontSize: 16, fontWeight: "bold",
-                            color: "white", //theme.themes[theme.name].modifiers.item.quantityStepper.buttons.selectedTextColor as any,
+                            color: theme.themes[theme.name].modifiers.item.quantitySwitch.on.textColor,
                         }}
                         textStyleOff={{
                             fontSize: 16, fontWeight: "bold",
-                            color: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.textColor as any,
+                            color: theme.themes[theme.name].modifiers.item.quantitySwitch.off.textColor,
                         }}
                         textStyleOnDisabled={{}}
                         textStyleOffDisabled={{}}

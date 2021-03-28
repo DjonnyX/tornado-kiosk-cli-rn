@@ -4,8 +4,8 @@ import DropShadow from "react-native-drop-shadow";
 import { uiutils } from "../../utils/ui";
 
 interface ISwitchProps {
-    titleOn: string;
-    titleOff: string;
+    titleOn?: string;
+    titleOff?: string;
     disabled?: boolean;
     styleViewOn?: StyleProp<ViewStyle>;
     styleViewOnDisabled?: StyleProp<ViewStyle>;
@@ -67,7 +67,7 @@ export const Switch = React.memo(({ value, titleOn, titleOff,
                 sViewOff = { ...sViewOff as any, ...styleViewOffDisabled as any };
             }
             if (!!styleOffDisabled) {
-                sLayoutOff = { ...sLayoutOn as any, ...styleOffDisabled as any };
+                sLayoutOff = { ...sLayoutOff as any, ...styleOffDisabled as any };
             }
             if (!!textStyleOnDisabled) {
                 sTextOff = { ...sTextOff as any, ...textStyleOffDisabled as any };
@@ -148,11 +148,14 @@ export const Switch = React.memo(({ value, titleOn, titleOff,
                     <View
                         style={styles.sLayoutOff}
                     >
-                        <Text style={styles.sTextOff}>
-                            {
-                                titleOff
-                            }
-                        </Text>
+                        {
+                            !!titleOff &&
+                            <Text style={styles.sTextOff}>
+                                {
+                                    titleOff
+                                }
+                            </Text>
+                        }
                         {
                             !!formatValueFunction &&
                             <Text style={styles.sTextOff}>
@@ -167,11 +170,14 @@ export const Switch = React.memo(({ value, titleOn, titleOff,
                     <View
                         style={styles.sLayoutOn}
                     >
-                        <Text style={styles.sTextOn}>
-                            {
-                                titleOn
-                            }
-                        </Text>
+                        {
+                            !!titleOn &&
+                            <Text style={styles.sTextOn}>
+                                {
+                                    titleOn
+                                }
+                            </Text>
+                        }
                         {
                             !!formatValueFunction &&
                             <Text style={styles.sTextOn}>
