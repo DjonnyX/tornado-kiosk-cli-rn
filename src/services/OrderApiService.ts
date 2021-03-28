@@ -18,6 +18,7 @@ export interface IOrderPositionData {
 }
 
 export interface IOrderData {
+    suffix: string;
     sum: number;
     discount: number;
     storeId: string;

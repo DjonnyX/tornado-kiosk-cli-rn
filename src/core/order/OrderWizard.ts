@@ -37,6 +37,12 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
     protected _lastPosition: IPositionWizard | null = null;
     get lastPosition() { return this._lastPosition; }
 
+    set suffix(v: string) {
+        if (this._suffix !== v) {
+            this._suffix = v;
+        }
+    }
+
     set currency(v: ICurrency) {
         if (this._currency !== v) {
             this._currency = v;
@@ -106,8 +112,8 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
 
     protected _changeDebounse = new Debounse(this.emitChangeState, 10);
 
-    constructor(protected _storeId: string, protected _currency: ICurrency, protected _language: ICompiledLanguage,
-        protected _orderType: ICompiledOrderType) {
+    constructor(protected _storeId: string, protected _suffix: string, protected _currency: ICurrency,
+        protected _language: ICompiledLanguage, protected _orderType: ICompiledOrderType) {
         super();
         OrderWizard.current = this;
     }
@@ -317,7 +323,7 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
         this._originalEditingPositions = [];
 
         this._lastPosition = null;
-        
+
         this.result = undefined;
 
         this._stateId = 0;
@@ -352,6 +358,7 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
     toOrderData(): IOrderData {
         const positions = this._positions.map(pos => this.toOrderPosition(pos));
         const order: IOrderData = {
+            suffix: this._suffix,
             sum: this._sum,
             discount: this._discount,
             storeId: this._storeId,
