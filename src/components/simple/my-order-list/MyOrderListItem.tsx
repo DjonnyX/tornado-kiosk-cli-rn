@@ -66,7 +66,7 @@ export const MyOrderListItem = React.memo(({ stateId, menuStateId, imageHeight, 
                 </View>
                 <Text numberOfLines={3} ellipsizeMode="tail" style={{
                     textAlign: "center", fontSize: 14, fontWeight: "bold",
-                    color: theme.themes[theme.name].menu.draftOrder.item.nameColor, textTransform: "uppercase", fontWeight: "bold"
+                    color: theme.themes[theme.name].menu.draftOrder.item.nameColor, textTransform: "uppercase"
                 }}>
                     {
                         currentContent?.name

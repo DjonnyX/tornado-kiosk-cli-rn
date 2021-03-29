@@ -7,6 +7,7 @@ import { TagList } from "../TagList";
 import { MenuNode } from "../../../core/menu/MenuNode";
 
 interface INavMenuItemProps {
+    themeName: string;
     thumbnailHeight: number;
     node: MenuNode;
     stateId: number;
@@ -15,7 +16,7 @@ interface INavMenuItemProps {
     onPress: (node: MenuNode) => void;
 }
 
-export const NavMenuItem = React.memo(({ thumbnailHeight, currency, language, node, stateId,
+export const NavMenuItem = React.memo(({ themeName, thumbnailHeight, currency, language, node, stateId,
     onPress }: INavMenuItemProps) => {
 
     const pressHandler = useCallback((e: GestureResponderEvent) => {
@@ -57,7 +58,6 @@ export const NavMenuItem = React.memo(({ thumbnailHeight, currency, language, no
                                     borderRadius: 8,
                                     paddingHorizontal: 8,
                                     paddingVertical: 4,
-                                    backgroundColor: "red",
                                     fontSize: 12, fontWeight: "bold",
                                     backgroundColor: theme.themes[theme.name].menu.navMenu.item.discount.backgroundColor,
                                     color: theme.themes[theme.name].menu.navMenu.item.discount.textColor,

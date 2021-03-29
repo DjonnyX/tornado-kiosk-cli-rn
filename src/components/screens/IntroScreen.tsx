@@ -14,6 +14,7 @@ import { OrderWizard } from "../../core/order/OrderWizard";
 
 interface IIntroSelfProps {
     // store props
+    _theme: string;
     _menuStateId: number;
     _intros: Array<ICompiledAd>;
     _language: ICompiledLanguage;
@@ -23,7 +24,7 @@ interface IIntroSelfProps {
 
 interface IIntroProps extends StackScreenProps<any, MainNavigationScreenTypes.INTRO>, IIntroSelfProps { }
 
-const IntroScreenContainer = React.memo(({ _language, _intros, _menuStateId, navigation }: IIntroProps) => {
+const IntroScreenContainer = React.memo(({ _theme, _language, _intros, _menuStateId, navigation }: IIntroProps) => {
     const pressHandler = useCallback((ad: ICompiledAd) => {
         OrderWizard.current.new();
     }, []);
@@ -40,6 +41,7 @@ const IntroScreenContainer = React.memo(({ _language, _intros, _menuStateId, nav
 
 const mapStateToProps = (state: IAppState, ownProps: IIntroProps) => {
     return {
+        _theme: CapabilitiesSelectors.selectTheme(state),
         _intros: CombinedDataSelectors.selectIntros(state),
         _language: CapabilitiesSelectors.selectLanguage(state),
         _menuStateId: MenuSelectors.selectStateId(state),

@@ -9,6 +9,7 @@ import { theme } from "../../theme";
 import { OrderWizard } from "../../core/order/OrderWizard";
 
 interface IMyOrderPanelProps {
+    themeName: string;
     orderStateId: number;
     currency: ICurrency;
     language: ICompiledLanguage;
@@ -22,7 +23,7 @@ interface IMyOrderPanelProps {
     onConfirm: () => void;
 }
 
-export const MyOrderPanel = React.memo(({ orderStateId, currency, language, languages, orderType, orderTypes,
+export const MyOrderPanel = React.memo(({ themeName, orderStateId, currency, language, languages, orderType, orderTypes,
     isShowOrderTypes, onChangeLanguage, onChangeOrderType, onConfirm,
 }: IMyOrderPanelProps) => {
     return (
@@ -33,7 +34,7 @@ export const MyOrderPanel = React.memo(({ orderStateId, currency, language, lang
                 {
                     !!languages && languages.length > 0 &&
                     <View style={{ margin: "auto", marginTop: 12, marginBottom: 20, alignItems: "center" }}>
-                        <LanguagePicker language={language} languages={languages} onSelect={onChangeLanguage}></LanguagePicker>
+                        <LanguagePicker themeName={themeName} language={language} languages={languages} onSelect={onChangeLanguage}></LanguagePicker>
                     </View>
                 }
                 {

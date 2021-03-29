@@ -17,6 +17,7 @@ import { SimpleButton } from "../simple";
 interface IPayConfirmationScreenSelfProps {
     // store props
     _onResetOrder: () => void;
+    _theme: string;
     _orderStateId: number;
     _language: ICompiledLanguage;
 
@@ -26,7 +27,7 @@ interface IPayConfirmationScreenSelfProps {
 interface IPayConfirmationScreenProps extends StackScreenProps<any, MainNavigationScreenTypes.PAY_CONFIRMATION>,
     IPayConfirmationScreenSelfProps { }
 
-const PayConfirmationScreenScreenContainer = React.memo(({ _language, _orderStateId, _onResetOrder, navigation }: IPayConfirmationScreenProps) => {
+const PayConfirmationScreenScreenContainer = React.memo(({ _theme, _language, _orderStateId, _onResetOrder, navigation }: IPayConfirmationScreenProps) => {
     const [countDown, setCountDown] = useState(config.capabilities.resetTimeoutAfterPay);
 
     useEffect(() => {
@@ -111,6 +112,7 @@ const PayConfirmationScreenScreenContainer = React.memo(({ _language, _orderStat
 
 const mapStateToProps = (state: IAppState, ownProps: IPayConfirmationScreenProps) => {
     return {
+        _theme: CapabilitiesSelectors.selectTheme(state),
         _orderStateId: MyOrderSelectors.selectStateId(state),
         _language: CapabilitiesSelectors.selectLanguage(state),
     };

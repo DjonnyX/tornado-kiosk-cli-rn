@@ -7,12 +7,13 @@ import { theme } from "../../theme";
 import { ModalSolid } from "./ModalSolid";
 
 interface ILanguagePickerProps {
+    themeName: string;
     languages: Array<ICompiledLanguage>;
     language: ICompiledLanguage;
     onSelect: (lang: ICompiledLanguage) => void;
 }
 
-export const LanguagePicker = React.memo(({ language, languages, onSelect }: ILanguagePickerProps) => {
+export const LanguagePicker = React.memo(({ themeName, language, languages, onSelect }: ILanguagePickerProps) => {
     const [currentLanguage, _setCurrentLanguage] = useState(language);
     const [modalVisible, _setModalVisible] = useState(false);
 

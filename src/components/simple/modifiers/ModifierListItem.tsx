@@ -9,6 +9,7 @@ import { TagList } from "../TagList";
 import { Switch } from "../Switch";
 
 interface IModifierListItemProps {
+    themeName: string;
     stateId: number;
     thumbnailHeight: number;
     position: IPositionWizard;
@@ -16,7 +17,7 @@ interface IModifierListItemProps {
     language: ICompiledLanguage;
 }
 
-export const ModifierListItem = React.memo(({ thumbnailHeight, currency, language, position, stateId }: IModifierListItemProps) => {
+export const ModifierListItem = React.memo(({ themeName, thumbnailHeight, currency, language, position, stateId }: IModifierListItemProps) => {
 
     const pressHandler = useCallback((e: GestureResponderEvent) => {
         const hasEdit = position.edit();
@@ -130,7 +131,7 @@ export const ModifierListItem = React.memo(({ thumbnailHeight, currency, languag
                         textStyleOffDisabled={{}}
                         formatValueFunction={(value: boolean) => {
                             return String(position.getFormatedSumPerOne(true));
-                        }}/>
+                        }} />
                     :
                     <NumericStapper
                         value={position.quantity}
@@ -143,7 +144,7 @@ export const ModifierListItem = React.memo(({ thumbnailHeight, currency, languag
                         buttonSelectedStyle={{
                             width: 48, height: 48, borderRadius: 16,
                             backgroundColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.selectedBackgroundColor,
-                            borderColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.borderSelectedColor,
+                            borderColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.selectedBackgroundColor,
                             padding: 6,
                             opacity: 1
                         }}
