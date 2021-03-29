@@ -66,7 +66,7 @@ export const MyOrderListItem = React.memo(({ stateId, menuStateId, imageHeight, 
                 </View>
                 <Text numberOfLines={3} ellipsizeMode="tail" style={{
                     textAlign: "center", fontSize: 14, fontWeight: "bold",
-                    color: theme.themes[theme.name].menu.draftOrder.item.nameColor, textTransform: "uppercase", fontWeight: "bold"
+                    color: theme.themes[theme.name].menu.draftOrder.item.nameColor, textTransform: "uppercase"
                 }}>
                     {
                         currentContent?.name
@@ -86,13 +86,13 @@ export const MyOrderListItem = React.memo(({ stateId, menuStateId, imageHeight, 
             <NumericStapper
                 value={position.quantity}
                 buttonStyle={{
-                    width: 32, height: 32, borderRadius: 10,
+                    width: 38, height: 38, borderRadius: 10,
                     backgroundColor: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.backgroundColor,
                     borderColor: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.borderColor,
                     padding: 6
                 }}
                 disabledButtonStyle={{
-                    width: 32, height: 32, borderRadius: 10,
+                    width: 38, height: 38, borderRadius: 10,
                     backgroundColor: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.disabledBackgroundColor,
                     borderColor: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.disabledBorderColor,
                     padding: 6

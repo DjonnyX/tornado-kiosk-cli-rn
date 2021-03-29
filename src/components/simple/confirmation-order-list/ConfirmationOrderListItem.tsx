@@ -9,6 +9,7 @@ import { OrderWizard } from "../../../core/order/OrderWizard";
 import { IAlertState } from "../../../interfaces";
 
 interface ConfirmationOrderListItemProps {
+    themeName: string;
     color?: string;
     stateId: number;
     position: IPositionWizard;
@@ -17,7 +18,7 @@ interface ConfirmationOrderListItemProps {
     alertOpen: (alert: IAlertState) => void;
 }
 
-export const ConfirmationOrderListItem = React.memo(({ stateId, color, currency, language, position,
+export const ConfirmationOrderListItem = React.memo(({ themeName, stateId, color, currency, language, position,
     alertOpen }: ConfirmationOrderListItemProps) => {
     const currentContent = position.__product__?.contents[language?.code];
     const currentAdAsset = currentContent?.resources?.icon;

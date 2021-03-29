@@ -1,7 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { View, Text, TouchableOpacity, GestureResponderEvent, Animated, Easing } from "react-native";
 import * as Color from "color";
-import DropShadow from "react-native-drop-shadow";
 import FastImage from "react-native-fast-image";
 import { NodeTypes, ICompiledLanguage } from "@djonnyx/tornado-types";
 import { theme } from "../../../theme";
@@ -119,8 +118,6 @@ export const SideMenuItem = React.memo(({ depth = 0, height = 0, selected, langu
 
     const isExpanded = node === selected || node.children.filter(child => child === selected).length > 0;
 
-    const shadow = uiutils.createShadow(actualColor);
-
     if (isExpanded) {
         expand();
     } else {
@@ -150,27 +147,25 @@ export const SideMenuItem = React.memo(({ depth = 0, height = 0, selected, langu
                 flex: 1,
                 // overflow: "hidden"
             }}>
-                <DropShadow style={shadow}>
-                    <TouchableOpacity style={{
-                        flex: 1, justifyContent: "center", alignItems: "center",
-                        margin: 8 * size, marginBottom: 4, marginTop: depth === 0 ? 5 : 0, borderRadius: 14,
-                        backgroundColor: actualColor,
-                    }} onPress={pressHandler}>
-                        <View style={{ padding: 8, width: "100%", justifyContent: "center", alignItems: "center", }}>
-                            <FastImage style={{ width: "100%", height: 56 - offset, marginBottom: 5 }} source={{
-                                uri: `file://${currentAdAsset?.mipmap.x128}`,
-                            }} resizeMode={FastImage.resizeMode.contain}></FastImage>
-                            <Text style={{
-                                fontSize: 14, color: theme.themes[theme.name].menu.sideMenu.item.nameColor, fontWeight: "bold",
-                                textTransform: "uppercase"
-                            }}>
-                                {
-                                    currentContent.name
-                                }
-                            </Text>
-                        </View>
-                    </TouchableOpacity>
-                </DropShadow>
+                <TouchableOpacity style={{
+                    flex: 1, justifyContent: "center", alignItems: "center",
+                    margin: 8 * size, marginBottom: 4, marginTop: depth === 0 ? 5 : 0, borderRadius: 14,
+                    backgroundColor: actualColor,
+                }} onPress={pressHandler}>
+                    <View style={{ padding: 8, width: "100%", justifyContent: "center", alignItems: "center", }}>
+                        <FastImage style={{ width: "100%", height: 56 - offset, marginBottom: 5 }} source={{
+                            uri: `file://${currentAdAsset?.mipmap.x128}`,
+                        }} resizeMode={FastImage.resizeMode.contain}></FastImage>
+                        <Text style={{
+                            fontSize: 14, color: theme.themes[theme.name].menu.sideMenu.item.nameColor, fontWeight: "bold",
+                            textTransform: "uppercase"
+                        }}>
+                            {
+                                currentContent.name
+                            }
+                        </Text>
+                    </View>
+                </TouchableOpacity>
             </View>
             {
                 /*

@@ -26,12 +26,13 @@ interface IBound {
 }
 
 interface IModifiersEditorProps {
+    _theme?: string;
     _language?: ICompiledLanguage;
     _currency?: ICurrency;
     _orderStateId?: number;
 }
 
-export const ModifiersEditorContainer = React.memo(({ _orderStateId, _language, _currency }: IModifiersEditorProps) => {
+export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _language, _currency }: IModifiersEditorProps) => {
     const [stateId, setStateId] = useState<number>(-1);
     const [position, setPosition] = useState<IPositionWizard | null>(OrderWizard.current.currentPosition);
 
@@ -80,7 +81,7 @@ export const ModifiersEditorContainer = React.memo(({ _orderStateId, _language, 
                     !!position && !!_language && !!_currency &&
                     <View style={{ flex: 1, width: "100%" }}>
                         <View style={{ flexDirection: "row", width: "100%", maxHeight: "20%", marginBottom: 32 }}>
-                            <View style={{ flex: 1, width: "100%", flexDirection: "row", alignItems: "flex-start", marginRight: 48 }}>
+                            <View style={{ flex: 1, width: "100%", flexDirection: "row", alignItems: "flex-start", marginRight: 48, marginBottom: 8, overflow: "hidden" }}>
                                 <View>
                                     <FastImage style={{ width: 192, height: "100%" }} source={{
                                         uri: `file://${position.__product__?.contents[_language?.code]?.resources?.icon.path}`,
@@ -93,7 +94,7 @@ export const ModifiersEditorContainer = React.memo(({ _orderStateId, _language, 
                                     }}>{
                                             position.__product__?.contents[_language.code]?.name
                                         }</Text>
-                                    <Text textBreakStrategy="simple" numberOfLines={7} ellipsizeMode="tail" style={{
+                                    <Text style={{
                                         fontSize: 14, color: theme.themes[theme.name].modifiers.descriptionColor,
                                         textTransform: "uppercase"
                                     }}>{
@@ -111,7 +112,7 @@ export const ModifiersEditorContainer = React.memo(({ _orderStateId, _language, 
                                 </View>
                             </View>
                             <View>
-                                <CloseButton onPress={onClose}></CloseButton>
+                                <CloseButton themeName={_theme} onPress={onClose}></CloseButton>
                             </View>
                         </View>
                         <View style={{
@@ -213,7 +214,7 @@ export const ModifiersEditorContainer = React.memo(({ _orderStateId, _language, 
                                         <GridList style={{ flex: 1 }} disbleStartAnimation
                                             padding={10} spacing={6} data={position.groups[position.currentGroup].positions}
                                             itemDimension={MODIFIER_ITEM_WIDTH} animationSkipFrames={10} renderItem={({ item }) => {
-                                                return <ModifierListItem key={item.id} position={item} currency={_currency} language={_language}
+                                                return <ModifierListItem key={item.id} themeName={_theme} position={item} currency={_currency} language={_language}
                                                     thumbnailHeight={128} stateId={item.stateId}></ModifierListItem>
                                             }}
                                             keyExtractor={(item, index) => item.id}>
@@ -230,10 +231,11 @@ export const ModifiersEditorContainer = React.memo(({ _orderStateId, _language, 
 })
 
 interface ICloseButtonProps {
+    themeName: string;
     onPress: () => void;
 }
 
-const CloseButton = ({ onPress }: ICloseButtonProps) => {
+const CloseButton = ({ themeName, onPress }: ICloseButtonProps) => {
     return (
         <TouchableOpacity onPress={onPress}>
             <View
@@ -247,6 +249,7 @@ const CloseButton = ({ onPress }: ICloseButtonProps) => {
 
 const mapStateToProps = (state: IAppState, ownProps: IModifiersEditorProps) => {
     return {
+        _theme: CapabilitiesSelectors.selectTheme(state),
         _currency: CombinedDataSelectors.selectDefaultCurrency(state),
         _language: CapabilitiesSelectors.selectLanguage(state),
         _orderStateId: MyOrderSelectors.selectStateId(state),

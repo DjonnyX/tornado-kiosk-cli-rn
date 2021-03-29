@@ -18,6 +18,7 @@ interface IConfirmationOrderScreenSelfProps {
     // store props
     _confirmOrder: () => void;
     _alertOpen: (alert: IAlertState) => void;
+    _theme: string;
     _orderStateId: number;
     _menuStateId: number;
     _banners: Array<ICompiledAd>;
@@ -29,7 +30,7 @@ interface IConfirmationOrderScreenSelfProps {
 
 interface IConfirmationOrderScreenProps extends StackScreenProps<any, MainNavigationScreenTypes.INTRO>, IConfirmationOrderScreenSelfProps { }
 
-const ConfirmationOrderScreenContainer = React.memo(({ _language, _banners, _currency, _orderStateId, _menuStateId, navigation,
+const ConfirmationOrderScreenContainer = React.memo(({ _theme, _language, _banners, _currency, _orderStateId, _menuStateId, navigation,
     _confirmOrder, _alertOpen }: IConfirmationOrderScreenProps) => {
 
     const selectAdHandler = useCallback((ad: ICompiledAd) => {
@@ -60,7 +61,7 @@ const ConfirmationOrderScreenContainer = React.memo(({ _language, _banners, _cur
                     <SafeAreaView style={{ flex: 1, width: "100%" }}>
                         <FlatList updateCellsBatchingPeriod={10} style={{ flex: 1 }}
                             data={OrderWizard.current.positions} renderItem={({ item, index }) => {
-                                return <ConfirmationOrderListItem key={item.id} stateId={item.stateId} position={item}
+                                return <ConfirmationOrderListItem key={item.id} themeName={_theme} stateId={item.stateId} position={item}
                                     color={index % 2 ? theme.themes[theme.name].confirmation.item.oddBackgroundColor : undefined}
                                     currency={_currency} language={_language} alertOpen={_alertOpen} />
                             }}
@@ -109,6 +110,7 @@ const ConfirmationOrderScreenContainer = React.memo(({ _language, _banners, _cur
 
 const mapStateToProps = (state: IAppState, ownProps: IConfirmationOrderScreenProps) => {
     return {
+        _theme: CapabilitiesSelectors.selectTheme(state),
         _banners: CombinedDataSelectors.selectBanners(state),
         _language: CapabilitiesSelectors.selectLanguage(state),
         _currency: CombinedDataSelectors.selectDefaultCurrency(state),

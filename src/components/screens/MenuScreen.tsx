@@ -17,6 +17,7 @@ import { MenuNode } from "../../core/menu/MenuNode";
 
 interface IMenuSelfProps {
     // store props
+    _theme: string;
     _languages: Array<ICompiledLanguage>;
     _orderTypes: Array<ICompiledOrderType>;
     _defaultCurrency: ICurrency;
@@ -38,7 +39,7 @@ interface IMenuSelfProps {
 
 interface IMenuProps extends StackScreenProps<any, MainNavigationScreenTypes.MENU>, IMenuSelfProps { }
 
-const MenuScreenContainer = React.memo(({
+const MenuScreenContainer = React.memo(({ _theme,
     _languages, _orderTypes, _defaultCurrency, _orderType,
     _menuStateId, _language, _orderStateId, _isShowOrderTypes, _onResetOrder, _alertOpen,
     _onChangeLanguage, _onChangeOrderType, _onAddOrderPosition, navigation,
@@ -96,12 +97,12 @@ const MenuScreenContainer = React.memo(({
         !!MenuWizard.current.menu &&
         <View style={{ flexDirection: "row", width: "100%", height: "100%", backgroundColor: theme.themes[theme.name].menu.background }}>
             <View style={{ position: "absolute", width: menuWidth, height: "100%", zIndex: 1 }}>
-                <Menu menuStateId={_menuStateId} orderType={_orderType} currency={_defaultCurrency} language={_language} menu={MenuWizard.current.menu}
+                <Menu themeName={_theme} menuStateId={_menuStateId} orderType={_orderType} currency={_defaultCurrency} language={_language} menu={MenuWizard.current.menu}
                     width={menuWidth} height={windowSize.height} cancelOrder={cancelHandler} addPosition={addProductHandler}
                 ></Menu>
             </View>
             <View style={{ position: "absolute", width: myOrderWidth, height: "100%", left: menuWidth, zIndex: 2 }}>
-                <MyOrderPanel isShowOrderTypes={_isShowOrderTypes} orderStateId={_orderStateId} currency={_defaultCurrency} language={_language} languages={_languages}
+                <MyOrderPanel themeName={_theme} isShowOrderTypes={_isShowOrderTypes} orderStateId={_orderStateId} currency={_defaultCurrency} language={_language} languages={_languages}
                     orderType={_orderType} orderTypes={_orderTypes}
                     onChangeLanguage={_onChangeLanguage} onChangeOrderType={_onChangeOrderType} onConfirm={confirmHandler}></MyOrderPanel>
             </View>
@@ -111,6 +112,7 @@ const MenuScreenContainer = React.memo(({
 
 const mapStateToProps = (state: IAppState, ownProps: IMenuProps) => {
     return {
+        _theme: CapabilitiesSelectors.selectTheme(state),
         _defaultCurrency: CombinedDataSelectors.selectDefaultCurrency(state),
         _menuStateId: MenuSelectors.selectStateId(state),
         _languages: CombinedDataSelectors.selectLangages(state),

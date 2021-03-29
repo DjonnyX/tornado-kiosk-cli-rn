@@ -47,7 +47,7 @@ export const NavigationServiceContainer = React.memo(({ onNavigate, _orderStateI
             if (onNavigate !== undefined) onNavigate(MainNavigationScreenTypes.INTRO);
         } else
             if (_orderStateId === 1 && _currentScreen !== MainNavigationScreenTypes.MENU) {
-                if (_showOrderTypes !== undefined) {
+                if (!!_orderTypes && _orderTypes.length > 1 && _showOrderTypes !== undefined) {
                     _showOrderTypes();
                 }
                 if (onNavigate !== undefined) {

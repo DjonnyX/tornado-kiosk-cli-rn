@@ -220,6 +220,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => {
         },
         _onChangeTerminal: (terminal: ITerminal) => {
             theme.name = terminal.config.theme;
+            dispatch(CapabilitiesActions.setTheme(terminal.config.theme));
 
             dispatch(CombinedDataActions.setTerminal(terminal));
         },

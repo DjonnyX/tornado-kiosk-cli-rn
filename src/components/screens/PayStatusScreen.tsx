@@ -11,6 +11,7 @@ import FastImage from "react-native-fast-image";
 
 interface IPayStatusScreenSelfProps {
     // store props
+    _theme: string;
     _language: ICompiledLanguage;
 
     // self props
@@ -18,7 +19,7 @@ interface IPayStatusScreenSelfProps {
 
 interface IPayStatusScreenProps extends StackScreenProps<any, MainNavigationScreenTypes.PAY_STATUS>, IPayStatusScreenSelfProps { }
 
-const PayStatusScreenContainer = React.memo(({ _language, navigation }: IPayStatusScreenProps) => {
+const PayStatusScreenContainer = React.memo(({ _theme, _language, navigation }: IPayStatusScreenProps) => {
     return (
         <View style={{
             flex: 1, justifyContent: "center", alignItems: "center", width: "100%", height: "100%",
@@ -49,6 +50,7 @@ const PayStatusScreenContainer = React.memo(({ _language, navigation }: IPayStat
 
 const mapStateToProps = (state: IAppState, ownProps: IPayStatusScreenProps) => {
     return {
+        _theme: CapabilitiesSelectors.selectTheme(state),
         _language: CapabilitiesSelectors.selectLanguage(state),
     };
 };
