@@ -8,6 +8,7 @@ import { CapabilitiesSelectors } from "../../store/selectors/CapabilitiesSelecto
 import { ICompiledLanguage } from "@djonnyx/tornado-types";
 import { theme } from "../../theme";
 import FastImage from "react-native-fast-image";
+import { localize } from "../../utils/localization";
 
 interface IPayStatusScreenSelfProps {
     // store props
@@ -30,13 +31,17 @@ const PayStatusScreenContainer = React.memo(({ _theme, _language, navigation }: 
                     fontSize: 40, fontWeight: "bold", textAlign: "center",
                     color: theme.themes[theme.name].payStatus.primaryMessageColor
                 }}>
-                    Пожалуйста подождите, идет оформление заказа.
+                    {
+                        localize(_language, "kiosk_pay_status_title")
+                    }
                 </Text>
                 <Text style={{
                     fontSize: 20, fontWeight: "bold", textAlign: "center",
                     color: theme.themes[theme.name].payStatus.secondaryMessageColor, marginBottom: 40
                 }}>
-                    Please wait, ordering
+                    {
+                        localize(_language, "kiosk_pay_status_description")
+                    }
                 </Text>
                 <FastImage style={{ width: 128, height: 128 }}
                     source={theme.name === 'light'

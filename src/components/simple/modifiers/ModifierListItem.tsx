@@ -9,7 +9,7 @@ import { TagList } from "../TagList";
 import { Switch } from "../Switch";
 
 interface IModifierListItemProps {
-    themeName: string;
+    themeName: string | undefined;
     stateId: number;
     thumbnailHeight: number;
     position: IPositionWizard;

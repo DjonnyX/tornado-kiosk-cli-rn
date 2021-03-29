@@ -14,6 +14,7 @@ import { theme } from "../../theme";
 import { IAlertState } from "../../interfaces";
 import { MenuWizard } from "../../core/menu/MenuWizard";
 import { MenuNode } from "../../core/menu/MenuNode";
+import { localize } from "../../utils/localization";
 
 interface IMenuSelfProps {
     // store props
@@ -75,19 +76,21 @@ const MenuScreenContainer = React.memo(({ _theme,
 
     const cancelHandler = useCallback(() => {
         _alertOpen({
-            title: "Внимание!", message: "Вы действительно хотите удалить заказ?", buttons: [
+            title: localize(_language, "kiosk_remove_order_title"),
+            message: localize(_language, "kiosk_remove_order_message"),
+            buttons: [
                 {
-                    title: "Удалить",
+                    title: localize(_language, "kiosk_remove_order_button_accept"),
                     action: () => {
                         cancelOrderConfirm();
                     }
                 },
                 {
-                    title: "Отмена",
+                    title: localize(_language, "kiosk_remove_order_button_cancel"),
                 }
             ]
         });
-    }, []);
+    }, [_language]);
 
     const addProductHandler = (productNode: MenuNode) => {
         _onAddOrderPosition(productNode);

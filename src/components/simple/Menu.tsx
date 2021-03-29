@@ -11,6 +11,7 @@ import { CtrlMenuButton } from "./CtrlMenuButton";
 import { theme } from "../../theme";
 import { ModifiersEditor } from "./modifiers";
 import { MenuNode } from "../../core/menu/MenuNode";
+import { localize } from "../../utils/localization";
 
 interface IMenuProps {
     themeName: string;
@@ -198,7 +199,8 @@ export const Menu = React.memo(({
                             fontSize: 32, marginRight: 24
                         }}>
                             {
-                                currentCategory.__rawNode__.content?.contents[language.code]?.name || "Меню"
+                                currentCategory.__rawNode__.content?.contents[language.code]?.name
+                                || localize(language, "kiosk_menu_root_title")
                             }
                         </Text>
                     </View>
@@ -222,7 +224,9 @@ export const Menu = React.memo(({
                             <CtrlMenuButton
                                 gradient={theme.themes[theme.name].menu.ctrls.cancelButton.backgroundColor}
                                 gradientDisabled={theme.themes[theme.name].menu.ctrls.cancelButton.disabledBackgroundColor}
-                                text="Отменить" onPress={cancelOrder} />
+                                text={
+                                    localize(language, "kiosk_menu_cancel_button")
+                                } onPress={cancelOrder} />
                         </View>
                     </Animated.View>
                     <Animated.View style={{

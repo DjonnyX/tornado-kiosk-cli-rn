@@ -7,6 +7,7 @@ import { theme } from "../../../theme";
 import { IPositionWizard } from "../../../core/interfaces";
 import { OrderWizard } from "../../../core/order/OrderWizard";
 import { IAlertState } from "../../../interfaces";
+import { localize } from "../../../utils/localization";
 
 interface IMyOrderListItemItemProps {
     stateId: number;
@@ -34,15 +35,17 @@ export const MyOrderListItem = React.memo(({ stateId, menuStateId, imageHeight, 
     const changeQuantityHandler = (value: number) => {
         if (value < 1) {
             alertOpen({
-                title: "Внимание!", message: "Вы действительно хотите удалить позицию?", buttons: [
+                title: localize(language, "kiosk_remove_product_title"),
+                message: localize(language, "kiosk_remove_product_message"),
+                buttons: [
                     {
-                        title: "Удалить",
+                        title: localize(language, "kiosk_remove_product_button_accept"),
                         action: () => {
                             OrderWizard.current.remove(position);
                         }
                     },
                     {
-                        title: "Отмена",
+                        title: localize(language, "kiosk_remove_product_button_cancel"),
                         action: () => {
                             setQuantity(1);
                         }
