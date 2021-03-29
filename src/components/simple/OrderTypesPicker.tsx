@@ -2,10 +2,8 @@ import React, { useState, useCallback, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleProp, ViewStyle, TextStyle } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import FastImage from "react-native-fast-image";
-import DropShadow from "react-native-drop-shadow";
 import { ICompiledOrderType, ICompiledLanguage } from "@djonnyx/tornado-types";
 import { theme } from "../../theme";
-import { uiutils } from "../../utils/ui";
 import { ModalSolid } from "./ModalSolid";
 
 interface IOrderTypesPickerProps {
@@ -22,8 +20,6 @@ export const OrderTypesPicker = React.memo(({ language, isShow, orderType, order
     textStyle, onSelect }: IOrderTypesPickerProps) => {
     const [currentOrderType, _setCurrentOrderTypes] = useState(orderType);
     const [modalVisible, _setModalVisible] = useState(false);
-
-    const shadow = uiutils.createShadow((style as any)?.backgroundColor, 1, 0.45);
 
     useEffect(() => {
         _setCurrentOrderTypes(orderType);
@@ -55,6 +51,7 @@ export const OrderTypesPicker = React.memo(({ language, isShow, orderType, order
                             <FastImage style={{
                                 width: 128, height: 128, borderWidth: 1,
                                 borderColor: theme.themes[theme.name].orderTypeModal.item.borderColor,
+                                backgroundColor: theme.themes[theme.name].orderTypeModal.item.backgroundColor,
                                 borderRadius: 16, marginBottom: 8
                             }} source={{
                                 uri: `file://${item.contents[language?.code]?.resources?.main?.mipmap.x128}`,
@@ -74,18 +71,16 @@ export const OrderTypesPicker = React.memo(({ language, isShow, orderType, order
             </ModalSolid>
             <TouchableOpacity style={{ flex: 1, justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}
                 onPress={onPressHandler}>
-                <DropShadow style={shadow}>
-                    <View style={{
-                        flexDirection: "row", alignItems: "center", borderRadius: 10, paddingLeft: 16,
-                        paddingRight: 16, paddingTop: 12, paddingBottom: 12, ...style as any
-                    }}>
-                        <Text style={{ fontSize: 14, fontWeight: "bold", textAlign: "center", textTransform: "uppercase", ...textStyle as any }}>
-                            {
-                                currentOrderType?.contents[language?.code]?.name
-                            }
-                        </Text>
-                    </View>
-                </DropShadow>
+                <View style={{
+                    flexDirection: "row", alignItems: "center", borderRadius: 10,
+                    borderWidth: 2, paddingLeft: 16, paddingRight: 16, paddingTop: 12, paddingBottom: 12, ...style as any
+                }}>
+                    <Text style={{ fontSize: 13, fontWeight: "bold", textAlign: "center", textTransform: "uppercase", ...textStyle as any }}>
+                        {
+                            currentOrderType?.contents[language?.code]?.name
+                        }
+                    </Text>
+                </View>
             </TouchableOpacity>
         </View>
     );

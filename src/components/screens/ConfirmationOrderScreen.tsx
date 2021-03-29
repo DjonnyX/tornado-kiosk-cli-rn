@@ -13,11 +13,13 @@ import { MyOrderActions, NotificationActions } from "../../store/actions";
 import { ConfirmationOrderListItem } from "../simple/confirmation-order-list";
 import { OrderWizard } from "../../core/order/OrderWizard";
 import { IAlertState } from "../../interfaces";
+import { localize } from "../../utils/localization";
 
 interface IConfirmationOrderScreenSelfProps {
     // store props
     _confirmOrder: () => void;
     _alertOpen: (alert: IAlertState) => void;
+    _theme: string;
     _orderStateId: number;
     _menuStateId: number;
     _banners: Array<ICompiledAd>;
@@ -29,7 +31,7 @@ interface IConfirmationOrderScreenSelfProps {
 
 interface IConfirmationOrderScreenProps extends StackScreenProps<any, MainNavigationScreenTypes.INTRO>, IConfirmationOrderScreenSelfProps { }
 
-const ConfirmationOrderScreenContainer = React.memo(({ _language, _banners, _currency, _orderStateId, _menuStateId, navigation,
+const ConfirmationOrderScreenContainer = React.memo(({ _theme, _language, _banners, _currency, _orderStateId, _menuStateId, navigation,
     _confirmOrder, _alertOpen }: IConfirmationOrderScreenProps) => {
 
     const selectAdHandler = useCallback((ad: ICompiledAd) => {
@@ -60,7 +62,7 @@ const ConfirmationOrderScreenContainer = React.memo(({ _language, _banners, _cur
                     <SafeAreaView style={{ flex: 1, width: "100%" }}>
                         <FlatList updateCellsBatchingPeriod={10} style={{ flex: 1 }}
                             data={OrderWizard.current.positions} renderItem={({ item, index }) => {
-                                return <ConfirmationOrderListItem key={item.id} stateId={item.stateId} position={item}
+                                return <ConfirmationOrderListItem key={item.id} themeName={_theme} stateId={item.stateId} position={item}
                                     color={index % 2 ? theme.themes[theme.name].confirmation.item.oddBackgroundColor : undefined}
                                     currency={_currency} language={_language} alertOpen={_alertOpen} />
                             }}
@@ -69,7 +71,10 @@ const ConfirmationOrderScreenContainer = React.memo(({ _language, _banners, _cur
                     </SafeAreaView>
                 </View>
                 <View style={{ width: "100%", flexDirection: "row", paddingLeft: 24, paddingRight: 24, paddingTop: 28, paddingBottom: 28 }}>
-                    <SimpleButton title="Назад"
+                    <SimpleButton title=
+                        {
+                            localize(_language, "kiosk_order_prev_button")
+                        }
                         styleView={{ opacity: 1, minWidth: 124 }}
                         style={{
                             backgroundColor: theme.themes[theme.name].confirmation.backButton.backgroundColor,
@@ -85,11 +90,16 @@ const ConfirmationOrderScreenContainer = React.memo(({ _language, _banners, _cur
                         <Text style={{
                             fontSize: 34, fontWeight: "bold", color: theme.themes[theme.name].confirmation.summaryPrice.textColor,
                             textAlign: "center", textTransform: "uppercase"
-                        }}>{
-                                `Итого: ${OrderWizard.current.getFormatedSum(true)}`
-                            }</Text>
+                        }}>
+                            {
+                                localize(_language, "kiosk_order_sum", OrderWizard.current.getFormatedSum(true))
+                            }
+                        </Text>
                     </View>
-                    <SimpleButton title="Далее"
+                    <SimpleButton title=
+                        {
+                            localize(_language, "kiosk_order_next_button")
+                        }
                         styleView={{ opacity: 1, minWidth: 124 }}
                         style={{
                             backgroundColor: theme.themes[theme.name].confirmation.nextButton.backgroundColor,
@@ -109,6 +119,7 @@ const ConfirmationOrderScreenContainer = React.memo(({ _language, _banners, _cur
 
 const mapStateToProps = (state: IAppState, ownProps: IConfirmationOrderScreenProps) => {
     return {
+        _theme: CapabilitiesSelectors.selectTheme(state),
         _banners: CombinedDataSelectors.selectBanners(state),
         _language: CapabilitiesSelectors.selectLanguage(state),
         _currency: CombinedDataSelectors.selectDefaultCurrency(state),

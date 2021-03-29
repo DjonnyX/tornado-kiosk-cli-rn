@@ -9,6 +9,7 @@ import { TagList } from "../TagList";
 import { Switch } from "../Switch";
 
 interface IModifierListItemProps {
+    themeName: string | undefined;
     stateId: number;
     thumbnailHeight: number;
     position: IPositionWizard;
@@ -16,7 +17,7 @@ interface IModifierListItemProps {
     language: ICompiledLanguage;
 }
 
-export const ModifierListItem = React.memo(({ thumbnailHeight, currency, language, position, stateId }: IModifierListItemProps) => {
+export const ModifierListItem = React.memo(({ themeName, thumbnailHeight, currency, language, position, stateId }: IModifierListItemProps) => {
 
     const pressHandler = useCallback((e: GestureResponderEvent) => {
         const hasEdit = position.edit();
@@ -62,9 +63,9 @@ export const ModifierListItem = React.memo(({ thumbnailHeight, currency, languag
                                 borderRadius: 8,
                                 paddingHorizontal: 8,
                                 paddingVertical: 4,
-                                backgroundColor: "red",
                                 fontSize: 12, fontWeight: "bold",
-                                color: "white", //theme.themes[theme.name].menu.navMenu.item.price.textColor
+                                backgroundColor: theme.themes[theme.name].modifiers.item.discount.backgroundColor,
+                                color: theme.themes[theme.name].modifiers.item.discount.textColor,
                             }}>
                                 {
                                     position.getFormatedDiscountPerOne(true)
@@ -103,18 +104,16 @@ export const ModifierListItem = React.memo(({ thumbnailHeight, currency, languag
                     <Switch
                         value={Boolean(position.quantity)}
                         onChange={changeQuantityHandler}
-                        titleOff="Не выбран"
-                        titleOn="Выбран"
                         styleOn={{
                             borderStyle: "solid", borderWidth: 0, borderRadius: 16,
-                            backgroundColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.selectedBackgroundColor,
-                            borderColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.borderSelectedColor,
+                            backgroundColor: theme.themes[theme.name].modifiers.item.quantitySwitch.on.backgroundColor,
+                            borderColor: theme.themes[theme.name].modifiers.item.quantitySwitch.on.borderColor,
                             padding: 6
                         }}
                         styleOff={{
                             borderStyle: "solid", borderWidth: 1, borderRadius: 16,
-                            backgroundColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.disabledBackgroundColor,
-                            borderColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.disabledBorderColor,
+                            backgroundColor: theme.themes[theme.name].modifiers.item.quantitySwitch.off.backgroundColor,
+                            borderColor: theme.themes[theme.name].modifiers.item.quantitySwitch.off.borderColor,
                             padding: 6,
                             opacity: 0.25
                         }}
@@ -122,17 +121,17 @@ export const ModifierListItem = React.memo(({ thumbnailHeight, currency, languag
                         styleViewOff={{}}
                         textStyleOn={{
                             fontSize: 16, fontWeight: "bold",
-                            color: "white", //theme.themes[theme.name].modifiers.item.quantityStepper.buttons.selectedTextColor as any,
+                            color: theme.themes[theme.name].modifiers.item.quantitySwitch.on.textColor,
                         }}
                         textStyleOff={{
                             fontSize: 16, fontWeight: "bold",
-                            color: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.textColor as any,
+                            color: theme.themes[theme.name].modifiers.item.quantitySwitch.off.textColor,
                         }}
                         textStyleOnDisabled={{}}
                         textStyleOffDisabled={{}}
                         formatValueFunction={(value: boolean) => {
                             return String(position.getFormatedSumPerOne(true));
-                        }}/>
+                        }} />
                     :
                     <NumericStapper
                         value={position.quantity}
@@ -145,7 +144,7 @@ export const ModifierListItem = React.memo(({ thumbnailHeight, currency, languag
                         buttonSelectedStyle={{
                             width: 48, height: 48, borderRadius: 16,
                             backgroundColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.selectedBackgroundColor,
-                            borderColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.borderSelectedColor,
+                            borderColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.selectedBackgroundColor,
                             padding: 6,
                             opacity: 1
                         }}

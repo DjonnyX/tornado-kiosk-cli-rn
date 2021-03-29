@@ -11,6 +11,7 @@ import { PositionWizardEventTypes } from "../../../core/position-wizard/events";
 import { CapabilitiesSelectors, CombinedDataSelectors, MyOrderSelectors } from "../../../store/selectors";
 import { IAppState } from "../../../store/state";
 import { Icons, theme } from "../../../theme";
+import { localize } from "../../../utils/localization";
 import { GridList } from "../../layouts/GridList";
 import { ModalRollTop } from "../ModalRollTop";
 import { SimpleButton } from "../SimpleButton";
@@ -26,12 +27,13 @@ interface IBound {
 }
 
 interface IModifiersEditorProps {
+    _theme?: string;
     _language?: ICompiledLanguage;
     _currency?: ICurrency;
     _orderStateId?: number;
 }
 
-export const ModifiersEditorContainer = React.memo(({ _orderStateId, _language, _currency }: IModifiersEditorProps) => {
+export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _language, _currency }: IModifiersEditorProps) => {
     const [stateId, setStateId] = useState<number>(-1);
     const [position, setPosition] = useState<IPositionWizard | null>(OrderWizard.current.currentPosition);
 
@@ -80,7 +82,7 @@ export const ModifiersEditorContainer = React.memo(({ _orderStateId, _language, 
                     !!position && !!_language && !!_currency &&
                     <View style={{ flex: 1, width: "100%" }}>
                         <View style={{ flexDirection: "row", width: "100%", maxHeight: "20%", marginBottom: 32 }}>
-                            <View style={{ flex: 1, width: "100%", flexDirection: "row", alignItems: "flex-start", marginRight: 48 }}>
+                            <View style={{ flex: 1, width: "100%", flexDirection: "row", alignItems: "flex-start", marginRight: 48, marginBottom: 8, overflow: "hidden" }}>
                                 <View>
                                     <FastImage style={{ width: 192, height: "100%" }} source={{
                                         uri: `file://${position.__product__?.contents[_language?.code]?.resources?.icon.path}`,
@@ -93,7 +95,7 @@ export const ModifiersEditorContainer = React.memo(({ _orderStateId, _language, 
                                     }}>{
                                             position.__product__?.contents[_language.code]?.name
                                         }</Text>
-                                    <Text textBreakStrategy="simple" numberOfLines={7} ellipsizeMode="tail" style={{
+                                    <Text style={{
                                         fontSize: 14, color: theme.themes[theme.name].modifiers.descriptionColor,
                                         textTransform: "uppercase"
                                     }}>{
@@ -111,7 +113,7 @@ export const ModifiersEditorContainer = React.memo(({ _orderStateId, _language, 
                                 </View>
                             </View>
                             <View>
-                                <CloseButton onPress={onClose}></CloseButton>
+                                <CloseButton themeName={_theme} onPress={onClose}></CloseButton>
                             </View>
                         </View>
                         <View style={{
@@ -134,7 +136,9 @@ export const ModifiersEditorContainer = React.memo(({ _orderStateId, _language, 
                                 </View>
                             </View>
                             <View style={{ width: "100%", flexDirection: "row", marginBottom: -40, zIndex: 2 }}>
-                                <SimpleButton title="Назад"
+                                <SimpleButton title={
+                                    localize(_language, "kiosk_modifiers_group_prev_button")
+                                }
                                     styleView={{ opacity: 1 }}
                                     style={{
                                         backgroundColor: theme.themes[theme.name].modifiers.group.buttonPrevious.backgroundColor,
@@ -176,7 +180,11 @@ export const ModifiersEditorContainer = React.memo(({ _orderStateId, _language, 
                                             position.groups[position.currentGroup].__node__.__rawNode__.content?.contents[_language.code]?.description
                                         }</Text>
                                 </View>
-                                <SimpleButton title={position.currentGroup === position.groups.length - 1 ? "Готово" : "Далее"}
+                                <SimpleButton title={
+                                    position.currentGroup === position.groups.length - 1
+                                        ? localize(_language, "kiosk_modifiers_group_done_button")
+                                        : localize(_language, "kiosk_modifiers_group_next_button")
+                                }
                                     styleView={{ opacity: 1 }}
                                     style={{
                                         backgroundColor: theme.themes[theme.name].modifiers.group.buttonNext.backgroundColor,
@@ -213,7 +221,7 @@ export const ModifiersEditorContainer = React.memo(({ _orderStateId, _language, 
                                         <GridList style={{ flex: 1 }} disbleStartAnimation
                                             padding={10} spacing={6} data={position.groups[position.currentGroup].positions}
                                             itemDimension={MODIFIER_ITEM_WIDTH} animationSkipFrames={10} renderItem={({ item }) => {
-                                                return <ModifierListItem key={item.id} position={item} currency={_currency} language={_language}
+                                                return <ModifierListItem key={item.id} themeName={_theme} position={item} currency={_currency} language={_language}
                                                     thumbnailHeight={128} stateId={item.stateId}></ModifierListItem>
                                             }}
                                             keyExtractor={(item, index) => item.id}>
@@ -230,10 +238,11 @@ export const ModifiersEditorContainer = React.memo(({ _orderStateId, _language, 
 })
 
 interface ICloseButtonProps {
+    themeName: string | undefined;
     onPress: () => void;
 }
 
-const CloseButton = ({ onPress }: ICloseButtonProps) => {
+const CloseButton = ({ themeName, onPress }: ICloseButtonProps) => {
     return (
         <TouchableOpacity onPress={onPress}>
             <View
@@ -247,6 +256,7 @@ const CloseButton = ({ onPress }: ICloseButtonProps) => {
 
 const mapStateToProps = (state: IAppState, ownProps: IModifiersEditorProps) => {
     return {
+        _theme: CapabilitiesSelectors.selectTheme(state),
         _currency: CombinedDataSelectors.selectDefaultCurrency(state),
         _language: CapabilitiesSelectors.selectLanguage(state),
         _orderStateId: MyOrderSelectors.selectStateId(state),

@@ -9,6 +9,7 @@ import { CapabilitiesSelectors, CombinedDataSelectors, MenuSelectors } from "../
 import { ISnackState } from "../interfaces";
 import { OrderWizard } from "./order/OrderWizard";
 import { MainNavigationScreenTypes } from "../components/navigation";
+import { localize } from "../utils/localization";
 
 interface IMenuServiceProps {
     // store
@@ -74,10 +75,10 @@ export const MenuServiceContainer = React.memo(({ _menuStateId, _menu, _language
     }, [_language, _currency, _businessPeriods, _orderTypes, _currentOrderType, _menu]);
 
     useEffect(() => {
-        if ((_currentScreen === MainNavigationScreenTypes.MENU || _currentScreen === MainNavigationScreenTypes.CONFIRMATION_ORDER)
+        if (Number(_menuStateId) > 0 && (_currentScreen === MainNavigationScreenTypes.MENU || _currentScreen === MainNavigationScreenTypes.CONFIRMATION_ORDER)
             && !!OrderWizard.current) {
             _snackOpen({
-                message: "Изменение в меню! Некоторые позиции в заказе могут стать недоступны.",
+                message: localize(_language as ICompiledLanguage, "kiosk_menu_change_message"),
                 duration: 5000,
             });
         }

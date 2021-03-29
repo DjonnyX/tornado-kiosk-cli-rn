@@ -7,6 +7,7 @@ import { theme } from "../../../theme";
 import { IPositionWizard } from "../../../core/interfaces";
 import { OrderWizard } from "../../../core/order/OrderWizard";
 import { IAlertState } from "../../../interfaces";
+import { localize } from "../../../utils/localization";
 
 interface IMyOrderListItemItemProps {
     stateId: number;
@@ -34,15 +35,17 @@ export const MyOrderListItem = React.memo(({ stateId, menuStateId, imageHeight, 
     const changeQuantityHandler = (value: number) => {
         if (value < 1) {
             alertOpen({
-                title: "Внимание!", message: "Вы действительно хотите удалить позицию?", buttons: [
+                title: localize(language, "kiosk_remove_product_title"),
+                message: localize(language, "kiosk_remove_product_message"),
+                buttons: [
                     {
-                        title: "Удалить",
+                        title: localize(language, "kiosk_remove_product_button_accept"),
                         action: () => {
                             OrderWizard.current.remove(position);
                         }
                     },
                     {
-                        title: "Отмена",
+                        title: localize(language, "kiosk_remove_product_button_cancel"),
                         action: () => {
                             setQuantity(1);
                         }
@@ -66,7 +69,7 @@ export const MyOrderListItem = React.memo(({ stateId, menuStateId, imageHeight, 
                 </View>
                 <Text numberOfLines={3} ellipsizeMode="tail" style={{
                     textAlign: "center", fontSize: 14, fontWeight: "bold",
-                    color: theme.themes[theme.name].menu.draftOrder.item.nameColor, textTransform: "uppercase", fontWeight: "bold"
+                    color: theme.themes[theme.name].menu.draftOrder.item.nameColor, textTransform: "uppercase"
                 }}>
                     {
                         currentContent?.name
@@ -86,13 +89,13 @@ export const MyOrderListItem = React.memo(({ stateId, menuStateId, imageHeight, 
             <NumericStapper
                 value={position.quantity}
                 buttonStyle={{
-                    width: 32, height: 32, borderRadius: 10,
+                    width: 38, height: 38, borderRadius: 10,
                     backgroundColor: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.backgroundColor,
                     borderColor: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.borderColor,
                     padding: 6
                 }}
                 disabledButtonStyle={{
-                    width: 32, height: 32, borderRadius: 10,
+                    width: 38, height: 38, borderRadius: 10,
                     backgroundColor: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.disabledBackgroundColor,
                     borderColor: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.disabledBorderColor,
                     padding: 6

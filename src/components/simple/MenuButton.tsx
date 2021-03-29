@@ -3,10 +3,11 @@ import { View, TouchableOpacity } from "react-native";
 import { Icons, theme } from "../../theme";
 
 interface IMenuButtonProps {
+    themeName: string;
     onPress: () => void;
 }
 
-export const MenuButton = ({ onPress }: IMenuButtonProps) => {
+export const MenuButton = ({ themeName, onPress }: IMenuButtonProps) => {
     return (
         <TouchableOpacity onPress={onPress}>
             <View

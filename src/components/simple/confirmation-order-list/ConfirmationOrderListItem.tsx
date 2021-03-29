@@ -7,8 +7,10 @@ import { theme } from "../../../theme";
 import { IPositionWizard } from "../../../core/interfaces";
 import { OrderWizard } from "../../../core/order/OrderWizard";
 import { IAlertState } from "../../../interfaces";
+import { localize } from "../../../utils/localization";
 
 interface ConfirmationOrderListItemProps {
+    themeName: string;
     color?: string;
     stateId: number;
     position: IPositionWizard;
@@ -17,7 +19,7 @@ interface ConfirmationOrderListItemProps {
     alertOpen: (alert: IAlertState) => void;
 }
 
-export const ConfirmationOrderListItem = React.memo(({ stateId, color, currency, language, position,
+export const ConfirmationOrderListItem = React.memo(({ themeName, stateId, color, currency, language, position,
     alertOpen }: ConfirmationOrderListItemProps) => {
     const currentContent = position.__product__?.contents[language?.code];
     const currentAdAsset = currentContent?.resources?.icon;
@@ -33,15 +35,17 @@ export const ConfirmationOrderListItem = React.memo(({ stateId, color, currency,
     const changeQuantityHandler = (value: number) => {
         if (value < 1) {
             alertOpen({
-                title: "Внимание!", message: "Вы действительно хотите удалить позицию?", buttons: [
+                title: localize(language, "kiosk_remove_product_title"),
+                message: localize(language, "kiosk_remove_product_message"),
+                buttons: [
                     {
-                        title: "Удалить",
+                        title: localize(language, "kiosk_remove_product_button_accept"),
                         action: () => {
                             OrderWizard.current.remove(position);
                         }
                     },
                     {
-                        title: "Отмена",
+                        title: localize(language, "kiosk_remove_product_button_cancel"),
                         action: () => {
                             setQuantity(1);
                         }

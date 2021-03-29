@@ -8,9 +8,11 @@ import { CapabilitiesSelectors } from "../../store/selectors/CapabilitiesSelecto
 import { ICompiledLanguage } from "@djonnyx/tornado-types";
 import { theme } from "../../theme";
 import FastImage from "react-native-fast-image";
+import { localize } from "../../utils/localization";
 
 interface IPayStatusScreenSelfProps {
     // store props
+    _theme: string;
     _language: ICompiledLanguage;
 
     // self props
@@ -18,7 +20,7 @@ interface IPayStatusScreenSelfProps {
 
 interface IPayStatusScreenProps extends StackScreenProps<any, MainNavigationScreenTypes.PAY_STATUS>, IPayStatusScreenSelfProps { }
 
-const PayStatusScreenContainer = React.memo(({ _language, navigation }: IPayStatusScreenProps) => {
+const PayStatusScreenContainer = React.memo(({ _theme, _language, navigation }: IPayStatusScreenProps) => {
     return (
         <View style={{
             flex: 1, justifyContent: "center", alignItems: "center", width: "100%", height: "100%",
@@ -29,13 +31,17 @@ const PayStatusScreenContainer = React.memo(({ _language, navigation }: IPayStat
                     fontSize: 40, fontWeight: "bold", textAlign: "center",
                     color: theme.themes[theme.name].payStatus.primaryMessageColor
                 }}>
-                    Пожалуйста подождите, идет оформление заказа.
+                    {
+                        localize(_language, "kiosk_pay_status_title")
+                    }
                 </Text>
                 <Text style={{
                     fontSize: 20, fontWeight: "bold", textAlign: "center",
                     color: theme.themes[theme.name].payStatus.secondaryMessageColor, marginBottom: 40
                 }}>
-                    Please wait, ordering
+                    {
+                        localize(_language, "kiosk_pay_status_description")
+                    }
                 </Text>
                 <FastImage style={{ width: 128, height: 128 }}
                     source={theme.name === 'light'
@@ -49,6 +55,7 @@ const PayStatusScreenContainer = React.memo(({ _language, navigation }: IPayStat
 
 const mapStateToProps = (state: IAppState, ownProps: IPayStatusScreenProps) => {
     return {
+        _theme: CapabilitiesSelectors.selectTheme(state),
         _language: CapabilitiesSelectors.selectLanguage(state),
     };
 };

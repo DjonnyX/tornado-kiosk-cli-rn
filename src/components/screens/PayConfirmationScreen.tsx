@@ -13,10 +13,12 @@ import { OrderWizard } from "../../core/order/OrderWizard";
 import { MyOrderActions } from "../../store/actions";
 import { config } from "../../Config";
 import { SimpleButton } from "../simple";
+import { localize } from "../../utils/localization";
 
 interface IPayConfirmationScreenSelfProps {
     // store props
     _onResetOrder: () => void;
+    _theme: string;
     _orderStateId: number;
     _language: ICompiledLanguage;
 
@@ -26,7 +28,7 @@ interface IPayConfirmationScreenSelfProps {
 interface IPayConfirmationScreenProps extends StackScreenProps<any, MainNavigationScreenTypes.PAY_CONFIRMATION>,
     IPayConfirmationScreenSelfProps { }
 
-const PayConfirmationScreenScreenContainer = React.memo(({ _language, _orderStateId, _onResetOrder, navigation }: IPayConfirmationScreenProps) => {
+const PayConfirmationScreenScreenContainer = React.memo(({ _theme, _language, _orderStateId, _onResetOrder, navigation }: IPayConfirmationScreenProps) => {
     const [countDown, setCountDown] = useState(config.capabilities.resetTimeoutAfterPay);
 
     useEffect(() => {
@@ -59,31 +61,39 @@ const PayConfirmationScreenScreenContainer = React.memo(({ _language, _orderStat
                     fontSize: 32, fontWeight: "bold", textAlign: "center",
                     color: theme.themes[theme.name].payConfirmation.primaryMessageColor
                 }}>
-                    Благодарим за покупку!
+                    {
+                        localize(_language, "kiosk_pay_success_congratulation")
+                    }
                 </Text>
                 <Text style={{
                     fontSize: 32, fontWeight: "bold", textAlign: "center",
                     color: theme.themes[theme.name].payConfirmation.primaryMessageColor
                 }}>
-                    Номер Вашего заказ
+                    {
+                        localize(_language, "kiosk_pay_success_order_num_title")
+                    }
                 </Text>
                 <Text style={{
                     fontSize: 76, fontWeight: "bold", textAlign: "center",
                     color: theme.themes[theme.name].payConfirmation.numberColor
                 }}>
-                    { OrderWizard.current.result?.code }
+                    {OrderWizard.current.result?.code}
                 </Text>
                 <Text style={{
                     fontSize: 20, fontWeight: "bold", textAlign: "center",
                     color: theme.themes[theme.name].payConfirmation.secondaryMessageColor
                 }}>
-                    Вы оформили заказ на сумму {OrderWizard.current.getFormatedSum(true)}
+                    {
+                        localize(_language, "kiosk_pay_success_order_description", OrderWizard.current.getFormatedSum(true))
+                    }
                 </Text>
                 <Text style={{
                     fontSize: 20, fontWeight: "bold", textAlign: "center",
                     color: theme.themes[theme.name].payConfirmation.secondaryMessageColor, marginBottom: 40
                 }}>
-                    Отсканируйте QR-код, чтобы следить за статусом Вашего заказа
+                    {
+                        localize(_language, "kiosk_pay_success_order_qrcode_description")
+                    }
                 </Text>
                 <View style={{
                     width: 216, height: 216, justifyContent: "center", alignItems: "center",
@@ -96,7 +106,9 @@ const PayConfirmationScreenScreenContainer = React.memo(({ _language, _orderStat
                 </View>
             </View>
             <View>
-                <SimpleButton title={`Закрыть (${countDown}с)`}
+                <SimpleButton title={
+                    localize(_language, "kiosk_pay_success_order_button_close", String(countDown))
+                }
                     styleView={{ opacity: 1, minWidth: 180 }}
                     style={{ backgroundColor: theme.themes[theme.name].confirmation.nextButton.backgroundColor, borderRadius: 8, padding: 20 }}
                     textStyle={{
@@ -111,6 +123,7 @@ const PayConfirmationScreenScreenContainer = React.memo(({ _language, _orderStat
 
 const mapStateToProps = (state: IAppState, ownProps: IPayConfirmationScreenProps) => {
     return {
+        _theme: CapabilitiesSelectors.selectTheme(state),
         _orderStateId: MyOrderSelectors.selectStateId(state),
         _language: CapabilitiesSelectors.selectLanguage(state),
     };

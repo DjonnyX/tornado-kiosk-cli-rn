@@ -11,8 +11,10 @@ import { CtrlMenuButton } from "./CtrlMenuButton";
 import { theme } from "../../theme";
 import { ModifiersEditor } from "./modifiers";
 import { MenuNode } from "../../core/menu/MenuNode";
+import { localize } from "../../utils/localization";
 
 interface IMenuProps {
+    themeName: string;
     menuStateId: number;
     orderType: ICompiledOrderType;
     menu: MenuNode;
@@ -28,7 +30,7 @@ interface IMenuProps {
 const sideMenuWidth = 180;
 
 export const Menu = React.memo(({
-    menu, menuStateId, orderType, language, currency, width, height,
+    themeName, menu, menuStateId, orderType, language, currency, width, height,
     cancelOrder, addPosition,
 }: IMenuProps) => {
     const [currentCategory, setCurrentCategory] = useState<MenuNode>(menu);
@@ -188,7 +190,7 @@ export const Menu = React.memo(({
                                 outputRange: [-10, -sideMenuWidth],
                             }),
                         }}>
-                            <MenuButton onPress={onBack}></MenuButton>
+                            <MenuButton themeName={themeName} onPress={onBack}></MenuButton>
                         </Animated.View>
                         <View style={{ flex: 1 }}></View>
                         <Text style={{
@@ -197,7 +199,8 @@ export const Menu = React.memo(({
                             fontSize: 32, marginRight: 24
                         }}>
                             {
-                                currentCategory.__rawNode__.content?.contents[language.code]?.name || "Меню"
+                                currentCategory.__rawNode__.content?.contents[language.code]?.name
+                                || localize(language, "kiosk_menu_root_title")
                             }
                         </Text>
                     </View>
@@ -221,7 +224,9 @@ export const Menu = React.memo(({
                             <CtrlMenuButton
                                 gradient={theme.themes[theme.name].menu.ctrls.cancelButton.backgroundColor}
                                 gradientDisabled={theme.themes[theme.name].menu.ctrls.cancelButton.disabledBackgroundColor}
-                                text="Отменить" onPress={cancelOrder} />
+                                text={
+                                    localize(language, "kiosk_menu_cancel_button")
+                                } onPress={cancelOrder} />
                         </View>
                     </Animated.View>
                     <Animated.View style={{
@@ -248,7 +253,7 @@ export const Menu = React.memo(({
                                 outputRange: [0, height],
                             }),
                         }}>
-                            <NavMenu menuStateId={menuStateId} orderType={orderType}
+                            <NavMenu themeName={themeName} menuStateId={menuStateId} orderType={orderType}
                                 node={previousCategory.index <= currentCategory.index ? currentCategory : previousCategory}
                                 language={language} currency={currency} onPress={selectNavMenuCategoryHandler}></NavMenu>
                         </Animated.View>
@@ -262,7 +267,7 @@ export const Menu = React.memo(({
                                 outputRange: [-height, 0],
                             }),
                         }}>
-                            <NavMenu menuStateId={menuStateId} orderType={orderType}
+                            <NavMenu themeName={themeName} menuStateId={menuStateId} orderType={orderType}
                                 node={previousCategory.index > currentCategory.index ? currentCategory : previousCategory}
                                 language={language} currency={currency} onPress={selectNavMenuCategoryHandler}></NavMenu>
                         </Animated.View>
