@@ -1,7 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, StyleProp, ViewStyle, TextStyle } from "react-native";
-import DropShadow from "react-native-drop-shadow";
-import { uiutils } from "../../utils/ui";
 
 interface INumericStepperButtonProps {
     icon: string;
@@ -37,20 +35,16 @@ const NumericStepperButton = ({ icon, style, selectedStyle, textStyle, textSelec
             textSelectedStyle :
             textStyle;
 
-    const shadow = uiutils.createShadow((actualStyle as any)?.backgroundColor);
-
     return (
-        <DropShadow style={shadow}>
-            <TouchableOpacity onPress={onPress}>
-                <View style={{ alignItems: "center", justifyContent: "center", ...actualStyle as any }}>
-                    <Text style={{ ...actualTextStyle as any }}>
-                        {
-                            icon
-                        }
-                    </Text>
-                </View>
-            </TouchableOpacity>
-        </DropShadow>
+        <TouchableOpacity onPress={onPress}>
+            <View style={{ alignItems: "center", justifyContent: "center", ...actualStyle as any }}>
+                <Text style={{ ...actualTextStyle as any }}>
+                    {
+                        icon
+                    }
+                </Text>
+            </View>
+        </TouchableOpacity>
     );
 };
 

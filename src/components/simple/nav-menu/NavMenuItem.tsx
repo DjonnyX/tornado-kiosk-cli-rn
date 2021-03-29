@@ -59,7 +59,8 @@ export const NavMenuItem = React.memo(({ thumbnailHeight, currency, language, no
                                     paddingVertical: 4,
                                     backgroundColor: "red",
                                     fontSize: 12, fontWeight: "bold",
-                                    color: "white", //theme.themes[theme.name].menu.navMenu.item.price.textColor
+                                    backgroundColor: theme.themes[theme.name].menu.navMenu.item.discount.backgroundColor,
+                                    color: theme.themes[theme.name].menu.navMenu.item.discount.textColor,
                                 }}>
                                     {
                                         node.getFormatedDiscount(true)

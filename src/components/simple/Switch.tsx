@@ -1,7 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { View, TouchableOpacity, StyleProp, ViewStyle, TextStyle, Text, Animated, Easing, LayoutChangeEvent } from "react-native";
-import DropShadow from "react-native-drop-shadow";
-import { uiutils } from "../../utils/ui";
 
 interface ISwitchProps {
     titleOn?: string;
@@ -131,8 +129,6 @@ export const Switch = React.memo(({ value, titleOn, titleOff,
         const { x, y, width, height } = event.nativeEvent.layout;
         setWidth(width);
     }, []);
-
-    //<DropShadow style={shadow}>
 
     return (
         <View onLayout={onChangeLayout} style={{ width: "100%", overflow: "hidden" }}>

@@ -62,9 +62,9 @@ export const ModifierListItem = React.memo(({ thumbnailHeight, currency, languag
                                 borderRadius: 8,
                                 paddingHorizontal: 8,
                                 paddingVertical: 4,
-                                backgroundColor: "red",
                                 fontSize: 12, fontWeight: "bold",
-                                color: "white", //theme.themes[theme.name].menu.navMenu.item.price.textColor
+                                backgroundColor: theme.themes[theme.name].modifiers.item.discount.backgroundColor,
+                                color: theme.themes[theme.name].modifiers.item.discount.textColor,
                             }}>
                                 {
                                     position.getFormatedDiscountPerOne(true)

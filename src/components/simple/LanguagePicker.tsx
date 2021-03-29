@@ -2,10 +2,8 @@ import React, { useState, useCallback, useEffect } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import FastImage from "react-native-fast-image";
-import DropShadow from "react-native-drop-shadow";
 import { ICompiledLanguage } from "@djonnyx/tornado-types";
 import { theme } from "../../theme";
-import { uiutils } from "../../utils/ui";
 import { ModalSolid } from "./ModalSolid";
 
 interface ILanguagePickerProps {
@@ -17,8 +15,6 @@ interface ILanguagePickerProps {
 export const LanguagePicker = React.memo(({ language, languages, onSelect }: ILanguagePickerProps) => {
     const [currentLanguage, _setCurrentLanguage] = useState(language);
     const [modalVisible, _setModalVisible] = useState(false);
-
-    const shadow = uiutils.createShadow(theme.themes[theme.name].languagePicker.borderColor, 1, 0.45);
 
     useEffect(() => {
         _setCurrentLanguage(language);
@@ -63,16 +59,14 @@ export const LanguagePicker = React.memo(({ language, languages, onSelect }: ILa
             </ModalSolid>
             <TouchableOpacity style={{ flex: 1, justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}
                 onPress={onPressHandler}>
-                <DropShadow style={shadow}>
-                    <View style={{
-                        flexDirection: "row", alignItems: "center", justifyContent: "center", padding: 8, overflow: "hidden",
-                        width: 44, height: 44, borderRadius: 32
-                    }}>
-                        <FastImage style={{ position: "absolute", width: 64, height: 64 }} source={{
-                            uri: `file://${currentLanguage?.resources?.main?.mipmap.x128}`,
-                        }} resizeMode={FastImage.resizeMode.contain}></FastImage>
-                    </View>
-                </DropShadow>
+                <View style={{
+                    flexDirection: "row", alignItems: "center", justifyContent: "center", padding: 8, overflow: "hidden",
+                    width: 44, height: 44, borderRadius: 32
+                }}>
+                    <FastImage style={{ position: "absolute", width: 64, height: 64 }} source={{
+                        uri: `file://${currentLanguage?.resources?.main?.mipmap.x128}`,
+                    }} resizeMode={FastImage.resizeMode.contain}></FastImage>
+                </View>
             </TouchableOpacity>
         </View>
     );
