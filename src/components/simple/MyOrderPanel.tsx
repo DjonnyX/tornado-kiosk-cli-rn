@@ -7,6 +7,7 @@ import { MyOrderList } from "./my-order-list";
 import { CtrlMenuButton } from "./CtrlMenuButton";
 import { theme } from "../../theme";
 import { OrderWizard } from "../../core/order/OrderWizard";
+import { localize } from "../../utils/localization";
 
 interface IMyOrderPanelProps {
     themeName: string;
@@ -73,7 +74,9 @@ export const MyOrderPanel = React.memo(({ themeName, orderStateId, currency, lan
             <View style={{ flex: 0, height: 144, margin: "auto", padding: 24 }}>
                 {
                     OrderWizard.current.positions.length !== 0 &&
-                    <CtrlMenuButton text="Заказать" disabled={OrderWizard.current.positions.length === 0}
+                    <CtrlMenuButton text={
+                        localize(language, "kiosk_menu_confirm_button")
+                    } disabled={OrderWizard.current.positions.length === 0}
                         gradient={theme.themes[theme.name].menu.ctrls.confirmButton.backgroundColor}
                         gradientDisabled={theme.themes[theme.name].menu.ctrls.confirmButton.disabledBackgroundColor}
                         onPress={onConfirm}></CtrlMenuButton>

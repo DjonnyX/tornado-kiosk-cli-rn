@@ -13,6 +13,7 @@ import { MyOrderActions, NotificationActions } from "../../store/actions";
 import { ConfirmationOrderListItem } from "../simple/confirmation-order-list";
 import { OrderWizard } from "../../core/order/OrderWizard";
 import { IAlertState } from "../../interfaces";
+import { localize } from "../../utils/localization";
 
 interface IConfirmationOrderScreenSelfProps {
     // store props
@@ -70,7 +71,10 @@ const ConfirmationOrderScreenContainer = React.memo(({ _theme, _language, _banne
                     </SafeAreaView>
                 </View>
                 <View style={{ width: "100%", flexDirection: "row", paddingLeft: 24, paddingRight: 24, paddingTop: 28, paddingBottom: 28 }}>
-                    <SimpleButton title="Назад"
+                    <SimpleButton title=
+                        {
+                            localize(_language, "kiosk_order_prev_button")
+                        }
                         styleView={{ opacity: 1, minWidth: 124 }}
                         style={{
                             backgroundColor: theme.themes[theme.name].confirmation.backButton.backgroundColor,
@@ -86,11 +90,16 @@ const ConfirmationOrderScreenContainer = React.memo(({ _theme, _language, _banne
                         <Text style={{
                             fontSize: 34, fontWeight: "bold", color: theme.themes[theme.name].confirmation.summaryPrice.textColor,
                             textAlign: "center", textTransform: "uppercase"
-                        }}>{
-                                `Итого: ${OrderWizard.current.getFormatedSum(true)}`
-                            }</Text>
+                        }}>
+                            {
+                                localize(_language, "kiosk_order_sum", OrderWizard.current.getFormatedSum(true))
+                            }
+                        </Text>
                     </View>
-                    <SimpleButton title="Далее"
+                    <SimpleButton title=
+                        {
+                            localize(_language, "kiosk_order_next_button")
+                        }
                         styleView={{ opacity: 1, minWidth: 124 }}
                         style={{
                             backgroundColor: theme.themes[theme.name].confirmation.nextButton.backgroundColor,

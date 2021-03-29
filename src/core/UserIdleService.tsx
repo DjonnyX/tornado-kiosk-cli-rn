@@ -7,10 +7,13 @@ import { CapabilitiesSelectors } from "../store/selectors";
 import { MainNavigationScreenTypes } from "../components/navigation";
 import { MyOrderActions, NotificationActions } from "../store/actions";
 import { IAlertState } from "../interfaces";
+import { localize } from "../utils/localization";
+import { ICompiledLanguage } from "@djonnyx/tornado-types";
 
 interface IUserIdleServiceProps {
     // store
     _onReset: () => void;
+    _language: ICompiledLanguage;
     _currentScreen: MainNavigationScreenTypes | undefined;
     _alertOpen: (alert: IAlertState) => void;
     _alertClose: () => void;
@@ -93,13 +96,15 @@ class UserIdleServiceContainer extends PureComponent<IUserIdleServiceProps, IUse
 
     private showAlert(): void {
         this.props._alertOpen({
-            title: "Внимание!", message: `Заказ будет отменен через ${this.state.countdown} сек`, buttons: [
+            title: localize(this.props._language, "kiosk_idle_order_remove_title"),
+            message: localize(this.props._language, "kiosk_idle_order_remove_message", String(this.state.countdown)),
+            buttons: [
                 {
-                    title: "Удалить",
+                    title: localize(this.props._language, "kiosk_idle_order_remove_button_accept"),
                     action: this._alertResetAction,
                 },
                 {
-                    title: "Отмена",
+                    title: localize(this.props._language, "kiosk_idle_order_remove_button_cancel"),
                     action: this._alertCancelAction,
                 }
             ]
@@ -179,6 +184,7 @@ class UserIdleServiceContainer extends PureComponent<IUserIdleServiceProps, IUse
 
 const mapStateToProps = (state: IAppState) => {
     return {
+        _language: CapabilitiesSelectors.selectLanguage(state),
         _currentScreen: CapabilitiesSelectors.selectCurrentScreen(state),
     };
 };

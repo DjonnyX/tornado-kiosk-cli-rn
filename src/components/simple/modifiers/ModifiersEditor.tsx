@@ -11,6 +11,7 @@ import { PositionWizardEventTypes } from "../../../core/position-wizard/events";
 import { CapabilitiesSelectors, CombinedDataSelectors, MyOrderSelectors } from "../../../store/selectors";
 import { IAppState } from "../../../store/state";
 import { Icons, theme } from "../../../theme";
+import { localize } from "../../../utils/localization";
 import { GridList } from "../../layouts/GridList";
 import { ModalRollTop } from "../ModalRollTop";
 import { SimpleButton } from "../SimpleButton";
@@ -135,7 +136,9 @@ export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _la
                                 </View>
                             </View>
                             <View style={{ width: "100%", flexDirection: "row", marginBottom: -40, zIndex: 2 }}>
-                                <SimpleButton title="Назад"
+                                <SimpleButton title={
+                                    localize(_language, "kiosk_modifiers_group_prev_button")
+                                }
                                     styleView={{ opacity: 1 }}
                                     style={{
                                         backgroundColor: theme.themes[theme.name].modifiers.group.buttonPrevious.backgroundColor,
@@ -177,7 +180,11 @@ export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _la
                                             position.groups[position.currentGroup].__node__.__rawNode__.content?.contents[_language.code]?.description
                                         }</Text>
                                 </View>
-                                <SimpleButton title={position.currentGroup === position.groups.length - 1 ? "Готово" : "Далее"}
+                                <SimpleButton title={
+                                    position.currentGroup === position.groups.length - 1
+                                        ? localize(_language, "kiosk_modifiers_group_done_button")
+                                        : localize(_language, "kiosk_modifiers_group_next_button")
+                                }
                                     styleView={{ opacity: 1 }}
                                     style={{
                                         backgroundColor: theme.themes[theme.name].modifiers.group.buttonNext.backgroundColor,
@@ -231,7 +238,7 @@ export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _la
 })
 
 interface ICloseButtonProps {
-    themeName: string;
+    themeName: string | undefined;
     onPress: () => void;
 }
 

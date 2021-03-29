@@ -12,6 +12,7 @@ import { orderApiService } from "../services";
 import { Subject } from "rxjs";
 import { finalize, take, takeUntil } from "rxjs/operators";
 import { MainNavigationScreenTypes } from "../components/navigation";
+import { localize } from "../utils/localization";
 
 interface IOrderServiceProps {
     // store
@@ -120,7 +121,8 @@ export const OrderServiceContainer = React.memo(({ _orderStateId, _storeId, _con
     useEffect(() => {
         if (!!previousLastPosition) {
             _snackOpen({
-                message: `"${previousLastPosition?.__product__?.contents[_language?.code || ""]?.name}" добавлен в заказ!`,
+                message: localize(_language as ICompiledLanguage, "kiosk_add_product_message",
+                    String(previousLastPosition?.__product__?.contents[_language?.code || ""]?.name)),
                 duration: 5000,
             });
         }
