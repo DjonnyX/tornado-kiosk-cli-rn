@@ -4,8 +4,12 @@ import { IAppState } from "../state";
 const getCapabilities = (state: IAppState) => state.capabilities;
 
 export namespace CapabilitiesSelectors {
+    export const selectThemes = createSelector(getCapabilities, (state) => {
+        return state?.themes;
+    });
+
     export const selectTheme = createSelector(getCapabilities, (state) => {
-        return state?.theme;
+        return state?.themes?.name;
     });
 
     export const selectLanguage = createSelector(getCapabilities, (state) => {

@@ -2,22 +2,23 @@ import React, { Component, Dispatch } from "react";
 import { connect } from "react-redux";
 import { BehaviorSubject, from, forkJoin, of, Subject } from "rxjs";
 import { take, takeUntil, filter } from "rxjs/operators";
-import { IAsset, ICompiledData, IRefs, RefTypes, ITerminal } from "@djonnyx/tornado-types";
+import { IAsset, ICompiledData, IRefs, RefTypes, ITerminal, IKioskTheme } from "@djonnyx/tornado-types";
 import { AssetsStore, IAssetsStoreResult } from "@djonnyx/tornado-assets-store";
+import { IProgress } from "@djonnyx/tornado-refs-processor/dist/DataCombiner";
 import { DataCombiner } from "@djonnyx/tornado-refs-processor";
 import { ExternalStorage } from "../native";
 import { config } from "../Config";
 import { assetsService, refApiService } from "../services";
 import { IAppState } from "../store/state";
 import { CombinedDataActions, CapabilitiesActions } from "../store/actions";
-import { IProgress } from "@djonnyx/tornado-refs-processor/dist/DataCombiner";
 import { CapabilitiesSelectors, SystemSelectors } from "../store/selectors";
 import { MainNavigationScreenTypes } from "../components/navigation";
-import { theme } from "../theme";
+import { compileThemes, theme, THEMES_FILE_NAME } from "../theme";
 
 interface IDataCollectorServiceProps {
     // store
     _onChange: (data: ICompiledData) => void;
+    _onChangeThemes: (themes: IKioskTheme) => void;
     _onChangeTerminal: (terminal: ITerminal) => void;
     _onProgress: (progress: IProgress) => void;
 
@@ -81,6 +82,23 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
             console.warn("Saved data not found.");
         }
 
+        let savedThemes: IKioskTheme | undefined;
+        try {
+            savedThemes = await assetsService.readFile(`${storePath}/${THEMES_FILE_NAME}`);
+        } catch (err) {
+            console.warn("Saved data not found.");
+        }
+
+        if (!!savedThemes) {
+            // Saved
+            theme.name = savedThemes.name;
+            theme.themes = savedThemes.themes;
+            this.props._onChangeThemes(savedThemes);
+        } else {
+            // Embeded
+            this.props._onChangeThemes(theme);
+        }
+
         this._assetsStore = new AssetsStore(storePath, assetsService, {
             createDirectoryRecurtion: false,
             maxThreads: 1,
@@ -108,6 +126,17 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
 
                 const terminal = data.refs.__raw.terminals.find(t => t.id === this.props._terminalId);
                 if (!!terminal) {
+
+                    const themes: IKioskTheme | undefined = data.refs.themes?.length > 0 ? compileThemes(data.refs.themes, terminal.config.theme) : undefined;
+                    assetsService.writeFile(`${storePath}/${THEMES_FILE_NAME}`, themes);
+
+                    // Override embeded themes
+                    theme.name = terminal.config.theme;
+                    if (!!themes) {
+                        theme.themes = themes.themes;
+                        this.props._onChangeThemes(themes);
+                    }
+
                     this.props._onChangeTerminal(terminal);
                 }
             },
@@ -160,6 +189,7 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
                     RefTypes.ORDER_TYPES,
                     RefTypes.CURRENCIES,
                     RefTypes.ADS,
+                    RefTypes.THEMES,
                 ],
                 initialRefs: this._savedData as any,
             });
@@ -213,15 +243,15 @@ const mapStateToProps = (state: IAppState) => {
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => {
     return {
+        _onChangeThemes: (themes: IKioskTheme) => {
+            dispatch(CapabilitiesActions.setThemes(themes));
+        },
         _onChange: (data: ICompiledData) => {
             dispatch(CombinedDataActions.setData(data));
             dispatch(CapabilitiesActions.setLanguage(data.refs.defaultLanguage));
             dispatch(CapabilitiesActions.setOrderType(data.refs.defaultOrderType));
         },
         _onChangeTerminal: (terminal: ITerminal) => {
-            theme.name = terminal.config.theme;
-            dispatch(CapabilitiesActions.setTheme(terminal.config.theme));
-
             dispatch(CombinedDataActions.setTerminal(terminal));
         },
         _onProgress: (progress: IProgress) => {
