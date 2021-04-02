@@ -1,5 +1,23 @@
-import { IKioskTheme } from "@djonnyx/tornado-types";
+import { IAppTheme, IKioskTheme, IKioskThemeColors } from "@djonnyx/tornado-types";
 
+export const THEMES_FILE_NAME = "themes.json";
+
+export const compileThemes = (themes: Array<IAppTheme<IKioskThemeColors>>, name: string): IKioskTheme => {
+    const result: IKioskTheme = {
+        name,
+        themes: {},
+    };
+
+    themes.forEach(t => {
+        result.themes[t.name] = t.data;
+    });
+
+    return result;
+}
+
+/**
+ * Embeded theme
+ */
 export const theme: IKioskTheme = {
     name: "light",
     themes: {
