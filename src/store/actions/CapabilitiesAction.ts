@@ -1,16 +1,16 @@
 import { Action } from "redux";
-import { ICompiledOrderType, ICompiledLanguage } from "@djonnyx/tornado-types";
+import { ICompiledOrderType, ICompiledLanguage, IKioskTheme } from "@djonnyx/tornado-types";
 import { MainNavigationScreenTypes } from "../../components/navigation";
 
 export enum CapabilitiesActionTypes {
-    SET_THEME = "TORNADO/capabilities/set-theme",
+    SET_THEMES = "TORNADO/capabilities/set-themes",
     SET_LANGUAGE = "TORNADO/capabilities/set-language",
     SET_ORDER_TYPE = "TORNADO/capabilities/set-order-type",
     SET_CURRENT_SCREEN = "TORNADO/capabilities/set-current-screen",
 }
 
-interface ICapabilitiesActionSetTheme extends Action<CapabilitiesActionTypes.SET_THEME> {
-    theme: string;
+interface ICapabilitiesActionSetThemes extends Action<CapabilitiesActionTypes.SET_THEMES> {
+    themes: IKioskTheme;
 }
 
 interface ICapabilitiesActionSetLanguage extends Action<CapabilitiesActionTypes.SET_LANGUAGE> {
@@ -26,9 +26,9 @@ interface ICapabilitiesActionSetCurrentScreen extends Action<CapabilitiesActionT
 }
 
 export class CapabilitiesActions {
-    static setTheme = (theme: string): ICapabilitiesActionSetTheme => ({
-        type: CapabilitiesActionTypes.SET_THEME,
-        theme,
+    static setThemes = (themes: IKioskTheme): ICapabilitiesActionSetThemes => ({
+        type: CapabilitiesActionTypes.SET_THEMES,
+        themes,
     });
 
     static setLanguage = (language: ICompiledLanguage): ICapabilitiesActionSetLanguage => ({
@@ -47,5 +47,5 @@ export class CapabilitiesActions {
     });
 }
 
-export type TCapabilitiesActions = ICapabilitiesActionSetTheme | ICapabilitiesActionSetLanguage | ICapabilitiesActionSetOrderType
-| ICapabilitiesActionSetCurrentScreen;
+export type TCapabilitiesActions = ICapabilitiesActionSetThemes | ICapabilitiesActionSetLanguage | ICapabilitiesActionSetOrderType
+    | ICapabilitiesActionSetCurrentScreen;

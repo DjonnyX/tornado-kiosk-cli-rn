@@ -1,7 +1,10 @@
 import { Observable, from, throwError, of } from "rxjs";
 import { catchError, map, retry, retryWhen, switchMap } from "rxjs/operators";
 import { config } from "../Config";
-import { IRef, INode, ISelector, IProduct, ITag, IAsset, ILanguage, ITranslation, IBusinessPeriod, IOrderType, ICurrency, IAd, IStore, ITerminal, TerminalTypes, ILicense } from "@djonnyx/tornado-types";
+import {
+    IRef, INode, ISelector, IProduct, ITag, IAsset, ILanguage, ITranslation, IBusinessPeriod, IOrderType, ICurrency,
+    IAppTheme, IAd, IStore, ITerminal, TerminalTypes, ILicense, IKioskThemeColors
+} from "@djonnyx/tornado-types";
 import { genericRetryStrategy } from "../utils/request";
 import { Log } from "./Log";
 import { AuthStore } from "../native";
@@ -616,6 +619,37 @@ class RefApiService {
             ).pipe(
                 switchMap(res => parseResponse(res)),
                 map(resData => resData.data),
+            );
+        } catch (err) {
+            return throwError(Error("Something went wrong"));
+        }
+        return response;
+    }
+
+    getThemes(): Observable<Array<IAppTheme<IKioskThemeColors>>> {
+        Log.i("RefApiService", "getThemes");
+        let response: Observable<Array<IAppTheme<IKioskThemeColors>>>;
+        try {
+            response = request(
+                from(this.getAccessToken()).pipe(
+                    switchMap(token => {
+                        return from(
+                            fetch(`${config.refServer.address}/api/v1/app-themes?type=${TerminalTypes.KIOSK}`,
+                                {
+                                    method: "GET",
+                                    headers: {
+                                        "x-access-token": token,
+                                    },
+                                }
+                            )
+                        );
+                    })
+                ),
+            ).pipe(
+                switchMap(res => parseResponse(res)),
+                map(resData => {
+                    return resData.data;
+                }),
             );
         } catch (err) {
             return throwError(Error("Something went wrong"));

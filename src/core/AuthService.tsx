@@ -16,7 +16,6 @@ interface IAuthServiceProps {
     _onChangeDeviceInfo: (deviceInfo: IDeviceInfo | null) => void;
 
     // self
-    _theme: string | undefined;
     _serialNumber: string | undefined;
     _terminalId: string | undefined;
     _storeId: string | undefined;
@@ -50,14 +49,12 @@ class AuthServiceContainer extends Component<IAuthServiceProps, IAuthServiceStat
         if (this.props._serialNumber !== nextProps._serialNumber
             || this.props._setupStep !== nextProps._setupStep
             || this.props._terminalId !== nextProps._terminalId
-            || this.props._storeId !== nextProps._storeId
-            || this.props._theme !== nextProps._theme) {
+            || this.props._storeId !== nextProps._storeId) {
 
             refApiService.serial = orderApiService.serial = nextProps._serialNumber || "";
 
             this.saveDeviceInfo({
                 ...this._deviceInfo,
-                theme: nextProps._theme,
                 serialNumber: nextProps._serialNumber,
                 terminalId: nextProps._terminalId,
                 storeId: nextProps._storeId,
@@ -118,7 +115,6 @@ class AuthServiceContainer extends Component<IAuthServiceProps, IAuthServiceStat
 
 const mapStateToProps = (state: IAppState) => {
     return {
-        _theme: CapabilitiesSelectors.selectTheme(state),
         _serialNumber: SystemSelectors.selectSerialNumber(state),
         _terminalId: SystemSelectors.selectTerminalId(state),
         _storeId: SystemSelectors.selectStoreId(state),
@@ -129,9 +125,6 @@ const mapStateToProps = (state: IAppState) => {
 const mapDispatchToProps = (dispatch: Dispatch<any>) => {
     return {
         _onChangeDeviceInfo: (data: IDeviceInfo | null) => {
-            theme.name = data?.theme || "light";
-            dispatch(CapabilitiesActions.setTheme(theme.name));
-
             dispatch(SystemActions.setSerialNumber(data?.serialNumber));
             dispatch(SystemActions.setSetupStep(data?.setupStep || 0));
             dispatch(SystemActions.setTerminalId(data?.terminalId));

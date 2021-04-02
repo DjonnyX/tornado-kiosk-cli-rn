@@ -14,7 +14,7 @@ import { theme } from "../../theme";
 import { NotificationActions } from "../../store/actions";
 import { orderApiService, refApiService } from "../../services";
 import { SystemActions } from "../../store/actions/SystemAction";
-import { SimpleButton } from "../simple";
+import { SimpleSystemButton } from "../simple";
 import { IAlertState } from "../../interfaces";
 import { Subject } from "rxjs";
 
@@ -69,7 +69,7 @@ const FormSN = React.memo(({ themeName, value, isProgress, onComplete }: IFormSN
         </Text>
             }
         </View>
-        <SimpleButton style={{ backgroundColor: theme.themes[theme.name].service.button.backgroundColor, minWidth: 180 }}
+        <SimpleSystemButton style={{ backgroundColor: theme.themes[theme.name].service.button.backgroundColor, minWidth: 180 }}
             textStyle={{ fontSize: 16, color: theme.themes[theme.name].service.button.textColor }}
             onPress={() => { completeHandler() }} title="Зарегистрировать" disabled={isProgress || !isValid} />
     </>
@@ -149,7 +149,7 @@ const FormTParams = React.memo(({ themeName, stores, isProgress, onComplete }: I
             </Text>
             }
         </View>
-        <SimpleButton style={{ backgroundColor: theme.themes[theme.name].service.button.backgroundColor, minWidth: 180 }}
+        <SimpleSystemButton style={{ backgroundColor: theme.themes[theme.name].service.button.backgroundColor, minWidth: 180 }}
             textStyle={{ fontSize: 16, color: theme.themes[theme.name].service.button.textColor }}
             onPress={completeHandler} title="Сохранить" disabled={isProgress || !isStep2Valid} />
     </>
