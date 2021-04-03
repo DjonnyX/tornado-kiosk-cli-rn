@@ -222,6 +222,7 @@ export const Menu = React.memo(({
                         </View>
                         <View style={{ flex: 0, width: "100%", height: 192, margin: "auto", padding: 24 }}>
                             <CtrlMenuButton
+                                key={language.code}
                                 gradient={theme.themes[theme.name].menu.ctrls.cancelButton.backgroundColor}
                                 gradientDisabled={theme.themes[theme.name].menu.ctrls.cancelButton.disabledBackgroundColor}
                                 text={
