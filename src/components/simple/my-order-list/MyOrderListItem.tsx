@@ -87,6 +87,7 @@ export const MyOrderListItem = React.memo(({ stateId, menuStateId, imageHeight, 
                 </View>
             </TouchableOpacity>
             <NumericStapper
+                key={language.code}
                 value={position.quantity}
                 buttonStyle={{
                     width: 38, height: 38, borderRadius: 10,
