@@ -21,6 +21,11 @@ export namespace CombinedDataSelectors {
         return state?.data?.refs.ads.intros;
     });
 
+    export const selectServiceUnavailableIntros = createSelector(getCombinedData, (state) => {
+        console.warn(state?.data?.refs.ads.serviceUnavailableIntros)
+        return state?.data?.refs.ads.serviceUnavailableIntros;
+    });
+
     export const selectBanners = createSelector(getCombinedData, (state) => {
         return state?.data?.refs.ads.banners;
     });
