@@ -11,6 +11,7 @@ import { ConfirmationOrderScreen } from "../screens/ConfirmationOrderScreen";
 import { AuthScreen } from "../screens/AuthScreen";
 import { PayStatusScreen } from "../screens/PayStatusScreen";
 import { PayConfirmationScreenScreen } from "../screens/PayConfirmationScreen";
+import { ServiceUnavailableScreen } from "../screens/ServiceUnavailableScreen";
 
 const Stack = createStackNavigator();
 
@@ -38,6 +39,13 @@ export const MainNavigationStack = () => {
       <Stack.Screen
         name={MainNavigationScreenTypes.INTRO}
         component={IntroScreen}
+        options={{
+          gestureEnabled: false,
+        }}
+      />
+      <Stack.Screen
+        name={MainNavigationScreenTypes.SERVICE_UNAVAILABLE}
+        component={ServiceUnavailableScreen}
         options={{
           gestureEnabled: false,
         }}
