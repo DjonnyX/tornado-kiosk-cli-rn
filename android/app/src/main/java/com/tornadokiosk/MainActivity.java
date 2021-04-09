@@ -44,6 +44,24 @@ public class MainActivity extends ReactActivity implements OnKeyboardVisibilityL
         setVolumeToMax();
         setDisableKeyguard();
         setKeepScreenOn();
+        detectNavbarShowing();
+    }
+
+    protected void detectNavbarShowing() {
+        View decorView = getWindow().getDecorView();
+        decorView.setOnSystemUiVisibilityChangeListener
+        (new View.OnSystemUiVisibilityChangeListener() {
+            @Override
+            public void onSystemUiVisibilityChange(int visibility) {
+                if ((visibility & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) == 0) {
+                    hideSystemUI();
+                } else {
+                    // TODO: The navigation bar is NOT visible. Make any desired
+                    // adjustments to your UI, such as hiding the action bar or
+                    // other navigational controls.
+                }
+            }
+        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
