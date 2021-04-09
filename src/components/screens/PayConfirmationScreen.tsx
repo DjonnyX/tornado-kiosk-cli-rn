@@ -87,7 +87,7 @@ const PayConfirmationScreenScreenContainer = React.memo(({ _theme, _language, _o
                         localize(_language, "kiosk_pay_success_order_description", OrderWizard.current.getFormatedSum(true))
                     }
                 </Text>
-                <Text style={{
+                {/*<Text style={{
                     fontSize: 20, fontWeight: "bold", textAlign: "center",
                     color: theme.themes[theme.name].payConfirmation.secondaryMessageColor, marginBottom: 40
                 }}>
@@ -103,7 +103,7 @@ const PayConfirmationScreenScreenContainer = React.memo(({ _theme, _language, _o
                         size={192}
                         value="Ссылка на просмотр статуса заказа"
                     />
-                </View>
+                </View>*/}
             </View>
             <View>
                 <SimpleButton title={
