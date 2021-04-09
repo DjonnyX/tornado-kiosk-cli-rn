@@ -93,7 +93,7 @@ const parseResponse = (res: Response) => {
     );
 }
 
-class RefApiService {
+class RefApiService<T = IKioskThemeColors> {
     private _serial: string | undefined;
 
     public set serial(v: string) {
@@ -626,9 +626,9 @@ class RefApiService {
         return response;
     }
 
-    getThemes(): Observable<Array<IAppTheme<IKioskThemeColors>>> {
+    getThemes(): Observable<Array<IAppTheme<T>>> {
         Log.i("RefApiService", "getThemes");
-        let response: Observable<Array<IAppTheme<IKioskThemeColors>>>;
+        let response: Observable<Array<IAppTheme<T>>>;
         try {
             response = request(
                 from(this.getAccessToken()).pipe(
@@ -658,4 +658,4 @@ class RefApiService {
     }
 }
 
-export const refApiService = new RefApiService();
+export const refApiService = new RefApiService<IKioskThemeColors>();

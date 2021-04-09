@@ -14,19 +14,21 @@ import { CombinedDataActions, CapabilitiesActions } from "../store/actions";
 import { CapabilitiesSelectors, SystemSelectors } from "../store/selectors";
 import { MainNavigationScreenTypes } from "../components/navigation";
 import { compileThemes, theme, THEMES_FILE_NAME } from "../theme";
+import { WorkStatuses } from "@djonnyx/tornado-refs-processor/dist/enums";
 
 interface IDataCollectorServiceProps {
     // store
     _onChange: (data: ICompiledData) => void;
     _onChangeThemes: (themes: IKioskTheme) => void;
     _onChangeTerminal: (terminal: ITerminal) => void;
+    _setCurrentScreen: (screen: MainNavigationScreenTypes) => void;
     _onProgress: (progress: IProgress) => void;
 
     // self
     _serialNumber?: string | undefined;
     _terminalId?: string | undefined;
     _storeId?: string | undefined;
-    _currentScreen?: string | undefined;
+    _currentScreen?: MainNavigationScreenTypes | undefined;
 }
 
 interface IDataCollectorServiceState { }
@@ -35,6 +37,8 @@ const COMPILED_DATA_FILE_NAME = "refs.json";
 
 class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps, IDataCollectorServiceState> {
     private _unsubscribe$: Subject<void> | null = new Subject<void>();
+
+    private _lastWorkScreen: MainNavigationScreenTypes | undefined;
 
     private _assetsStore: AssetsStore | null = null;
 
@@ -113,6 +117,26 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
             },
             dataService: refApiService,
             updateTimeout: config.refServer.updateTimeout,
+        });
+
+        this._dataCombiner.onChangeStatus.pipe(
+            takeUntil(this._unsubscribe$ as any),
+        ).subscribe(status => {
+            switch (status) {
+                case WorkStatuses.WORK: {
+                    if (this.props._currentScreen === MainNavigationScreenTypes.SERVICE_UNAVAILABLE && !!this._lastWorkScreen) {
+                        this.props._setCurrentScreen(this._lastWorkScreen);
+                    }
+                    break;
+                }
+                case WorkStatuses.ERROR: {
+                    if (this.props._currentScreen !== MainNavigationScreenTypes.SERVICE_UNAVAILABLE) {
+                        this._lastWorkScreen = this.props._currentScreen;
+                        this.props._setCurrentScreen(MainNavigationScreenTypes.SERVICE_UNAVAILABLE);
+                    }
+                    break;
+                }
+            }
         });
 
         this._dataCombiner.onChange.pipe(
@@ -243,6 +267,9 @@ const mapStateToProps = (state: IAppState) => {
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => {
     return {
+        _setCurrentScreen: (screen: MainNavigationScreenTypes) => {
+            dispatch(CapabilitiesActions.setCurrentScreen(screen));
+        },
         _onChangeThemes: (themes: IKioskTheme) => {
             dispatch(CapabilitiesActions.setThemes(themes));
         },

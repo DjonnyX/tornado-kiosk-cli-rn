@@ -40,6 +40,7 @@ class UserIdleServiceContainer extends PureComponent<IUserIdleServiceProps, IUse
     private _onIdle = () => {
         switch (this.props._currentScreen) {
             case MainNavigationScreenTypes.LOADING:
+            case MainNavigationScreenTypes.SERVICE_UNAVAILABLE:
             case MainNavigationScreenTypes.INTRO:
             case MainNavigationScreenTypes.AUTH:
             case MainNavigationScreenTypes.PAY_STATUS:
