@@ -9,7 +9,7 @@ export const compileThemes = (themes: Array<IAppTheme<IKioskThemeColors>>, name:
     };
 
     themes.forEach(t => {
-        result.themes[t.name] = t.data;
+        result.themes[t.id!] = t.data;
     });
 
     return result;
@@ -19,27 +19,27 @@ export const compileThemes = (themes: Array<IAppTheme<IKioskThemeColors>>, name:
  * Embeded theme
  */
 export const theme: IKioskTheme = {
-    name: "light",
+    name: "embeded",
     themes: {
-        ["light"]: {
+        ["embeded"]: {
             common: {
                 modal: {
-                    background: "#e3e3e3",
+                    backgroundColor: "#e3e3e3",
                     window: {
-                        background: "transparent",
+                        backgroundColor: "transparent",
                     }
                 },
                 modalTransparent: {
-                    background: "rgba(0,0,0,0.5)",
+                    backgroundColor: "rgba(0,0,0,0.5)",
                     window: {
-                        background: "#fff",
+                        backgroundColor: "#fff",
                         borderColor: "rgba(0,0,0,0.1)"
                     }
                 },
                 modalNotification: {
-                    background: "none",
+                    backgroundColor: "none",
                     window: {
-                        background: "rgba(0,0,0,0.75)",
+                        backgroundColor: "rgba(0,0,0,0.75)",
                         borderColor: "rgba(0,0,0,0.1)",
                     }
                 },
@@ -96,7 +96,7 @@ export const theme: IKioskTheme = {
                 }
             },
             loading: {
-                background: "#fff",
+                backgroundColor: "#fff",
                 progressBar: {
                     thumbColor: "rgba(0,0,0,0.85)",
                     trackColor: "rgba(0,0,0,0.75)",
@@ -104,12 +104,12 @@ export const theme: IKioskTheme = {
                 }
             },
             intro: {
-                background: "#fff",
+                backgroundColor: "#fff",
             },
             menu: {
-                background: "#fff",
+                backgroundColor: "#fff",
                 header: {
-                    background: ["rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 0)"],
+                    backgroundColor: ["rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 0)"],
                     titleColor: "rgba(0,0,0,0.75)",
                 },
                 orderPanel: {
@@ -261,7 +261,7 @@ export const theme: IKioskTheme = {
                 }
             },
             confirmation: {
-                background: "#fff",
+                backgroundColor: "#fff",
                 backButton: {
                     backgroundColor: "#212121",
                     textColor: "#ffffff",
@@ -315,22 +315,22 @@ export const theme: IKioskTheme = {
         ["dark"]: {
             common: {
                 modal: {
-                    background: "#000",
+                    backgroundColor: "#000",
                     window: {
-                        background: "#000",
+                        backgroundColor: "#000",
                     }
                 },
                 modalTransparent: {
-                    background: "rgba(255,255,255,0.075)",
+                    backgroundColor: "rgba(255,255,255,0.075)",
                     window: {
-                        background: "#000",
+                        backgroundColor: "#000",
                         borderColor: "rgba(255,255,255,0.1)"
                     }
                 },
                 modalNotification: {
-                    background: "none",
+                    backgroundColor: "none",
                     window: {
-                        background: "rgba(255,255,255,0.75)",
+                        backgroundColor: "rgba(255,255,255,0.75)",
                         borderColor: "rgba(255,255,255,0.1)",
                     }
                 },
@@ -387,7 +387,7 @@ export const theme: IKioskTheme = {
                 }
             },
             loading: {
-                background: "#000",
+                backgroundColor: "#000",
                 progressBar: {
                     thumbColor: "rgba(255,255,255,0.85)",
                     trackColor: "rgba(255,255,255,0.75)",
@@ -395,12 +395,12 @@ export const theme: IKioskTheme = {
                 }
             },
             intro: {
-                background: "#000",
+                backgroundColor: "#000",
             },
             menu: {
-                background: "#000",
+                backgroundColor: "#000",
                 header: {
-                    background: ["rgba(0, 0, 0, 1)", "rgba(0, 0, 0, 1)", "rgba(0, 0, 0, 1)", "rgba(0, 0, 0, 1)", "rgba(0, 0, 0, 0)"],
+                    backgroundColor: ["rgba(0, 0, 0, 1)", "rgba(0, 0, 0, 1)", "rgba(0, 0, 0, 1)", "rgba(0, 0, 0, 1)", "rgba(0, 0, 0, 0)"],
                     titleColor: "rgba(255,255,255,0.75)",
                 },
                 orderPanel: {
@@ -552,7 +552,7 @@ export const theme: IKioskTheme = {
                 }
             },
             confirmation: {
-                background: "#000",
+                backgroundColor: "#000",
                 backButton: {
                     backgroundColor: "#212121",
                     textColor: "#ffffff",
