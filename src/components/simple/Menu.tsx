@@ -176,7 +176,7 @@ export const Menu = React.memo(({
             <ModifiersEditor></ModifiersEditor>
             <View style={{ flex: 1, width, height: "100%" }}>
                 <LinearGradient
-                    colors={theme.themes[theme.name].menu.header.background}
+                    colors={theme.themes[theme.name].menu.header.backgroundColor}
                     style={{ display: "flex", position: "absolute", width: "100%", height: 96, zIndex: 1 }}
                 >
                     <View style={{ display: "flex", alignItems: "center", flexDirection: "row", width: "100%", height: "100%", padding: 16 }}>

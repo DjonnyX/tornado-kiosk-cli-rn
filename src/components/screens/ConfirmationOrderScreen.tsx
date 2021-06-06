@@ -47,7 +47,7 @@ const ConfirmationOrderScreenContainer = React.memo(({ _theme, _language, _banne
     }, []);
 
     return (
-        <View style={{ flex: 1, backgroundColor: theme.themes[theme.name].confirmation.background }}>
+        <View style={{ flex: 1, backgroundColor: theme.themes[theme.name].confirmation.backgroundColor }}>
             {
                 _banners.length > 0
                     ?

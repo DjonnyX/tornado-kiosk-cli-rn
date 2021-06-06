@@ -24,7 +24,7 @@ const PayStatusScreenContainer = React.memo(({ _theme, _language, navigation }: 
     return (
         <View style={{
             flex: 1, justifyContent: "center", alignItems: "center", width: "100%", height: "100%",
-            backgroundColor: theme.themes[theme.name].intro.background
+            backgroundColor: theme.themes[theme.name].intro.backgroundColor
         }}>
             <View style={{ alignItems: "center", width: "80%", maxWidth: 620 }}>
                 <Text style={{

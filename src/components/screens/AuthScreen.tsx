@@ -369,7 +369,7 @@ const AuthScreenContainer = React.memo(({ _theme, _serialNumber, _setupStep, _te
         <>
             {
                 !!_theme &&
-                <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: theme.themes[theme.name].loading.background }}>
+                <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: theme.themes[theme.name].loading.backgroundColor }}>
                     {
                         !isLicenseValid &&
                         <>

@@ -65,7 +65,7 @@ export const NotificationModal = React.memo(({ children, visible }: INotificatio
                 margin: 40,
                 borderWidth: 1,
                 borderColor: theme.themes[theme.name].common.modalNotification.window.borderColor,
-                backgroundColor: theme.themes[theme.name].common.modalNotification.window.background,
+                backgroundColor: theme.themes[theme.name].common.modalNotification.window.backgroundColor,
                 borderRadius: 8,
                 padding: 44,
                 alignItems: "center",

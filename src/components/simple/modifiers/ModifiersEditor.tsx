@@ -210,7 +210,7 @@ export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _la
                             </View>
                             <View style={{ flex: 1, width: "100%" }}>
                                 <LinearGradient
-                                    colors={theme.themes[theme.name].menu.header.background}
+                                    colors={theme.themes[theme.name].menu.header.backgroundColor}
                                     style={{ display: "flex", position: "absolute", width: "100%", height: 96, zIndex: 1 }}
                                 >
                                 </LinearGradient>
