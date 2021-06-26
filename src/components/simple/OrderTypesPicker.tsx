@@ -57,8 +57,9 @@ export const OrderTypesPicker = React.memo(({ language, isShow, orderType, order
                                 uri: `file://${item.contents[language?.code]?.resources?.main?.mipmap.x128}`,
                             }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                             <Text style={{
-                                fontSize: 16, fontWeight: "bold",
-                                color: theme.themes[theme.name].orderTypeModal.item.textColor
+                                fontWeight: "bold",
+                                color: theme.themes[theme.name].orderTypeModal.item.textColor,
+                                fontSize: theme.themes[theme.name].orderTypeModal.item.textFontSize,
                             }}>
                                 {
                                     item.contents[language?.code]?.name

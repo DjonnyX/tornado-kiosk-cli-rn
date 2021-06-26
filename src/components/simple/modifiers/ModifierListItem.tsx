@@ -35,7 +35,7 @@ export const ModifierListItem = React.memo(({ themeName, thumbnailHeight, curren
     }
 
     const currentContent = position.__product__?.contents[language?.code];
-    const currentAdAsset = currentContent?.resources?.icon;
+    const currentAsset = currentContent?.resources?.icon;
 
     const tags = !!position.__product__?.tags && position.__product__?.tags?.length > 0
         ? position.__product__?.tags
@@ -63,7 +63,7 @@ export const ModifierListItem = React.memo(({ themeName, thumbnailHeight, curren
                                 borderRadius: 8,
                                 paddingHorizontal: 8,
                                 paddingVertical: 4,
-                                fontSize: 12, fontWeight: "bold",
+                                fontSize: theme.themes[theme.name].modifiers.item.discount.textFontSize, fontWeight: "bold",
                                 backgroundColor: theme.themes[theme.name].modifiers.item.discount.backgroundColor,
                                 color: theme.themes[theme.name].modifiers.item.discount.textColor,
                             }}>
@@ -76,12 +76,12 @@ export const ModifierListItem = React.memo(({ themeName, thumbnailHeight, curren
                 </View>
                 <View style={{ width: "100%", height: thumbnailHeight, marginBottom: 5 }}>
                     <FastImage style={{ width: "100%", height: "100%" }} source={{
-                        uri: `file://${currentAdAsset?.mipmap.x128}`,
+                        uri: `file://${currentAsset?.mipmap?.x128}`,
                     }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                 </View>
                 <Text textBreakStrategy="simple" numberOfLines={2} ellipsizeMode="tail"
                     style={{
-                        textAlign: "center", fontSize: 20, marginBottom: 6, color: theme.themes[theme.name].modifiers.item.nameColor,
+                        textAlign: "center", fontSize: theme.themes[theme.name].modifiers.item.nameFontFontSize, marginBottom: 6, color: theme.themes[theme.name].modifiers.item.nameColor,
                         fontWeight: "bold", textTransform: "uppercase"
                     }}>
                     {
@@ -89,7 +89,7 @@ export const ModifierListItem = React.memo(({ themeName, thumbnailHeight, curren
                     }
                 </Text>
                 <Text textBreakStrategy="simple" numberOfLines={2} ellipsizeMode="tail" style={{
-                    textAlign: "center", fontSize: 12,
+                    textAlign: "center", fontSize: theme.themes[theme.name].modifiers.item.descriptionFontSize,
                     color: theme.themes[theme.name].modifiers.item.descriptionColor, textTransform: "uppercase",
                     marginBottom: 12
                 }}>
@@ -120,11 +120,11 @@ export const ModifierListItem = React.memo(({ themeName, thumbnailHeight, curren
                         styleViewOn={{}}
                         styleViewOff={{}}
                         textStyleOn={{
-                            fontSize: 16, fontWeight: "bold",
+                            fontSize: theme.themes[theme.name].modifiers.item.quantitySwitch.on.textFontSize, fontWeight: "bold",
                             color: theme.themes[theme.name].modifiers.item.quantitySwitch.on.textColor,
                         }}
                         textStyleOff={{
-                            fontSize: 16, fontWeight: "bold",
+                            fontSize: theme.themes[theme.name].modifiers.item.quantitySwitch.off.textFontSize, fontWeight: "bold",
                             color: theme.themes[theme.name].modifiers.item.quantitySwitch.off.textColor,
                         }}
                         textStyleOnDisabled={{}}
@@ -163,23 +163,23 @@ export const ModifierListItem = React.memo(({ themeName, thumbnailHeight, curren
                             opacity: 0.25
                         }}
                         buttonTextStyle={{
-                            fontSize: 16, fontWeight: "bold",
+                            fontSize: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "bold",
                             color: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.textColor as any,
                         }}
                         buttonSelectedTextStyle={{
-                            fontSize: 16, fontWeight: "bold",
+                            fontSize: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "bold",
                             color: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.selectedTextColor as any,
                         }}
                         disabledButtonTextStyle={{
-                            fontSize: 16, fontWeight: "bold",
+                            fontSize: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "bold",
                             color: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.disabledTextColor as any,
                         }}
                         disabledSelectedButtonTextStyle={{
-                            fontSize: 16, fontWeight: "bold",
+                            fontSize: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "bold",
                             color: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.disabledSelectedTextColor as any,
                         }}
                         textStyle={{
-                            fontSize: 16, fontWeight: "bold",
+                            fontSize: theme.themes[theme.name].modifiers.item.quantityStepper.indicator.textFontSize, fontWeight: "bold",
                             color: theme.themes[theme.name].modifiers.item.quantityStepper.indicator.textColor
                         }}
                         iconDecrement="-"

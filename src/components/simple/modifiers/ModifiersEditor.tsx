@@ -90,13 +90,13 @@ export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _la
                                 </View>
                                 <View style={{ flex: 1, marginLeft: 30, marginRight: 30 }}>
                                     <Text style={{
-                                        fontSize: 32, fontWeight: "bold", color: theme.themes[theme.name].modifiers.nameColor,
+                                        fontSize: theme.themes[theme.name].modifiers.nameFontSize, fontWeight: "bold", color: theme.themes[theme.name].modifiers.nameColor,
                                         textTransform: "uppercase"
                                     }}>{
                                             position.__product__?.contents[_language.code]?.name
                                         }</Text>
                                     <Text style={{
-                                        fontSize: 14, color: theme.themes[theme.name].modifiers.descriptionColor,
+                                        fontSize: theme.themes[theme.name].modifiers.descriptionFontSize, color: theme.themes[theme.name].modifiers.descriptionColor,
                                         textTransform: "uppercase"
                                     }}>{
                                             position.__product__?.contents[_language.code]?.description
@@ -104,7 +104,7 @@ export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _la
                                 </View>
                                 <View style={{ marginTop: -10 }}>
                                     <Text style={{
-                                        fontSize: 48, fontWeight: "bold",
+                                        fontSize: theme.themes[theme.name].modifiers.price.textFontSize, fontWeight: "bold",
                                         color: theme.themes[theme.name].modifiers.price.textColor,
                                         textTransform: "uppercase",
                                     }}>{
@@ -153,12 +153,12 @@ export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _la
                                     textStyle={{
                                         fontWeight: "bold",
                                         color: theme.themes[theme.name].modifiers.group.buttonPrevious.textColor,
-                                        fontSize: 26
+                                        fontSize: theme.themes[theme.name].modifiers.group.buttonPrevious.textFontSize,
                                     }}
                                     textStyleDisabled={{
                                         fontWeight: "bold",
                                         color: theme.themes[theme.name].modifiers.group.buttonPrevious.disabledTextColor,
-                                        fontSize: 26
+                                        fontSize: theme.themes[theme.name].modifiers.group.buttonPrevious.textFontSize,
                                     }}
                                     disabled={position.currentGroup === 0} onPress={onPreviousGroup}></SimpleButton>
                                 <View style={{ flex: 1 }}>
@@ -199,12 +199,12 @@ export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _la
                                     textStyle={{
                                         fontWeight: "bold",
                                         color: theme.themes[theme.name].modifiers.group.buttonNext.textColor,
-                                        fontSize: 26
+                                        fontSize: theme.themes[theme.name].modifiers.group.buttonNext.textFontSize,
                                     }}
                                     textStyleDisabled={{
                                         fontWeight: "bold",
                                         color: theme.themes[theme.name].modifiers.group.buttonNext.disabledTextColor,
-                                        fontSize: 26
+                                        fontSize: theme.themes[theme.name].modifiers.group.buttonNext.textFontSize,
                                     }}
                                     disabled={!position.groups[position.currentGroup].isValid} onPress={onNextGroup}></SimpleButton>
                             </View>

@@ -28,7 +28,7 @@ const PayStatusScreenContainer = React.memo(({ _theme, _language, navigation }: 
         }}>
             <View style={{ alignItems: "center", width: "80%", maxWidth: 620 }}>
                 <Text style={{
-                    fontSize: 40, fontWeight: "bold", textAlign: "center",
+                    fontSize: theme.themes[theme.name].payStatus.primaryMessageFontSize, fontWeight: "bold", textAlign: "center",
                     color: theme.themes[theme.name].payStatus.primaryMessageColor
                 }}>
                     {
@@ -36,7 +36,7 @@ const PayStatusScreenContainer = React.memo(({ _theme, _language, navigation }: 
                     }
                 </Text>
                 <Text style={{
-                    fontSize: 20, fontWeight: "bold", textAlign: "center",
+                    fontSize: theme.themes[theme.name].payStatus.secondaryMessageFontSize, fontWeight: "bold", textAlign: "center",
                     color: theme.themes[theme.name].payStatus.secondaryMessageColor, marginBottom: 40
                 }}>
                     {

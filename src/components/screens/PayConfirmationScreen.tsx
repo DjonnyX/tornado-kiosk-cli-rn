@@ -58,7 +58,7 @@ const PayConfirmationScreenScreenContainer = React.memo(({ _theme, _language, _o
         }}>
             <View style={{ flex: 1, alignItems: "center", width: "70%", maxWidth: 620 }}>
                 <Text style={{
-                    fontSize: 32, fontWeight: "bold", textAlign: "center",
+                    fontSize: theme.themes[theme.name].payConfirmation.primaryMessageFontSize, fontWeight: "bold", textAlign: "center",
                     color: theme.themes[theme.name].payConfirmation.primaryMessageColor
                 }}>
                     {
@@ -66,7 +66,7 @@ const PayConfirmationScreenScreenContainer = React.memo(({ _theme, _language, _o
                     }
                 </Text>
                 <Text style={{
-                    fontSize: 32, fontWeight: "bold", textAlign: "center",
+                    fontSize: theme.themes[theme.name].payConfirmation.primaryMessageFontSize, fontWeight: "bold", textAlign: "center",
                     color: theme.themes[theme.name].payConfirmation.primaryMessageColor
                 }}>
                     {
@@ -74,13 +74,13 @@ const PayConfirmationScreenScreenContainer = React.memo(({ _theme, _language, _o
                     }
                 </Text>
                 <Text style={{
-                    fontSize: 76, fontWeight: "bold", textAlign: "center",
+                    fontSize: theme.themes[theme.name].payConfirmation.nameFontSize, fontWeight: "bold", textAlign: "center",
                     color: theme.themes[theme.name].payConfirmation.numberColor
                 }}>
                     {OrderWizard.current.result?.code}
                 </Text>
                 <Text style={{
-                    fontSize: 20, fontWeight: "bold", textAlign: "center",
+                    fontSize: theme.themes[theme.name].payConfirmation.secondaryMessageFontSize, fontWeight: "bold", textAlign: "center",
                     color: theme.themes[theme.name].payConfirmation.secondaryMessageColor
                 }}>
                     {

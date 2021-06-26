@@ -22,7 +22,7 @@ interface IMyOrderListItemItemProps {
 export const MyOrderListItem = React.memo(({ stateId, menuStateId, imageHeight, currency, language, position,
     alertOpen }: IMyOrderListItemItemProps) => {
     const currentContent = position.__product__?.contents[language?.code];
-    const currentAdAsset = currentContent?.resources?.icon;
+    const currentAsset = currentContent?.resources?.icon;
 
     const pressHandler = useCallback((e: GestureResponderEvent) => {
         position.edit();
@@ -64,11 +64,11 @@ export const MyOrderListItem = React.memo(({ stateId, menuStateId, imageHeight, 
             <TouchableOpacity style={{ alignItems: "center" }} onPress={pressHandler}>
                 <View style={{ flex: 1, width: "100%", height: imageHeight, marginBottom: 2, justifyContent: "flex-end" }}>
                     <FastImage style={{ width: "100%", height: "100%" }} source={{
-                        uri: `file://${currentAdAsset?.mipmap.x128}`,
+                        uri: `file://${currentAsset?.mipmap?.x128}`,
                     }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                 </View>
                 <Text numberOfLines={3} ellipsizeMode="tail" style={{
-                    textAlign: "center", fontSize: 14, fontWeight: "bold",
+                    textAlign: "center", fontSize: theme.themes[theme.name].menu.draftOrder.item.nameFontSize, fontWeight: "bold",
                     color: theme.themes[theme.name].menu.draftOrder.item.nameColor, textTransform: "uppercase"
                 }}>
                     {
@@ -77,7 +77,7 @@ export const MyOrderListItem = React.memo(({ stateId, menuStateId, imageHeight, 
                 </Text>
                 <View style={{ alignItems: "center", justifyContent: "center", marginBottom: 1 }}>
                     <Text style={{
-                        textAlign: "center", fontWeight: "bold", fontSize: 14, paddingTop: 4, paddingBottom: 4, paddingLeft: 6, paddingRight: 6,
+                        textAlign: "center", fontWeight: "bold", fontSize: theme.themes[theme.name].menu.draftOrder.item.price.textFontSize, paddingTop: 4, paddingBottom: 4, paddingLeft: 6, paddingRight: 6,
                         color: theme.themes[theme.name].menu.draftOrder.item.price.textColor
                     }}>
                         {
@@ -103,15 +103,17 @@ export const MyOrderListItem = React.memo(({ stateId, menuStateId, imageHeight, 
                 }}
                 buttonTextStyle={{
                     fontWeight: "bold",
+                    fontSize: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.textFontSize,
                     color: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.textColor as any,
                 }}
                 disabledButtonTextStyle={{
                     fontWeight: "bold",
+                    fontSize: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.textFontSize,
                     color: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.disabledTextColor as any,
                 }}
                 textStyle={{
                     width: 44,
-                    fontSize: 14, fontWeight: "bold",
+                    fontSize: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.indicator.textFontSize, fontWeight: "bold",
                     color: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.indicator.textColor
                 }}
                 iconDecrement="-"

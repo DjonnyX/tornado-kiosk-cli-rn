@@ -1,15 +1,16 @@
 import { Observable, from, throwError, of } from "rxjs";
-import { catchError, map, retry, retryWhen, switchMap } from "rxjs/operators";
+import { catchError, map, retry, retryWhen, switchMap, tap } from "rxjs/operators";
 import { config } from "../Config";
 import {
     IRef, INode, ISelector, IProduct, ITag, IAsset, ILanguage, ITranslation, IBusinessPeriod, IOrderType, ICurrency,
-    IAppTheme, IAd, IStore, ITerminal, TerminalTypes, ILicense, IKioskThemeColors
+    IAppTheme, IAd, IStore, ITerminal, TerminalTypes, ILicense, IKioskThemeData, ISystemTag
 } from "@djonnyx/tornado-types";
 import { genericRetryStrategy } from "../utils/request";
 import { Log } from "./Log";
 import { AuthStore } from "../native";
 import { extractError } from "../utils/error";
 import { ApiErrorCodes } from "./ApiErrorCodes";
+import { IDataService } from "@djonnyx/tornado-refs-processor";
 
 interface IRequestOptions {
     useAttempts?: boolean;
@@ -26,7 +27,7 @@ const request = (observable: Observable<Response>, options?: IRequestOptions): O
             retryWhen(
                 genericRetryStrategy({
                     rejectShortAttempts: 5, // 5 последовательных попыток
-                    rejectShortTimeout: 5000, // Раз в 5 сек
+                    rejectShortTimeout: 10000, // Раз в 5 сек
                     rejectLongTimeout: 60000, // Раз в минуту переобновление
                     excludedStatusCodes: [],
                 }),
@@ -93,7 +94,7 @@ const parseResponse = (res: Response) => {
     );
 }
 
-class RefApiService<T = IKioskThemeColors> {
+class RefApiService<T = IKioskThemeData> implements IDataService<T> {
     private _serial: string | undefined;
 
     public set serial(v: string) {
@@ -221,12 +222,12 @@ class RefApiService<T = IKioskThemeColors> {
                 from(this.getAccessToken()).pipe(
                     switchMap(token => {
                         return from(
-                            fetch(`${config.refServer.address}/api/v1/refs`,
+                            fetch(`${config.refServer.address}/api/v1/refs?theme=${TerminalTypes.KIOSK}`,
                                 {
                                     method: "GET",
                                     headers: {
                                         "x-access-token": token,
-                                    }
+                                    },
                                 }
                             )
                         );
@@ -646,6 +647,9 @@ class RefApiService<T = IKioskThemeColors> {
                     })
                 ),
             ).pipe(
+                tap(() => {
+                    console.warn("get t")
+                }),
                 switchMap(res => parseResponse(res)),
                 map(resData => {
                     return resData.data;
@@ -656,6 +660,10 @@ class RefApiService<T = IKioskThemeColors> {
         }
         return response;
     }
+
+    getSystemTags(): Observable<Array<ISystemTag>> {
+        return throwError(Error("System tags not supported from client."));
+    }
 }
 
-export const refApiService = new RefApiService<IKioskThemeColors>();
+export const refApiService = new RefApiService<IKioskThemeData>();

@@ -83,13 +83,17 @@ const ConfirmationOrderScreenContainer = React.memo(({ _theme, _language, _banne
                         textStyle={{
                             textAlign: "center", fontWeight: "bold",
                             color: theme.themes[theme.name].confirmation.backButton.textColor,
-                            fontSize: 16, textTransform: "uppercase"
+                            fontSize: theme.themes[theme.name].confirmation.backButton.textFontSize,
+                            textTransform: "uppercase"
                         }}
                         onPress={onPrevious}></SimpleButton>
                     <View style={{ flex: 1, alignContent: "center", justifyContent: "center" }}>
                         <Text style={{
-                            fontSize: 34, fontWeight: "bold", color: theme.themes[theme.name].confirmation.summaryPrice.textColor,
-                            textAlign: "center", textTransform: "uppercase"
+                            fontSize: theme.themes[theme.name].confirmation.summaryPrice.textFontSize,
+                            fontWeight: "bold",
+                            color: theme.themes[theme.name].confirmation.summaryPrice.textColor,
+                            textAlign: "center",
+                            textTransform: "uppercase"
                         }}>
                             {
                                 localize(_language, "kiosk_order_sum", OrderWizard.current.getFormatedSum(true))
@@ -108,7 +112,7 @@ const ConfirmationOrderScreenContainer = React.memo(({ _theme, _language, _banne
                         textStyle={{
                             textAlign: "center",
                             fontWeight: "bold", color: theme.themes[theme.name].confirmation.nextButton.textColor,
-                            fontSize: 16, textTransform: "uppercase"
+                            fontSize: theme.themes[theme.name].confirmation.nextButton.textFontSize, textTransform: "uppercase"
                         }}
                         onPress={onNext}></SimpleButton>
                 </View>

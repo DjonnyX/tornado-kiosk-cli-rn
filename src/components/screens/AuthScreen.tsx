@@ -57,20 +57,20 @@ const FormSN = React.memo(({ themeName, value, isProgress, onComplete }: IFormSN
                     : theme.themes[theme.name].service.textInput.underlineWrongColor
                 }
                 style={{
-                    fontSize: 16,
+                    fontSize: theme.themes[theme.name].service.textInput.textFontSize,
                     textAlign: "center", color: theme.themes[theme.name].service.textInput.textColor,
                     minWidth: 140, marginBottom: 12
                 }} editable={!isProgress}
                 placeholder="Серийный ключ" onChangeText={changeSerialNumHandler} value={serialNumber} />
             {
                 !isValid &&
-                <Text style={{ fontSize: 12, color: theme.themes[theme.name].service.errorLabel.textColor }}>
+                <Text style={{ fontSize: theme.themes[theme.name].service.errorLabel.textFontSize, color: theme.themes[theme.name].service.errorLabel.textColor }}>
                     * Обязательное поле
-        </Text>
+                </Text>
             }
         </View>
         <SimpleSystemButton style={{ backgroundColor: theme.themes[theme.name].service.button.backgroundColor, minWidth: 180 }}
-            textStyle={{ fontSize: 16, color: theme.themes[theme.name].service.button.textColor }}
+            textStyle={{ fontSize: theme.themes[theme.name].service.button.textFontSize, color: theme.themes[theme.name].service.button.textColor }}
             onPress={() => { completeHandler() }} title="Зарегистрировать" disabled={isProgress || !isValid} />
     </>
 });
@@ -107,16 +107,16 @@ const FormTParams = React.memo(({ themeName, stores, isProgress, onComplete }: I
                     : theme.themes[theme.name].service.textInput.underlineWrongColor
                 }
                 style={{
-                    fontSize: 16,
+                    fontSize: theme.themes[theme.name].service.textInput.textFontSize,
                     textAlign: "center", color: theme.themes[theme.name].service.textInput.textColor,
                     minWidth: 180
                 }} editable={!isProgress}
                 placeholder="Название терминала" onChangeText={changeTerminalNameHandler} value={terminalName} />
             {
                 !isTerminalNameValid &&
-                <Text style={{ fontSize: 12, color: theme.themes[theme.name].service.errorLabel.textColor }}>
+                <Text style={{ fontSize: theme.themes[theme.name].service.errorLabel.textFontSize, color: theme.themes[theme.name].service.errorLabel.textColor }}>
                     * Обязательное поле
-        </Text>
+                </Text>
             }
         </View>
         <View style={{ marginBottom: 12 }}>
@@ -124,6 +124,7 @@ const FormTParams = React.memo(({ themeName, stores, isProgress, onComplete }: I
                 mode="dropdown"
                 selectedValue={storeId}
                 style={{
+                    fontSize: theme.themes[theme.name].service.picker.textFontSize,
                     textAlign: "center", minWidth: 180,
                     color: isStoreIdValid
                         ? theme.themes[theme.name].service.picker.textColor
@@ -144,13 +145,13 @@ const FormTParams = React.memo(({ themeName, stores, isProgress, onComplete }: I
             </Picker>
             {
                 !isStoreIdValid &&
-                <Text style={{ fontSize: 12, color: theme.themes[theme.name].service.errorLabel.textColor }}>
+                <Text style={{ fontSize: theme.themes[theme.name].service.errorLabel.textFontSize, color: theme.themes[theme.name].service.errorLabel.textColor }}>
                     * Обязательное поле
-            </Text>
+                </Text>
             }
         </View>
         <SimpleSystemButton style={{ backgroundColor: theme.themes[theme.name].service.button.backgroundColor, minWidth: 180 }}
-            textStyle={{ fontSize: 16, color: theme.themes[theme.name].service.button.textColor }}
+            textStyle={{ fontSize: theme.themes[theme.name].service.button.textFontSize, color: theme.themes[theme.name].service.button.textColor }}
             onPress={completeHandler} title="Сохранить" disabled={isProgress || !isStep2Valid} />
     </>
 })
@@ -368,7 +369,6 @@ const AuthScreenContainer = React.memo(({ _theme, _serialNumber, _setupStep, _te
     return (
         <>
             {
-                !!_theme &&
                 <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: theme.themes[theme.name].loading.backgroundColor }}>
                     {
                         !isLicenseValid &&

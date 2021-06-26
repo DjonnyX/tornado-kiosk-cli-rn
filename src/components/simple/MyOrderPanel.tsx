@@ -47,20 +47,16 @@ export const MyOrderPanel = React.memo(({ themeName, orderStateId, currency, lan
                                 backgroundColor: theme.themes[theme.name].orderTypePicker.backgroundColor,
                                 borderColor: theme.themes[theme.name].orderTypePicker.borderColor,
                             }}
-                            textStyle={{ color: theme.themes[theme.name].orderTypePicker.textColor }} />
+                            textStyle={{
+                                color: theme.themes[theme.name].orderTypePicker.textColor,
+                                fontSize: theme.themes[theme.name].orderTypePicker.textFontSize,
+                            }} />
                     </View>
                 }
                 {
                     OrderWizard.current.positions.length !== 0 &&
                     <View style={{ margin: "auto", marginBottom: 12, alignItems: "center" }}>
-                        {/*<Text style={{
-                        textTransform: "uppercase", fontWeight: "bold", fontSize: 18,
-                        color: theme.themes[theme.name].menu.sum.description.textColor
-                    }}>
-                        Итого
-                    </Text>
-                    */}
-                        <Text style={{ fontWeight: "bold", fontSize: 18, color: theme.themes[theme.name].menu.sum.price.textColor }}>
+                        <Text style={{ fontWeight: "bold", fontSize: theme.themes[theme.name].menu.sum.price.textFontSize, color: theme.themes[theme.name].menu.sum.price.textColor }}>
                             {
                                 OrderWizard.current.getFormatedSum(true)
                             }

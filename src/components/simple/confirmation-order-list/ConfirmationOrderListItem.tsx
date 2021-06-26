@@ -22,7 +22,7 @@ interface ConfirmationOrderListItemProps {
 export const ConfirmationOrderListItem = React.memo(({ themeName, stateId, color, currency, language, position,
     alertOpen }: ConfirmationOrderListItemProps) => {
     const currentContent = position.__product__?.contents[language?.code];
-    const currentAdAsset = currentContent?.resources?.icon;
+    const currentAsset = currentContent?.resources?.icon;
 
     const pressHandler = useCallback((e: GestureResponderEvent) => {
         position.edit();
@@ -71,14 +71,14 @@ export const ConfirmationOrderListItem = React.memo(({ themeName, stateId, color
             }} onPress={pressHandler}>
                 <View style={{ width: 48, height: 48, marginRight: 20, justifyContent: "flex-end" }}>
                     <FastImage style={{ width: "100%", height: "100%" }} source={{
-                        uri: `file://${currentAdAsset?.mipmap.x128}`,
+                        uri: `file://${currentAsset?.mipmap?.x128}`,
                     }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                 </View>
                 <View style={{ flex: 1, marginTop: 8 }}>
                     <View style={{ flexDirection: "row", marginRight: 20, alignItems: "baseline" }}>
                         <View style={{ flex: 1 }}>
                             <Text numberOfLines={3} ellipsizeMode="tail" style={{
-                                textAlign: "left", fontSize: 20,
+                                textAlign: "left", fontSize: theme.themes[theme.name].confirmation.item.nameFontSize,
                                 color: theme.themes[theme.name].confirmation.item.nameColor, textTransform: "uppercase", fontWeight: "bold"
                             }}>
                                 {
@@ -88,7 +88,7 @@ export const ConfirmationOrderListItem = React.memo(({ themeName, stateId, color
                         </View>
                         <View style={{ width: 192, justifyContent: "flex-end" }}>
                             <Text style={{
-                                textAlign: "right", fontSize: 24,
+                                textAlign: "right", fontSize: theme.themes[theme.name].confirmation.item.price.textFontSize,
                                 color: theme.themes[theme.name].confirmation.item.price.textColor, fontWeight: "bold"
                             }}>
                                 {
@@ -113,7 +113,7 @@ export const ConfirmationOrderListItem = React.memo(({ themeName, stateId, color
                                 </View>
                                 <View style={{ width: 192 }}>
                                     <Text numberOfLines={1} ellipsizeMode="tail" style={{
-                                        textAlign: "right", fontSize: 12,
+                                        textAlign: "right", fontSize: theme.themes[theme.name].confirmation.nestedItem.price.textFontSize,
                                         color: theme.themes[theme.name].confirmation.nestedItem.price.textColor, fontWeight: "bold"
                                     }}>
                                         {
@@ -143,15 +143,15 @@ export const ConfirmationOrderListItem = React.memo(({ themeName, stateId, color
                         padding: 6
                     }}
                     buttonTextStyle={{
-                        fontSize: 16, fontWeight: "bold",
+                        fontSize: theme.themes[theme.name].confirmation.item.quantityStepper.buttons.textFontSize, fontWeight: "bold",
                         color: theme.themes[theme.name].confirmation.item.quantityStepper.buttons.textColor as any,
                     }}
                     disabledButtonTextStyle={{
-                        fontSize: 16, fontWeight: "bold",
+                        fontSize: theme.themes[theme.name].confirmation.item.quantityStepper.buttons.textFontSize, fontWeight: "bold",
                         color: theme.themes[theme.name].confirmation.item.quantityStepper.buttons.disabledTextColor
                     }}
                     textStyle={{
-                        width: 24, fontSize: 16, fontWeight: "bold",
+                        width: 24, fontSize: theme.themes[theme.name].confirmation.item.quantityStepper.indicator.textFontSize, fontWeight: "bold",
                         color: theme.themes[theme.name].confirmation.item.quantityStepper.indicator.textColor
                     }}
                     iconDecrement="-"

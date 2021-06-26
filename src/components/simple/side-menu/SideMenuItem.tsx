@@ -57,6 +57,7 @@ const getChainChildren = (node: MenuNode, selected: MenuNode): Array<MenuNode> =
 }
 
 interface ISideMenuItemProps {
+    themeName: string;
     depth?: number;
     height?: number;
     node: MenuNode;
@@ -65,7 +66,7 @@ interface ISideMenuItemProps {
     onPress: (node: MenuNode) => void;
 }
 
-export const SideMenuItem = React.memo(({ depth = 0, height = 0, selected, language, node,
+export const SideMenuItem = React.memo(({ themeName, depth = 0, height = 0, selected, language, node,
     onPress }: ISideMenuItemProps) => {
     const [itemHeight, _setItemHeight] = useState(0);
     const [subMenuSize, _setSubMenuSize] = useState(new Animated.Value(1));
@@ -106,7 +107,7 @@ export const SideMenuItem = React.memo(({ depth = 0, height = 0, selected, langu
     };
 
     const currentContent = node.__rawNode__.content?.contents[language?.code];
-    const currentAdAsset = currentContent?.resources?.icon;
+    const currentAsset = currentContent?.resources?.icon;
     const color = theme.themes[theme.name].menu.sideMenu.item.backgroundColor; //currentContent.color;
     const actualColor = node === selected ?
         theme.name === "light" ?
@@ -154,10 +155,10 @@ export const SideMenuItem = React.memo(({ depth = 0, height = 0, selected, langu
                 }} onPress={pressHandler}>
                     <View style={{ padding: 8, width: "100%", justifyContent: "center", alignItems: "center", }}>
                         <FastImage style={{ width: "100%", height: 56 - offset, marginBottom: 5 }} source={{
-                            uri: `file://${currentAdAsset?.mipmap.x128}`,
+                            uri: `file://${currentAsset?.mipmap?.x128}`,
                         }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                         <Text style={{
-                            fontSize: 14, color: theme.themes[theme.name].menu.sideMenu.item.nameColor, fontWeight: "bold",
+                            fontSize: theme.themes[theme.name].menu.sideMenu.item.nameFontSize, color: theme.themes[theme.name].menu.sideMenu.item.nameColor, fontWeight: "bold",
                             textTransform: "uppercase"
                         }}>
                             {

@@ -49,7 +49,7 @@ class AssetsService implements IAssetStoreFileService {
         Log.i("AssetsService", "writeFile \"" + path + "\"");
         return ExternalStorage.writeFile(
             this.normalizeFilePath(path),
-            new Buffer(JSON.stringify(data), "utf8").toString("base64"),
+            Buffer.from(JSON.stringify(data), "utf8").toString("base64"),
         );
     }
 
@@ -60,7 +60,7 @@ class AssetsService implements IAssetStoreFileService {
                 this.normalizeFilePath(path)
             ),
         ).pipe(
-            map(data => new Buffer(data, "base64")),
+            map(data => Buffer.from(data, "base64")),
             map(string => {
                 return JSON.parse(string.toString("utf8"));
             })
