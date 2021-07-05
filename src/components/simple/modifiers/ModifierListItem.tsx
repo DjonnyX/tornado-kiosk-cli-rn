@@ -41,6 +41,8 @@ export const ModifierListItem = React.memo(({ themeName, thumbnailHeight, curren
         ? position.__product__?.tags
         : undefined;
 
+        console.warn(position.quantity)
+
     return (
         <View style={{ flex: 1, backgroundColor: theme.themes[theme.name].modifiers.item.backgroundColor, borderRadius: 16, padding: 22 }}>
             <TouchableOpacity style={{ alignItems: "center", flex: 1 }} onPress={pressHandler}>
@@ -186,8 +188,8 @@ export const ModifierListItem = React.memo(({ themeName, thumbnailHeight, curren
                         iconIncrement="+"
                         onChange={changeQuantityHandler}
                         formatValueFunction={(value: number) => {
-                            return position.sum > 0
-                                ? `${String(value)}x${position.getFormatedSumPerOne(true)}`
+                            return value > 0
+                                ? `${String(value)} x ${position.getFormatedSumPerOne(true)}`
                                 : String(position.getFormatedSumPerOne(true));
                         }}
                         min={position.downLimit}

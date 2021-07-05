@@ -28,11 +28,11 @@ export const MyOrderListItem = React.memo(({ stateId, menuStateId, imageHeight, 
         position.edit();
     }, []);
 
-    const setQuantity = (qnt: number) => {
+    const setQuantity = useCallback((qnt: number) => {
         position.quantity = qnt;
-    }
+    }, [stateId]);
 
-    const changeQuantityHandler = (value: number) => {
+    const changeQuantityHandler = useCallback((value: number) => {
         if (value < 1) {
             alertOpen({
                 title: localize(language, "kiosk_remove_product_title"),
@@ -57,7 +57,7 @@ export const MyOrderListItem = React.memo(({ stateId, menuStateId, imageHeight, 
         }
 
         setQuantity(value);
-    };
+    }, [stateId]);
 
     return (
         <View style={{ flex: 1, paddingLeft: 24, paddingRight: 24, marginBottom: 20 }}>

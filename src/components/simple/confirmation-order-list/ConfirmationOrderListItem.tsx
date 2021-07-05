@@ -99,7 +99,7 @@ export const ConfirmationOrderListItem = React.memo(({ themeName, stateId, color
                     </View>
                     <View>
                         {
-                            position.nestedPositions.map(p => <View style={{ flexDirection: "row", marginRight: 20 }}>
+                            position.nestedPositions.map((p, index) => <View key={index} style={{ flexDirection: "row", marginRight: 20 }}>
                                 <View style={{ flex: 1 }}>
                                     <Text numberOfLines={1} ellipsizeMode="tail" style={{
                                         textAlign: "left", fontSize: 13,
