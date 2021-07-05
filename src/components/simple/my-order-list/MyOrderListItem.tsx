@@ -89,6 +89,7 @@ export const MyOrderListItem = React.memo(({ stateId, menuStateId, imageHeight, 
             <NumericStapper
                 key={language.code}
                 value={position.quantity}
+                animationOnInit={true}
                 buttonStyle={{
                     width: 38, height: 38, borderRadius: 10,
                     backgroundColor: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.backgroundColor,

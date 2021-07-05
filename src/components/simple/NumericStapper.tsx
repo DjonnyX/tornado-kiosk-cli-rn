@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, StyleProp, ViewStyle, TextStyle, Animated, Easing, Dimensions, ScaledSize, LayoutChangeEvent } from "react-native";
+import { interval, Subject } from "rxjs";
+import { take, takeUntil } from "rxjs/operators";
 
 interface IBound {
     x: number;
@@ -112,6 +114,7 @@ interface INumericStapperProps {
     onChange: (value: number) => void;
     value?: number;
     formatValueFunction?: (value: number) => string;
+    animationOnInit?: boolean;
     textStyle?: StyleProp<TextStyle>;
     textSelectedStyle?: StyleProp<TextStyle>;
     buttonStyle?: StyleProp<ViewStyle | TextStyle>;
@@ -129,13 +132,14 @@ interface INumericStapperProps {
     max?: number;
 }
 
-export const NumericStapper = React.memo(({ value = 0, iconDecrement = "-", iconIncrement = "+",
+export const NumericStapper = React.memo(({ value = 0, iconDecrement = "-", iconIncrement = "+", animationOnInit = false,
     buttonStyle, buttonSelectedStyle, disabledButtonStyle, disabledSelectedButtonStyle, disabledButtonTextStyle,
     disabledSelectedButtonTextStyle, buttonTextStyle, buttonSelectedTextStyle,
     containerStyle, textStyle, min, max, formatValueFunction, onChange }: INumericStapperProps) => {
+    const [isInitialized, setIsInitialized] = useState(false);
     const [isDecDisabled, setIsDecDisabled] = useState(value === min);
     const [isIncDisabled, setIsIncDisabled] = useState(value === max);
-    const [controlsPos, setControlsPos] = useState(new Animated.Value(0));
+    const [controlsPos, setControlsPos] = useState(new Animated.Value(animationOnInit ? 0 : Number(Boolean(value > 0))));
     let expandAnimation: Animated.CompositeAnimation;
     const [bound, _setBound] = useState({ x: 0, y: 0, width: 0, height: 0 });
     const [boundDecButton, _setBoundDecButton] = useState({ x: 0, y: 0, width: 0, height: 0 });
@@ -233,23 +237,26 @@ export const NumericStapper = React.memo(({ value = 0, iconDecrement = "-", icon
                     icon={iconDecrement} onPress={decrementHandler} onLayoutChange={decButtonLayoutChangeHandler} />
             </Animated.View>
 
-            <Animated.View style={{
-                position: "absolute",
-                left: controlsPos.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [0, boundDecButton.width],
-                }),
-                width: controlsPos.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [bound.width, bound.width - boundDecButton.width - boundIncButton.width]
-                })
-            }}>
-                <NumericStepperPlaceholder disabled={isIncDisabled} onPress={placeholderTapHandler} text={
-                    !!formatValueFunction
-                        ? formatValueFunction(value)
-                        : value.toString()
-                } textStyle={{ flex: 1, textAlign: "center", ...textStyle as any }} />
-            </Animated.View>
+            {
+                bound.width > 0 &&
+                <Animated.View style={{
+                    position: "absolute",
+                    left: controlsPos.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [0, boundDecButton.width],
+                    }),
+                    width: controlsPos.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [bound.width, bound.width - boundDecButton.width - boundIncButton.width]
+                    })
+                }}>
+                    <NumericStepperPlaceholder disabled={isIncDisabled} onPress={placeholderTapHandler} text={
+                        !!formatValueFunction
+                            ? formatValueFunction(value)
+                            : value.toString()
+                    } textStyle={{ flex: 1, textAlign: "center", ...textStyle as any }} />
+                </Animated.View>
+            }
 
             <Animated.View style={{
                 position: "absolute",
