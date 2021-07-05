@@ -1,5 +1,5 @@
 import { Observable, from, throwError, of } from "rxjs";
-import { catchError, map, retry, retryWhen, switchMap, tap } from "rxjs/operators";
+import { catchError, map, retry, retryWhen, switchMap } from "rxjs/operators";
 import { config } from "../Config";
 import {
     IRef, INode, ISelector, IProduct, ITag, IAsset, ILanguage, ITranslation, IBusinessPeriod, IOrderType, ICurrency,
@@ -647,9 +647,6 @@ class RefApiService<T = IKioskThemeData> implements IDataService<T> {
                     })
                 ),
             ).pipe(
-                tap(() => {
-                    console.warn("get t")
-                }),
                 switchMap(res => parseResponse(res)),
                 map(resData => {
                     return resData.data;
