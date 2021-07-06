@@ -24,11 +24,11 @@ export const ModalSolid = React.memo(({ children, visible }: IModalSolidProps) =
                 bottom: 0,
                 left: 0,
                 right: 0,
-                backgroundColor: theme.themes[theme.name].common.modal.background,
+                backgroundColor: theme.themes[theme.name].common.modal.backgroundColor,
             }}>
                 <View style={{
                     margin: 40,
-                    backgroundColor: theme.themes[theme.name].common.modal.window.background,
+                    backgroundColor: theme.themes[theme.name].common.modal.window.backgroundColor,
                     borderRadius: 8,
                     padding: 44,
                     alignItems: "center",

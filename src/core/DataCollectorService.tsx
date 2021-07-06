@@ -93,16 +93,6 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
             console.warn("Saved data not found.");
         }
 
-        if (!!savedThemes) {
-            // Saved
-            theme.name = savedThemes.name;
-            theme.themes = savedThemes.themes;
-            this.props._onChangeThemes(savedThemes);
-        } else {
-            // Embeded
-            this.props._onChangeThemes(theme);
-        }
-
         this._assetsStore = new AssetsStore(storePath, assetsService, {
             createDirectoryRecurtion: false,
             maxThreads: 1,
@@ -152,10 +142,12 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
                 if (!!terminal) {
 
                     const themes: IKioskTheme | undefined = data.refs.themes?.length > 0 ? compileThemes(data.refs.themes, terminal.config.theme) : undefined;
-                    assetsService.writeFile(`${storePath}/${THEMES_FILE_NAME}`, themes);
 
                     // Override embeded themes
                     theme.name = terminal.config.theme;
+
+                    assetsService.writeFile(`${storePath}/${THEMES_FILE_NAME}`, themes);
+
                     if (!!themes) {
                         theme.themes = themes.themes;
                         this.props._onChangeThemes(themes);

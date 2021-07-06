@@ -1,15 +1,15 @@
-import { IAppTheme, IKioskTheme, IKioskThemeColors } from "@djonnyx/tornado-types";
+import { IAppTheme, IKioskTheme, IKioskThemeData } from "@djonnyx/tornado-types";
 
 export const THEMES_FILE_NAME = "themes.json";
 
-export const compileThemes = (themes: Array<IAppTheme<IKioskThemeColors>>, name: string): IKioskTheme => {
+export const compileThemes = (themes: Array<IAppTheme<IKioskThemeData>>, name: string): IKioskTheme => {
     const result: IKioskTheme = {
         name,
         themes: {},
     };
 
     themes.forEach(t => {
-        result.themes[t.name] = t.data;
+        result.themes[t.id!] = t.data;
     });
 
     return result;
@@ -22,35 +22,42 @@ export const theme: IKioskTheme = {
     name: "light",
     themes: {
         ["light"]: {
+            configuration: {
+                showDraftOrder: true,
+            },
             common: {
                 modal: {
-                    background: "#e3e3e3",
+                    backgroundColor: "#e3e3e3",
                     window: {
-                        background: "transparent",
+                        backgroundColor: "transparent",
                     }
                 },
                 modalTransparent: {
-                    background: "rgba(0,0,0,0.5)",
+                    backgroundColor: "rgba(0,0,0,0.5)",
                     window: {
-                        background: "#fff",
+                        backgroundColor: "#fff",
                         borderColor: "rgba(0,0,0,0.1)"
                     }
                 },
                 modalNotification: {
-                    background: "none",
+                    backgroundColor: "none",
                     window: {
-                        background: "rgba(0,0,0,0.75)",
+                        backgroundColor: "rgba(0,0,0,0.75)",
                         borderColor: "rgba(0,0,0,0.1)",
                     }
                 },
                 notificationAlert: {
                     textColor: "rgba(255,255,255,0.75)",
+                    textFontSize: 20,
                 },
                 alert: {
                     titleColor: "rgba(0,0,0,0.75)",
+                    titleFontSize: 20,
                     messageColor: "rgba(0,0,0,0.75)",
+                    messageFontSize: 18,
                     buttonColor: "#30a02a",
                     buttonTextColor: "rgba(255,255,255,1)",
+                    buttonTextFontSize: 14,
                 }
             },
             languageModal: {
@@ -58,6 +65,7 @@ export const theme: IKioskTheme = {
                     backgroundColor: "#fff",
                     borderColor: "transparent",
                     textColor: "rgba(0,0,0,0.75)",
+                    textFontSize: 16,
                 }
             },
             languagePicker: {
@@ -68,16 +76,19 @@ export const theme: IKioskTheme = {
                     backgroundColor: "#fff",
                     borderColor: "transparent",
                     textColor: "rgba(0,0,0,0.75)",
+                    textFontSize: 16,
                 }
             },
             orderTypePicker: {
                 backgroundColor: "transparent",
                 borderColor: "#212121",
                 textColor: "#212121",
+                textFontSize: 13,
             },
             service: {
                 errorLabel: {
                     textColor: "red",
+                    textFontSize: 12,
                 },
                 textInput: {
                     placeholderColor: "rgba(0,0,0,0.5)",
@@ -85,32 +96,37 @@ export const theme: IKioskTheme = {
                     underlineColor: "#30a02a",
                     underlineWrongColor: "red",
                     textColor: "rgba(0,0,0,1)",
+                    textFontSize: 16,
                 },
                 picker: {
                     textColor: "rgba(0,0,0,1)",
+                    textFontSize: 16,
                     placeholderColor: "gray",
                 },
                 button: {
                     backgroundColor: "#30a02a",
                     textColor: "rgba(255,255,255,1)",
+                    textFontSize: 16,
                 }
             },
             loading: {
-                background: "#fff",
+                backgroundColor: "#fff",
                 progressBar: {
                     thumbColor: "rgba(0,0,0,0.85)",
                     trackColor: "rgba(0,0,0,0.75)",
                     textColor: "rgba(0,0,0,0.75)",
+                    textFontSize: 13,
                 }
             },
             intro: {
-                background: "#fff",
+                backgroundColor: "#fff",
             },
             menu: {
-                background: "#fff",
+                backgroundColor: "#fff",
                 header: {
-                    background: ["rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 0)"],
+                    backgroundColor: ["rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 0)"],
                     titleColor: "rgba(0,0,0,0.75)",
+                    titleFontSize: 32,
                 },
                 orderPanel: {
                     backgroundColor: "rgba(0,0,0,0.025)",
@@ -122,42 +138,43 @@ export const theme: IKioskTheme = {
                     item: {
                         backgroundColor: "#000",
                         nameColor: "rgba(0,0,0,0.75)",
+                        nameFontSize: 14,
                     },
                 },
                 navMenu: {
                     item: {
                         backgroundColor: "transparent",
                         nameColor: "rgba(0,0,0,0.75)",
+                        nameFontSize: 20,
                         descriptionColor: "rgba(0,0,0,0.5)",
+                        descriptionFontSize: 12,
                         discount: {
                             backgroundColor: "red",
                             textColor: "white",
+                            textFontSize: 12,
                         },
                         price: {
                             borderColor: "rgba(0,0,0,0.5)",
                             textColor: "rgba(0,0,0,0.5)",
+                            textFontSize: 16,
                         }
                     }
                 },
-                orderType: {
-                    borderColor: "rgba(0,0,0,0.75)",
-                    textColor: "rgba(0,0,0,0.75)",
-                },
                 sum: {
-                    description: {
-                        textColor: "rgba(0,0,0,0.75)"
-                    },
                     price: {
-                        textColor: "rgba(0,0,0,0.75)"
+                        textColor: "rgba(0,0,0,0.75)",
+                        textFontSize: 18,
                     },
                 },
                 draftOrder: {
                     item: {
                         backgroundColor: "transparent",
                         nameColor: "rgba(0,0,0,0.75)",
+                        nameFontSize: 14,
                         price: {
                             borderColor: "rgba(0,0,0,0.5)",
                             textColor: "rgba(0,0,0,0.75)",
+                            textFontSize: 14,
                         },
                         quantityStepper: {
                             buttons: {
@@ -166,10 +183,12 @@ export const theme: IKioskTheme = {
                                 borderColor: "rgba(0,0,0,0.75)",
                                 disabledBorderColor: "rgba(0,0,0,0.75)",
                                 textColor: "rgba(255,255,255,1)",
+                                textFontSize: 14,
                                 disabledTextColor: "rgba(255,255,255,0.75)",
                             },
                             indicator: {
                                 textColor: "rgba(0,0,0,0.75)",
+                                textFontSize: 16,
                             }
                         }
                     }
@@ -188,10 +207,13 @@ export const theme: IKioskTheme = {
             modifiers: {
                 backgroundColor: "#fff",
                 nameColor: "rgba(0,0,0,0.75)",
+                nameFontSize: 32,
                 descriptionColor: "rgba(0,0,0,0.75)",
+                descriptionFontSize: 14,
                 price: {
                     borderColor: "rgba(0,0,0,0.5)",
                     textColor: "rgba(0,0,0,0.75)",
+                    textFontSize: 48,
                 },
                 group: {
                     nameColor: "rgba(0,0,0,0.75)",
@@ -203,6 +225,7 @@ export const theme: IKioskTheme = {
                         borderColor: "transparent",
                         disabledBorderColor: "rgba(0,0,0,0.1)",
                         textColor: "rgba(255,255,255,1)",
+                        textFontSize: 26,
                         disabledTextColor: "rgba(0,0,0,0.1)",
                     },
                     buttonNext: {
@@ -211,6 +234,7 @@ export const theme: IKioskTheme = {
                         borderColor: "transparent",
                         disabledBorderColor: "rgba(0,0,0,0.1)",
                         textColor: "rgba(255,255,255,1)",
+                        textFontSize: 26,
                         disabledTextColor: "rgba(0,0,0,0.1)",
                     },
                     indicator: {
@@ -222,21 +246,26 @@ export const theme: IKioskTheme = {
                 item: {
                     backgroundColor: "transparent",
                     nameColor: "rgba(0,0,0,0.75)",
+                    nameFontFontSize: 20,
                     descriptionColor: "rgba(0,0,0,0.5)",
+                    descriptionFontSize: 12,
                     discount: {
                         backgroundColor: "red",
                         textColor: "white",
+                        textFontSize: 12,
                     },
                     quantitySwitch: {
                         on: {
                             backgroundColor: "#30a02a",
                             borderColor: "#30a02a",
                             textColor: "rgba(255,255,255,0.75)",
+                            textFontSize: 16,
                         },
                         off: {
                             backgroundColor: "transparent",
                             borderColor: "rgba(0,0,0,0.75)",
                             textColor: "rgba(0,0,0,0.75)",
+                            textFontSize: 16,
                         },
                     },
                     quantityStepper: {
@@ -250,42 +279,50 @@ export const theme: IKioskTheme = {
                             disabledBorderColor: "rgba(0,0,0,0.75)",
                             disabledSelectedBorderColor: "transparent",
                             textColor: "rgba(0,0,0,0.75)",
+                            textFontSize: 16,
                             selectedTextColor: "rgba(255,255,255,0.75)",
                             disabledTextColor: "rgba(0,0,0,0.75)",
                             disabledSelectedTextColor: "rgba(255,255,255,0.75)",
                         },
                         indicator: {
                             textColor: "rgba(0,0,0,0.75)",
+                            textFontSize: 16,
                         }
                     }
                 }
             },
             confirmation: {
-                background: "#fff",
+                backgroundColor: "#fff",
                 backButton: {
                     backgroundColor: "#212121",
                     textColor: "#ffffff",
+                    textFontSize: 16,
                 },
                 nextButton: {
                     backgroundColor: "#30a02a",
                     textColor: "#ffffff",
+                    textFontSize: 16,
                 },
                 summaryPrice: {
                     textColor: "rgba(0,0,0,0.75)",
+                    textFontSize: 16,
                 },
                 nestedItem: {
                     backgroundColor: "transparent",
                     nameColor: "#212121",
                     price: {
                         textColor: "rgba(0,0,0,0.75)",
+                        textFontSize: 12,
                     },
                 },
                 item: {
                     backgroundColor: "transparent",
                     oddBackgroundColor: "rgba(0,0,0,0.025)",
                     nameColor: "rgba(0,0,0,0.75)",
+                    nameFontSize: 20,
                     price: {
                         textColor: "rgba(0,0,0,0.75)",
+                        textFontSize: 24,
                     },
                     quantityStepper: {
                         buttons: {
@@ -294,54 +331,68 @@ export const theme: IKioskTheme = {
                             borderColor: "rgba(0,0,0,0.75)",
                             disabledBorderColor: "rgba(0,0,0,0.75)",
                             textColor: "rgba(255,255,255,1)",
+                            textFontSize: 16,
                             disabledTextColor: "rgba(255,255,255,0.75)",
                         },
                         indicator: {
                             textColor: "rgba(0,0,0,0.75)",
+                            textFontSize: 16,
                         }
                     }
                 }
             },
             payStatus: {
                 primaryMessageColor: "rgba(0,0,0,0.75)",
+                primaryMessageFontSize: 40,
                 secondaryMessageColor: "rgba(0,0,0,0.5)",
+                secondaryMessageFontSize: 20,
             },
             payConfirmation: {
                 numberColor: "rgba(0,0,0,1)",
+                nameFontSize: 76,
                 primaryMessageColor: "rgba(0,0,0,0.75)",
+                primaryMessageFontSize: 32,
                 secondaryMessageColor: "rgba(0,0,0,0.5)",
+                secondaryMessageFontSize: 20,
             }
         },
         ["dark"]: {
+            configuration: {
+                showDraftOrder: true,
+            },
             common: {
                 modal: {
-                    background: "#000",
+                    backgroundColor: "#000",
                     window: {
-                        background: "#000",
+                        backgroundColor: "#000",
                     }
                 },
                 modalTransparent: {
-                    background: "rgba(255,255,255,0.075)",
+                    backgroundColor: "rgba(255,255,255,0.075)",
                     window: {
-                        background: "#000",
+                        backgroundColor: "#000",
                         borderColor: "rgba(255,255,255,0.1)"
                     }
                 },
                 modalNotification: {
-                    background: "none",
+                    backgroundColor: "none",
                     window: {
-                        background: "rgba(255,255,255,0.75)",
+                        backgroundColor: "rgba(255,255,255,0.75)",
                         borderColor: "rgba(255,255,255,0.1)",
                     }
                 },
                 notificationAlert: {
                     textColor: "rgba(0,0,0,0.75)",
+                    textFontSize: 20,
                 },
                 alert: {
                     titleColor: "rgba(255,255,255,0.75)",
+                    titleFontSize: 20,
                     messageColor: "rgba(255,255,255,0.75)",
+                    messageFontSize: 18,
                     buttonColor: "#30a02a",
                     buttonTextColor: "rgba(255,255,255,1)",
+                    buttonTextFontSize: 14,
                 }
             },
             languageModal: {
@@ -349,6 +400,7 @@ export const theme: IKioskTheme = {
                     backgroundColor: "transparent",
                     borderColor: "transparent",
                     textColor: "rgba(255,255,255,0.75)",
+                    textFontSize: 16,
                 }
             },
             languagePicker: {
@@ -359,16 +411,19 @@ export const theme: IKioskTheme = {
                     backgroundColor: "transparent",
                     borderColor: "transparent",
                     textColor: "rgba(255,255,255,0.75)",
+                    textFontSize: 16,
                 }
             },
             orderTypePicker: {
                 backgroundColor: "transparent",
                 borderColor: "rgba(255,255,255,0.25)",
                 textColor: "rgba(255,255,255,1)",
+                textFontSize: 13,
             },
             service: {
                 errorLabel: {
                     textColor: "red",
+                    textFontSize: 12,
                 },
                 textInput: {
                     placeholderColor: "rgba(255,255,255,0.5)",
@@ -376,32 +431,37 @@ export const theme: IKioskTheme = {
                     underlineColor: "#30a02a",
                     underlineWrongColor: "red",
                     textColor: "rgba(255,255,255,1)",
+                    textFontSize: 16,
                 },
                 picker: {
                     textColor: "rgba(255,255,255,1)",
+                    textFontSize: 16,
                     placeholderColor: "gray",
                 },
                 button: {
                     backgroundColor: "#30a02a",
                     textColor: "rgba(255,255,255,1)",
+                    textFontSize: 16,
                 }
             },
             loading: {
-                background: "#000",
+                backgroundColor: "#000",
                 progressBar: {
                     thumbColor: "rgba(255,255,255,0.85)",
                     trackColor: "rgba(255,255,255,0.75)",
                     textColor: "rgba(255,255,255,0.75)",
+                    textFontSize: 13,
                 }
             },
             intro: {
-                background: "#000",
+                backgroundColor: "#000",
             },
             menu: {
-                background: "#000",
+                backgroundColor: "#000",
                 header: {
-                    background: ["rgba(0, 0, 0, 1)", "rgba(0, 0, 0, 1)", "rgba(0, 0, 0, 1)", "rgba(0, 0, 0, 1)", "rgba(0, 0, 0, 0)"],
+                    backgroundColor: ["rgba(0, 0, 0, 1)", "rgba(0, 0, 0, 1)", "rgba(0, 0, 0, 1)", "rgba(0, 0, 0, 1)", "rgba(0, 0, 0, 0)"],
                     titleColor: "rgba(255,255,255,0.75)",
+                    titleFontSize: 32,
                 },
                 orderPanel: {
                     backgroundColor: "rgba(255,255,255,0.025)",
@@ -413,42 +473,43 @@ export const theme: IKioskTheme = {
                     item: {
                         backgroundColor: "#fff",
                         nameColor: "rgba(255,255,255,0.75)",
+                        nameFontSize: 14,
                     },
                 },
                 navMenu: {
                     item: {
                         backgroundColor: "transparent",
                         nameColor: "rgba(255,255,255,0.75)",
+                        nameFontSize: 20,
                         descriptionColor: "rgba(255,255,255,0.5)",
+                        descriptionFontSize: 12,
                         discount: {
                             backgroundColor: "red",
                             textColor: "white",
+                            textFontSize: 12,
                         },
                         price: {
                             borderColor: "rgba(255,255,255,0.5)",
                             textColor: "rgba(255,255,255,0.5)",
+                            textFontSize: 16,
                         }
                     }
                 },
-                orderType: {
-                    borderColor: "rgba(255,255,255,0.75)",
-                    textColor: "rgba(255,255,255,0.75)",
-                },
                 sum: {
-                    description: {
-                        textColor: "rgba(255,255,255,0.75)"
-                    },
                     price: {
-                        textColor: "rgba(255,255,255,0.75)"
+                        textColor: "rgba(255,255,255,0.75)",
+                        textFontSize: 18,
                     },
                 },
                 draftOrder: {
                     item: {
                         backgroundColor: "transparent",
                         nameColor: "rgba(255,255,255,0.75)",
+                        nameFontSize: 14,
                         price: {
                             borderColor: "rgba(255,255,255,0.5)",
                             textColor: "rgba(255,255,255,0.75)",
+                            textFontSize: 14,
                         },
                         quantityStepper: {
                             buttons: {
@@ -457,10 +518,12 @@ export const theme: IKioskTheme = {
                                 borderColor: "rgba(0,0,0,0.75)",
                                 disabledBorderColor: "rgba(0,0,0,0.75)",
                                 textColor: "rgba(255,255,255,1)",
+                                textFontSize: 16,
                                 disabledTextColor: "rgba(255,255,255,0.75)",
                             },
                             indicator: {
                                 textColor: "rgba(255,255,255,0.75)",
+                                textFontSize: 14,
                             }
                         }
                     }
@@ -479,10 +542,13 @@ export const theme: IKioskTheme = {
             modifiers: {
                 backgroundColor: "#000",
                 nameColor: "rgba(255,255,255,0.75)",
+                nameFontSize: 32,
                 descriptionColor: "rgba(255,255,255,0.5)",
+                descriptionFontSize: 14,
                 price: {
                     borderColor: "rgba(255,255,255,0.5)",
                     textColor: "rgba(255,255,255,0.75)",
+                    textFontSize: 48,
                 },
                 group: {
                     nameColor: "rgba(255,255,255,0.75)",
@@ -494,6 +560,7 @@ export const theme: IKioskTheme = {
                         borderColor: "transparent",
                         disabledBorderColor: "rgba(255,255,255,0.1)",
                         textColor: "rgba(255,255,255,1)",
+                        textFontSize: 26,
                         disabledTextColor: "rgba(255,255,255,0.1)",
                     },
                     buttonNext: {
@@ -502,6 +569,7 @@ export const theme: IKioskTheme = {
                         borderColor: "transparent",
                         disabledBorderColor: "rgba(255,255,255,0.1)",
                         textColor: "rgba(255,255,255,1)",
+                        textFontSize: 26,
                         disabledTextColor: "rgba(255,255,255,0.1)",
                     },
                     indicator: {
@@ -513,21 +581,26 @@ export const theme: IKioskTheme = {
                 item: {
                     backgroundColor: "transparent",
                     nameColor: "rgba(255,255,255,0.75)",
+                    nameFontFontSize: 20,
                     descriptionColor: "rgba(255,255,255,0.5)",
+                    descriptionFontSize: 12,
                     discount: {
                         backgroundColor: "red",
                         textColor: "white",
+                        textFontSize: 12,
                     },
                     quantitySwitch: {
                         on: {
                             backgroundColor: "#30a02a",
                             borderColor: "#30a02a",
                             textColor: "rgba(255,255,255,0.75)",
+                            textFontSize: 16,
                         },
                         off: {
                             backgroundColor: "transparent",
                             borderColor: "rgba(255,255,255,0.75)",
                             textColor: "rgba(255,255,255,0.75)",
+                            textFontSize: 16,
                         },
                     },
                     quantityStepper: {
@@ -541,42 +614,50 @@ export const theme: IKioskTheme = {
                             disabledBorderColor: "rgba(255,255,255,0.75)",
                             disabledSelectedBorderColor: "transparent",
                             textColor: "rgba(255,255,255,0.75)",
+                            textFontSize: 16,
                             selectedTextColor: "rgba(255,255,255,1)",
                             disabledTextColor: "rgba(255,255,255,0.75)",
                             disabledSelectedTextColor: "rgba(255,255,255,0.75)",
                         },
                         indicator: {
                             textColor: "rgba(255,255,255,0.75)",
+                            textFontSize: 16,
                         }
                     }
                 }
             },
             confirmation: {
-                background: "#000",
+                backgroundColor: "#000",
                 backButton: {
                     backgroundColor: "#212121",
                     textColor: "#ffffff",
+                    textFontSize: 16,
                 },
                 nextButton: {
                     backgroundColor: "#30a02a",
                     textColor: "#ffffff",
+                    textFontSize: 16,
                 },
                 summaryPrice: {
                     textColor: "#ffffff",
+                    textFontSize: 16,
                 },
                 nestedItem: {
                     backgroundColor: "transparent",
                     nameColor: "rgba(255,255,255,0.5)",
                     price: {
                         textColor: "rgba(255,255,255,0.5)",
+                        textFontSize: 12,
                     },
                 },
                 item: {
                     backgroundColor: "transparent",
                     oddBackgroundColor: "rgba(255,255,255,0.05)",
                     nameColor: "rgba(255,255,255,0.75)",
+                    nameFontSize: 20,
                     price: {
                         textColor: "rgba(255,255,255,0.75)",
+                        textFontSize: 24,
                     },
                     quantityStepper: {
                         buttons: {
@@ -585,22 +666,29 @@ export const theme: IKioskTheme = {
                             borderColor: "rgba(255,255,255,0.75)",
                             disabledBorderColor: "rgba(255,255,255,0.75)",
                             textColor: "rgba(255,255,255,1)",
+                            textFontSize: 16,
                             disabledTextColor: "rgba(255,255,255,0.75)",
                         },
                         indicator: {
                             textColor: "rgba(255,255,255,0.75)",
+                            textFontSize: 16,
                         }
                     }
                 }
             },
             payStatus: {
                 primaryMessageColor: "rgba(255,255,255,0.75)",
+                primaryMessageFontSize: 40,
                 secondaryMessageColor: "rgba(255,255,255,0.5)",
+                secondaryMessageFontSize: 20,
             },
             payConfirmation: {
                 numberColor: "rgba(255,255,255,1)",
+                nameFontSize: 76,
                 primaryMessageColor: "rgba(255,255,255,0.75)",
+                primaryMessageFontSize: 32,
                 secondaryMessageColor: "rgba(255,255,255,0.5)",
+                secondaryMessageFontSize: 20,
             }
         }
     }

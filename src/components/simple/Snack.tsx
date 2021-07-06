@@ -35,10 +35,12 @@ const SnackContainer = React.memo(({ message, duration, visible, onComplete, _sn
     }, [visible, duration, message]);
     return (
         <NotificationModal visible={visible}>
-            <Text style={{ fontSize: 20, fontWeight: "bold", color: theme.themes[theme.name].common.notificationAlert.textColor }}>{message}</Text>
+            <Text style={{ fontWeight: "bold", color: theme.themes[theme.name].common.notificationAlert.textColor,
+            fontSize: theme.themes[theme.name].common.notificationAlert.textFontSize }}>{message}</Text>
         </NotificationModal>
     );
-})
+});
+
 const mapStateToProps = (state: IAppState, ownProps: ISnackProps) => {
     return {
 

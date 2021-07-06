@@ -26,7 +26,7 @@ export const NavMenuItem = React.memo(({ themeName, thumbnailHeight, currency, l
     }, []);
 
     const currentContent = node.__rawNode__.content?.contents[language?.code];
-    const currentAdAsset = currentContent?.resources?.icon;
+    const currentAsset = currentContent?.resources?.icon;
 
     const tags = node.type === NodeTypes.PRODUCT && (node.__rawNode__.content as ICompiledProduct).tags?.length > 0
         ? (node.__rawNode__.content as ICompiledProduct).tags
@@ -58,7 +58,7 @@ export const NavMenuItem = React.memo(({ themeName, thumbnailHeight, currency, l
                                     borderRadius: 8,
                                     paddingHorizontal: 8,
                                     paddingVertical: 4,
-                                    fontSize: 12, fontWeight: "bold",
+                                    fontSize: theme.themes[theme.name].modifiers.item.discount.textFontSize, fontWeight: "bold",
                                     backgroundColor: theme.themes[theme.name].menu.navMenu.item.discount.backgroundColor,
                                     color: theme.themes[theme.name].menu.navMenu.item.discount.textColor,
                                 }}>
@@ -71,11 +71,11 @@ export const NavMenuItem = React.memo(({ themeName, thumbnailHeight, currency, l
                     </View>
                     <View style={{ width: "100%", height: thumbnailHeight, marginBottom: 5 }}>
                         <FastImage style={{ width: "100%", height: "100%" }} source={{
-                            uri: `file://${currentAdAsset?.mipmap.x128}`,
+                            uri: `file://${currentAsset?.mipmap?.x128}`,
                         }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                     </View>
                     <Text textBreakStrategy="simple" numberOfLines={2} ellipsizeMode="tail" style={{
-                        textAlign: "center", fontSize: 20, marginBottom: 6, fontWeight: "bold", textTransform: "uppercase",
+                        textAlign: "center", fontSize: theme.themes[theme.name].menu.navMenu.item.nameFontSize, marginBottom: 6, fontWeight: "bold", textTransform: "uppercase",
                         color: theme.themes[theme.name].menu.navMenu.item.nameColor,
                     }}>
                         {
@@ -84,7 +84,7 @@ export const NavMenuItem = React.memo(({ themeName, thumbnailHeight, currency, l
                     </Text>
                     <Text textBreakStrategy="simple" numberOfLines={2} ellipsizeMode="tail" style={{
                         textAlign: "center",
-                        fontSize: 12, color: theme.themes[theme.name].menu.navMenu.item.descriptionColor, textTransform: "uppercase",
+                        fontSize: theme.themes[theme.name].menu.navMenu.item.descriptionFontSize, color: theme.themes[theme.name].menu.navMenu.item.descriptionColor, textTransform: "uppercase",
                         marginBottom: 12
                     }}>
                         {
@@ -101,7 +101,7 @@ export const NavMenuItem = React.memo(({ themeName, thumbnailHeight, currency, l
                             marginBottom: 12
                         }}>
                             <Text style={{
-                                textAlign: "center", fontSize: 16, paddingTop: 6, paddingBottom: 6, paddingLeft: 14,
+                                textAlign: "center", fontSize: theme.themes[theme.name].menu.navMenu.item.price.textFontSize, paddingTop: 6, paddingBottom: 6, paddingLeft: 14,
                                 paddingRight: 14, color: theme.themes[theme.name].menu.navMenu.item.price.textColor
                             }}>
                                 {

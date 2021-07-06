@@ -22,7 +22,6 @@ export namespace CombinedDataSelectors {
     });
 
     export const selectServiceUnavailableIntros = createSelector(getCombinedData, (state) => {
-        console.warn(state?.data?.refs.ads.serviceUnavailableIntros)
         return state?.data?.refs.ads.serviceUnavailableIntros;
     });
 

@@ -176,7 +176,7 @@ export const Menu = React.memo(({
             <ModifiersEditor></ModifiersEditor>
             <View style={{ flex: 1, width, height: "100%" }}>
                 <LinearGradient
-                    colors={theme.themes[theme.name].menu.header.background}
+                    colors={theme.themes[theme.name].menu.header.backgroundColor}
                     style={{ display: "flex", position: "absolute", width: "100%", height: 96, zIndex: 1 }}
                 >
                     <View style={{ display: "flex", alignItems: "center", flexDirection: "row", width: "100%", height: "100%", padding: 16 }}>
@@ -196,7 +196,7 @@ export const Menu = React.memo(({
                         <Text style={{
                             textTransform: "uppercase", fontWeight: "bold",
                             color: theme.themes[theme.name].menu.header.titleColor,
-                            fontSize: 32, marginRight: 24
+                            fontSize: theme.themes[theme.name].menu.header.titleFontSize, marginRight: 24
                         }}>
                             {
                                 currentCategory.__rawNode__.content?.contents[language.code]?.name
@@ -217,7 +217,7 @@ export const Menu = React.memo(({
                         }),
                     }}>
                         <View style={{ flex: 1, flexGrow: 1, margin: "auto" }}>
-                            <SideMenu menu={menu} language={language} selected={currentCategory}
+                            <SideMenu themeName={themeName} menu={menu} language={language} selected={currentCategory}
                                 onPress={selectSideMenuCategoryHandler}></SideMenu>
                         </View>
                         <View style={{ flex: 0, width: "100%", height: 192, margin: "auto", padding: 24 }}>

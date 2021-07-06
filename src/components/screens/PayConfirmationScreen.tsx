@@ -54,11 +54,11 @@ const PayConfirmationScreenScreenContainer = React.memo(({ _theme, _language, _o
     return (
         <View style={{
             flex: 1, justifyContent: "space-around", alignItems: "center", width: "100%", height: "100%",
-            backgroundColor: theme.themes[theme.name].intro.background, padding: 54
+            backgroundColor: theme.themes[theme.name].intro.backgroundColor, padding: 54
         }}>
             <View style={{ flex: 1, alignItems: "center", width: "70%", maxWidth: 620 }}>
                 <Text style={{
-                    fontSize: 32, fontWeight: "bold", textAlign: "center",
+                    fontSize: theme.themes[theme.name].payConfirmation.primaryMessageFontSize, fontWeight: "bold", textAlign: "center",
                     color: theme.themes[theme.name].payConfirmation.primaryMessageColor
                 }}>
                     {
@@ -66,7 +66,7 @@ const PayConfirmationScreenScreenContainer = React.memo(({ _theme, _language, _o
                     }
                 </Text>
                 <Text style={{
-                    fontSize: 32, fontWeight: "bold", textAlign: "center",
+                    fontSize: theme.themes[theme.name].payConfirmation.primaryMessageFontSize, fontWeight: "bold", textAlign: "center",
                     color: theme.themes[theme.name].payConfirmation.primaryMessageColor
                 }}>
                     {
@@ -74,20 +74,20 @@ const PayConfirmationScreenScreenContainer = React.memo(({ _theme, _language, _o
                     }
                 </Text>
                 <Text style={{
-                    fontSize: 76, fontWeight: "bold", textAlign: "center",
+                    fontSize: theme.themes[theme.name].payConfirmation.nameFontSize, fontWeight: "bold", textAlign: "center",
                     color: theme.themes[theme.name].payConfirmation.numberColor
                 }}>
                     {OrderWizard.current.result?.code}
                 </Text>
                 <Text style={{
-                    fontSize: 20, fontWeight: "bold", textAlign: "center",
+                    fontSize: theme.themes[theme.name].payConfirmation.secondaryMessageFontSize, fontWeight: "bold", textAlign: "center",
                     color: theme.themes[theme.name].payConfirmation.secondaryMessageColor
                 }}>
                     {
                         localize(_language, "kiosk_pay_success_order_description", OrderWizard.current.getFormatedSum(true))
                     }
                 </Text>
-                <Text style={{
+                {/*<Text style={{
                     fontSize: 20, fontWeight: "bold", textAlign: "center",
                     color: theme.themes[theme.name].payConfirmation.secondaryMessageColor, marginBottom: 40
                 }}>
@@ -103,7 +103,7 @@ const PayConfirmationScreenScreenContainer = React.memo(({ _theme, _language, _o
                         size={192}
                         value="Ссылка на просмотр статуса заказа"
                     />
-                </View>
+                </View>*/}
             </View>
             <View>
                 <SimpleButton title={

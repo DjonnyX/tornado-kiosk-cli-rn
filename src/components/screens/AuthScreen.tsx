@@ -5,7 +5,7 @@ import { Picker } from '@react-native-community/picker';
 import { View, TextInput, Text } from "react-native";
 import { connect } from "react-redux";
 import { CommonActions } from "@react-navigation/native";
-import { take, takeUntil } from "rxjs/operators";
+import { switchMap, take, takeUntil } from "rxjs/operators";
 import { IStore } from "@djonnyx/tornado-types";
 import { MainNavigationScreenTypes } from "../navigation";
 import { IAppState } from "../../store/state";
@@ -16,7 +16,7 @@ import { orderApiService, refApiService } from "../../services";
 import { SystemActions } from "../../store/actions/SystemAction";
 import { SimpleSystemButton } from "../simple";
 import { IAlertState } from "../../interfaces";
-import { Subject } from "rxjs";
+import { interval, Subject } from "rxjs";
 
 interface IFormSNProps {
     themeName: string;
@@ -57,20 +57,20 @@ const FormSN = React.memo(({ themeName, value, isProgress, onComplete }: IFormSN
                     : theme.themes[theme.name].service.textInput.underlineWrongColor
                 }
                 style={{
-                    fontSize: 16,
+                    fontSize: theme.themes[theme.name].service.textInput.textFontSize,
                     textAlign: "center", color: theme.themes[theme.name].service.textInput.textColor,
                     minWidth: 140, marginBottom: 12
                 }} editable={!isProgress}
                 placeholder="Серийный ключ" onChangeText={changeSerialNumHandler} value={serialNumber} />
             {
                 !isValid &&
-                <Text style={{ fontSize: 12, color: theme.themes[theme.name].service.errorLabel.textColor }}>
+                <Text style={{ fontSize: theme.themes[theme.name].service.errorLabel.textFontSize, color: theme.themes[theme.name].service.errorLabel.textColor }}>
                     * Обязательное поле
-        </Text>
+                </Text>
             }
         </View>
         <SimpleSystemButton style={{ backgroundColor: theme.themes[theme.name].service.button.backgroundColor, minWidth: 180 }}
-            textStyle={{ fontSize: 16, color: theme.themes[theme.name].service.button.textColor }}
+            textStyle={{ fontSize: theme.themes[theme.name].service.button.textFontSize, color: theme.themes[theme.name].service.button.textColor }}
             onPress={() => { completeHandler() }} title="Зарегистрировать" disabled={isProgress || !isValid} />
     </>
 });
@@ -107,16 +107,16 @@ const FormTParams = React.memo(({ themeName, stores, isProgress, onComplete }: I
                     : theme.themes[theme.name].service.textInput.underlineWrongColor
                 }
                 style={{
-                    fontSize: 16,
+                    fontSize: theme.themes[theme.name].service.textInput.textFontSize,
                     textAlign: "center", color: theme.themes[theme.name].service.textInput.textColor,
                     minWidth: 180
                 }} editable={!isProgress}
                 placeholder="Название терминала" onChangeText={changeTerminalNameHandler} value={terminalName} />
             {
                 !isTerminalNameValid &&
-                <Text style={{ fontSize: 12, color: theme.themes[theme.name].service.errorLabel.textColor }}>
+                <Text style={{ fontSize: theme.themes[theme.name].service.errorLabel.textFontSize, color: theme.themes[theme.name].service.errorLabel.textColor }}>
                     * Обязательное поле
-        </Text>
+                </Text>
             }
         </View>
         <View style={{ marginBottom: 12 }}>
@@ -124,6 +124,7 @@ const FormTParams = React.memo(({ themeName, stores, isProgress, onComplete }: I
                 mode="dropdown"
                 selectedValue={storeId}
                 style={{
+                    fontSize: theme.themes[theme.name].service.picker.textFontSize,
                     textAlign: "center", minWidth: 180,
                     color: isStoreIdValid
                         ? theme.themes[theme.name].service.picker.textColor
@@ -144,13 +145,13 @@ const FormTParams = React.memo(({ themeName, stores, isProgress, onComplete }: I
             </Picker>
             {
                 !isStoreIdValid &&
-                <Text style={{ fontSize: 12, color: theme.themes[theme.name].service.errorLabel.textColor }}>
+                <Text style={{ fontSize: theme.themes[theme.name].service.errorLabel.textFontSize, color: theme.themes[theme.name].service.errorLabel.textColor }}>
                     * Обязательное поле
-            </Text>
+                </Text>
             }
         </View>
         <SimpleSystemButton style={{ backgroundColor: theme.themes[theme.name].service.button.backgroundColor, minWidth: 180 }}
-            textStyle={{ fontSize: 16, color: theme.themes[theme.name].service.button.textColor }}
+            textStyle={{ fontSize: theme.themes[theme.name].service.button.textFontSize, color: theme.themes[theme.name].service.button.textColor }}
             onPress={completeHandler} title="Сохранить" disabled={isProgress || !isStep2Valid} />
     </>
 })
@@ -248,6 +249,26 @@ const AuthScreenContainer = React.memo(({ _theme, _serialNumber, _setupStep, _te
     useEffect(() => {
         const unsubscribe$ = new Subject<void>();
 
+        const getStoresInterval = () => {
+            interval(5000).pipe(
+                take(1),
+                takeUntil(unsubscribe$),
+                switchMap(_ => {
+                    return refApiService.getStores({
+                        serial: _serialNumber,
+                    }).pipe(
+                        take(1),
+                        takeUntil(unsubscribe$),
+                    )
+                })
+            ).subscribe(
+                v => {
+                    setStores(v);
+                    getStoresInterval();
+                }
+            );
+        };
+
         if (_setupStep === 1) {
             refApiService.getStores({
                 serial: _serialNumber,
@@ -257,6 +278,7 @@ const AuthScreenContainer = React.memo(({ _theme, _serialNumber, _setupStep, _te
             ).subscribe(
                 v => {
                     setStores(v);
+                    getStoresInterval();
                 },
                 err => {
                     _alertOpen({
@@ -368,8 +390,7 @@ const AuthScreenContainer = React.memo(({ _theme, _serialNumber, _setupStep, _te
     return (
         <>
             {
-                !!_theme &&
-                <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: theme.themes[theme.name].loading.background }}>
+                <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: theme.themes[theme.name].loading.backgroundColor }}>
                     {
                         !isLicenseValid &&
                         <>

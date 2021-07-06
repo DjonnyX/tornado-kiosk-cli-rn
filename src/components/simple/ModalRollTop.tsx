@@ -25,14 +25,14 @@ export const ModalRollTop = React.memo(({ children, visible }: IModalRollTopProp
                 bottom: 0,
                 left: 0,
                 right: 0,
-                //backgroundColor: "#ffffff",//theme.themes[theme.name].common.modalTransparent.background,
+                //backgroundColor: "#ffffff",//theme.themes[theme.name].common.modalTransparent.backgroundColor,
             }}>
                 <View style={{
                     width: "100%",
                     height: "100%",
                     //borderWidth: 1,
                     //borderColor: theme.themes[theme.name].common.modalTransparent.window.borderColor,
-                    backgroundColor: theme.themes[theme.name].common.modalTransparent.window.background,
+                    backgroundColor: theme.themes[theme.name].common.modalTransparent.window.backgroundColor,
                     alignItems: "center",
                     shadowColor: "#000",
                     shadowOffset: {
