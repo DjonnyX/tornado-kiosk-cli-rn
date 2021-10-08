@@ -54,7 +54,7 @@ const PayConfirmationScreenScreenContainer = React.memo(({ _theme, _language, _o
     return (
         <View style={{
             flex: 1, justifyContent: "space-around", alignItems: "center", width: "100%", height: "100%",
-            backgroundColor: theme.themes[theme.name].intro.backgroundColor, padding: 54
+            backgroundColor: theme.themes[theme.name].payConfirmation.backgroundColor, padding: 54
         }}>
             <View style={{ flex: 1, alignItems: "center", width: "70%", maxWidth: 620 }}>
                 <Text style={{
