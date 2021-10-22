@@ -69,10 +69,12 @@ export const NavMenuItem = React.memo(({ themeName, thumbnailHeight, currency, l
                             </View>
                         }
                     </View>
-                    <View style={{ width: "100%", height: thumbnailHeight, marginBottom: 5 }}>
-                        <FastImage style={{ width: "100%", height: "100%" }} source={{
-                            uri: `file://${currentAsset?.mipmap?.x128}`,
-                        }} resizeMode={FastImage.resizeMode.contain}></FastImage>
+                    <View style={{ width: "100%", height: thumbnailHeight, flex: 1, alignItems: "center", marginBottom: 5 }}>
+                        <View style={{  }}>
+                            <FastImage style={{ width: thumbnailHeight, height: thumbnailHeight, borderRadius: 16, overflow: "hidden" }} source={{
+                                uri: `file://${currentAsset?.mipmap?.x128}`,
+                            }} resizeMode={FastImage.resizeMode.contain}></FastImage>
+                        </View>
                     </View>
                     <Text textBreakStrategy="simple" numberOfLines={2} ellipsizeMode="tail" style={{
                         textAlign: "center", fontSize: theme.themes[theme.name].menu.navMenu.item.nameFontSize, marginBottom: 6, fontWeight: "bold", textTransform: "uppercase",

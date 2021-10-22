@@ -135,13 +135,20 @@ export const theme: IKioskTheme = {
                     iconColor: "rgba(0,0,0,0.75)",
                 },
                 sideMenu: {
+                    backgroundColor: "white",
+                    backgroundImage: undefined,
                     item: {
                         backgroundColor: "#000",
                         nameColor: "rgba(0,0,0,0.75)",
                         nameFontSize: 14,
+                        select: {
+                            isLight: true,
+                        }
                     },
                 },
                 navMenu: {
+                    backgroundColor: "transparent",
+                    backgroundImage: undefined,
                     item: {
                         backgroundColor: "transparent",
                         nameColor: "rgba(0,0,0,0.75)",
@@ -167,6 +174,8 @@ export const theme: IKioskTheme = {
                     },
                 },
                 draftOrder: {
+                    backgroundColor: "white",
+                    backgroundImage: undefined,
                     item: {
                         backgroundColor: "transparent",
                         nameColor: "rgba(0,0,0,0.75)",
@@ -342,12 +351,18 @@ export const theme: IKioskTheme = {
                 }
             },
             payStatus: {
+                backgroundColor: "rgb(255,255,255)",
+                backgroundImage: undefined,
                 primaryMessageColor: "rgba(0,0,0,0.75)",
                 primaryMessageFontSize: 40,
                 secondaryMessageColor: "rgba(0,0,0,0.5)",
                 secondaryMessageFontSize: 20,
+                processIndicator: {
+                    backgroundImage: undefined,
+                },
             },
             payConfirmation: {
+                backgroundColor: "rgb(255,255,255)",
                 numberColor: "rgba(0,0,0,1)",
                 nameFontSize: 76,
                 primaryMessageColor: "rgba(0,0,0,0.75)",
@@ -470,13 +485,20 @@ export const theme: IKioskTheme = {
                     iconColor: "rgba(255,255,255,0.75)",
                 },
                 sideMenu: {
+                    backgroundColor: "black",
+                    backgroundImage: undefined,
                     item: {
                         backgroundColor: "#fff",
                         nameColor: "rgba(255,255,255,0.75)",
                         nameFontSize: 14,
+                        select: {
+                            isLight: false,
+                        }
                     },
                 },
                 navMenu: {
+                    backgroundColor: "transparent",
+                    backgroundImage: undefined,
                     item: {
                         backgroundColor: "transparent",
                         nameColor: "rgba(255,255,255,0.75)",
@@ -502,6 +524,8 @@ export const theme: IKioskTheme = {
                     },
                 },
                 draftOrder: {
+                    backgroundColor: "black",
+                    backgroundImage: undefined,
                     item: {
                         backgroundColor: "transparent",
                         nameColor: "rgba(255,255,255,0.75)",
@@ -677,12 +701,18 @@ export const theme: IKioskTheme = {
                 }
             },
             payStatus: {
+                backgroundColor: "rgb(0,0,0)",
+                backgroundImage: undefined,
                 primaryMessageColor: "rgba(255,255,255,0.75)",
                 primaryMessageFontSize: 40,
                 secondaryMessageColor: "rgba(255,255,255,0.5)",
                 secondaryMessageFontSize: 20,
+                processIndicator: {
+                    backgroundImage: undefined,
+                },
             },
             payConfirmation: {
+                backgroundColor: "rgb(0,0,0)",
                 numberColor: "rgba(255,255,255,1)",
                 nameFontSize: 76,
                 primaryMessageColor: "rgba(255,255,255,0.75)",

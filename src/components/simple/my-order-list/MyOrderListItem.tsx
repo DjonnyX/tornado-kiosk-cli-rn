@@ -61,32 +61,35 @@ export const MyOrderListItem = React.memo(({ stateId, menuStateId, imageHeight, 
 
     return (
         <View style={{ flex: 1, paddingLeft: 24, paddingRight: 24, marginBottom: 20 }}>
-            <TouchableOpacity style={{ alignItems: "center" }} onPress={pressHandler}>
-                <View style={{ flex: 1, width: "100%", height: imageHeight, marginBottom: 2, justifyContent: "flex-end" }}>
+            {/* <TouchableOpacity style={{ alignItems: "center" }} onPress={pressHandler}> */}
+                {/* <View style={{ flex: 1, width: "100%", height: imageHeight, marginBottom: 2, justifyContent: "flex-end" }}>
                     <FastImage style={{ width: "100%", height: "100%" }} source={{
                         uri: `file://${currentAsset?.mipmap?.x128}`,
                     }} resizeMode={FastImage.resizeMode.contain}></FastImage>
-                </View>
+                </View> */}
                 <Text numberOfLines={3} ellipsizeMode="tail" style={{
-                    textAlign: "center", fontSize: theme.themes[theme.name].menu.draftOrder.item.nameFontSize, fontWeight: "bold",
+                    textAlign: "left", fontSize: theme.themes[theme.name].menu.draftOrder.item.nameFontSize, fontWeight: "bold",
                     color: theme.themes[theme.name].menu.draftOrder.item.nameColor, textTransform: "uppercase"
                 }}>
                     {
                         currentContent?.name
                     }
                 </Text>
-                <View style={{ alignItems: "center", justifyContent: "center", marginBottom: 1 }}>
+                <View style={{ marginBottom: 1 }}>
                     <Text style={{
-                        textAlign: "center", fontWeight: "bold", fontSize: theme.themes[theme.name].menu.draftOrder.item.price.textFontSize, paddingTop: 4, paddingBottom: 4, paddingLeft: 6, paddingRight: 6,
+                        textAlign: "left",
+                        fontWeight: "bold",
+                        fontSize: theme.themes[theme.name].menu.draftOrder.item.price.textFontSize,
+                        paddingTop: 4, paddingBottom: 4, paddingLeft: 6, paddingRight: 6,
                         color: theme.themes[theme.name].menu.draftOrder.item.price.textColor
                     }}>
                         {
-                            position.getFormatedSumPerOne(true)
+                            `${position.quantity} x ${position.getFormatedSumPerOne(true)}`
                         }
                     </Text>
                 </View>
-            </TouchableOpacity>
-            <NumericStapper
+            {/* </TouchableOpacity> */}
+            {/* <NumericStapper
                 key={language.code}
                 value={position.quantity}
                 animationOnInit={true}
@@ -122,7 +125,7 @@ export const MyOrderListItem = React.memo(({ stateId, menuStateId, imageHeight, 
                 min={0}
                 max={Math.min(position.rests, 99)}
                 onChange={changeQuantityHandler}
-            />
+            /> */}
         </View>
     );
 })

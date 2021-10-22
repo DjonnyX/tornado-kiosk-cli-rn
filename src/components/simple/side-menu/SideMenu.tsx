@@ -4,6 +4,7 @@ import { ICompiledLanguage } from "@djonnyx/tornado-types";
 import { SideMenuItem } from "./SideMenuItem";
 import { ScrollView } from "react-native-gesture-handler";
 import { MenuNode } from "../../../core/menu/MenuNode";
+import { theme } from "../../../theme";
 
 interface ISideMenuProps {
     themeName: string;
@@ -15,7 +16,7 @@ interface ISideMenuProps {
 
 export const SideMenu = React.memo(({ themeName, selected, language, menu, onPress }: ISideMenuProps) => {
     return (
-        <SafeAreaView style={{ flex: 1, width: "100%" }}>
+        <SafeAreaView style={{ flex: 1, width: "100%", backgroundColor: theme.themes[theme.name].menu.sideMenu.backgroundColor }}>
             <ScrollView horizontal={false}>
                 <View style={{ paddingLeft: 32, paddingRight: 20, paddingTop: 78, paddingBottom: 10 }}>
                     {

@@ -44,9 +44,9 @@ const PayStatusScreenContainer = React.memo(({ _theme, _language, navigation }: 
                     }
                 </Text>
                 <FastImage style={{ width: 128, height: 128 }}
-                    source={theme.name === 'light'
-                        ? require("./imgs/processing-indicator-light.gif")
-                        : require("./imgs/processing-indicator-dark.gif")}
+                    source={{
+                        uri: `file://${theme.themes[theme.name].payStatus.processIndicator.backgroundImage?.asset?.path}`,
+                    }}
                     resizeMode="contain" />
             </View>
         </View >

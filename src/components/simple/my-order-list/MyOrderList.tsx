@@ -10,6 +10,7 @@ import { OrderWizard } from "../../../core/order/OrderWizard";
 import { IAlertState } from "../../../interfaces";
 import { NotificationActions } from "../../../store/actions";
 import { IPositionWizard } from "../../../core/interfaces";
+import { theme } from "../../../theme";
 
 interface IMyOrderListProps {
     // store
