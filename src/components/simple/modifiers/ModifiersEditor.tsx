@@ -83,8 +83,8 @@ export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _la
                     <View style={{ flex: 1, width: "100%" }}>
                         <View style={{ flexDirection: "row", width: "100%", maxHeight: "20%", marginBottom: 32 }}>
                             <View style={{ flex: 1, width: "100%", flexDirection: "row", alignItems: "flex-start", marginRight: 48, marginBottom: 8, overflow: "hidden" }}>
-                                <View>
-                                    <FastImage style={{ width: 192, height: "100%" }} source={{
+                                <View style={{ alignItems: "center" }}>
+                                    <FastImage style={{ width: 128, height: 128, borderRadius: 16, overflow: "hidden" }} source={{
                                         uri: `file://${position.__product__?.contents[_language?.code]?.resources?.icon.path}`,
                                     }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                                 </View>
@@ -117,7 +117,7 @@ export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _la
                             </View>
                         </View>
                         <View style={{
-                            flex: 1, width: "100%", backgroundColor: theme.themes[theme.name].modifiers.backgroundColor,
+                            flex: 1, width: "100%",
                         }}>
                             <View style={{ width: "100%", alignItems: "center", marginBottom: 10 }}>
                                 <View style={{ width: "100%", flexDirection: "row", height: 4, maxWidth: 300, }}>

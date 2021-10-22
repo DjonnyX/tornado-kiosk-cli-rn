@@ -69,8 +69,8 @@ export const ConfirmationOrderListItem = React.memo(({ themeName, stateId, color
                 flex: 1, flexDirection: "row",
                 alignItems: "stretch"
             }} onPress={pressHandler}>
-                <View style={{ width: 48, height: 48, marginRight: 20, justifyContent: "flex-end" }}>
-                    <FastImage style={{ width: "100%", height: "100%" }} source={{
+                <View style={{ width: 48, height: 48, marginTop: 10, marginRight: 20, justifyContent: "flex-end" }}>
+                    <FastImage style={{ width: 48, height: 48, borderRadius: 16, overflow: "hidden" }} source={{
                         uri: `file://${currentAsset?.mipmap?.x128}`,
                     }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                 </View>

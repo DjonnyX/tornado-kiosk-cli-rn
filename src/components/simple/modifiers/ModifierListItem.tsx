@@ -76,8 +76,8 @@ export const ModifierListItem = React.memo(({ themeName, thumbnailHeight, curren
                         </View>
                     }
                 </View>
-                <View style={{ width: "100%", height: thumbnailHeight, marginBottom: 5 }}>
-                    <FastImage style={{ width: "100%", height: "100%" }} source={{
+                <View style={{ width: "100%", height: thumbnailHeight, marginBottom: 5, flex: 1, alignItems: "center" }}>
+                    <FastImage style={{ width: thumbnailHeight, height: thumbnailHeight, borderRadius: 16, overflow: "hidden" }} source={{
                         uri: `file://${currentAsset?.mipmap?.x128}`,
                     }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                 </View>
