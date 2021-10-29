@@ -41,11 +41,11 @@ export const NavMenuItem = React.memo(({ themeName, thumbnailHeight, currency, l
                 <View style={{ alignItems: "center", flex: 1, width: "100%" }}>
                     <View style={{
                         flexDirection: "row", alignItems: "baseline", justifyContent: !!tags ? "space-around" : "flex-end",
-                        width: "100%"
+                        width: "100%", position: "relative",
                     }}>
                         {
                             !!tags &&
-                            <View style={{ flex: 1 }}>
+                            <View style={{ position: "absolute", left: 0, right: 0, flex: 1, zIndex: 1 }}>
                                 <TagList tags={tags} language={language} />
                             </View>
                         }

@@ -41,18 +41,18 @@ export const ModifierListItem = React.memo(({ themeName, thumbnailHeight, curren
         ? position.__product__?.tags
         : undefined;
 
-        console.warn(position.quantity)
+    console.warn(position.quantity)
 
     return (
         <View style={{ flex: 1, backgroundColor: theme.themes[theme.name].modifiers.item.backgroundColor, borderRadius: 16, padding: 22 }}>
             <TouchableOpacity style={{ alignItems: "center", flex: 1 }} onPress={pressHandler}>
                 <View style={{
                     flexDirection: "row", alignItems: "baseline", justifyContent: !!tags ? "space-around" : "flex-end",
-                    width: "100%"
+                    width: "100%", position: "relative",
                 }}>
                     {
                         !!tags &&
-                        <View style={{ flex: 1 }}>
+                        <View style={{ position: "absolute", left: 0, right: 0, flex: 1, zIndex: 1 }}>
                             <TagList tags={tags} language={language} />
                         </View>
                     }
