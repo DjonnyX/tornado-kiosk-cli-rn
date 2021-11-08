@@ -29,7 +29,9 @@ export const MyOrderListContainer = React.memo(({ _currency, _language, _alertOp
     }, [flatListRef]);
 
     return (
-        <SafeAreaView style={{ flex: 1, width: "100%" }}>
+        <SafeAreaView style={{
+            flex: 1, width: "100%",
+        }}>
             <FlatList ref={flatListRef as any} onContentSizeChange={contentSizeChangeHandler} persistentScrollbar
                 updateCellsBatchingPeriod={10} style={{ flex: 1 }} data={OrderWizard.current.positions} renderItem={({ item }) => {
                     return <MyOrderListItem key={item.id} position={item} currency={_currency as ICurrency}

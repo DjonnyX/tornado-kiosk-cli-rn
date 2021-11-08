@@ -90,7 +90,7 @@ export const ModifierListItem = React.memo(({ themeName, thumbnailHeight, curren
                         currentContent?.name
                     }
                 </Text>
-                <Text textBreakStrategy="simple" numberOfLines={2} ellipsizeMode="tail" style={{
+                {/* <Text textBreakStrategy="simple" numberOfLines={2} ellipsizeMode="tail" style={{
                     textAlign: "center", fontSize: theme.themes[theme.name].modifiers.item.descriptionFontSize,
                     color: theme.themes[theme.name].modifiers.item.descriptionColor, textTransform: "uppercase",
                     marginBottom: 12
@@ -98,7 +98,7 @@ export const ModifierListItem = React.memo(({ themeName, thumbnailHeight, curren
                     {
                         currentContent?.description
                     }
-                </Text>
+                </Text> */}
             </TouchableOpacity>
             {
                 position.isReplacement

@@ -137,6 +137,8 @@ export const theme: IKioskTheme = {
                 sideMenu: {
                     backgroundColor: "white",
                     backgroundImage: undefined,
+                    padding: 8,
+                    borderRadius: 14,
                     item: {
                         backgroundColor: "#000",
                         nameColor: "rgba(0,0,0,0.75)",
@@ -176,6 +178,8 @@ export const theme: IKioskTheme = {
                 draftOrder: {
                     backgroundColor: "white",
                     backgroundImage: undefined,
+                    padding: 8,
+                    borderRadius: 14,
                     item: {
                         backgroundColor: "transparent",
                         nameColor: "rgba(0,0,0,0.75)",
@@ -225,9 +229,13 @@ export const theme: IKioskTheme = {
                     textFontSize: 48,
                 },
                 group: {
+                    backgroundColor: "rgba(255, 255, 255, 1)",
                     nameColor: "rgba(0,0,0,0.75)",
                     descriptionColor: "rgba(0,0,0,0.75)",
                     descriptionInvalidColor: "#ff4e4e",
+                    header: {
+                        backgroundColor: ["rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 0)"],
+                    },
                     buttonPrevious: {
                         backgroundColor: "#212121",
                         disabledBackgroundColor: "transparent",
@@ -487,6 +495,8 @@ export const theme: IKioskTheme = {
                 sideMenu: {
                     backgroundColor: "black",
                     backgroundImage: undefined,
+                    padding: 8,
+                    borderRadius: 14,
                     item: {
                         backgroundColor: "#fff",
                         nameColor: "rgba(255,255,255,0.75)",
@@ -526,6 +536,8 @@ export const theme: IKioskTheme = {
                 draftOrder: {
                     backgroundColor: "black",
                     backgroundImage: undefined,
+                    padding: 8,
+                    borderRadius: 14,
                     item: {
                         backgroundColor: "transparent",
                         nameColor: "rgba(255,255,255,0.75)",
@@ -575,9 +587,13 @@ export const theme: IKioskTheme = {
                     textFontSize: 48,
                 },
                 group: {
+                    backgroundColor: "rgba(0, 0, 0, 1)",
                     nameColor: "rgba(255,255,255,0.75)",
                     descriptionColor: "rgba(255,255,255,0.75)",
                     descriptionInvalidColor: "#ff4e4e",
+                    header: {
+                        backgroundColor: ["rgba(0, 0, 0, 1)", "rgba(0, 0, 0, 1)", "rgba(0, 0, 0, 1)", "rgba(0, 0, 0, 1)", "rgba(0, 0, 0, 0)"],
+                    },
                     buttonPrevious: {
                         backgroundColor: "#30a02a",
                         disabledBackgroundColor: "transparent",
