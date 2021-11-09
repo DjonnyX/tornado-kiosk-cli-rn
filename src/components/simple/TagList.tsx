@@ -15,7 +15,7 @@ export const TagList = React.memo(({ tags, language }: ITagListProps) => {
             tags?.map(tag =>
                 tag?.contents[language.code]?.resources?.main?.mipmap?.x32
                     ?
-                    <FastImage key={tag.id} style={{ width: 24, height: 24 }} source={{
+                    <FastImage key={tag.id} style={{ width: 32, height: 32 }} source={{
                         uri: `file://${tag?.contents[language.code]?.resources?.main?.mipmap?.x32}`,
                     }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                     :
