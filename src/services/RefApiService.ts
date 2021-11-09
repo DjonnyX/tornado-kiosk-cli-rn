@@ -11,6 +11,7 @@ import { AuthStore } from "../native";
 import { extractError } from "../utils/error";
 import { ApiErrorCodes } from "./ApiErrorCodes";
 import { IDataService } from "@djonnyx/tornado-refs-processor";
+import { IKioskTheme } from "@djonnyx/tornado-types";
 
 interface IRequestOptions {
     useAttempts?: boolean;
@@ -94,7 +95,7 @@ const parseResponse = (res: Response) => {
     );
 }
 
-class RefApiService<T = IKioskThemeData> implements IDataService<T> {
+class RefApiService implements IDataService<IKioskTheme> {
     private _serial: string | undefined;
 
     public set serial(v: string) {
@@ -627,9 +628,9 @@ class RefApiService<T = IKioskThemeData> implements IDataService<T> {
         return response;
     }
 
-    getThemes(): Observable<Array<IAppTheme<T>>> {
+    getThemes(): Observable<Array<IAppTheme<IKioskTheme>>> {
         Log.i("RefApiService", "getThemes");
-        let response: Observable<Array<IAppTheme<T>>>;
+        let response: Observable<Array<IAppTheme<IKioskTheme>>>;
         try {
             response = request(
                 from(this.getAccessToken()).pipe(
