@@ -1,5 +1,5 @@
 import { ICompiledLanguage, ICurrency } from "@djonnyx/tornado-types";
-import React, { Dispatch, useCallback, useEffect, useState } from "react";
+import React, { Dispatch, useCallback, useEffect, useRef, useState } from "react";
 import { View, Text, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
 import FastImage from "react-native-fast-image";
 import LinearGradient from "react-native-linear-gradient";
@@ -36,6 +36,7 @@ interface IModifiersEditorProps {
 export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _language, _currency }: IModifiersEditorProps) => {
     const [stateId, setStateId] = useState<number>(-1);
     const [position, setPosition] = useState<IPositionWizard | null>(OrderWizard.current.currentPosition);
+    const _scrollViewRef = useRef<ScrollView>()
 
     useEffect(() => {
         setStateId(_orderStateId || 0);
@@ -61,13 +62,15 @@ export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _la
         if (!!OrderWizard.current) {
             OrderWizard.current.gotoPreviousGroup();
         }
-    }, []);
+        _scrollViewRef?.current?.scrollTo(0, 0, true);
+    }, [_scrollViewRef]);
 
     const onNextGroup = useCallback(() => {
         if (!!OrderWizard.current) {
             OrderWizard.current.gotoNextGroup();
         }
-    }, []);
+        _scrollViewRef?.current?.scrollTo(0, 0, true);
+    }, [_scrollViewRef]);
 
     const onClose = useCallback(() => {
         if (!!OrderWizard.current) {
@@ -224,7 +227,7 @@ export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _la
                                 <SafeAreaView style={{
                                     flex: 1, width: "100%",
                                 }}>
-                                    <ScrollView style={{ flex: 1, marginTop: 68 }} persistentScrollbar>
+                                    <ScrollView ref={_scrollViewRef as any} style={{ flex: 1, marginTop: 68 }} persistentScrollbar>
                                         <GridList style={{ flex: 1 }} disbleStartAnimation
                                             padding={10} spacing={6} data={position.groups[position.currentGroup].positions}
                                             itemDimension={MODIFIER_ITEM_WIDTH} animationSkipFrames={10} renderItem={({ item }) => {
@@ -253,7 +256,7 @@ const CloseButton = ({ themeName, onPress }: ICloseButtonProps) => {
     return (
         <TouchableOpacity onPress={onPress}>
             <View
-                style={{ borderRadius: 16 }}
+                style={{ borderRadius: 24, backgroundColor: theme.themes[theme.name].modifiers.backgroundColor, }}
             >
                 <Icons name="Close" fill={theme.themes[theme.name].menu.backButton.iconColor} width={34} height={34} ></Icons>
             </View>

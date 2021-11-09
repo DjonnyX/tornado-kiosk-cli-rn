@@ -234,7 +234,7 @@ export const Menu = React.memo(({
                                         outputRange: [-10, -sideMenuWidth],
                                     }),
                                 }}>
-                                    <MenuButton themeName={themeName} onPress={onBack}></MenuButton>
+                                    <MenuButton language={language} themeName={themeName} onPress={onBack}></MenuButton>
                                 </Animated.View>
                                 <View style={{ flex: 1 }}></View>
                                 <Text style={{
