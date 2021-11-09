@@ -13,7 +13,7 @@
     "start": "react-native start",
     "start:reset-cache": "npm start -- --reset-cache",
     "cache:clean": "del %appdata%\\Temp\\react-native-* & cd android & gradlew clean & cd .. & del node_modules/ & npm cache clean --force & npm install & npm start -- --reset-cache",
-    "build:android": "cd android && gradlew assembleRelease",
+    "build:android": "cd android && gradlew clean && gradlew assembleRelease",
     "setdeviceowner": "adb shell dpm set-device-owner com.tornadokiosk/.TornadoDeviceAdminReceiver",
     "removedeviceowner": "adb shell dpm remove-active-admin com.tornadokiosk/.TornadoDeviceAdminReceiver",
     "startapp": "adb shell am start -n com.tornadokiosk/com.tornadokiosk.MainActivity",
