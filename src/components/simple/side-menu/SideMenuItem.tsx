@@ -108,13 +108,12 @@ export const SideMenuItem = React.memo(({ themeName, depth = 0, height = 0, sele
     const currentContent = node.__rawNode__.content?.contents[language?.code];
     const currentAsset = currentContent?.resources?.icon;
     const color = theme.themes[theme.name].menu.sideMenu.item.backgroundColor; //currentContent.color;
+    const isLight = Color.rgb(color).isLight();
     const actualColor = node === selected ?
-        theme.themes[theme.name].menu.sideMenu.item.select.isLight ?
+        isLight ?
             Color.rgb(color).lightness(85).toString() :
             Color.rgb(color).darken(0.75).toString() :
-        theme.themes[theme.name].menu.sideMenu.item.select.isLight ?
-            Color.rgb(color).lightness(95).toString() :
-            Color.rgb(color).lightness(0.75).toString();
+        color;
 
     const isExpanded = node === selected || node.children.filter(child => child === selected).length > 0;
 
