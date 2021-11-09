@@ -606,7 +606,7 @@ class RefApiService<T = IKioskThemeData> implements IDataService<T> {
                 from(this.getAccessToken()).pipe(
                     switchMap(token => {
                         return from(
-                            fetch(`${config.refServer.address}/api/v1/terminals`,
+                            fetch(`${config.refServer.address}/api/v1/terminals?type=${TerminalTypes.KIOSK}`,
                                 {
                                     method: "GET",
                                     headers: {
