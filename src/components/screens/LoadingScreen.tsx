@@ -42,7 +42,7 @@ const LoadingScreenContainer = React.memo(({ _theme, _progress, _loaded, navigat
         style={{ width: "100%", maxWidth: 200, marginLeft: "10%", marginRight: "10%" }}
         styleAttr="Horizontal"
         progress={_progress / 100}
-        indeterminate={false}
+        indeterminate={_progress === 1 || _progress === 0}
         color={theme.themes[theme.name].loading.progressBar.trackColor}></ProgressBar>
       <Text style={{ color: theme.themes[theme.name].loading.progressBar.textColor, fontSize: theme.themes[theme.name].loading.progressBar.textFontSize }}>
         {
