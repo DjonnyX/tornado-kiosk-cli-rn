@@ -16,9 +16,11 @@ interface ISideMenuProps {
 
 export const SideMenu = React.memo(({ themeName, selected, language, menu, onPress }: ISideMenuProps) => {
     return (
-        <SafeAreaView style={{ flex: 1, width: "100%", backgroundColor: theme.themes[theme.name].menu.sideMenu.backgroundColor }}>
+        <SafeAreaView style={{
+            flex: 1, width: "100%", height: "100%",
+        }}>
             <ScrollView horizontal={false}>
-                <View style={{ paddingLeft: 32, paddingRight: 20, paddingTop: 78, paddingBottom: 10 }}>
+                <View style={{ paddingLeft: 32, paddingRight: 20, paddingTop: 20, paddingBottom: 10 }}>
                     {
                         menu.activeChildren.map(child =>
                             <SideMenuItem key={child.id} themeName={themeName} selected={selected} node={child} language={language}

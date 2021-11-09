@@ -84,7 +84,7 @@ export const NavMenuItem = React.memo(({ themeName, thumbnailHeight, currency, l
                             currentContent.name
                         }
                     </Text>
-                    <Text textBreakStrategy="simple" numberOfLines={2} ellipsizeMode="tail" style={{
+                    {/* <Text textBreakStrategy="simple" numberOfLines={2} ellipsizeMode="tail" style={{
                         textAlign: "center",
                         fontSize: theme.themes[theme.name].menu.navMenu.item.descriptionFontSize, color: theme.themes[theme.name].menu.navMenu.item.descriptionColor, textTransform: "uppercase",
                         marginBottom: 12
@@ -92,7 +92,7 @@ export const NavMenuItem = React.memo(({ themeName, thumbnailHeight, currency, l
                         {
                             currentContent.description
                         }
-                    </Text>
+                    </Text> */}
                 </View>
                 {
                     node.type === NodeTypes.PRODUCT

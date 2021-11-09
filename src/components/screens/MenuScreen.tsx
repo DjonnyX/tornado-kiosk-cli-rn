@@ -1,6 +1,6 @@
 import React, { Dispatch, useState, useCallback, useEffect } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
-import { View, Dimensions, ScaledSize } from "react-native";
+import { View, Dimensions, ScaledSize, LayoutChangeEvent } from "react-native";
 import { connect } from "react-redux";
 import { ICurrency, ICompiledLanguage, ICompiledOrderType, ICompiledProduct } from "@djonnyx/tornado-types";
 import { MainNavigationScreenTypes } from "../navigation";
@@ -46,9 +46,16 @@ const MenuScreenContainer = React.memo(({ _theme,
     _onChangeLanguage, _onChangeOrderType, _onAddOrderPosition, navigation,
 }: IMenuProps) => {
     const [windowSize, _setWindowSize] = useState({ width: Dimensions.get("window").width, height: Dimensions.get("window").height });
+    const [dimentions, _setDimentions] = useState({ width: Dimensions.get("window").width, height: Dimensions.get("window").height })
 
     const myOrderWidth = 170;
-    let menuWidth = windowSize.width - myOrderWidth;
+    let menuWidth: number = windowSize.width - myOrderWidth;
+    let menuHeight: number = dimentions.height;
+
+    useEffect(() => {
+        menuWidth = windowSize.width - myOrderWidth;
+        menuHeight = dimentions.height;
+    }, [dimentions]);
 
     useEffect(() => {
         const dimensionsChangeHandler = ({ window }: { window: ScaledSize }) => {
@@ -96,16 +103,34 @@ const MenuScreenContainer = React.memo(({ _theme,
         _onAddOrderPosition(productNode);
     };
 
+    const onChangeLayout = useCallback((event: LayoutChangeEvent) => {
+        const { x, y, width, height } = event.nativeEvent.layout;
+        _setDimentions({ width, height });
+    }, []);
+
     return (
         !!MenuWizard.current.menu &&
-        <View style={{ flexDirection: "row", width: "100%", height: "100%", backgroundColor: theme.themes[theme.name].menu.backgroundColor }}>
+        <View onLayout={onChangeLayout} style={{
+            flexDirection: "row", width: "100%", height: "100%",
+            backgroundColor: theme.themes[theme.name].menu.backgroundColor
+        }}>
             <View style={{ position: "absolute", width: menuWidth, height: "100%", zIndex: 1 }}>
-                <Menu themeName={_theme} menuStateId={_menuStateId} orderType={_orderType} currency={_defaultCurrency} language={_language} menu={MenuWizard.current.menu}
-                    width={menuWidth} height={windowSize.height} cancelOrder={cancelHandler} addPosition={addProductHandler}
+                <Menu themeName={_theme} menuStateId={_menuStateId} orderType={_orderType} currency={_defaultCurrency}
+                    language={_language} menu={MenuWizard.current.menu}
+                    width={menuWidth} height={dimentions.height} cancelOrder={cancelHandler} addPosition={addProductHandler}
                 ></Menu>
             </View>
-            <View style={{ position: "absolute", width: myOrderWidth, height: "100%", left: menuWidth, zIndex: 2 }}>
-                <MyOrderPanel themeName={_theme} isShowOrderTypes={_isShowOrderTypes} orderStateId={_orderStateId} currency={_defaultCurrency} language={_language} languages={_languages}
+            <View style={{
+                position: "absolute",
+                width: myOrderWidth - theme.themes[theme.name].menu.draftOrder.padding,
+                height: menuHeight - theme.themes[theme.name].menu.draftOrder.padding * 2,
+                left: menuWidth, zIndex: 2,
+                backgroundColor: theme.themes[theme.name].menu.draftOrder.backgroundColor,
+                top: theme.themes[theme.name].menu.draftOrder.padding,
+                borderRadius: theme.themes[theme.name].menu.draftOrder.borderRadius,
+            }}>
+                <MyOrderPanel themeName={_theme} isShowOrderTypes={_isShowOrderTypes} orderStateId={_orderStateId}
+                    currency={_defaultCurrency} language={_language} languages={_languages}
                     orderType={_orderType} orderTypes={_orderTypes}
                     onChangeLanguage={_onChangeLanguage} onChangeOrderType={_onChangeOrderType} onConfirm={confirmHandler}></MyOrderPanel>
             </View>

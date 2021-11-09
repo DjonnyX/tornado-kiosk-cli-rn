@@ -77,11 +77,17 @@ export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _la
 
     return (
         <ModalRollTop visible={!!position}>
-            <View style={{ flex: 1, width: "100%", paddingLeft: 34, paddingRight: 34, paddingTop: 34 }}>
+            <View style={{ flex: 1, width: "100%" }}>
                 {
                     !!position && !!_language && !!_currency &&
-                    <View style={{ flex: 1, width: "100%" }}>
-                        <View style={{ flexDirection: "row", width: "100%", maxHeight: "20%", marginBottom: 32 }}>
+                    <View style={{
+                        flex: 1, width: "100%",
+                        backgroundColor: theme.themes[theme.name].modifiers.backgroundColor,
+                    }}>
+                        <View style={{
+                            flexDirection: "row", width: "100%", maxHeight: "20%",
+                            marginBottom: 32, paddingLeft: 34, paddingRight: 34, paddingTop: 34,
+                        }}>
                             <View style={{ flex: 1, width: "100%", flexDirection: "row", alignItems: "flex-start", marginRight: 48, marginBottom: 8, overflow: "hidden" }}>
                                 <View style={{ alignItems: "center" }}>
                                     <FastImage style={{ width: 128, height: 128, borderRadius: 16, overflow: "hidden" }} source={{
@@ -117,7 +123,8 @@ export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _la
                             </View>
                         </View>
                         <View style={{
-                            flex: 1, width: "100%",
+                            flex: 1, width: "100%", backgroundColor: theme.themes[theme.name].modifiers.group.backgroundColor, paddingLeft: 34, paddingRight: 34, paddingTop: 34,
+                            borderTopLeftRadius: 32, borderTopRightRadius: 32,
                         }}>
                             <View style={{ width: "100%", alignItems: "center", marginBottom: 10 }}>
                                 <View style={{ width: "100%", flexDirection: "row", height: 4, maxWidth: 300, }}>
@@ -210,7 +217,7 @@ export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _la
                             </View>
                             <View style={{ flex: 1, width: "100%" }}>
                                 <LinearGradient
-                                    colors={theme.themes[theme.name].menu.header.backgroundColor}
+                                    colors={theme.themes[theme.name].modifiers.group.header.backgroundColor}
                                     style={{ display: "flex", position: "absolute", width: "100%", height: 96, zIndex: 1 }}
                                 >
                                 </LinearGradient>

@@ -174,53 +174,28 @@ export const Menu = React.memo(({
     return (
         <>
             <ModifiersEditor></ModifiersEditor>
-            <View style={{ flex: 1, width, height: "100%" }}>
-                <LinearGradient
-                    colors={theme.themes[theme.name].menu.header.backgroundColor}
-                    style={{ display: "flex", position: "absolute", width: "100%", height: 96, zIndex: 1 }}
-                >
-                    <View style={{ display: "flex", alignItems: "center", flexDirection: "row", width: "100%", height: "100%", padding: 16 }}>
-                        <Animated.View style={{
-                            width: 162,
-                            justifyContent: "center",
-                            alignItems: "center",
-                            top: 10,
-                            left: menuPosition.interpolate({
-                                inputRange: [0, 1],
-                                outputRange: [-10, -sideMenuWidth],
-                            }),
-                        }}>
-                            <MenuButton themeName={themeName} onPress={onBack}></MenuButton>
-                        </Animated.View>
-                        <View style={{ flex: 1 }}></View>
-                        <Text style={{
-                            textTransform: "uppercase", fontWeight: "bold",
-                            color: theme.themes[theme.name].menu.header.titleColor,
-                            fontSize: theme.themes[theme.name].menu.header.titleFontSize, marginRight: 24
-                        }}>
-                            {
-                                currentCategory.__rawNode__.content?.contents[language.code]?.name
-                                || localize(language, "kiosk_menu_root_title")
-                            }
-                        </Text>
-                    </View>
-                </LinearGradient>
+            <View style={{ flex: 1, width, height }}>
+
                 <View style={{ position: "absolute", overflow: "hidden", flexDirection: "row", width: "100%", height: "100%" }}>
                     <Animated.View style={{
                         position: "absolute",
-                        width: sideMenuWidth,
-                        height: "100%",
-                        marginTop: 48,
+                        width: sideMenuWidth - theme.themes[theme.name].menu.sideMenu.padding,
+                        height: height - theme.themes[theme.name].menu.sideMenu.padding * 2,
+                        backgroundColor: theme.themes[theme.name].menu.sideMenu.backgroundColor,
+                        top: theme.themes[theme.name].menu.sideMenu.padding,
+                        borderRadius: theme.themes[theme.name].menu.sideMenu.borderRadius,
                         left: menuPosition.interpolate({
                             inputRange: [0, 1],
-                            outputRange: [0, -sideMenuWidth],
+                            outputRange: [theme.themes[theme.name].menu.sideMenu.padding, -sideMenuWidth],
                         }),
                     }}>
-                        <View style={{ flex: 1, flexGrow: 1, margin: "auto" }}>
+                        <View style={{
+                            flex: 1, flexGrow: 1, margin: "auto",
+                        }}>
                             <SideMenu themeName={themeName} menu={menu} language={language} selected={currentCategory}
                                 onPress={selectSideMenuCategoryHandler}></SideMenu>
                         </View>
-                        <View style={{ flex: 0, width: "100%", height: 192, margin: "auto", padding: 24 }}>
+                        <View style={{ flex: 0, width: "100%", height: 144, margin: "auto", padding: 24 }}>
                             <CtrlMenuButton
                                 key={language.code}
                                 gradient={theme.themes[theme.name].menu.ctrls.cancelButton.backgroundColor}
@@ -244,7 +219,36 @@ export const Menu = React.memo(({
                             easing: Easing.linear,
                         }),
                     }}>
-
+                        <LinearGradient
+                            colors={theme.themes[theme.name].menu.header.backgroundColor}
+                            style={{ display: "flex", position: "absolute", width: "100%", height: 96, zIndex: 1 }}
+                        >
+                            <View style={{ display: "flex", alignItems: "center", flexDirection: "row", width: "100%", height: "100%", padding: 16 }}>
+                                <Animated.View style={{
+                                    width: 162,
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    top: 10,
+                                    left: menuPosition.interpolate({
+                                        inputRange: [0, 1],
+                                        outputRange: [-10, -sideMenuWidth],
+                                    }),
+                                }}>
+                                    <MenuButton themeName={themeName} onPress={onBack}></MenuButton>
+                                </Animated.View>
+                                <View style={{ flex: 1 }}></View>
+                                <Text style={{
+                                    textTransform: "uppercase", fontWeight: "bold",
+                                    color: theme.themes[theme.name].menu.header.titleColor,
+                                    fontSize: theme.themes[theme.name].menu.header.titleFontSize, marginRight: 24
+                                }}>
+                                    {
+                                        currentCategory.__rawNode__.content?.contents[language.code]?.name
+                                        || localize(language, "kiosk_menu_root_title")
+                                    }
+                                </Text>
+                            </View>
+                        </LinearGradient>
                         <Animated.View style={{
                             position: "absolute",
                             height: "100%",
