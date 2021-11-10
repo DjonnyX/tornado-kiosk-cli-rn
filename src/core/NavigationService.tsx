@@ -5,6 +5,7 @@ import { IAppState } from "../store/state";
 import { CapabilitiesSelectors, CombinedDataSelectors, MyOrderSelectors } from "../store/selectors";
 import { MainNavigationScreenTypes } from "../components/navigation";
 import { CapabilitiesActions, MyOrderActions, NotificationActions } from "../store/actions";
+import { IOrderWizard } from "./interfaces";
 
 interface INavigationServiceProps {
     // store
@@ -17,12 +18,13 @@ interface INavigationServiceProps {
     _orderTypes?: Array<ICompiledOrderType>;
     _orderStateId?: number;
     _currentScreen?: MainNavigationScreenTypes;
+    _orderWizard?: IOrderWizard | undefined;
 
     // self
     onNavigate?: (screen: MainNavigationScreenTypes) => void;
 }
 
-export const NavigationServiceContainer = React.memo(({ onNavigate, _orderStateId, _currentScreen, _languages, _orderTypes,
+export const NavigationServiceContainer = React.memo(({ onNavigate, _orderStateId, _currentScreen, _languages, _orderTypes, _orderWizard,
     _setLanguage, _setOrderType, _showOrderTypes, _alertClose, _snackClose }: INavigationServiceProps) => {
 
     useEffect(() => {
@@ -45,16 +47,21 @@ export const NavigationServiceContainer = React.memo(({ onNavigate, _orderStateI
                 }
             }
             if (onNavigate !== undefined) onNavigate(MainNavigationScreenTypes.INTRO);
-        } else
-            if (_orderStateId === 1 && _currentScreen !== MainNavigationScreenTypes.MENU) {
-                if (!!_orderTypes && _orderTypes.length > 1 && _showOrderTypes !== undefined) {
-                    _showOrderTypes();
-                }
+        } else if (_orderStateId === 1 && _currentScreen !== MainNavigationScreenTypes.MENU) {
+            if (!!_orderTypes && _orderTypes.length > 1 && _showOrderTypes !== undefined) {
+                _showOrderTypes();
+            }
+            if (onNavigate !== undefined) {
+                onNavigate(MainNavigationScreenTypes.MENU);
+            }
+        } else if (_orderStateId! > 0) {
+            if (_currentScreen === MainNavigationScreenTypes.CONFIRMATION_ORDER && !_orderWizard?.positions?.length) {
                 if (onNavigate !== undefined) {
                     onNavigate(MainNavigationScreenTypes.MENU);
                 }
             }
-    }, [_orderStateId, _currentScreen, onNavigate]);
+        }
+    }, [_orderStateId, _orderWizard, _currentScreen, onNavigate]);
 
     useEffect(() => {
         if (!!_currentScreen && onNavigate !== undefined) onNavigate(_currentScreen as MainNavigationScreenTypes);
@@ -65,6 +72,7 @@ export const NavigationServiceContainer = React.memo(({ onNavigate, _orderStateI
 
 const mapStateToProps = (state: IAppState) => {
     return {
+        _orderWizard: MyOrderSelectors.selectWizard(state),
         _orderTypes: CombinedDataSelectors.selectOrderTypes(state),
         _languages: CombinedDataSelectors.selectLangages(state),
         _orderStateId: MyOrderSelectors.selectStateId(state),
