@@ -34,7 +34,7 @@ export const NavMenuItem = React.memo(({ theme, thumbnailHeight, currency, langu
     return (
         <View style={{
             flex: 1, backgroundColor: theme.menu.navMenu.item.backgroundColor,
-            borderRadius: 16, padding: 22
+            borderRadius: 16, padding: 8
         }}>
             <TouchableOpacity style={{ alignItems: "center", flex: 1 }} onPress={pressHandler}>
                 <View style={{ alignItems: "center", flex: 1, width: "100%" }}>
@@ -51,7 +51,8 @@ export const NavMenuItem = React.memo(({ theme, thumbnailHeight, currency, langu
                         {
                             node.type === NodeTypes.PRODUCT && node.discount < 0 &&
                             <View style={{
-                                width: "auto"
+                                width: "auto",
+                                position: "absolute",
                             }}>
                                 <Text style={{
                                     borderRadius: 8,
@@ -75,7 +76,7 @@ export const NavMenuItem = React.memo(({ theme, thumbnailHeight, currency, langu
                             }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                         </View>
                     </View>
-                    <Text textBreakStrategy="simple" numberOfLines={2} ellipsizeMode="tail" style={{
+                    <Text textBreakStrategy="simple" numberOfLines={4} ellipsizeMode="tail" style={{
                         textAlign: "center", fontSize: theme.menu.navMenu.item.nameFontSize, marginBottom: 6, fontWeight: "bold", textTransform: "uppercase",
                         color: theme.menu.navMenu.item.nameColor,
                     }}>

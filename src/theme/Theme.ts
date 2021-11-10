@@ -227,6 +227,7 @@ export const EMBEDED_THEME: IKioskTheme = {
                 descriptionColor: "rgba(0,0,0,0.75)",
                 descriptionFontSize: 14,
                 price: {
+                    backgroundColor: "rgba(255, 255, 255, 1)",
                     borderColor: "rgba(0,0,0,0.5)",
                     textColor: "rgba(0,0,0,0.75)",
                     textFontSize: 48,
@@ -287,6 +288,61 @@ export const EMBEDED_THEME: IKioskTheme = {
                             textColor: "rgba(0,0,0,0.75)",
                             textFontSize: 16,
                         },
+                    },
+                    quantityStepper: {
+                        buttons: {
+                            backgroundColor: "transparent",
+                            selectedBackgroundColor: "#30a02a",
+                            disabledBackgroundColor: "transparent",
+                            disabledSelectedBackgroundColor: "#30a02a40",
+                            borderColor: "rgba(0,0,0,0.75)",
+                            selectedBorderColor: "transparent",
+                            disabledBorderColor: "rgba(0,0,0,0.75)",
+                            disabledSelectedBorderColor: "transparent",
+                            textColor: "rgba(0,0,0,0.75)",
+                            textFontSize: 16,
+                            selectedTextColor: "rgba(255,255,255,0.75)",
+                            disabledTextColor: "rgba(0,0,0,0.75)",
+                            disabledSelectedTextColor: "rgba(255,255,255,0.75)",
+                        },
+                        indicator: {
+                            textColor: "rgba(0,0,0,0.75)",
+                            textFontSize: 16,
+                        }
+                    }
+                }
+            },
+            details: {
+                backgroundColor: "#fff",
+                frame: {
+                    backgroundColor: "#fff",
+                    nameColor: "rgba(0,0,0,0.75)",
+                    nameFontSize: 32,
+                    descriptionColor: "rgba(0,0,0,0.75)",
+                    descriptionFontSize: 14,
+                    price: {
+                        backgroundColor: "#000",
+                        borderColor: "rgba(0,0,0,0.5)",
+                        textColor: "rgba(0,0,0,0.75)",
+                        textFontSize: 48,
+                    },
+                    buttonDelete: {
+                        backgroundColor: "#212121",
+                        disabledBackgroundColor: "transparent",
+                        borderColor: "transparent",
+                        disabledBorderColor: "rgba(0,0,0,0.1)",
+                        textColor: "rgba(255,255,255,1)",
+                        textFontSize: 26,
+                        disabledTextColor: "rgba(0,0,0,0.1)",
+                    },
+                    buttonApply: {
+                        backgroundColor: "#30a02a",
+                        disabledBackgroundColor: "transparent",
+                        borderColor: "transparent",
+                        disabledBorderColor: "rgba(0,0,0,0.1)",
+                        textColor: "rgba(255,255,255,1)",
+                        textFontSize: 26,
+                        disabledTextColor: "rgba(0,0,0,0.1)",
                     },
                     quantityStepper: {
                         buttons: {
@@ -588,6 +644,7 @@ export const EMBEDED_THEME: IKioskTheme = {
                 descriptionColor: "rgba(255,255,255,0.5)",
                 descriptionFontSize: 14,
                 price: {
+                    backgroundColor: "rgba(0, 0, 0, 1)",
                     borderColor: "rgba(255,255,255,0.5)",
                     textColor: "rgba(255,255,255,0.75)",
                     textFontSize: 48,
@@ -648,6 +705,61 @@ export const EMBEDED_THEME: IKioskTheme = {
                             textColor: "rgba(255,255,255,0.75)",
                             textFontSize: 16,
                         },
+                    },
+                    quantityStepper: {
+                        buttons: {
+                            backgroundColor: "transparent",
+                            selectedBackgroundColor: "#30a02a",
+                            disabledBackgroundColor: "transparent",
+                            disabledSelectedBackgroundColor: "#30a02a40",
+                            borderColor: "rgba(255,255,255,0.75)",
+                            selectedBorderColor: "transparent",
+                            disabledBorderColor: "rgba(255,255,255,0.75)",
+                            disabledSelectedBorderColor: "transparent",
+                            textColor: "rgba(255,255,255,0.75)",
+                            textFontSize: 16,
+                            selectedTextColor: "rgba(255,255,255,1)",
+                            disabledTextColor: "rgba(255,255,255,0.75)",
+                            disabledSelectedTextColor: "rgba(255,255,255,0.75)",
+                        },
+                        indicator: {
+                            textColor: "rgba(255,255,255,0.75)",
+                            textFontSize: 16,
+                        }
+                    }
+                }
+            },
+            details: {
+                backgroundColor: "#000",
+                frame: {
+                    backgroundColor: "#000",
+                    nameColor: "rgba(255,255,255,0.75)",
+                    nameFontSize: 32,
+                    descriptionColor: "rgba(255,255,255,0.5)",
+                    descriptionFontSize: 14,
+                    price: {
+                        backgroundColor: "#000",
+                        borderColor: "rgba(255,255,255,0.5)",
+                        textColor: "rgba(255,255,255,0.75)",
+                        textFontSize: 48,
+                    },
+                    buttonDelete: {
+                        backgroundColor: "#30a02a",
+                        disabledBackgroundColor: "transparent",
+                        borderColor: "transparent",
+                        disabledBorderColor: "rgba(255,255,255,0.1)",
+                        textColor: "rgba(255,255,255,1)",
+                        textFontSize: 26,
+                        disabledTextColor: "rgba(255,255,255,0.1)",
+                    },
+                    buttonApply: {
+                        backgroundColor: "#30a02a",
+                        disabledBackgroundColor: "transparent",
+                        borderColor: "transparent",
+                        disabledBorderColor: "rgba(255,255,255,0.1)",
+                        textColor: "rgba(255,255,255,1)",
+                        textFontSize: 26,
+                        disabledTextColor: "rgba(255,255,255,0.1)",
                     },
                     quantityStepper: {
                         buttons: {

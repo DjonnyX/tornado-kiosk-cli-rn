@@ -31,7 +31,7 @@ export const MyOrderPanel = React.memo(({ theme, orderStateId, currency, languag
         <View
             style={{ flex: 1, backgroundColor: theme.menu.orderPanel.backgroundColor }}
         >
-            <View style={{ padding: 16, alignItems: "center" }}>
+            <View style={{ padding: 12, alignItems: "center" }}>
                 {
                     !!languages && languages.length > 0 &&
                     <View style={{ margin: "auto", marginTop: 12, marginBottom: 20, alignItems: "center" }}>
@@ -40,14 +40,18 @@ export const MyOrderPanel = React.memo(({ theme, orderStateId, currency, languag
                 }
                 {
                     !!orderTypes && orderTypes.length > 1 &&
-                    <View style={{ margin: "auto", marginBottom: 20, alignItems: "center" }}>
+                    <View style={{ margin: "auto", marginBottom: 20, alignItems: "center", width: "100%" }}>
                         <OrderTypesPicker theme={theme} isShow={isShowOrderTypes} language={language} orderType={orderType}
                             orderTypes={orderTypes} onSelect={onChangeOrderType}
                             style={{
+                                flex: 1,
+                                width: "100%",
                                 backgroundColor: theme.orderTypePicker.backgroundColor,
                                 borderColor: theme.orderTypePicker.borderColor,
                             }}
                             textStyle={{
+                                width: "100%",
+                                textAlign: "center",
                                 color: theme.orderTypePicker.textColor,
                                 fontSize: theme.orderTypePicker.textFontSize,
                             }} />
@@ -67,7 +71,7 @@ export const MyOrderPanel = React.memo(({ theme, orderStateId, currency, languag
             <View style={{ flex: 1, flexGrow: 1, margin: "auto" }}>
                 <MyOrderList />
             </View>
-            <View style={{ flex: 0, height: 144, margin: "auto", padding: 24 }}>
+            <View style={{ flex: 0, height: 124, margin: "auto", paddingHorizontal: 12, paddingVertical: 12, }}>
                 {
                     orderWizard?.positions.length !== 0 &&
                     <CtrlMenuButton text={

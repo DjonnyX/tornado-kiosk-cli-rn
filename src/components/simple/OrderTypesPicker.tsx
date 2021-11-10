@@ -70,11 +70,13 @@ export const OrderTypesPicker = React.memo(({ theme, language, isShow, orderType
                 }}>
                 </FlatList>
             </ModalSolid>
-            <TouchableOpacity style={{ flex: 1, justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}
+            <TouchableOpacity style={{
+                flex: 1, justifyContent: "center", alignItems: "center", width: "100%", height: "100%", borderRadius: 10,
+                borderWidth: 2,
+            }}
                 onPress={onPressHandler}>
                 <View style={{
-                    flexDirection: "row", alignItems: "center", borderRadius: 10,
-                    borderWidth: 2, paddingLeft: 16, paddingRight: 16, paddingTop: 12, paddingBottom: 12, ...style as any
+                    flexDirection: "row", alignItems: "center", paddingLeft: 16, paddingRight: 16, paddingTop: 12, paddingBottom: 12, ...style as any
                 }}>
                     <Text style={{ fontSize: 13, fontWeight: "bold", textAlign: "center", textTransform: "uppercase", ...textStyle as any }}>
                         {

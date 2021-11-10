@@ -9,6 +9,8 @@ export interface IOrderWizard extends EventEmitter {
     result: IOrder | undefined;
     lastPosition: IPositionWizard | null;
     currentPosition: IPositionWizard | null;
+    viewingPosition: IPositionWizard | null;
+    readonly onChangePosition: () => void;
     readonly stateId: number;
     readonly sum: number;
     readonly positions: Array<IPositionWizard>;
@@ -19,6 +21,9 @@ export interface IOrderWizard extends EventEmitter {
     respawn(): void;
     gotoPreviousGroup(): void;
     gotoNextGroup(): void;
+    addViewingProduct(): void;
+    removeViewingPosition(): void;
+    closeViewingPosition(): void;
     editProduct: (productNode: MenuNode<ICompiledProduct>) => void;
     editCancel: () => void;
     findPosition: (position: IPositionWizard) => IPositionWizard | undefined;
