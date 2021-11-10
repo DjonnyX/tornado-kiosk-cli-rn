@@ -51,7 +51,8 @@ export const NavMenuItem = React.memo(({ theme, thumbnailHeight, currency, langu
                         {
                             node.type === NodeTypes.PRODUCT && node.discount < 0 &&
                             <View style={{
-                                width: "auto"
+                                width: "auto",
+                                position: "absolute",
                             }}>
                                 <Text style={{
                                     borderRadius: 8,

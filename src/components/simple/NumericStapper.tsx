@@ -252,7 +252,7 @@ export const NumericStapper = React.memo(({ value = 0, iconDecrement = "-", icon
                         !!formatValueFunction
                             ? formatValueFunction(value)
                             : value.toString()
-                    } textStyle={{ flex: 1, textAlign: "center", ...textStyle as any }} />
+                    } textStyle={{ flex: 1, textAlign: "center", ...textStyle as any, opacity: value === 0 ? 0.5 : 1 }} />
                 </Animated.View>
             }
 

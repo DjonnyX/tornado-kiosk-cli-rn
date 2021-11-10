@@ -56,7 +56,8 @@ export const ModifierListItem = React.memo(({ theme, thumbnailHeight, currency, 
                     {
                         position.discountPerOne < 0 &&
                         <View style={{
-                            width: "auto"
+                            width: "auto",
+                            position: "absolute",
                         }}>
                             <Text style={{
                                 borderRadius: 8,
