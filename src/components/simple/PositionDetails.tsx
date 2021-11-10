@@ -1,8 +1,7 @@
 import { ICompiledLanguage, ICurrency, IKioskTheme, IKioskThemeData } from "@djonnyx/tornado-types";
 import React, { Dispatch, useCallback, useEffect, useRef, useState } from "react";
-import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, Dimensions } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, Dimensions, LayoutChangeEvent } from "react-native";
 import FastImage from "react-native-fast-image";
-import LinearGradient from "react-native-linear-gradient";
 import { connect } from "react-redux";
 import { PositionWizardModes } from "../../core/enums";
 import { IOrderWizard, IPositionWizard } from "../../core/interfaces";
@@ -13,12 +12,9 @@ import { CapabilitiesSelectors, CombinedDataSelectors, MyOrderSelectors } from "
 import { IAppState } from "../../store/state";
 import { Icons } from "../../theme";
 import { localize } from "../../utils/localization";
-import { GridList } from "../layouts/GridList";
 import { ModalRollTop } from "./ModalRollTop";
 import { NumericStapper } from "./NumericStapper";
 import { SimpleButton } from "./SimpleButton";
-
-const MODIFIER_ITEM_WIDTH = 218;
 
 interface IBound {
     x: number;
@@ -38,8 +34,10 @@ interface IPositionDetailsProps {
 
 export const PositionDetailsContainer = React.memo(({ _theme, _orderStateId, _language, _currency, _orderWizard, _alertOpen }: IPositionDetailsProps) => {
     const [stateId, setStateId] = useState<number>(-1);
+    const [bounds, setBounds] = useState<IBound>({
+        x: 0, y: 0, width: Dimensions.get("screen").width, height: Dimensions.get("screen").height,
+    });
     const [position, setPosition] = useState<IPositionWizard | null>(_orderWizard?.viewingPosition || null);
-    const _scrollViewRef = useRef<ScrollView>()
 
     useEffect(() => {
         setStateId(_orderStateId || 0);
@@ -116,14 +114,25 @@ export const PositionDetailsContainer = React.memo(({ _theme, _orderStateId, _la
         }
     }
 
+    const onChangeLayout = useCallback((event: LayoutChangeEvent) => {
+        const { x, y, width, height } = event.nativeEvent.layout;
+        setBounds({ x, y, width, height });
+    }, []);
+
     const theme = _theme?.themes?.[_theme?.name] as IKioskThemeData;
+
+    const isLandscape = bounds.width > bounds.height;
+    const mainMargin = 34;
+    const mainMarginDouble = mainMargin * 2;
+    const actualWidth = bounds.width - mainMarginDouble;
+    const actualHeight = bounds.height - mainMarginDouble;
 
     return (
         <>
             {
                 !!theme &&
                 <ModalRollTop theme={theme} visible={!!position}>
-                    <View style={{ flex: 1, width: "100%" }}>
+                    <View onLayout={onChangeLayout} style={{ flex: 1, width: "100%" }}>
                         {
                             !!position && !!_language && !!_currency &&
                             <View style={{
@@ -132,19 +141,25 @@ export const PositionDetailsContainer = React.memo(({ _theme, _orderStateId, _la
                             }}>
                                 <View style={{
                                     flexDirection: "row", width: "100%",
-                                    marginBottom: 32, paddingLeft: 34, paddingRight: 34, paddingTop: 34,
+                                    paddingHorizontal: mainMargin, paddingVertical: mainMargin,
+                                    position: "relative",
                                 }}>
                                     <View style={{
-                                        flex: 1, width: "100%", flexDirection: "row", alignItems: "flex-start", marginRight: 48, marginBottom: 8,
-                                        overflow: "hidden"
+                                        flex: 1, width: "100%", height: "100%", flexDirection: isLandscape ? "row" : "column", alignItems: "flex-start",
+                                        overflow: "hidden", display: "flex", justifyContent: "space-around",
                                     }}>
                                         <View style={{ alignItems: "center" }}>
-                                            <FastImage style={{ width: Dimensions.get("window").width * .5, height: Dimensions.get("window").height, borderRadius: 16, overflow: "hidden" }} source={{
+                                            <FastImage style={{
+                                                width: isLandscape ? (actualWidth * .5) : actualWidth,
+                                                height: isLandscape ? actualHeight : (actualHeight * .4),
+                                                borderRadius: 16, overflow: "hidden"
+                                            }} source={{
                                                 uri: `file://${position.__product__?.contents[_language?.code]?.resources?.icon.path}`,
                                             }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                                         </View>
                                         <View style={{
-                                            flex: 1,
+                                            width: isLandscape ? (actualWidth * .5) - mainMarginDouble : actualWidth - mainMarginDouble,
+                                            height: isLandscape ? actualHeight - mainMarginDouble : (actualHeight * .6) - mainMarginDouble,
                                             marginVertical: 30, marginHorizontal: 30,
                                             paddingHorizontal: 54, paddingVertical: 54,
                                             backgroundColor: theme.details.frame.backgroundColor, borderRadius: 24,
@@ -328,7 +343,11 @@ export const PositionDetailsContainer = React.memo(({ _theme, _orderStateId, _la
                                             </View>
                                         </View>
                                     </View>
-                                    <View>
+                                    <View style={{
+                                        position: "absolute",
+                                        right: mainMargin,
+                                        top: mainMargin,
+                                    }}>
                                         <CloseButton theme={theme} onPress={onClose}></CloseButton>
                                     </View>
                                 </View>
