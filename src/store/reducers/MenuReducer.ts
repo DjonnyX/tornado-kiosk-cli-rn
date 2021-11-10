@@ -4,6 +4,7 @@ import { IMenuState } from "../state";
 
 const initialState: IMenuState = {
     stateId: -1,
+    wizard: undefined,
 };
 
 const menuReducer: Reducer<IMenuState, TMenuActions> = (
@@ -11,6 +12,11 @@ const menuReducer: Reducer<IMenuState, TMenuActions> = (
     action,
 ) => {
     switch (action.type) {
+        case MenuActionTypes.SET_WIZARD:
+            return {
+                ...state,
+                wizard: action.wizard,
+            };
         case MenuActionTypes.UPDATE_STATE_ID:
             return {
                 ...state,

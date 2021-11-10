@@ -2,7 +2,7 @@ import React, { Dispatch, useState, useCallback, useEffect } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
 import { View, Dimensions, ScaledSize, LayoutChangeEvent } from "react-native";
 import { connect } from "react-redux";
-import { ICurrency, ICompiledLanguage, ICompiledOrderType, ICompiledProduct } from "@djonnyx/tornado-types";
+import { ICurrency, ICompiledLanguage, ICompiledOrderType, ICompiledProduct, IKioskTheme } from "@djonnyx/tornado-types";
 import { MainNavigationScreenTypes } from "../navigation";
 import { IAppState } from "../../store/state";
 import { CombinedDataSelectors, MenuSelectors, MyOrderSelectors } from "../../store/selectors";
@@ -10,15 +10,17 @@ import { CapabilitiesSelectors } from "../../store/selectors/CapabilitiesSelecto
 import { CapabilitiesActions, MyOrderActions, NotificationActions } from "../../store/actions";
 import { MyOrderPanel } from "../simple/MyOrderPanel";
 import { Menu } from "../simple/Menu";
-import { theme } from "../../theme";
 import { IAlertState } from "../../interfaces";
 import { MenuWizard } from "../../core/menu/MenuWizard";
 import { MenuNode } from "../../core/menu/MenuNode";
 import { localize } from "../../utils/localization";
+import { IOrderWizard } from "../../core/interfaces";
 
 interface IMenuSelfProps {
     // store props
-    _theme: string;
+    _theme: IKioskTheme;
+    _menuWizard: MenuWizard | undefined;
+    _orderWizard: IOrderWizard | undefined;
     _languages: Array<ICompiledLanguage>;
     _orderTypes: Array<ICompiledOrderType>;
     _defaultCurrency: ICurrency;
@@ -41,7 +43,7 @@ interface IMenuSelfProps {
 interface IMenuProps extends StackScreenProps<any, MainNavigationScreenTypes.MENU>, IMenuSelfProps { }
 
 const MenuScreenContainer = React.memo(({ _theme,
-    _languages, _orderTypes, _defaultCurrency, _orderType,
+    _languages, _orderTypes, _defaultCurrency, _orderType, _menuWizard, _orderWizard,
     _menuStateId, _language, _orderStateId, _isShowOrderTypes, _onResetOrder, _alertOpen,
     _onChangeLanguage, _onChangeOrderType, _onAddOrderPosition, navigation,
 }: IMenuProps) => {
@@ -82,21 +84,25 @@ const MenuScreenContainer = React.memo(({ _theme,
     };
 
     const cancelHandler = useCallback(() => {
-        _alertOpen({
-            title: localize(_language, "kiosk_remove_order_title"),
-            message: localize(_language, "kiosk_remove_order_message"),
-            buttons: [
-                {
-                    title: localize(_language, "kiosk_remove_order_button_accept"),
-                    action: () => {
-                        cancelOrderConfirm();
+        if (!_orderWizard?.positions?.length) {
+            cancelOrderConfirm();
+        } else {
+            _alertOpen({
+                title: localize(_language, "kiosk_remove_order_title"),
+                message: localize(_language, "kiosk_remove_order_message"),
+                buttons: [
+                    {
+                        title: localize(_language, "kiosk_remove_order_button_accept"),
+                        action: () => {
+                            cancelOrderConfirm();
+                        }
+                    },
+                    {
+                        title: localize(_language, "kiosk_remove_order_button_cancel"),
                     }
-                },
-                {
-                    title: localize(_language, "kiosk_remove_order_button_cancel"),
-                }
-            ]
-        });
+                ]
+            });
+        }
     }, [_language]);
 
     const addProductHandler = (productNode: MenuNode) => {
@@ -108,38 +114,47 @@ const MenuScreenContainer = React.memo(({ _theme,
         _setDimentions({ width, height });
     }, []);
 
+    const theme = _theme?.themes?.[_theme?.name];
+
     return (
-        !!MenuWizard.current.menu &&
-        <View onLayout={onChangeLayout} style={{
-            flexDirection: "row", width: "100%", height: "100%",
-            backgroundColor: theme.themes[theme.name].menu.backgroundColor
-        }}>
-            <View style={{ position: "absolute", width: menuWidth, height: "100%", zIndex: 1 }}>
-                <Menu themeName={_theme} menuStateId={_menuStateId} orderType={_orderType} currency={_defaultCurrency}
-                    language={_language} menu={MenuWizard.current.menu}
-                    width={menuWidth} height={dimentions.height} cancelOrder={cancelHandler} addPosition={addProductHandler}
-                ></Menu>
-            </View>
-            <View style={{
-                position: "absolute",
-                width: myOrderWidth - theme.themes[theme.name].menu.draftOrder.padding,
-                height: menuHeight - theme.themes[theme.name].menu.draftOrder.padding * 2,
-                left: menuWidth, zIndex: 2,
-                backgroundColor: theme.themes[theme.name].menu.draftOrder.backgroundColor,
-                top: theme.themes[theme.name].menu.draftOrder.padding,
-                borderRadius: theme.themes[theme.name].menu.draftOrder.borderRadius,
-            }}>
-                <MyOrderPanel themeName={_theme} isShowOrderTypes={_isShowOrderTypes} orderStateId={_orderStateId}
-                    currency={_defaultCurrency} language={_language} languages={_languages}
-                    orderType={_orderType} orderTypes={_orderTypes}
-                    onChangeLanguage={_onChangeLanguage} onChangeOrderType={_onChangeOrderType} onConfirm={confirmHandler}></MyOrderPanel>
-            </View>
-        </View>
+        <>
+            {
+                !!theme &&
+                !!_menuWizard?.menu &&
+                <View onLayout={onChangeLayout} style={{
+                    flexDirection: "row", width: "100%", height: "100%",
+                    backgroundColor: theme.menu.backgroundColor
+                }}>
+                    <View style={{ position: "absolute", width: menuWidth, height: "100%", zIndex: 1 }}>
+                        <Menu theme={theme} menuStateId={_menuStateId} orderType={_orderType} currency={_defaultCurrency}
+                            language={_language} menu={_menuWizard.menu}
+                            width={menuWidth} height={dimentions.height} cancelOrder={cancelHandler} addPosition={addProductHandler}
+                        ></Menu>
+                    </View>
+                    <View style={{
+                        position: "absolute",
+                        width: myOrderWidth - theme.menu.draftOrder.padding,
+                        height: menuHeight - theme.menu.draftOrder.padding * 2,
+                        left: menuWidth, zIndex: 2,
+                        backgroundColor: theme.menu.draftOrder.backgroundColor,
+                        top: theme.menu.draftOrder.padding,
+                        borderRadius: theme.menu.draftOrder.borderRadius,
+                    }}>
+                        <MyOrderPanel theme={theme} isShowOrderTypes={_isShowOrderTypes} orderStateId={_orderStateId}
+                            currency={_defaultCurrency} language={_language} languages={_languages}
+                            orderType={_orderType} orderTypes={_orderTypes} orderWizard={_orderWizard}
+                            onChangeLanguage={_onChangeLanguage} onChangeOrderType={_onChangeOrderType} onConfirm={confirmHandler}></MyOrderPanel>
+                    </View>
+                </View>
+            }
+        </>
     );
 })
 
 const mapStateToProps = (state: IAppState, ownProps: IMenuProps) => {
     return {
+        _menuWizard: MenuSelectors.selectWizard(state),
+        _orderWizard: MyOrderSelectors.selectWizard(state),
         _theme: CapabilitiesSelectors.selectTheme(state),
         _defaultCurrency: CombinedDataSelectors.selectDefaultCurrency(state),
         _menuStateId: MenuSelectors.selectStateId(state),

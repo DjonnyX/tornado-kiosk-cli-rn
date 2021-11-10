@@ -2,11 +2,11 @@ import React, { useState, useCallback, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleProp, ViewStyle, TextStyle } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import FastImage from "react-native-fast-image";
-import { ICompiledOrderType, ICompiledLanguage } from "@djonnyx/tornado-types";
-import { theme } from "../../theme";
+import { ICompiledOrderType, ICompiledLanguage, IKioskThemeData } from "@djonnyx/tornado-types";
 import { ModalSolid } from "./ModalSolid";
 
 interface IOrderTypesPickerProps {
+    theme: IKioskThemeData;
     isShow: boolean;
     orderTypes: Array<ICompiledOrderType>;
     language: ICompiledLanguage;
@@ -16,7 +16,7 @@ interface IOrderTypesPickerProps {
     textStyle: StyleProp<TextStyle>;
 }
 
-export const OrderTypesPicker = React.memo(({ language, isShow, orderType, orderTypes, style,
+export const OrderTypesPicker = React.memo(({ theme, language, isShow, orderType, orderTypes, style,
     textStyle, onSelect }: IOrderTypesPickerProps) => {
     const [currentOrderType, _setCurrentOrderTypes] = useState(orderType);
     const [modalVisible, _setModalVisible] = useState(false);
@@ -42,7 +42,7 @@ export const OrderTypesPicker = React.memo(({ language, isShow, orderType, order
 
     return (
         <View style={{ justifyContent: "center", alignItems: "center", width: "100%", height: 48 }}>
-            <ModalSolid visible={modalVisible}>
+            <ModalSolid theme={theme} visible={modalVisible}>
                 <FlatList style={{ flexGrow: 0, padding: 12 }} data={orderTypes} renderItem={({ item }) => {
                     return <TouchableOpacity onPress={() => {
                         onSelectHandler(item);
@@ -50,16 +50,16 @@ export const OrderTypesPicker = React.memo(({ language, isShow, orderType, order
                         <View style={{ flexDirection: "column", alignItems: "center", justifyContent: "center", marginBottom: 32 }}>
                             <FastImage style={{
                                 width: 128, height: 128, borderWidth: 1,
-                                borderColor: theme.themes[theme.name].orderTypeModal.item.borderColor,
-                                backgroundColor: theme.themes[theme.name].orderTypeModal.item.backgroundColor,
+                                borderColor: theme.orderTypeModal.item.borderColor,
+                                backgroundColor: theme.orderTypeModal.item.backgroundColor,
                                 borderRadius: 16, marginBottom: 8
                             }} source={{
                                 uri: `file://${item.contents[language?.code]?.resources?.main?.mipmap.x128}`,
                             }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                             <Text style={{
                                 fontWeight: "bold",
-                                color: theme.themes[theme.name].orderTypeModal.item.textColor,
-                                fontSize: theme.themes[theme.name].orderTypeModal.item.textFontSize,
+                                color: theme.orderTypeModal.item.textColor,
+                                fontSize: theme.orderTypeModal.item.textFontSize,
                             }}>
                                 {
                                     item.contents[language?.code]?.name

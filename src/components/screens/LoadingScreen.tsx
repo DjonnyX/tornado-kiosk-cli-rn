@@ -6,13 +6,12 @@ import { MainNavigationScreenTypes } from "../navigation";
 import { IAppState } from "../../store/state";
 import { connect } from "react-redux";
 import { CapabilitiesSelectors, CombinedDataSelectors } from "../../store/selectors";
-import { theme } from "../../theme";
-import { CapabilitiesActions } from "../../store/actions";
 import { CommonActions } from "@react-navigation/native";
+import { IKioskTheme } from "@djonnyx/tornado-types";
 
 interface ILoadingSelfProps {
   // store props
-  _theme: string;
+  _theme: IKioskTheme;
   _progress: number;
   _loaded: boolean;
 
@@ -36,24 +35,31 @@ const LoadingScreenContainer = React.memo(({ _theme, _progress, _loaded, navigat
     }
   }, [_loaded]);
 
+  const theme = _theme?.themes?.[_theme?.name];
+
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: theme.themes[theme.name].loading.backgroundColor }}>
-      <ProgressBar
-        style={{ width: "100%", maxWidth: 200, marginLeft: "10%", marginRight: "10%" }}
-        styleAttr="Horizontal"
-        progress={_progress / 100}
-        indeterminate={_progress === 1 || _progress === 0}
-        color={theme.themes[theme.name].loading.progressBar.trackColor}></ProgressBar>
-      <Text style={{ color: theme.themes[theme.name].loading.progressBar.textColor, fontSize: theme.themes[theme.name].loading.progressBar.textFontSize }}>
-        {
-          _progress > 0
-            ?
-            `${_progress}%`
-            :
-            "loading..."
-        }
-      </Text>
-    </View>
+    <>
+      {
+        !!theme &&
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: theme.loading.backgroundColor }}>
+          <ProgressBar
+            style={{ width: "100%", maxWidth: 200, marginLeft: "10%", marginRight: "10%" }}
+            styleAttr="Horizontal"
+            progress={_progress / 100}
+            indeterminate={_progress === 100 || _progress === 0}
+            color={theme.loading.progressBar.trackColor}></ProgressBar>
+          <Text style={{ color: theme.loading.progressBar.textColor, fontSize: theme.loading.progressBar.textFontSize }}>
+            {
+              _progress > 0
+                ?
+                `${_progress}%`
+                :
+                "loading..."
+            }
+          </Text>
+        </View>
+      }
+    </>
   );
 })
 

@@ -5,14 +5,13 @@ import { connect } from "react-redux";
 import { IAppState } from "../../store/state";
 import { MainNavigationScreenTypes } from "../navigation";
 import { CapabilitiesSelectors } from "../../store/selectors/CapabilitiesSelector";
-import { ICompiledLanguage } from "@djonnyx/tornado-types";
-import { theme } from "../../theme";
+import { ICompiledLanguage, IKioskTheme } from "@djonnyx/tornado-types";
 import FastImage from "react-native-fast-image";
 import { localize } from "../../utils/localization";
 
 interface IPayStatusScreenSelfProps {
     // store props
-    _theme: string;
+    _theme: IKioskTheme;
     _language: ICompiledLanguage;
 
     // self props
@@ -21,35 +20,41 @@ interface IPayStatusScreenSelfProps {
 interface IPayStatusScreenProps extends StackScreenProps<any, MainNavigationScreenTypes.PAY_STATUS>, IPayStatusScreenSelfProps { }
 
 const PayStatusScreenContainer = React.memo(({ _theme, _language, navigation }: IPayStatusScreenProps) => {
+    const theme = _theme?.themes?.[_theme?.name];
     return (
-        <View style={{
-            flex: 1, justifyContent: "center", alignItems: "center", width: "100%", height: "100%",
-            backgroundColor: theme.themes[theme.name].payStatus.backgroundColor
-        }}>
-            <View style={{ alignItems: "center", width: "80%", maxWidth: 620 }}>
-                <Text style={{
-                    fontSize: theme.themes[theme.name].payStatus.primaryMessageFontSize, fontWeight: "bold", textAlign: "center",
-                    color: theme.themes[theme.name].payStatus.primaryMessageColor
+        <>
+            {
+                !!theme &&
+                <View style={{
+                    flex: 1, justifyContent: "center", alignItems: "center", width: "100%", height: "100%",
+                    backgroundColor: theme.payStatus.backgroundColor
                 }}>
-                    {
-                        localize(_language, "kiosk_pay_status_title")
-                    }
-                </Text>
-                <Text style={{
-                    fontSize: theme.themes[theme.name].payStatus.secondaryMessageFontSize, fontWeight: "bold", textAlign: "center",
-                    color: theme.themes[theme.name].payStatus.secondaryMessageColor, marginBottom: 40
-                }}>
-                    {
-                        localize(_language, "kiosk_pay_status_description")
-                    }
-                </Text>
-                <FastImage style={{ width: 128, height: 128 }}
-                    source={{
-                        uri: `file://${theme.themes[theme.name].payStatus.processIndicator.backgroundImage?.asset?.path}`,
-                    }}
-                    resizeMode="contain" />
-            </View>
-        </View >
+                    <View style={{ alignItems: "center", width: "80%", maxWidth: 620 }}>
+                        <Text style={{
+                            fontSize: theme.payStatus.primaryMessageFontSize, fontWeight: "bold", textAlign: "center",
+                            color: theme.payStatus.primaryMessageColor
+                        }}>
+                            {
+                                localize(_language, "kiosk_pay_status_title")
+                            }
+                        </Text>
+                        <Text style={{
+                            fontSize: theme.payStatus.secondaryMessageFontSize, fontWeight: "bold", textAlign: "center",
+                            color: theme.payStatus.secondaryMessageColor, marginBottom: 40
+                        }}>
+                            {
+                                localize(_language, "kiosk_pay_status_description")
+                            }
+                        </Text>
+                        <FastImage style={{ width: 128, height: 128 }}
+                            source={{
+                                uri: `file://${theme.payStatus.processIndicator.backgroundImage?.asset?.path}`,
+                            }}
+                            resizeMode="contain" />
+                    </View>
+                </View >
+            }
+        </>
     );
 });
 

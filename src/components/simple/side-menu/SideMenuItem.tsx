@@ -2,8 +2,7 @@ import React, { useState, useCallback } from "react";
 import { View, Text, TouchableOpacity, GestureResponderEvent, Animated, Easing } from "react-native";
 import * as Color from "color";
 import FastImage from "react-native-fast-image";
-import { NodeTypes, ICompiledLanguage } from "@djonnyx/tornado-types";
-import { theme } from "../../../theme";
+import { NodeTypes, ICompiledLanguage, IKioskThemeData } from "@djonnyx/tornado-types";
 import { MenuNode } from "../../../core/menu/MenuNode";
 
 const getSelectedDepth = (node: MenuNode, selected: MenuNode, depth: number = 0): number => {
@@ -56,7 +55,7 @@ const getChainChildren = (node: MenuNode, selected: MenuNode): Array<MenuNode> =
 }
 
 interface ISideMenuItemProps {
-    themeName: string;
+    theme: IKioskThemeData;
     depth?: number;
     height?: number;
     node: MenuNode;
@@ -65,7 +64,7 @@ interface ISideMenuItemProps {
     onPress: (node: MenuNode) => void;
 }
 
-export const SideMenuItem = React.memo(({ themeName, depth = 0, height = 0, selected, language, node,
+export const SideMenuItem = React.memo(({ theme, depth = 0, height = 0, selected, language, node,
     onPress }: ISideMenuItemProps) => {
     const [itemHeight, _setItemHeight] = useState(0);
     const [subMenuSize, _setSubMenuSize] = useState(new Animated.Value(1));
@@ -107,7 +106,7 @@ export const SideMenuItem = React.memo(({ themeName, depth = 0, height = 0, sele
 
     const currentContent = node.__rawNode__.content?.contents[language?.code];
     const currentAsset = currentContent?.resources?.icon;
-    const color = theme.themes[theme.name].menu.sideMenu.item.backgroundColor; //currentContent.color;
+    const color = theme.menu.sideMenu.item.backgroundColor; //currentContent.color;
     const isLight = Color.rgb(color).isLight();
     const actualColor = node === selected ?
         isLight ?
@@ -156,8 +155,8 @@ export const SideMenuItem = React.memo(({ themeName, depth = 0, height = 0, sele
                             uri: `file://${currentAsset?.mipmap?.x128}`,
                         }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                         <Text style={{
-                            fontSize: theme.themes[theme.name].menu.sideMenu.item.nameFontSize,
-                            color: theme.themes[theme.name].menu.sideMenu.item.nameColor,
+                            fontSize: theme.menu.sideMenu.item.nameFontSize,
+                            color: theme.menu.sideMenu.item.nameColor,
                             textAlign: "center",
                             fontWeight: "bold",
                             textTransform: "uppercase"

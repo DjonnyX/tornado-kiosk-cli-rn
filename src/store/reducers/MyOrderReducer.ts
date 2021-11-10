@@ -1,10 +1,10 @@
 import { Reducer } from "redux";
-import { OrderWizard } from "../../core/order/OrderWizard";
 import { TMyOrderActions, MyOrderActionTypes } from "../actions";
 import { IMyOrderState } from "../state";
 
 const initialState: IMyOrderState = {
     stateId: -1,
+    wizard: undefined,
     showOrderTypes: true,
     isProcessing: false,
 };
@@ -14,20 +14,28 @@ const myOrderReducer: Reducer<IMyOrderState, TMyOrderActions> = (
     action,
 ) => {
     switch (action.type) {
+        case MyOrderActionTypes.SET_WIZARD:
+            return {
+                ...state,
+                wizard: action.wizard,
+            };
+        case MyOrderActionTypes.RESPAWN:
+            state.wizard?.respawn();
+            return state;
         case MyOrderActionTypes.EDIT_PRODUCT:
-            OrderWizard.current.editProduct(action.productNode);
+            state.wizard?.editProduct(action.productNode);
             return state;
         case MyOrderActionTypes.EDIT_CANCEL:
-            OrderWizard.current.editCancel();
+            state.wizard?.editCancel();
             return state;
         case MyOrderActionTypes.ADD:
-            OrderWizard.current.add(action.position);
+            state.wizard?.add(action.position);
             return state;
         case MyOrderActionTypes.REMOVE:
-            OrderWizard.current.remove(action.position);
+            state.wizard?.remove(action.position);
             return state;
         case MyOrderActionTypes.RESET:
-            OrderWizard.current.reset();
+            state.wizard?.reset();
             return state;
         case MyOrderActionTypes.SHOW_ORDER_TYPES:
             return {

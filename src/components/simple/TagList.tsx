@@ -1,14 +1,15 @@
 import React from "react";
 import { View } from "react-native";
 import FastImage from "react-native-fast-image";
-import { ICompiledLanguage, ICompiledTag } from "@djonnyx/tornado-types";
+import { ICompiledLanguage, ICompiledTag, IKioskThemeData } from "@djonnyx/tornado-types";
 
 interface ITagListProps {
+    theme: IKioskThemeData;
     language: ICompiledLanguage;
     tags: Array<ICompiledTag>;
 }
 
-export const TagList = React.memo(({ tags, language }: ITagListProps) => {
+export const TagList = React.memo(({ theme, tags, language }: ITagListProps) => {
 
     return (<View style={{ width: "100%", flexDirection: "row", flexWrap: "wrap" }}>
         {

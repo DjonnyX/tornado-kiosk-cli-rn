@@ -5,12 +5,10 @@ import { IProgress } from "@djonnyx/tornado-refs-processor/dist/DataCombiner";
 import { ExternalStorage } from "../native";
 import { assetsService, orderApiService, refApiService } from "../services";
 import { IAppState } from "../store/state";
-import { CapabilitiesActions, CombinedDataActions } from "../store/actions";
+import { CombinedDataActions } from "../store/actions";
 import { SystemActions } from "../store/actions/SystemAction";
-import { CapabilitiesSelectors, SystemSelectors } from "../store/selectors";
+import { SystemSelectors } from "../store/selectors";
 import { IDeviceInfo } from "./interfaces";
-import { theme } from "../theme";
-import { Debounse } from "../utils/debounse";
 
 interface IAuthServiceProps {
     // store
@@ -34,8 +32,6 @@ class AuthServiceContainer extends Component<IAuthServiceProps, IAuthServiceStat
 
     private _storePath: string | undefined = undefined;
 
-    protected _saveDeviceInfoDebounse = new Debounse(this.saveDeviceInfo, 100);
-
     constructor(props: IAuthServiceProps) {
         super(props);
     }
@@ -56,13 +52,15 @@ class AuthServiceContainer extends Component<IAuthServiceProps, IAuthServiceStat
 
             refApiService.serial = orderApiService.serial = nextProps._serialNumber || "";
 
-            this._saveDeviceInfoDebounse.call({
-                ...this._deviceInfo,
-                serialNumber: nextProps._serialNumber,
-                terminalId: nextProps._terminalId,
-                storeId: nextProps._storeId,
-                setupStep: nextProps._setupStep,
-            });
+            if (nextProps._serialNumber !== null && nextProps._serialNumber !== undefined) {
+                this.saveDeviceInfo({
+                    ...this._deviceInfo,
+                    serialNumber: nextProps._serialNumber,
+                    terminalId: nextProps._terminalId,
+                    storeId: nextProps._storeId,
+                    setupStep: nextProps._setupStep,
+                });
+            }
         }
 
         if (super.shouldComponentUpdate) return super.shouldComponentUpdate(nextProps, nextState, nextContext);

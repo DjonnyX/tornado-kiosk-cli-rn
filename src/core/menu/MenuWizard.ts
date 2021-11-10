@@ -9,8 +9,6 @@ import { MenuWizardEventTypes, MenuNodeEventTypes } from "./events";
 import { MenuNode } from "./MenuNode";
 
 export class MenuWizard extends EventEmitter {
-    static current: MenuWizard;
-
     protected _stateId: number = 0;
     get stateId() { return this._stateId; }
 
@@ -111,7 +109,6 @@ export class MenuWizard extends EventEmitter {
         protected _orderType: ICompiledOrderType,
         protected _language: ICompiledLanguage) {
         super();
-        MenuWizard.current = this;
 
         this.startUpdatingTimer();
     }

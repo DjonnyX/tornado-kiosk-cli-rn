@@ -607,7 +607,7 @@ class RefApiService implements IDataService<IKioskTheme> {
                 from(this.getAccessToken()).pipe(
                     switchMap(token => {
                         return from(
-                            fetch(`${config.refServer.address}/api/v1/terminals?type=${TerminalTypes.KIOSK}`,
+                            fetch(`${config.refServer.address}/api/v1/terminals?type.equals=${TerminalTypes.KIOSK}`,
                                 {
                                     method: "GET",
                                     headers: {
@@ -636,7 +636,7 @@ class RefApiService implements IDataService<IKioskTheme> {
                 from(this.getAccessToken()).pipe(
                     switchMap(token => {
                         return from(
-                            fetch(`${config.refServer.address}/api/v1/app-themes?type=${TerminalTypes.KIOSK}`,
+                            fetch(`${config.refServer.address}/api/v1/app-themes?type.equals=${TerminalTypes.KIOSK}`,
                                 {
                                     method: "GET",
                                     headers: {
@@ -664,4 +664,4 @@ class RefApiService implements IDataService<IKioskTheme> {
     }
 }
 
-export const refApiService = new RefApiService<IKioskThemeData>();
+export const refApiService = new RefApiService();

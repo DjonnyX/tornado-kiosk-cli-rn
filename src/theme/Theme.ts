@@ -18,7 +18,7 @@ export const compileThemes = (themes: Array<IAppTheme<IKioskThemeData>>, name: s
 /**
  * Embeded theme
  */
-export const theme: IKioskTheme = {
+export const EMBEDED_THEME: IKioskTheme = {
     name: "light",
     themes: {
         ["light"]: {

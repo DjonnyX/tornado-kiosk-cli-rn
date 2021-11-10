@@ -1,15 +1,14 @@
 import React, { useCallback } from "react";
 import { View, Text, TouchableOpacity, GestureResponderEvent } from "react-native";
 import FastImage from "react-native-fast-image";
-import { ICurrency, ICompiledLanguage } from "@djonnyx/tornado-types";
-import { theme } from "../../../theme";
+import { ICurrency, ICompiledLanguage, IKioskThemeData } from "@djonnyx/tornado-types";
 import { NumericStapper } from "../NumericStapper";
 import { IPositionWizard } from "../../../core/interfaces";
 import { TagList } from "../TagList";
 import { Switch } from "../Switch";
 
 interface IModifierListItemProps {
-    themeName: string | undefined;
+    theme: IKioskThemeData;
     stateId: number;
     thumbnailHeight: number;
     position: IPositionWizard;
@@ -17,7 +16,7 @@ interface IModifierListItemProps {
     language: ICompiledLanguage;
 }
 
-export const ModifierListItem = React.memo(({ themeName, thumbnailHeight, currency, language, position, stateId }: IModifierListItemProps) => {
+export const ModifierListItem = React.memo(({ theme, thumbnailHeight, currency, language, position, stateId }: IModifierListItemProps) => {
 
     const pressHandler = useCallback((e: GestureResponderEvent) => {
         const hasEdit = position.edit();
@@ -41,10 +40,8 @@ export const ModifierListItem = React.memo(({ themeName, thumbnailHeight, curren
         ? position.__product__?.tags
         : undefined;
 
-    console.warn(position.quantity)
-
     return (
-        <View style={{ flex: 1, backgroundColor: theme.themes[theme.name].modifiers.item.backgroundColor, borderRadius: 16, padding: 22 }}>
+        <View style={{ flex: 1, backgroundColor: theme.modifiers.item.backgroundColor, borderRadius: 16, padding: 22 }}>
             <TouchableOpacity style={{ alignItems: "center", flex: 1 }} onPress={pressHandler}>
                 <View style={{
                     flexDirection: "row", alignItems: "baseline", justifyContent: !!tags ? "space-around" : "flex-end",
@@ -53,7 +50,7 @@ export const ModifierListItem = React.memo(({ themeName, thumbnailHeight, curren
                     {
                         !!tags &&
                         <View style={{ position: "absolute", left: 0, right: 0, flex: 1, zIndex: 1 }}>
-                            <TagList tags={tags} language={language} />
+                            <TagList theme={theme} tags={tags} language={language} />
                         </View>
                     }
                     {
@@ -65,9 +62,9 @@ export const ModifierListItem = React.memo(({ themeName, thumbnailHeight, curren
                                 borderRadius: 8,
                                 paddingHorizontal: 8,
                                 paddingVertical: 4,
-                                fontSize: theme.themes[theme.name].modifiers.item.discount.textFontSize, fontWeight: "bold",
-                                backgroundColor: theme.themes[theme.name].modifiers.item.discount.backgroundColor,
-                                color: theme.themes[theme.name].modifiers.item.discount.textColor,
+                                fontSize: theme.modifiers.item.discount.textFontSize, fontWeight: "bold",
+                                backgroundColor: theme.modifiers.item.discount.backgroundColor,
+                                color: theme.modifiers.item.discount.textColor,
                             }}>
                                 {
                                     position.getFormatedDiscountPerOne(true)
@@ -83,7 +80,7 @@ export const ModifierListItem = React.memo(({ themeName, thumbnailHeight, curren
                 </View>
                 <Text textBreakStrategy="simple" numberOfLines={2} ellipsizeMode="tail"
                     style={{
-                        textAlign: "center", fontSize: theme.themes[theme.name].modifiers.item.nameFontFontSize, marginBottom: 6, color: theme.themes[theme.name].modifiers.item.nameColor,
+                        textAlign: "center", fontSize: theme.modifiers.item.nameFontFontSize, marginBottom: 6, color: theme.modifiers.item.nameColor,
                         fontWeight: "bold", textTransform: "uppercase"
                     }}>
                     {
@@ -91,8 +88,8 @@ export const ModifierListItem = React.memo(({ themeName, thumbnailHeight, curren
                     }
                 </Text>
                 {/* <Text textBreakStrategy="simple" numberOfLines={2} ellipsizeMode="tail" style={{
-                    textAlign: "center", fontSize: theme.themes[theme.name].modifiers.item.descriptionFontSize,
-                    color: theme.themes[theme.name].modifiers.item.descriptionColor, textTransform: "uppercase",
+                    textAlign: "center", fontSize: theme.modifiers.item.descriptionFontSize,
+                    color: theme.modifiers.item.descriptionColor, textTransform: "uppercase",
                     marginBottom: 12
                 }}>
                     {
@@ -108,26 +105,26 @@ export const ModifierListItem = React.memo(({ themeName, thumbnailHeight, curren
                         onChange={changeQuantityHandler}
                         styleOn={{
                             borderStyle: "solid", borderWidth: 0, borderRadius: 16,
-                            backgroundColor: theme.themes[theme.name].modifiers.item.quantitySwitch.on.backgroundColor,
-                            borderColor: theme.themes[theme.name].modifiers.item.quantitySwitch.on.borderColor,
+                            backgroundColor: theme.modifiers.item.quantitySwitch.on.backgroundColor,
+                            borderColor: theme.modifiers.item.quantitySwitch.on.borderColor,
                             padding: 6
                         }}
                         styleOff={{
                             borderStyle: "solid", borderWidth: 1, borderRadius: 16,
-                            backgroundColor: theme.themes[theme.name].modifiers.item.quantitySwitch.off.backgroundColor,
-                            borderColor: theme.themes[theme.name].modifiers.item.quantitySwitch.off.borderColor,
+                            backgroundColor: theme.modifiers.item.quantitySwitch.off.backgroundColor,
+                            borderColor: theme.modifiers.item.quantitySwitch.off.borderColor,
                             padding: 6,
                             opacity: 0.25
                         }}
                         styleViewOn={{}}
                         styleViewOff={{}}
                         textStyleOn={{
-                            fontSize: theme.themes[theme.name].modifiers.item.quantitySwitch.on.textFontSize, fontWeight: "bold",
-                            color: theme.themes[theme.name].modifiers.item.quantitySwitch.on.textColor,
+                            fontSize: theme.modifiers.item.quantitySwitch.on.textFontSize, fontWeight: "bold",
+                            color: theme.modifiers.item.quantitySwitch.on.textColor,
                         }}
                         textStyleOff={{
-                            fontSize: theme.themes[theme.name].modifiers.item.quantitySwitch.off.textFontSize, fontWeight: "bold",
-                            color: theme.themes[theme.name].modifiers.item.quantitySwitch.off.textColor,
+                            fontSize: theme.modifiers.item.quantitySwitch.off.textFontSize, fontWeight: "bold",
+                            color: theme.modifiers.item.quantitySwitch.off.textColor,
                         }}
                         textStyleOnDisabled={{}}
                         textStyleOffDisabled={{}}
@@ -139,50 +136,50 @@ export const ModifierListItem = React.memo(({ themeName, thumbnailHeight, curren
                         value={position.quantity}
                         buttonStyle={{
                             width: 48, height: 48, borderStyle: "solid", borderWidth: 1, borderRadius: 16,
-                            backgroundColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.backgroundColor,
-                            borderColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.borderColor,
+                            backgroundColor: theme.modifiers.item.quantityStepper.buttons.backgroundColor,
+                            borderColor: theme.modifiers.item.quantityStepper.buttons.borderColor,
                             padding: 6
                         }}
                         buttonSelectedStyle={{
                             width: 48, height: 48, borderRadius: 16,
-                            backgroundColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.selectedBackgroundColor,
-                            borderColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.selectedBackgroundColor,
+                            backgroundColor: theme.modifiers.item.quantityStepper.buttons.selectedBackgroundColor,
+                            borderColor: theme.modifiers.item.quantityStepper.buttons.selectedBackgroundColor,
                             padding: 6,
                             opacity: 1
                         }}
                         disabledButtonStyle={{
                             width: 48, height: 48, borderStyle: "solid", borderWidth: 1, borderRadius: 16,
-                            backgroundColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.disabledBackgroundColor,
-                            borderColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.disabledBorderColor,
+                            backgroundColor: theme.modifiers.item.quantityStepper.buttons.disabledBackgroundColor,
+                            borderColor: theme.modifiers.item.quantityStepper.buttons.disabledBorderColor,
                             padding: 6,
                             opacity: 0.25
                         }}
                         disabledSelectedButtonStyle={{
                             width: 48, height: 48, borderRadius: 16,
-                            backgroundColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.disabledSelectedBackgroundColor,
-                            borderColor: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.disabledSelectedBorderColor,
+                            backgroundColor: theme.modifiers.item.quantityStepper.buttons.disabledSelectedBackgroundColor,
+                            borderColor: theme.modifiers.item.quantityStepper.buttons.disabledSelectedBorderColor,
                             padding: 6,
                             opacity: 0.25
                         }}
                         buttonTextStyle={{
-                            fontSize: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "bold",
-                            color: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.textColor as any,
+                            fontSize: theme.modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "bold",
+                            color: theme.modifiers.item.quantityStepper.buttons.textColor as any,
                         }}
                         buttonSelectedTextStyle={{
-                            fontSize: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "bold",
-                            color: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.selectedTextColor as any,
+                            fontSize: theme.modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "bold",
+                            color: theme.modifiers.item.quantityStepper.buttons.selectedTextColor as any,
                         }}
                         disabledButtonTextStyle={{
-                            fontSize: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "bold",
-                            color: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.disabledTextColor as any,
+                            fontSize: theme.modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "bold",
+                            color: theme.modifiers.item.quantityStepper.buttons.disabledTextColor as any,
                         }}
                         disabledSelectedButtonTextStyle={{
-                            fontSize: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "bold",
-                            color: theme.themes[theme.name].modifiers.item.quantityStepper.buttons.disabledSelectedTextColor as any,
+                            fontSize: theme.modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "bold",
+                            color: theme.modifiers.item.quantityStepper.buttons.disabledSelectedTextColor as any,
                         }}
                         textStyle={{
-                            fontSize: theme.themes[theme.name].modifiers.item.quantityStepper.indicator.textFontSize, fontWeight: "bold",
-                            color: theme.themes[theme.name].modifiers.item.quantityStepper.indicator.textColor
+                            fontSize: theme.modifiers.item.quantityStepper.indicator.textFontSize, fontWeight: "bold",
+                            color: theme.modifiers.item.quantityStepper.indicator.textColor
                         }}
                         iconDecrement="-"
                         iconIncrement="+"

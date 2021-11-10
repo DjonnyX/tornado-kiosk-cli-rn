@@ -1,9 +1,11 @@
 import { Action } from "redux";
 import { ICompiledProduct } from "@djonnyx/tornado-types";
-import { IPositionWizard } from "../../core/interfaces";
+import { IOrderWizard, IPositionWizard } from "../../core/interfaces";
 import { MenuNode } from "../../core/menu/MenuNode";
 
 export enum MyOrderActionTypes {
+    SET_WIZARD = "TORNADO/my-order/set-wizard",
+    RESPAWN = "TORNADO/my-order/respawn",
     EDIT_PRODUCT = "TORNADO/my-order/edit-product",
     EDIT_CANCEL = "TORNADO/my-order/edit-cancel",
     ADD = "TORNADO/my-order/add",
@@ -13,6 +15,12 @@ export enum MyOrderActionTypes {
     UPDATE_STATE_ID = "TORNADO/my-order/update-state-id",
     SHOW_ORDER_TYPES = "TORNADO/my-order/show-order-types",
     UPDATE_IS_PROCESSING = "TORNADO/my-order/update-is-processing",
+}
+
+interface IMyOrderActionRespawn extends Action<MyOrderActionTypes.RESPAWN> { }
+
+interface IMyOrderActionSetWizard extends Action<MyOrderActionTypes.SET_WIZARD> {
+    wizard: IOrderWizard | undefined;
 }
 
 interface IMyOrderActionEdit extends Action<MyOrderActionTypes.EDIT_PRODUCT> {
@@ -50,6 +58,15 @@ interface IMyOrderActionUpdateIsProcessing extends Action<MyOrderActionTypes.UPD
 }
 
 export class MyOrderActions {
+    static setWizard = (wizard: IOrderWizard | undefined): IMyOrderActionSetWizard => ({
+        type: MyOrderActionTypes.SET_WIZARD,
+        wizard,
+    });
+
+    static respawn = (): IMyOrderActionRespawn => ({
+        type: MyOrderActionTypes.RESPAWN,
+    });
+
     static updateStateId = (stateId: number): IMyOrderActionUpdateStateId => ({
         type: MyOrderActionTypes.UPDATE_STATE_ID,
         stateId,
@@ -90,5 +107,5 @@ export class MyOrderActions {
     });
 }
 
-export type TMyOrderActions = IMyOrderActionEdit | IMyOrderActionEditCancel | IMyOrderActionAdd | IMyOrderActionRemove
-    | IMyOrderActionUpdateStateId | IMyOrderActionReset | IMyOrderActionShowOrderTypes | IMyOrderActionUpdateIsProcessing;
+export type TMyOrderActions = IMyOrderActionEdit | IMyOrderActionSetWizard | IMyOrderActionEditCancel | IMyOrderActionAdd | IMyOrderActionRemove
+    | IMyOrderActionUpdateStateId | IMyOrderActionReset | IMyOrderActionShowOrderTypes | IMyOrderActionUpdateIsProcessing | IMyOrderActionRespawn;

@@ -2,19 +2,18 @@ import React, { useState, useCallback, useEffect } from "react";
 import { View, Text, Animated, Easing } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import {
-    NodeTypes, ICompiledLanguage, ICompiledOrderType, ICurrency,
+    NodeTypes, ICompiledLanguage, ICompiledOrderType, ICurrency, IKioskThemeData,
 } from "@djonnyx/tornado-types";
 import { SideMenu } from "./side-menu";
 import { NavMenu } from "./nav-menu";
 import { MenuButton } from "./MenuButton";
 import { CtrlMenuButton } from "./CtrlMenuButton";
-import { theme } from "../../theme";
 import { ModifiersEditor } from "./modifiers";
 import { MenuNode } from "../../core/menu/MenuNode";
 import { localize } from "../../utils/localization";
 
 interface IMenuProps {
-    themeName: string;
+    theme: IKioskThemeData;
     menuStateId: number;
     orderType: ICompiledOrderType;
     menu: MenuNode;
@@ -30,7 +29,7 @@ interface IMenuProps {
 const sideMenuWidth = 180;
 
 export const Menu = React.memo(({
-    themeName, menu, menuStateId, orderType, language, currency, width, height,
+    theme, menu, menuStateId, orderType, language, currency, width, height,
     cancelOrder, addPosition,
 }: IMenuProps) => {
     const [currentCategory, setCurrentCategory] = useState<MenuNode>(menu);
@@ -173,112 +172,117 @@ export const Menu = React.memo(({
 
     return (
         <>
-            <ModifiersEditor></ModifiersEditor>
-            <View style={{ flex: 1, width, height }}>
+            {
+                !!theme &&
+                <>
+                    <ModifiersEditor></ModifiersEditor>
+                    <View style={{ flex: 1, width, height }}>
 
-                <View style={{ position: "absolute", overflow: "hidden", flexDirection: "row", width: "100%", height: "100%" }}>
-                    <Animated.View style={{
-                        position: "absolute",
-                        width: sideMenuWidth - theme.themes[theme.name].menu.sideMenu.padding,
-                        height: height - theme.themes[theme.name].menu.sideMenu.padding * 2,
-                        backgroundColor: theme.themes[theme.name].menu.sideMenu.backgroundColor,
-                        top: theme.themes[theme.name].menu.sideMenu.padding,
-                        borderRadius: theme.themes[theme.name].menu.sideMenu.borderRadius,
-                        left: menuPosition.interpolate({
-                            inputRange: [0, 1],
-                            outputRange: [theme.themes[theme.name].menu.sideMenu.padding, -sideMenuWidth],
-                        }),
-                    }}>
-                        <View style={{
-                            flex: 1, flexGrow: 1, margin: "auto",
-                        }}>
-                            <SideMenu themeName={themeName} menu={menu} language={language} selected={currentCategory}
-                                onPress={selectSideMenuCategoryHandler}></SideMenu>
-                        </View>
-                        <View style={{ flex: 0, width: "100%", height: 144, margin: "auto", padding: 24 }}>
-                            <CtrlMenuButton
-                                key={language.code}
-                                gradient={theme.themes[theme.name].menu.ctrls.cancelButton.backgroundColor}
-                                gradientDisabled={theme.themes[theme.name].menu.ctrls.cancelButton.disabledBackgroundColor}
-                                text={
-                                    localize(language, "kiosk_menu_cancel_button")
-                                } onPress={cancelOrder} />
-                        </View>
-                    </Animated.View>
-                    <Animated.View style={{
-                        position: "absolute",
-                        height: "100%",
-                        zIndex: 0,
-                        left: menuPosition.interpolate({
-                            inputRange: [0, 1],
-                            outputRange: [sideMenuWidth, 0],
-                        }),
-                        width: menuPosition.interpolate({
-                            inputRange: [0, 1],
-                            outputRange: [width - sideMenuWidth, width],
-                            easing: Easing.linear,
-                        }),
-                    }}>
-                        <LinearGradient
-                            colors={theme.themes[theme.name].menu.header.backgroundColor}
-                            style={{ display: "flex", position: "absolute", width: "100%", height: 96, zIndex: 1 }}
-                        >
-                            <View style={{ display: "flex", alignItems: "center", flexDirection: "row", width: "100%", height: "100%", padding: 16 }}>
+                        <View style={{ position: "absolute", overflow: "hidden", flexDirection: "row", width: "100%", height: "100%" }}>
+                            <Animated.View style={{
+                                position: "absolute",
+                                width: sideMenuWidth - theme.menu.sideMenu.padding,
+                                height: height - theme.menu.sideMenu.padding * 2,
+                                backgroundColor: theme.menu.sideMenu.backgroundColor,
+                                top: theme.menu.sideMenu.padding,
+                                borderRadius: theme.menu.sideMenu.borderRadius,
+                                left: menuPosition.interpolate({
+                                    inputRange: [0, 1],
+                                    outputRange: [theme.menu.sideMenu.padding, -sideMenuWidth],
+                                }),
+                            }}>
+                                <View style={{
+                                    flex: 1, flexGrow: 1, margin: "auto",
+                                }}>
+                                    <SideMenu theme={theme} menu={menu} language={language} selected={currentCategory}
+                                        onPress={selectSideMenuCategoryHandler}></SideMenu>
+                                </View>
+                                <View style={{ flex: 0, width: "100%", height: 144, margin: "auto", padding: 24 }}>
+                                    <CtrlMenuButton
+                                        key={language.code}
+                                        gradient={theme.menu.ctrls.cancelButton.backgroundColor}
+                                        gradientDisabled={theme.menu.ctrls.cancelButton.disabledBackgroundColor}
+                                        text={
+                                            localize(language, "kiosk_menu_cancel_button")
+                                        } onPress={cancelOrder} />
+                                </View>
+                            </Animated.View>
+                            <Animated.View style={{
+                                position: "absolute",
+                                height: "100%",
+                                zIndex: 0,
+                                left: menuPosition.interpolate({
+                                    inputRange: [0, 1],
+                                    outputRange: [sideMenuWidth, 0],
+                                }),
+                                width: menuPosition.interpolate({
+                                    inputRange: [0, 1],
+                                    outputRange: [width - sideMenuWidth, width],
+                                    easing: Easing.linear,
+                                }),
+                            }}>
+                                <LinearGradient
+                                    colors={theme.menu.header.backgroundColor}
+                                    style={{ display: "flex", position: "absolute", width: "100%", height: 96, zIndex: 1 }}
+                                >
+                                    <View style={{ display: "flex", alignItems: "center", flexDirection: "row", width: "100%", height: "100%", padding: 16 }}>
+                                        <Animated.View style={{
+                                            width: 162,
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            top: 10,
+                                            left: menuPosition.interpolate({
+                                                inputRange: [0, 1],
+                                                outputRange: [-10, -sideMenuWidth],
+                                            }),
+                                        }}>
+                                            <MenuButton language={language} theme={theme} onPress={onBack}></MenuButton>
+                                        </Animated.View>
+                                        <View style={{ flex: 1 }}></View>
+                                        <Text style={{
+                                            textTransform: "uppercase", fontWeight: "bold",
+                                            color: theme.menu.header.titleColor,
+                                            fontSize: theme.menu.header.titleFontSize, marginRight: 24
+                                        }}>
+                                            {
+                                                currentCategory.__rawNode__.content?.contents[language.code]?.name
+                                                || localize(language, "kiosk_menu_root_title")
+                                            }
+                                        </Text>
+                                    </View>
+                                </LinearGradient>
                                 <Animated.View style={{
-                                    width: 162,
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    top: 10,
-                                    left: menuPosition.interpolate({
+                                    position: "absolute",
+                                    height: "100%",
+                                    width: navMenuWidth,
+                                    top: screenPosition.interpolate({
                                         inputRange: [0, 1],
-                                        outputRange: [-10, -sideMenuWidth],
+                                        outputRange: [0, height],
                                     }),
                                 }}>
-                                    <MenuButton language={language} themeName={themeName} onPress={onBack}></MenuButton>
+                                    <NavMenu theme={theme} menuStateId={menuStateId} orderType={orderType}
+                                        node={previousCategory.index <= currentCategory.index ? currentCategory : previousCategory}
+                                        language={language} currency={currency} onPress={selectNavMenuCategoryHandler}></NavMenu>
                                 </Animated.View>
-                                <View style={{ flex: 1 }}></View>
-                                <Text style={{
-                                    textTransform: "uppercase", fontWeight: "bold",
-                                    color: theme.themes[theme.name].menu.header.titleColor,
-                                    fontSize: theme.themes[theme.name].menu.header.titleFontSize, marginRight: 24
-                                }}>
-                                    {
-                                        currentCategory.__rawNode__.content?.contents[language.code]?.name
-                                        || localize(language, "kiosk_menu_root_title")
-                                    }
-                                </Text>
-                            </View>
-                        </LinearGradient>
-                        <Animated.View style={{
-                            position: "absolute",
-                            height: "100%",
-                            width: navMenuWidth,
-                            top: screenPosition.interpolate({
-                                inputRange: [0, 1],
-                                outputRange: [0, height],
-                            }),
-                        }}>
-                            <NavMenu themeName={themeName} menuStateId={menuStateId} orderType={orderType}
-                                node={previousCategory.index <= currentCategory.index ? currentCategory : previousCategory}
-                                language={language} currency={currency} onPress={selectNavMenuCategoryHandler}></NavMenu>
-                        </Animated.View>
 
-                        <Animated.View style={{
-                            position: "absolute",
-                            height: "100%",
-                            width: navMenuWidth,
-                            top: screenPosition.interpolate({
-                                inputRange: [0, 1],
-                                outputRange: [-height, 0],
-                            }),
-                        }}>
-                            <NavMenu themeName={themeName} menuStateId={menuStateId} orderType={orderType}
-                                node={previousCategory.index > currentCategory.index ? currentCategory : previousCategory}
-                                language={language} currency={currency} onPress={selectNavMenuCategoryHandler}></NavMenu>
-                        </Animated.View>
-                    </Animated.View>
-                </View>
-            </View >
+                                <Animated.View style={{
+                                    position: "absolute",
+                                    height: "100%",
+                                    width: navMenuWidth,
+                                    top: screenPosition.interpolate({
+                                        inputRange: [0, 1],
+                                        outputRange: [-height, 0],
+                                    }),
+                                }}>
+                                    <NavMenu theme={theme} menuStateId={menuStateId} orderType={orderType}
+                                        node={previousCategory.index > currentCategory.index ? currentCategory : previousCategory}
+                                        language={language} currency={currency} onPress={selectNavMenuCategoryHandler}></NavMenu>
+                                </Animated.View>
+                            </Animated.View>
+                        </View>
+                    </View >
+                </>
+            }
         </>
     )
 })

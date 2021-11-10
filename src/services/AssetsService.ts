@@ -36,17 +36,17 @@ class AssetsService implements IAssetStoreFileService {
     }
 
     readManifest(path: string): Promise<Array<IAsset>> {
-        Log.i("AssetsService", "readManifest");
+        // Log.i("AssetsService", "readManifest");
         return this.readFile<Array<IAsset>>(`${path}/${this.manifestFileName}`);
     }
 
     writeManifest(path: string, data: Array<IAsset>): Promise<void> {
-        Log.i("AssetsService", "writeManifest");
+        // Log.i("AssetsService", "writeManifest");
         return this.writeFile(`${path}/${this.manifestFileName}`, data);
     }
 
     async writeFile(path: string, data: any): Promise<void> {
-        Log.i("AssetsService", "writeFile \"" + path + "\"");
+        // Log.i("AssetsService", "writeFile \"" + path + "\"");
         return ExternalStorage.writeFile(
             this.normalizeFilePath(path),
             Buffer.from(JSON.stringify(data), "utf8").toString("base64"),
@@ -54,7 +54,7 @@ class AssetsService implements IAssetStoreFileService {
     }
 
     readFile<T = any>(path: string): Promise<T> {
-        Log.i("AssetsService", "readFile \"" + path + "\"");
+        // Log.i("AssetsService", "readFile \"" + path + "\"");
         return from(
             ExternalStorage.readFile(
                 this.normalizeFilePath(path)
@@ -68,7 +68,7 @@ class AssetsService implements IAssetStoreFileService {
     }
 
     downloadAsset(url: string, outputPath: string): Promise<void> {
-        Log.i("AssetsService", "downloadAsset \"" + url + "\" to \"" + outputPath + "\"");
+        // Log.i("AssetsService", "downloadAsset \"" + url + "\" to \"" + outputPath + "\"");
         return from(
             ExternalStorage.downloadFile(
                 `${config.refServer.address}/${url}`.replace("\\", "/"),
@@ -78,7 +78,7 @@ class AssetsService implements IAssetStoreFileService {
     }
 
     deleteAsset(filePath: string): Promise<void> {
-        Log.i("AssetsService", "deleteAsset \"" + filePath + "\"");
+        // Log.i("AssetsService", "deleteAsset \"" + filePath + "\"");
         return ExternalStorage.unlink(
             this.normalizeFilePath(filePath),
         );

@@ -13,7 +13,7 @@ import { IAppState } from "../store/state";
 import { CombinedDataActions, CapabilitiesActions } from "../store/actions";
 import { CapabilitiesSelectors, SystemSelectors } from "../store/selectors";
 import { MainNavigationScreenTypes } from "../components/navigation";
-import { compileThemes, theme, THEMES_FILE_NAME } from "../theme";
+import { compileThemes, EMBEDED_THEME, THEMES_FILE_NAME } from "../theme";
 import { WorkStatuses } from "@djonnyx/tornado-refs-processor/dist/enums";
 
 interface IDataCollectorServiceProps {
@@ -93,6 +93,14 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
             console.warn("Saved data not found.");
         }
 
+        if (!!savedThemes) {
+            // Saved
+            this.props._onChangeThemes(savedThemes);
+        } else {
+            // Embeded
+            this.props._onChangeThemes(EMBEDED_THEME);
+        }
+
         this._assetsStore = new AssetsStore(storePath, assetsService, {
             createDirectoryRecurtion: false,
             maxThreads: 1,
@@ -144,13 +152,9 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
                     const themes: IKioskTheme | undefined = data.refs.themes?.length > 0 ? compileThemes(data.refs.themes, terminal.config.theme) : undefined;
 
                     // Override embeded themes
-                    theme.name = terminal.config.theme;
-
-                    assetsService.writeFile(`${storePath}/${THEMES_FILE_NAME}`, themes);
-
                     if (!!themes) {
-                        theme.themes = themes.themes;
                         this.props._onChangeThemes(themes);
+                        assetsService.writeFile(`${storePath}/${THEMES_FILE_NAME}`, themes);
                     }
 
                     this.props._onChangeTerminal(terminal);
@@ -205,6 +209,7 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
                     RefTypes.ORDER_TYPES,
                     RefTypes.CURRENCIES,
                     RefTypes.ADS,
+                    RefTypes.TERMINALS,
                     RefTypes.THEMES,
                 ],
                 initialRefs: this._savedData as any,
