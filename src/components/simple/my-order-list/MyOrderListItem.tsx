@@ -58,7 +58,7 @@ export const MyOrderListItem = React.memo(({ theme, stateId, menuStateId, imageH
     }, [stateId]);
 
     return (
-        <View style={{ flex: 1, paddingLeft: 24, paddingRight: 24, marginBottom: 20 }}>
+        <View style={{ flex: 1, paddingHorizontal: 12, marginBottom: 20 }}>
             {/* <TouchableOpacity style={{ alignItems: "center" }} onPress={pressHandler}> */}
             {/* <View style={{ flex: 1, width: "100%", height: imageHeight, marginBottom: 2, justifyContent: "flex-end" }}>
                     <FastImage style={{ width: "100%", height: "100%" }} source={{
@@ -66,7 +66,7 @@ export const MyOrderListItem = React.memo(({ theme, stateId, menuStateId, imageH
                     }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                 </View> */}
             <Text numberOfLines={3} ellipsizeMode="tail" style={{
-                textAlign: "left", fontSize: theme.menu.draftOrder.item.nameFontSize, fontWeight: "bold",
+                textAlign: "center", fontSize: theme.menu.draftOrder.item.nameFontSize, fontWeight: "bold",
                 color: theme.menu.draftOrder.item.nameColor, textTransform: "uppercase"
             }}>
                 {
@@ -75,7 +75,7 @@ export const MyOrderListItem = React.memo(({ theme, stateId, menuStateId, imageH
             </Text>
             <View style={{ marginBottom: 1 }}>
                 <Text style={{
-                    textAlign: "left",
+                    textAlign: "center",
                     fontWeight: "bold",
                     fontSize: theme.menu.draftOrder.item.price.textFontSize,
                     paddingTop: 4, paddingBottom: 4, paddingLeft: 6, paddingRight: 6,

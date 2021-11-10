@@ -75,12 +75,12 @@ const ConfirmationOrderScreenContainer = React.memo(({ _theme, _language, _banne
                                 </FlatList>
                             </SafeAreaView>
                         </View>
-                        <View style={{ width: "100%", flexDirection: "row", paddingLeft: 24, paddingRight: 24, paddingTop: 28, paddingBottom: 28 }}>
+                        <View style={{ width: "100%", flexDirection: "row", paddingHorizontal: 12, paddingVertical: 12 }}>
                             <SimpleButton title=
                                 {
                                     localize(_language, "kiosk_order_prev_button")
                                 }
-                                styleView={{ opacity: 1, minWidth: 124 }}
+                                styleView={{ opacity: 1, minWidth: 144 }}
                                 style={{
                                     backgroundColor: theme.confirmation.backButton.backgroundColor,
                                     borderRadius: 16, padding: 20, height: 96, justifyContent: "center"
@@ -109,7 +109,7 @@ const ConfirmationOrderScreenContainer = React.memo(({ _theme, _language, _banne
                                 {
                                     localize(_language, "kiosk_order_next_button")
                                 }
-                                styleView={{ opacity: 1, minWidth: 124 }}
+                                styleView={{ opacity: 1, minWidth: 144 }}
                                 style={{
                                     backgroundColor: theme.confirmation.nextButton.backgroundColor,
                                     borderRadius: 16, padding: 20, height: 96, justifyContent: "center"

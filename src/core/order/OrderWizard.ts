@@ -23,6 +23,9 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
         return this._editingPositions.length > 0 ? this._editingPositions[this._editingPositions.length - 1] : null;
     }
 
+    protected _viewingPosition: IPositionWizard | null = null;
+    get viewingPosition() { return this._viewingPosition; }
+
     protected _editingPositions = new Array<IPositionWizard>();
     get editingPositions() { return this._editingPositions; }
 
@@ -78,7 +81,7 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
         this.removeInvalidOrders();
     }
 
-    private onChangePosition = () => {
+    public onChangePosition = () => {
         this.update();
 
         this._changeDebounse.call();
@@ -221,7 +224,12 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
         if (!!existsProduct && existsProduct.groups.length === 0) {
             // Добавление количества к существующему продукту,
             // у которого не возможны модификации
-            existsProduct.quantity++;
+            // existsProduct.quantity++;
+
+            // Продукт помечается для просмотра
+            this._viewingPosition = existsProduct;
+            this.update();
+            this._changeDebounse.call();
         } else {
             const position = new PositionWizard(PositionWizardModes.NEW, productNode, this._currency,
                 PositionWizardTypes.PRODUCT);
@@ -229,15 +237,53 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
             position.quantity = 1;
 
             if (position.groups.length === 0) {
-                // Добавление нового продукта
-                this.add(position);
-                position.dispose();
+                // Обычное добавление
+                // this.add(position);
+                // position.dispose();
+
+                // Продукт помечается для просмотра
+                this._viewingPosition = position;
+                this.update();
+                this._changeDebounse.call();
             } else {
                 // Открытие конфигуратора добавляемого продукта
                 this._editingPositions.push(position);
                 this.update();
                 this._changeDebounse.call();
             }
+        }
+    }
+
+    // Добавление нового продукта или редактирование уже имеющегося в заказе
+    addViewingProduct(): void {
+        if (!!this._viewingPosition) {
+            const existsProduct = this._positions.find(pos => pos === this._viewingPosition);
+            if (!!existsProduct && existsProduct.groups.length === 0) {
+
+            } else {
+                this.add(this._viewingPosition);
+                this._viewingPosition.dispose();
+
+                this.closeViewingPosition();
+            }
+        }
+    }
+
+    // Удалить редактируемую позицию
+    removeViewingPosition(): void {
+        if (!!this._viewingPosition) {
+            this.remove(this._viewingPosition);
+            this._viewingPosition = null;
+        }
+    }
+
+    // Применить и закрыть редактирование
+    closeViewingPosition(): void {
+        if (!!this._viewingPosition) {
+            this._viewingPosition = null;
+
+            this.update();
+            this._changeDebounse.call();
         }
     }
 
@@ -315,6 +361,9 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
             p.removeAllListeners();
             p.dispose();
         });
+
+        this._viewingPosition = null;
+
         this._editingPositions = [];
 
         this._originalEditingPositions = [];

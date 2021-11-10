@@ -79,7 +79,7 @@ export const ModifierListItem = React.memo(({ theme, thumbnailHeight, currency, 
                         uri: `file://${currentAsset?.mipmap?.x128}`,
                     }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                 </View>
-                <Text textBreakStrategy="simple" numberOfLines={2} ellipsizeMode="tail"
+                <Text textBreakStrategy="simple" numberOfLines={4} ellipsizeMode="tail"
                     style={{
                         textAlign: "center", fontSize: theme.modifiers.item.nameFontFontSize, marginBottom: 6, color: theme.modifiers.item.nameColor,
                         fontWeight: "bold", textTransform: "uppercase"

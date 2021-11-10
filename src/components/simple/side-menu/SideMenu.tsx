@@ -19,7 +19,7 @@ export const SideMenu = React.memo(({ theme, selected, language, menu, onPress }
             flex: 1, width: "100%", height: "100%",
         }}>
             <ScrollView horizontal={false}>
-                <View style={{ paddingLeft: 32, paddingRight: 20, paddingTop: 20, paddingBottom: 10 }}>
+                <View style={{ paddingHorizontal: 12, paddingVertical: 12, }}>
                     {
                         menu.activeChildren.map(child =>
                             <SideMenuItem key={child.id} theme={theme} selected={selected} node={child} language={language}

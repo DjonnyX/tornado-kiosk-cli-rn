@@ -11,6 +11,7 @@ import { CtrlMenuButton } from "./CtrlMenuButton";
 import { ModifiersEditor } from "./modifiers";
 import { MenuNode } from "../../core/menu/MenuNode";
 import { localize } from "../../utils/localization";
+import { PositionDetails } from "./PositionDetails";
 
 interface IMenuProps {
     theme: IKioskThemeData;
@@ -175,6 +176,7 @@ export const Menu = React.memo(({
             {
                 !!theme &&
                 <>
+                    <PositionDetails></PositionDetails>
                     <ModifiersEditor></ModifiersEditor>
                     <View style={{ flex: 1, width, height }}>
 
@@ -197,7 +199,7 @@ export const Menu = React.memo(({
                                     <SideMenu theme={theme} menu={menu} language={language} selected={currentCategory}
                                         onPress={selectSideMenuCategoryHandler}></SideMenu>
                                 </View>
-                                <View style={{ flex: 0, width: "100%", height: 144, margin: "auto", padding: 24 }}>
+                                <View style={{ flex: 0, width: "100%", height: 124, margin: "auto", padding: 12 }}>
                                     <CtrlMenuButton
                                         key={language.code}
                                         gradient={theme.menu.ctrls.cancelButton.backgroundColor}
