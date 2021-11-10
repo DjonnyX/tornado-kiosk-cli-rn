@@ -3,9 +3,10 @@ import { View, TouchableOpacity, GestureResponderEvent } from "react-native";
 import FastImage from 'react-native-fast-image'
 import Video from "react-native-video";
 import { ICompiledAd } from "@djonnyx/tornado-types/dist/interfaces/ICompiledAd";
-import { ICompiledLanguage, AssetExtensions, ICompiledAdContents, IAsset } from "@djonnyx/tornado-types";
+import { ICompiledLanguage, AssetExtensions, ICompiledAdContents, IAsset, IKioskThemeData } from "@djonnyx/tornado-types";
 
 interface IAdsProps {
+    theme: IKioskThemeData;
     menuStateId: number;
     ads: Array<ICompiledAd>;
     language: ICompiledLanguage;
@@ -18,7 +19,7 @@ interface IAdsParams {
     isVideo: boolean;
 }
 
-export const Ads = React.memo(({ menuStateId, language, ads, onPress }: IAdsProps) => {
+export const Ads = React.memo(({ theme, menuStateId, language, ads, onPress }: IAdsProps) => {
     const [currentAdIndex, _setCurrentAdIndex] = useState(0);
     const [params, setParams] = useState<IAdsParams | undefined>();
 
@@ -65,7 +66,7 @@ export const Ads = React.memo(({ menuStateId, language, ads, onPress }: IAdsProp
 
     const pressHandler = useCallback((e: GestureResponderEvent) => {
         if (!!onPress) {
-            onPress(ads[currentAdIndex]);
+            onPress(ads?.[currentAdIndex]);
         }
     }, [currentAdIndex]);
 

@@ -4,6 +4,10 @@ import { IAppState } from "../state";
 const getMyOrder = (state: IAppState) => state.myOrder;
 
 export namespace MyOrderSelectors {
+    export const selectWizard = createSelector(getMyOrder, (state) => {
+        return state.wizard;
+    });
+
     export const selectStateId = createSelector(getMyOrder, (state) => {
         return state.stateId;
     });

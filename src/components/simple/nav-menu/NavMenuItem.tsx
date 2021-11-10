@@ -1,13 +1,12 @@
 import React, { useCallback } from "react";
 import { View, Text, TouchableOpacity, GestureResponderEvent } from "react-native";
 import FastImage from "react-native-fast-image";
-import { NodeTypes, ICompiledProduct, ICurrency, ICompiledLanguage } from "@djonnyx/tornado-types";
-import { theme } from "../../../theme";
+import { NodeTypes, ICompiledProduct, ICurrency, ICompiledLanguage, IKioskThemeData } from "@djonnyx/tornado-types";
 import { TagList } from "../TagList";
 import { MenuNode } from "../../../core/menu/MenuNode";
 
 interface INavMenuItemProps {
-    themeName: string;
+    theme: IKioskThemeData;
     thumbnailHeight: number;
     node: MenuNode;
     stateId: number;
@@ -16,7 +15,7 @@ interface INavMenuItemProps {
     onPress: (node: MenuNode) => void;
 }
 
-export const NavMenuItem = React.memo(({ themeName, thumbnailHeight, currency, language, node, stateId,
+export const NavMenuItem = React.memo(({ theme, thumbnailHeight, currency, language, node, stateId,
     onPress }: INavMenuItemProps) => {
 
     const pressHandler = useCallback((e: GestureResponderEvent) => {
@@ -34,7 +33,7 @@ export const NavMenuItem = React.memo(({ themeName, thumbnailHeight, currency, l
 
     return (
         <View style={{
-            flex: 1, backgroundColor: theme.themes[theme.name].menu.navMenu.item.backgroundColor,
+            flex: 1, backgroundColor: theme.menu.navMenu.item.backgroundColor,
             borderRadius: 16, padding: 22
         }}>
             <TouchableOpacity style={{ alignItems: "center", flex: 1 }} onPress={pressHandler}>
@@ -46,7 +45,7 @@ export const NavMenuItem = React.memo(({ themeName, thumbnailHeight, currency, l
                         {
                             !!tags &&
                             <View style={{ position: "absolute", left: 0, right: 0, flex: 1, zIndex: 1 }}>
-                                <TagList tags={tags} language={language} />
+                                <TagList theme={theme} tags={tags} language={language} />
                             </View>
                         }
                         {
@@ -58,9 +57,9 @@ export const NavMenuItem = React.memo(({ themeName, thumbnailHeight, currency, l
                                     borderRadius: 8,
                                     paddingHorizontal: 8,
                                     paddingVertical: 4,
-                                    fontSize: theme.themes[theme.name].modifiers.item.discount.textFontSize, fontWeight: "bold",
-                                    backgroundColor: theme.themes[theme.name].menu.navMenu.item.discount.backgroundColor,
-                                    color: theme.themes[theme.name].menu.navMenu.item.discount.textColor,
+                                    fontSize: theme.modifiers.item.discount.textFontSize, fontWeight: "bold",
+                                    backgroundColor: theme.menu.navMenu.item.discount.backgroundColor,
+                                    color: theme.menu.navMenu.item.discount.textColor,
                                 }}>
                                     {
                                         node.getFormatedDiscount(true)
@@ -77,8 +76,8 @@ export const NavMenuItem = React.memo(({ themeName, thumbnailHeight, currency, l
                         </View>
                     </View>
                     <Text textBreakStrategy="simple" numberOfLines={2} ellipsizeMode="tail" style={{
-                        textAlign: "center", fontSize: theme.themes[theme.name].menu.navMenu.item.nameFontSize, marginBottom: 6, fontWeight: "bold", textTransform: "uppercase",
-                        color: theme.themes[theme.name].menu.navMenu.item.nameColor,
+                        textAlign: "center", fontSize: theme.menu.navMenu.item.nameFontSize, marginBottom: 6, fontWeight: "bold", textTransform: "uppercase",
+                        color: theme.menu.navMenu.item.nameColor,
                     }}>
                         {
                             currentContent.name
@@ -86,7 +85,7 @@ export const NavMenuItem = React.memo(({ themeName, thumbnailHeight, currency, l
                     </Text>
                     {/* <Text textBreakStrategy="simple" numberOfLines={2} ellipsizeMode="tail" style={{
                         textAlign: "center",
-                        fontSize: theme.themes[theme.name].menu.navMenu.item.descriptionFontSize, color: theme.themes[theme.name].menu.navMenu.item.descriptionColor, textTransform: "uppercase",
+                        fontSize: theme.menu.navMenu.item.descriptionFontSize, color: theme.menu.navMenu.item.descriptionColor, textTransform: "uppercase",
                         marginBottom: 12
                     }}>
                         {
@@ -99,12 +98,12 @@ export const NavMenuItem = React.memo(({ themeName, thumbnailHeight, currency, l
                         ?
                         <View style={{
                             borderStyle: "solid", borderWidth: 0.5, borderRadius: 5, alignItems: "center",
-                            justifyContent: "center", borderColor: theme.themes[theme.name].menu.navMenu.item.price.borderColor,
+                            justifyContent: "center", borderColor: theme.menu.navMenu.item.price.borderColor,
                             marginBottom: 12
                         }}>
                             <Text style={{
-                                textAlign: "center", fontSize: theme.themes[theme.name].menu.navMenu.item.price.textFontSize, paddingTop: 6, paddingBottom: 6, paddingLeft: 14,
-                                paddingRight: 14, color: theme.themes[theme.name].menu.navMenu.item.price.textColor
+                                textAlign: "center", fontSize: theme.menu.navMenu.item.price.textFontSize, paddingTop: 6, paddingBottom: 6, paddingLeft: 14,
+                                paddingRight: 14, color: theme.menu.navMenu.item.price.textColor
                             }}>
                                 {
                                     node.getFormatedPrice(true)

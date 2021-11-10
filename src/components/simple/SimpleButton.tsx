@@ -11,6 +11,7 @@ interface ISimpleButtonProps {
     textStyle?: StyleProp<TextStyle>;
     textStyleDisabled?: StyleProp<TextStyle>;
     onPress: () => void;
+    children?: JSX.Element;
 }
 
 interface IStyles {
@@ -19,13 +20,13 @@ interface IStyles {
     sText: StyleProp<TextStyle>;
 }
 
-export const SimpleButton = React.memo(({ title, style, styleDisabled, textStyle, textStyleDisabled, styleView, styleViewDisabled,
+export const SimpleButton = React.memo(({ children, title, style, styleDisabled, textStyle, textStyleDisabled, styleView, styleViewDisabled,
     disabled = false, onPress }: ISimpleButtonProps) => {
     const [styles, setStyles] = useState<IStyles>({} as IStyles);
 
     useEffect(() => {
         let sView: StyleProp<ViewStyle> = { borderRadius: 3, overflow: "hidden", opacity: disabled ? 0.35 : 1, ...styleView as any };
-        let sLayout: StyleProp<ViewStyle> = { paddingLeft: 22, paddingRight: 22, paddingTop: 16, paddingBottom: 16, ...style as any };
+        let sLayout: StyleProp<ViewStyle> = { flexDirection: "row", alignItems: "center", paddingHorizontal: 22, paddingVertical: 16, ...style as any };
         let sText: StyleProp<TextStyle> = { fontSize: 14, fontWeight: "bold", ...textStyle as any };
 
         if (disabled) {
@@ -58,6 +59,9 @@ export const SimpleButton = React.memo(({ title, style, styleDisabled, textStyle
             <View
                 style={styles.sLayout}
             >
+                {
+                    !!children && children
+                }
                 <Text style={styles.sText}>
                     {
                         title

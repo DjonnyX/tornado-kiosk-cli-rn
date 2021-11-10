@@ -11,8 +11,6 @@ import { PositionWizardEventTypes } from "../position-wizard/events";
 import { OrderWizardEventTypes } from "./events";
 
 export class OrderWizard extends EventEmitter implements IOrderWizard {
-    static current: OrderWizard;
-
     public result: IOrder | undefined;
 
     protected _stateId: number = 0;
@@ -115,7 +113,6 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
     constructor(protected _storeId: string, protected _suffix: string, protected _currency: ICurrency,
         protected _language: ICompiledLanguage, protected _orderType: ICompiledOrderType) {
         super();
-        OrderWizard.current = this;
     }
 
     protected resetAndEdit() {
@@ -212,7 +209,7 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
         return this._positions.find(p => p.id === position.id);
     }
 
-    new(): void {
+    respawn(): void {
         this._stateId = 1;
         this._sum = 0;
 

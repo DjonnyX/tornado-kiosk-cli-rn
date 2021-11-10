@@ -1,26 +1,24 @@
 import React, { useCallback } from "react";
-import { View, Text, TouchableOpacity, GestureResponderEvent } from "react-native";
-import FastImage from "react-native-fast-image";
-import { ICurrency, ICompiledLanguage } from "@djonnyx/tornado-types";
-import { NumericStapper } from "../NumericStapper";
-import { theme } from "../../../theme";
-import { IPositionWizard } from "../../../core/interfaces";
-import { OrderWizard } from "../../../core/order/OrderWizard";
+import { View, Text, GestureResponderEvent } from "react-native";
+import { ICurrency, ICompiledLanguage, IKioskThemeData } from "@djonnyx/tornado-types";
+import { IOrderWizard, IPositionWizard } from "../../../core/interfaces";
 import { IAlertState } from "../../../interfaces";
 import { localize } from "../../../utils/localization";
 
 interface IMyOrderListItemItemProps {
+    theme: IKioskThemeData;
     stateId: number;
     menuStateId: number;
     imageHeight: number;
     position: IPositionWizard;
     currency: ICurrency;
     language: ICompiledLanguage;
+    orderWizard?: IOrderWizard;
     alertOpen: (alert: IAlertState) => void;
 }
 
-export const MyOrderListItem = React.memo(({ stateId, menuStateId, imageHeight, currency, language, position,
-    alertOpen }: IMyOrderListItemItemProps) => {
+export const MyOrderListItem = React.memo(({ theme, stateId, menuStateId, imageHeight, currency, language, position,
+    orderWizard, alertOpen }: IMyOrderListItemItemProps) => {
     const currentContent = position.__product__?.contents[language?.code];
     const currentAsset = currentContent?.resources?.icon;
 
@@ -41,7 +39,7 @@ export const MyOrderListItem = React.memo(({ stateId, menuStateId, imageHeight, 
                     {
                         title: localize(language, "kiosk_remove_product_button_accept"),
                         action: () => {
-                            OrderWizard.current.remove(position);
+                            orderWizard?.remove(position);
                         }
                     },
                     {
@@ -62,32 +60,32 @@ export const MyOrderListItem = React.memo(({ stateId, menuStateId, imageHeight, 
     return (
         <View style={{ flex: 1, paddingLeft: 24, paddingRight: 24, marginBottom: 20 }}>
             {/* <TouchableOpacity style={{ alignItems: "center" }} onPress={pressHandler}> */}
-                {/* <View style={{ flex: 1, width: "100%", height: imageHeight, marginBottom: 2, justifyContent: "flex-end" }}>
+            {/* <View style={{ flex: 1, width: "100%", height: imageHeight, marginBottom: 2, justifyContent: "flex-end" }}>
                     <FastImage style={{ width: "100%", height: "100%" }} source={{
                         uri: `file://${currentAsset?.mipmap?.x128}`,
                     }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                 </View> */}
-                <Text numberOfLines={3} ellipsizeMode="tail" style={{
-                    textAlign: "left", fontSize: theme.themes[theme.name].menu.draftOrder.item.nameFontSize, fontWeight: "bold",
-                    color: theme.themes[theme.name].menu.draftOrder.item.nameColor, textTransform: "uppercase"
+            <Text numberOfLines={3} ellipsizeMode="tail" style={{
+                textAlign: "left", fontSize: theme.menu.draftOrder.item.nameFontSize, fontWeight: "bold",
+                color: theme.menu.draftOrder.item.nameColor, textTransform: "uppercase"
+            }}>
+                {
+                    currentContent?.name
+                }
+            </Text>
+            <View style={{ marginBottom: 1 }}>
+                <Text style={{
+                    textAlign: "left",
+                    fontWeight: "bold",
+                    fontSize: theme.menu.draftOrder.item.price.textFontSize,
+                    paddingTop: 4, paddingBottom: 4, paddingLeft: 6, paddingRight: 6,
+                    color: theme.menu.draftOrder.item.price.textColor
                 }}>
                     {
-                        currentContent?.name
+                        `${position.quantity} x ${position.getFormatedSumPerOne(true)}`
                     }
                 </Text>
-                <View style={{ marginBottom: 1 }}>
-                    <Text style={{
-                        textAlign: "left",
-                        fontWeight: "bold",
-                        fontSize: theme.themes[theme.name].menu.draftOrder.item.price.textFontSize,
-                        paddingTop: 4, paddingBottom: 4, paddingLeft: 6, paddingRight: 6,
-                        color: theme.themes[theme.name].menu.draftOrder.item.price.textColor
-                    }}>
-                        {
-                            `${position.quantity} x ${position.getFormatedSumPerOne(true)}`
-                        }
-                    </Text>
-                </View>
+            </View>
             {/* </TouchableOpacity> */}
             {/* <NumericStapper
                 key={language.code}
@@ -95,30 +93,30 @@ export const MyOrderListItem = React.memo(({ stateId, menuStateId, imageHeight, 
                 animationOnInit={true}
                 buttonStyle={{
                     width: 38, height: 38, borderRadius: 10,
-                    backgroundColor: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.backgroundColor,
-                    borderColor: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.borderColor,
+                    backgroundColor: theme.menu.draftOrder.item.quantityStepper.buttons.backgroundColor,
+                    borderColor: theme.menu.draftOrder.item.quantityStepper.buttons.borderColor,
                     padding: 6
                 }}
                 disabledButtonStyle={{
                     width: 38, height: 38, borderRadius: 10,
-                    backgroundColor: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.disabledBackgroundColor,
-                    borderColor: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.disabledBorderColor,
+                    backgroundColor: theme.menu.draftOrder.item.quantityStepper.buttons.disabledBackgroundColor,
+                    borderColor: theme.menu.draftOrder.item.quantityStepper.buttons.disabledBorderColor,
                     padding: 6
                 }}
                 buttonTextStyle={{
                     fontWeight: "bold",
-                    fontSize: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.textFontSize,
-                    color: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.textColor as any,
+                    fontSize: theme.menu.draftOrder.item.quantityStepper.buttons.textFontSize,
+                    color: theme.menu.draftOrder.item.quantityStepper.buttons.textColor as any,
                 }}
                 disabledButtonTextStyle={{
                     fontWeight: "bold",
-                    fontSize: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.textFontSize,
-                    color: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.buttons.disabledTextColor as any,
+                    fontSize: theme.menu.draftOrder.item.quantityStepper.buttons.textFontSize,
+                    color: theme.menu.draftOrder.item.quantityStepper.buttons.disabledTextColor as any,
                 }}
                 textStyle={{
                     width: 44,
-                    fontSize: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.indicator.textFontSize, fontWeight: "bold",
-                    color: theme.themes[theme.name].menu.draftOrder.item.quantityStepper.indicator.textColor
+                    fontSize: theme.menu.draftOrder.item.quantityStepper.indicator.textFontSize, fontWeight: "bold",
+                    color: theme.menu.draftOrder.item.quantityStepper.indicator.textColor
                 }}
                 iconDecrement="-"
                 iconIncrement="+"

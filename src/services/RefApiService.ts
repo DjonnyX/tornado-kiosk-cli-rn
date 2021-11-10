@@ -11,6 +11,7 @@ import { AuthStore } from "../native";
 import { extractError } from "../utils/error";
 import { ApiErrorCodes } from "./ApiErrorCodes";
 import { IDataService } from "@djonnyx/tornado-refs-processor";
+import { IKioskTheme } from "@djonnyx/tornado-types";
 
 interface IRequestOptions {
     useAttempts?: boolean;
@@ -94,7 +95,7 @@ const parseResponse = (res: Response) => {
     );
 }
 
-class RefApiService<T = IKioskThemeData> implements IDataService<T> {
+class RefApiService implements IDataService<IKioskTheme> {
     private _serial: string | undefined;
 
     public set serial(v: string) {
@@ -606,7 +607,7 @@ class RefApiService<T = IKioskThemeData> implements IDataService<T> {
                 from(this.getAccessToken()).pipe(
                     switchMap(token => {
                         return from(
-                            fetch(`${config.refServer.address}/api/v1/terminals`,
+                            fetch(`${config.refServer.address}/api/v1/terminals?type.equals=${TerminalTypes.KIOSK}`,
                                 {
                                     method: "GET",
                                     headers: {
@@ -627,15 +628,15 @@ class RefApiService<T = IKioskThemeData> implements IDataService<T> {
         return response;
     }
 
-    getThemes(): Observable<Array<IAppTheme<T>>> {
+    getThemes(): Observable<Array<IAppTheme<IKioskTheme>>> {
         Log.i("RefApiService", "getThemes");
-        let response: Observable<Array<IAppTheme<T>>>;
+        let response: Observable<Array<IAppTheme<IKioskTheme>>>;
         try {
             response = request(
                 from(this.getAccessToken()).pipe(
                     switchMap(token => {
                         return from(
-                            fetch(`${config.refServer.address}/api/v1/app-themes?type=${TerminalTypes.KIOSK}`,
+                            fetch(`${config.refServer.address}/api/v1/app-themes?type.equals=${TerminalTypes.KIOSK}`,
                                 {
                                     method: "GET",
                                     headers: {
@@ -663,4 +664,4 @@ class RefApiService<T = IKioskThemeData> implements IDataService<T> {
     }
 }
 
-export const refApiService = new RefApiService<IKioskThemeData>();
+export const refApiService = new RefApiService();

@@ -1,16 +1,15 @@
-import { ICompiledLanguage, ICurrency } from "@djonnyx/tornado-types";
-import React, { Dispatch, useCallback, useEffect, useState } from "react";
+import { ICompiledLanguage, ICurrency, IKioskTheme, IKioskThemeData } from "@djonnyx/tornado-types";
+import React, { Dispatch, useCallback, useEffect, useRef, useState } from "react";
 import { View, Text, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
 import FastImage from "react-native-fast-image";
 import LinearGradient from "react-native-linear-gradient";
 import { connect } from "react-redux";
 import { PositionWizardModes } from "../../../core/enums";
-import { IPositionWizard } from "../../../core/interfaces";
-import { OrderWizard } from "../../../core/order/OrderWizard";
+import { IOrderWizard, IPositionWizard } from "../../../core/interfaces";
 import { PositionWizardEventTypes } from "../../../core/position-wizard/events";
 import { CapabilitiesSelectors, CombinedDataSelectors, MyOrderSelectors } from "../../../store/selectors";
 import { IAppState } from "../../../store/state";
-import { Icons, theme } from "../../../theme";
+import { Icons } from "../../../theme";
 import { localize } from "../../../utils/localization";
 import { GridList } from "../../layouts/GridList";
 import { ModalRollTop } from "../ModalRollTop";
@@ -27,19 +26,21 @@ interface IBound {
 }
 
 interface IModifiersEditorProps {
-    _theme?: string;
+    _theme?: IKioskTheme;
     _language?: ICompiledLanguage;
     _currency?: ICurrency;
     _orderStateId?: number;
+    _orderWizard?: IOrderWizard | undefined;
 }
 
-export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _language, _currency }: IModifiersEditorProps) => {
+export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _language, _currency, _orderWizard }: IModifiersEditorProps) => {
     const [stateId, setStateId] = useState<number>(-1);
-    const [position, setPosition] = useState<IPositionWizard | null>(OrderWizard.current.currentPosition);
+    const [position, setPosition] = useState<IPositionWizard | null>(_orderWizard?.currentPosition || null);
+    const _scrollViewRef = useRef<ScrollView>()
 
     useEffect(() => {
         setStateId(_orderStateId || 0);
-        setPosition(OrderWizard.current?.currentPosition);
+        setPosition(_orderWizard?.currentPosition || null);
     }, [_orderStateId]);
 
     useEffect(() => {
@@ -58,204 +59,213 @@ export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _la
     }, [position]);
 
     const onPreviousGroup = useCallback(() => {
-        if (!!OrderWizard.current) {
-            OrderWizard.current.gotoPreviousGroup();
+        if (!!_orderWizard) {
+            _orderWizard.gotoPreviousGroup();
         }
-    }, []);
+        _scrollViewRef?.current?.scrollTo({ x: 0, y: 0, animated: true });
+    }, [_scrollViewRef]);
 
     const onNextGroup = useCallback(() => {
-        if (!!OrderWizard.current) {
-            OrderWizard.current.gotoNextGroup();
+        if (!!_orderWizard) {
+            _orderWizard.gotoNextGroup();
         }
-    }, []);
+        _scrollViewRef?.current?.scrollTo({ x: 0, y: 0, animated: true });
+    }, [_scrollViewRef]);
 
     const onClose = useCallback(() => {
-        if (!!OrderWizard.current) {
-            OrderWizard.current.editCancel();
+        if (!!_orderWizard) {
+            _orderWizard.editCancel();
         }
     }, []);
 
+    const theme = _theme?.themes?.[_theme?.name] as IKioskThemeData;
+
     return (
-        <ModalRollTop visible={!!position}>
-            <View style={{ flex: 1, width: "100%" }}>
-                {
-                    !!position && !!_language && !!_currency &&
-                    <View style={{
-                        flex: 1, width: "100%",
-                        backgroundColor: theme.themes[theme.name].modifiers.backgroundColor,
-                    }}>
-                        <View style={{
-                            flexDirection: "row", width: "100%", maxHeight: "20%",
-                            marginBottom: 32, paddingLeft: 34, paddingRight: 34, paddingTop: 34,
-                        }}>
-                            <View style={{ flex: 1, width: "100%", flexDirection: "row", alignItems: "flex-start", marginRight: 48, marginBottom: 8, overflow: "hidden" }}>
-                                <View style={{ alignItems: "center" }}>
-                                    <FastImage style={{ width: 128, height: 128, borderRadius: 16, overflow: "hidden" }} source={{
-                                        uri: `file://${position.__product__?.contents[_language?.code]?.resources?.icon.path}`,
-                                    }} resizeMode={FastImage.resizeMode.contain}></FastImage>
-                                </View>
-                                <View style={{ flex: 1, marginLeft: 30, marginRight: 30 }}>
-                                    <Text style={{
-                                        fontSize: theme.themes[theme.name].modifiers.nameFontSize, fontWeight: "bold", color: theme.themes[theme.name].modifiers.nameColor,
-                                        textTransform: "uppercase"
-                                    }}>{
-                                            position.__product__?.contents[_language.code]?.name
-                                        }</Text>
-                                    <Text style={{
-                                        fontSize: theme.themes[theme.name].modifiers.descriptionFontSize, color: theme.themes[theme.name].modifiers.descriptionColor,
-                                        textTransform: "uppercase"
-                                    }}>{
-                                            position.__product__?.contents[_language.code]?.description
-                                        }</Text>
-                                </View>
-                                <View style={{ marginTop: -10 }}>
-                                    <Text style={{
-                                        fontSize: theme.themes[theme.name].modifiers.price.textFontSize, fontWeight: "bold",
-                                        color: theme.themes[theme.name].modifiers.price.textColor,
-                                        textTransform: "uppercase",
-                                    }}>{
-                                            position.getFormatedSumPerOne(true)
-                                        }</Text>
-                                </View>
-                            </View>
-                            <View>
-                                <CloseButton themeName={_theme} onPress={onClose}></CloseButton>
-                            </View>
-                        </View>
-                        <View style={{
-                            flex: 1, width: "100%", backgroundColor: theme.themes[theme.name].modifiers.group.backgroundColor, paddingLeft: 34, paddingRight: 34, paddingTop: 34,
-                            borderTopLeftRadius: 32, borderTopRightRadius: 32,
-                        }}>
-                            <View style={{ width: "100%", alignItems: "center", marginBottom: 10 }}>
-                                <View style={{ width: "100%", flexDirection: "row", height: 4, maxWidth: 300, }}>
-                                    {
-                                        position.groups.map((gr, i) =>
-                                            <View key={gr.index} style={{
-                                                flex: 1, marginRight: 3, height: 4,
-                                                backgroundColor: i === position?.currentGroup
-                                                    ? gr.isValid
-                                                        ? theme.themes[theme.name].modifiers.group.indicator.currentValidColor
-                                                        : theme.themes[theme.name].modifiers.group.indicator.currentInvalidColor
-                                                    : theme.themes[theme.name].modifiers.group.indicator.otherColor
-                                            }}></View>
-                                        )
-                                    }
-                                </View>
-                            </View>
-                            <View style={{ width: "100%", flexDirection: "row", marginBottom: -40, zIndex: 2 }}>
-                                <SimpleButton title={
-                                    localize(_language, "kiosk_modifiers_group_prev_button")
-                                }
-                                    styleView={{ opacity: 1 }}
-                                    style={{
-                                        backgroundColor: theme.themes[theme.name].modifiers.group.buttonPrevious.backgroundColor,
-                                        borderColor: theme.themes[theme.name].modifiers.group.buttonPrevious.borderColor,
-                                        borderRadius: 8, padding: 20
-                                    }}
-                                    styleDisabled={{
-                                        backgroundColor: theme.themes[theme.name].modifiers.group.buttonPrevious.disabledBackgroundColor,
-                                        borderRadius: 8, borderWidth: 2,
-                                        borderColor: theme.themes[theme.name].modifiers.group.buttonPrevious.disabledBorderColor,
-                                    }}
-                                    textStyle={{
-                                        fontWeight: "bold",
-                                        color: theme.themes[theme.name].modifiers.group.buttonPrevious.textColor,
-                                        fontSize: theme.themes[theme.name].modifiers.group.buttonPrevious.textFontSize,
-                                    }}
-                                    textStyleDisabled={{
-                                        fontWeight: "bold",
-                                        color: theme.themes[theme.name].modifiers.group.buttonPrevious.disabledTextColor,
-                                        fontSize: theme.themes[theme.name].modifiers.group.buttonPrevious.textFontSize,
-                                    }}
-                                    disabled={position.currentGroup === 0} onPress={onPreviousGroup}></SimpleButton>
-                                <View style={{ flex: 1 }}>
-                                    <Text style={{
-                                        fontSize: 24, fontWeight: "bold", color: theme.themes[theme.name].modifiers.group.nameColor,
-                                        textAlign: "center",
-                                        textTransform: "uppercase",
-                                        marginBottom: 6,
-                                    }}>{
-                                            position.groups[position.currentGroup].__node__.__rawNode__.content?.contents[_language.code]?.name
-                                        }</Text>
-                                    <Text style={{
-                                        fontSize: 14,
-                                        color: position.groups[position.currentGroup].isValid
-                                            ? theme.themes[theme.name].modifiers.group.descriptionColor
-                                            : theme.themes[theme.name].modifiers.group.descriptionInvalidColor,
-                                        textAlign: "center", textTransform: "uppercase",
-                                    }}>{
-                                            position.groups[position.currentGroup].__node__.__rawNode__.content?.contents[_language.code]?.description
-                                        }</Text>
-                                </View>
-                                <SimpleButton title={
-                                    position.currentGroup === position.groups.length - 1
-                                        ? localize(_language, "kiosk_modifiers_group_done_button")
-                                        : localize(_language, "kiosk_modifiers_group_next_button")
-                                }
-                                    styleView={{ opacity: 1 }}
-                                    style={{
-                                        backgroundColor: theme.themes[theme.name].modifiers.group.buttonNext.backgroundColor,
-                                        borderColor: theme.themes[theme.name].modifiers.group.buttonNext.borderColor,
-                                        borderRadius: 8, padding: 20
-                                    }}
-                                    styleDisabled={{
-                                        backgroundColor: theme.themes[theme.name].modifiers.group.buttonNext.disabledBackgroundColor,
-                                        borderRadius: 8, borderWidth: 2,
-                                        borderColor: theme.themes[theme.name].modifiers.group.buttonNext.disabledBorderColor,
-                                    }}
-                                    textStyle={{
-                                        fontWeight: "bold",
-                                        color: theme.themes[theme.name].modifiers.group.buttonNext.textColor,
-                                        fontSize: theme.themes[theme.name].modifiers.group.buttonNext.textFontSize,
-                                    }}
-                                    textStyleDisabled={{
-                                        fontWeight: "bold",
-                                        color: theme.themes[theme.name].modifiers.group.buttonNext.disabledTextColor,
-                                        fontSize: theme.themes[theme.name].modifiers.group.buttonNext.textFontSize,
-                                    }}
-                                    disabled={!position.groups[position.currentGroup].isValid} onPress={onNextGroup}></SimpleButton>
-                            </View>
-                            <View style={{ flex: 1, width: "100%" }}>
-                                <LinearGradient
-                                    colors={theme.themes[theme.name].modifiers.group.header.backgroundColor}
-                                    style={{ display: "flex", position: "absolute", width: "100%", height: 96, zIndex: 1 }}
-                                >
-                                </LinearGradient>
-                                <SafeAreaView style={{
-                                    flex: 1, width: "100%",
+        <>
+            {
+                !!theme &&
+                <ModalRollTop theme={theme} visible={!!position}>
+                    <View style={{ flex: 1, width: "100%" }}>
+                        {
+                            !!position && !!_language && !!_currency &&
+                            <View style={{
+                                flex: 1, width: "100%",
+                                backgroundColor: theme.modifiers.backgroundColor,
+                            }}>
+                                <View style={{
+                                    flexDirection: "row", width: "100%", maxHeight: "20%",
+                                    marginBottom: 32, paddingLeft: 34, paddingRight: 34, paddingTop: 34,
                                 }}>
-                                    <ScrollView style={{ flex: 1, marginTop: 68 }} persistentScrollbar>
-                                        <GridList style={{ flex: 1 }} disbleStartAnimation
-                                            padding={10} spacing={6} data={position.groups[position.currentGroup].positions}
-                                            itemDimension={MODIFIER_ITEM_WIDTH} animationSkipFrames={10} renderItem={({ item }) => {
-                                                return <ModifierListItem key={item.id} themeName={_theme} position={item} currency={_currency} language={_language}
-                                                    thumbnailHeight={128} stateId={item.stateId}></ModifierListItem>
+                                    <View style={{ flex: 1, width: "100%", flexDirection: "row", alignItems: "flex-start", marginRight: 48, marginBottom: 8, overflow: "hidden" }}>
+                                        <View style={{ alignItems: "center" }}>
+                                            <FastImage style={{ width: 128, height: 128, borderRadius: 16, overflow: "hidden" }} source={{
+                                                uri: `file://${position.__product__?.contents[_language?.code]?.resources?.icon.path}`,
+                                            }} resizeMode={FastImage.resizeMode.contain}></FastImage>
+                                        </View>
+                                        <View style={{ flex: 1, marginLeft: 30, marginRight: 30 }}>
+                                            <Text style={{
+                                                fontSize: theme.modifiers.nameFontSize, fontWeight: "bold", color: theme.modifiers.nameColor,
+                                                textTransform: "uppercase"
+                                            }}>{
+                                                    position.__product__?.contents[_language.code]?.name
+                                                }</Text>
+                                            <Text style={{
+                                                fontSize: theme.modifiers.descriptionFontSize, color: theme.modifiers.descriptionColor,
+                                                textTransform: "uppercase"
+                                            }}>{
+                                                    position.__product__?.contents[_language.code]?.description
+                                                }</Text>
+                                        </View>
+                                        <View style={{ marginTop: -10 }}>
+                                            <Text style={{
+                                                fontSize: theme.modifiers.price.textFontSize, fontWeight: "bold",
+                                                color: theme.modifiers.price.textColor,
+                                                textTransform: "uppercase",
+                                            }}>{
+                                                    position.getFormatedSumPerOne(true)
+                                                }</Text>
+                                        </View>
+                                    </View>
+                                    <View>
+                                        <CloseButton theme={theme} onPress={onClose}></CloseButton>
+                                    </View>
+                                </View>
+                                <View style={{
+                                    flex: 1, width: "100%", backgroundColor: theme.modifiers.group.backgroundColor, paddingLeft: 34, paddingRight: 34, paddingTop: 34,
+                                    borderTopLeftRadius: 32, borderTopRightRadius: 32,
+                                }}>
+                                    <View style={{ width: "100%", alignItems: "center", marginBottom: 10 }}>
+                                        <View style={{ width: "100%", flexDirection: "row", height: 4, maxWidth: 300, }}>
+                                            {
+                                                position.groups.map((gr, i) =>
+                                                    <View key={gr.index} style={{
+                                                        flex: 1, marginRight: 3, height: 4,
+                                                        backgroundColor: i === position?.currentGroup
+                                                            ? gr.isValid
+                                                                ? theme.modifiers.group.indicator.currentValidColor
+                                                                : theme.modifiers.group.indicator.currentInvalidColor
+                                                            : theme.modifiers.group.indicator.otherColor
+                                                    }}></View>
+                                                )
+                                            }
+                                        </View>
+                                    </View>
+                                    <View style={{ width: "100%", flexDirection: "row", marginBottom: -40, zIndex: 2 }}>
+                                        <SimpleButton title={
+                                            localize(_language, "kiosk_modifiers_group_prev_button")
+                                        }
+                                            styleView={{ opacity: 1 }}
+                                            style={{
+                                                backgroundColor: theme.modifiers.group.buttonPrevious.backgroundColor,
+                                                borderColor: theme.modifiers.group.buttonPrevious.borderColor,
+                                                borderRadius: 8, padding: 20
                                             }}
-                                            keyExtractor={(item, index) => item.id}>
-                                        </GridList>
-                                    </ScrollView>
-                                </SafeAreaView>
+                                            styleDisabled={{
+                                                backgroundColor: theme.modifiers.group.buttonPrevious.disabledBackgroundColor,
+                                                borderRadius: 8, borderWidth: 2,
+                                                borderColor: theme.modifiers.group.buttonPrevious.disabledBorderColor,
+                                            }}
+                                            textStyle={{
+                                                fontWeight: "bold",
+                                                color: theme.modifiers.group.buttonPrevious.textColor,
+                                                fontSize: theme.modifiers.group.buttonPrevious.textFontSize,
+                                            }}
+                                            textStyleDisabled={{
+                                                fontWeight: "bold",
+                                                color: theme.modifiers.group.buttonPrevious.disabledTextColor,
+                                                fontSize: theme.modifiers.group.buttonPrevious.textFontSize,
+                                            }}
+                                            disabled={position.currentGroup === 0} onPress={onPreviousGroup}></SimpleButton>
+                                        <View style={{ flex: 1 }}>
+                                            <Text style={{
+                                                fontSize: 24, fontWeight: "bold", color: theme.modifiers.group.nameColor,
+                                                textAlign: "center",
+                                                textTransform: "uppercase",
+                                                marginBottom: 6,
+                                            }}>{
+                                                    position.groups[position.currentGroup].__node__.__rawNode__.content?.contents[_language.code]?.name
+                                                }</Text>
+                                            <Text style={{
+                                                fontSize: 14,
+                                                color: position.groups[position.currentGroup].isValid
+                                                    ? theme.modifiers.group.descriptionColor
+                                                    : theme.modifiers.group.descriptionInvalidColor,
+                                                textAlign: "center", textTransform: "uppercase",
+                                            }}>{
+                                                    position.groups[position.currentGroup].__node__.__rawNode__.content?.contents[_language.code]?.description
+                                                }</Text>
+                                        </View>
+                                        <SimpleButton title={
+                                            position.currentGroup === position.groups.length - 1
+                                                ? localize(_language, "kiosk_modifiers_group_done_button")
+                                                : localize(_language, "kiosk_modifiers_group_next_button")
+                                        }
+                                            styleView={{ opacity: 1 }}
+                                            style={{
+                                                backgroundColor: theme.modifiers.group.buttonNext.backgroundColor,
+                                                borderColor: theme.modifiers.group.buttonNext.borderColor,
+                                                borderRadius: 8, padding: 20
+                                            }}
+                                            styleDisabled={{
+                                                backgroundColor: theme.modifiers.group.buttonNext.disabledBackgroundColor,
+                                                borderRadius: 8, borderWidth: 2,
+                                                borderColor: theme.modifiers.group.buttonNext.disabledBorderColor,
+                                            }}
+                                            textStyle={{
+                                                fontWeight: "bold",
+                                                color: theme.modifiers.group.buttonNext.textColor,
+                                                fontSize: theme.modifiers.group.buttonNext.textFontSize,
+                                            }}
+                                            textStyleDisabled={{
+                                                fontWeight: "bold",
+                                                color: theme.modifiers.group.buttonNext.disabledTextColor,
+                                                fontSize: theme.modifiers.group.buttonNext.textFontSize,
+                                            }}
+                                            disabled={!position.groups[position.currentGroup].isValid} onPress={onNextGroup}></SimpleButton>
+                                    </View>
+                                    <View style={{ flex: 1, width: "100%" }}>
+                                        <LinearGradient
+                                            colors={theme.modifiers.group.header.backgroundColor}
+                                            style={{ display: "flex", position: "absolute", width: "100%", height: 96, zIndex: 1 }}
+                                        >
+                                        </LinearGradient>
+                                        <SafeAreaView style={{
+                                            flex: 1, width: "100%",
+                                        }}>
+                                            <ScrollView ref={_scrollViewRef as any} style={{ flex: 1, marginTop: 68 }} persistentScrollbar>
+                                                <GridList style={{ flex: 1 }} disbleStartAnimation
+                                                    padding={10} spacing={6} data={position.groups[position.currentGroup].positions}
+                                                    itemDimension={MODIFIER_ITEM_WIDTH} animationSkipFrames={10} renderItem={({ item }) => {
+                                                        return <ModifierListItem key={item.id} theme={theme} position={item} currency={_currency} language={_language}
+                                                            thumbnailHeight={128} stateId={item.stateId}></ModifierListItem>
+                                                    }}
+                                                    keyExtractor={(item, index) => item.id}>
+                                                </GridList>
+                                            </ScrollView>
+                                        </SafeAreaView>
+                                    </View>
+                                </View>
                             </View>
-                        </View>
+                        }
                     </View>
-                }
-            </View>
-        </ModalRollTop>
+                </ModalRollTop>
+            }
+        </>
     );
 })
 
 interface ICloseButtonProps {
-    themeName: string | undefined;
+    theme: IKioskThemeData;
     onPress: () => void;
 }
 
-const CloseButton = ({ themeName, onPress }: ICloseButtonProps) => {
+const CloseButton = ({ theme, onPress }: ICloseButtonProps) => {
     return (
         <TouchableOpacity onPress={onPress}>
             <View
-                style={{ borderRadius: 16 }}
+                style={{ borderRadius: 24, backgroundColor: theme.modifiers.backgroundColor, }}
             >
-                <Icons name="Close" fill={theme.themes[theme.name].menu.backButton.iconColor} width={34} height={34} ></Icons>
+                <Icons name="Close" fill={theme.menu.backButton.iconColor} width={34} height={34} ></Icons>
             </View>
         </TouchableOpacity>
     )
@@ -263,6 +273,7 @@ const CloseButton = ({ themeName, onPress }: ICloseButtonProps) => {
 
 const mapStateToProps = (state: IAppState, ownProps: IModifiersEditorProps) => {
     return {
+        _orderWizard: MyOrderSelectors.selectWizard(state),
         _theme: CapabilitiesSelectors.selectTheme(state),
         _currency: CombinedDataSelectors.selectDefaultCurrency(state),
         _language: CapabilitiesSelectors.selectLanguage(state),

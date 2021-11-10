@@ -21,7 +21,9 @@ interface IOrderServiceProps {
     _alertOpen: (alert: IAlertState) => void;
     _setCurrentScreen: (screen: MainNavigationScreenTypes) => void;
     _setIsOrderProcessing: (value: boolean) => void;
+    _onSetOrderWizard: (orderWizard: IOrderWizard | undefined) => void;
 
+    _orderWizard?: IOrderWizard | undefined;
     _config?: ITerminalKioskConfig;
     _orderStateId?: number;
     _storeId?: string;
@@ -32,25 +34,26 @@ interface IOrderServiceProps {
 
     // self
     onNavigate?: (screen: MainNavigationScreenTypes) => void;
+    onCreate?: (orderWizard: IOrderWizard | undefined) => void;
 }
 
-export const OrderServiceContainer = React.memo(({ _orderStateId, _storeId, _config, _language, _currency, _orderType, _isOrderProcessing,
-    _setCurrentScreen, _snackOpen, _alertOpen, _onUpdateStateId, _setIsOrderProcessing, onNavigate }: IOrderServiceProps) => {
-    const [orderWizard, setOrderWizard] = useState<IOrderWizard | undefined>(undefined);
+export const OrderServiceContainer = React.memo(({ _orderStateId, _storeId, _config, _language, _currency,
+    _orderType, _isOrderProcessing, _orderWizard, _onSetOrderWizard,
+    _setCurrentScreen, _snackOpen, _alertOpen, _onUpdateStateId, _setIsOrderProcessing, onNavigate, onCreate }: IOrderServiceProps) => {
     const [previousLastPosition, setPreviousLastPosition] = useState<IPositionWizard | null>(null);
 
     useEffect(() => {
-        if (orderWizard) {
+        if (!!_orderWizard) {
             const onOrderWizardChange = () => {
-                _onUpdateStateId(orderWizard?.stateId || 0);
+                _onUpdateStateId(_orderWizard?.stateId || 0);
             }
 
-            orderWizard.addListener(OrderWizardEventTypes.CHANGE, onOrderWizardChange);
+            _orderWizard.addListener(OrderWizardEventTypes.CHANGE, onOrderWizardChange);
             return () => {
-                orderWizard.removeListener(OrderWizardEventTypes.CHANGE, onOrderWizardChange);
+                _orderWizard.removeListener(OrderWizardEventTypes.CHANGE, onOrderWizardChange);
             }
         }
-    }, [orderWizard]);
+    }, [_orderWizard]);
 
     useEffect(() => {
         const unsubscribe$ = new Subject<void>();
@@ -58,37 +61,41 @@ export const OrderServiceContainer = React.memo(({ _orderStateId, _storeId, _con
         if (_isOrderProcessing) {
             _setCurrentScreen(MainNavigationScreenTypes.PAY_STATUS);
 
-            const orderData = OrderWizard.current.toOrderData();
-            orderApiService.sendOrder(orderData).pipe(
-                take(1),
-                takeUntil(unsubscribe$),
-                finalize(() => {
-                    _setIsOrderProcessing(false);
-                })
-            ).subscribe(
-                order => {
-                    OrderWizard.current.result = order;
+            if (!!_orderWizard) {
+                const orderData = _orderWizard?.toOrderData();
+                orderApiService.sendOrder(orderData).pipe(
+                    take(1),
+                    takeUntil(unsubscribe$),
+                    finalize(() => {
+                        _setIsOrderProcessing(false);
+                    })
+                ).subscribe(
+                    order => {
+                        if (!!_orderWizard) {
+                            _orderWizard.result = order;
+                        }
 
-                    _setCurrentScreen(MainNavigationScreenTypes.PAY_CONFIRMATION);
-                },
-                err => {
-                    _setCurrentScreen(MainNavigationScreenTypes.CONFIRMATION_ORDER);
-                    _alertOpen({
-                        title: "Ошибка", message: err.message ? err.message : err, buttons: [
-                            {
-                                title: "Отмена",
-                                action: () => { }
-                            },
-                            {
-                                title: "Повторить",
-                                action: () => {
-                                    _setIsOrderProcessing(true);
+                        _setCurrentScreen(MainNavigationScreenTypes.PAY_CONFIRMATION);
+                    },
+                    err => {
+                        _setCurrentScreen(MainNavigationScreenTypes.CONFIRMATION_ORDER);
+                        _alertOpen({
+                            title: "Ошибка", message: err.message ? err.message : err, buttons: [
+                                {
+                                    title: "Отмена",
+                                    action: () => { }
+                                },
+                                {
+                                    title: "Повторить",
+                                    action: () => {
+                                        _setIsOrderProcessing(true);
+                                    }
                                 }
-                            }
-                        ]
-                    });
-                }
-            );
+                            ]
+                        });
+                    }
+                );
+            }
         }
 
         return () => {
@@ -99,24 +106,23 @@ export const OrderServiceContainer = React.memo(({ _orderStateId, _storeId, _con
 
     useEffect(() => {
         if (!!_storeId && !!_config && !!_language && !!_currency && !!_orderType) {
-
-            if (!orderWizard) {
+            if (!_orderWizard) {
                 const ow = new OrderWizard(_storeId, _config.suffix, _currency, _language, _orderType);
-                setOrderWizard(ow);
+                _onSetOrderWizard(ow);
             } else {
-                orderWizard.orderType = _orderType;
-                orderWizard.suffix = _config.suffix;
-                orderWizard.currency = _currency;
-                orderWizard.language = _language;
+                _orderWizard.orderType = _orderType;
+                _orderWizard.suffix = _config.suffix;
+                _orderWizard.currency = _currency;
+                _orderWizard.language = _language;
             }
         }
-    }, [_storeId, _config, _language, _orderType, _currency]);
+    }, [_storeId, _config, _language, _orderType, _currency, _orderWizard]);
 
     useEffect(() => {
-        if (!!OrderWizard?.current?.lastPosition && previousLastPosition !== OrderWizard.current.lastPosition) {
-            setPreviousLastPosition(OrderWizard.current.lastPosition);
+        if (!!_orderWizard?.lastPosition && previousLastPosition !== _orderWizard.lastPosition) {
+            setPreviousLastPosition(_orderWizard.lastPosition);
         }
-    }, [_orderStateId]);
+    }, [_orderStateId, _orderWizard]);
 
     useEffect(() => {
         if (!!previousLastPosition) {
@@ -133,6 +139,7 @@ export const OrderServiceContainer = React.memo(({ _orderStateId, _storeId, _con
 
 const mapStateToProps = (state: IAppState) => {
     return {
+        _orderWizard: MyOrderSelectors.selectWizard(state),
         _storeId: SystemSelectors.selectStoreId(state),
         _config: CombinedDataSelectors.selectConfig(state),
         _language: CapabilitiesSelectors.selectLanguage(state),
@@ -145,6 +152,9 @@ const mapStateToProps = (state: IAppState) => {
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => {
     return {
+        _onSetOrderWizard: (orderWizard: IOrderWizard | undefined) => {
+            dispatch(MyOrderActions.setWizard(orderWizard));
+        },
         _onUpdateStateId: (stateId: number) => {
             dispatch(MyOrderActions.updateStateId(stateId));
         },

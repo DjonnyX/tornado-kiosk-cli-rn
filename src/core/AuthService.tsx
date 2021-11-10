@@ -5,11 +5,10 @@ import { IProgress } from "@djonnyx/tornado-refs-processor/dist/DataCombiner";
 import { ExternalStorage } from "../native";
 import { assetsService, orderApiService, refApiService } from "../services";
 import { IAppState } from "../store/state";
-import { CapabilitiesActions, CombinedDataActions } from "../store/actions";
+import { CombinedDataActions } from "../store/actions";
 import { SystemActions } from "../store/actions/SystemAction";
-import { CapabilitiesSelectors, SystemSelectors } from "../store/selectors";
+import { SystemSelectors } from "../store/selectors";
 import { IDeviceInfo } from "./interfaces";
-import { theme } from "../theme";
 
 interface IAuthServiceProps {
     // store
@@ -53,13 +52,15 @@ class AuthServiceContainer extends Component<IAuthServiceProps, IAuthServiceStat
 
             refApiService.serial = orderApiService.serial = nextProps._serialNumber || "";
 
-            this.saveDeviceInfo({
-                ...this._deviceInfo,
-                serialNumber: nextProps._serialNumber,
-                terminalId: nextProps._terminalId,
-                storeId: nextProps._storeId,
-                setupStep: nextProps._setupStep,
-            });
+            if (nextProps._serialNumber !== null && nextProps._serialNumber !== undefined) {
+                this.saveDeviceInfo({
+                    ...this._deviceInfo,
+                    serialNumber: nextProps._serialNumber,
+                    terminalId: nextProps._terminalId,
+                    storeId: nextProps._storeId,
+                    setupStep: nextProps._setupStep,
+                });
+            }
         }
 
         if (super.shouldComponentUpdate) return super.shouldComponentUpdate(nextProps, nextState, nextContext);

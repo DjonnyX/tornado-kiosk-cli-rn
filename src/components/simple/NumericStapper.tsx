@@ -1,7 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, StyleProp, ViewStyle, TextStyle, Animated, Easing, Dimensions, ScaledSize, LayoutChangeEvent } from "react-native";
-import { interval, Subject } from "rxjs";
-import { take, takeUntil } from "rxjs/operators";
+import { View, Text, TouchableOpacity, StyleProp, ViewStyle, TextStyle, Animated, Easing, LayoutChangeEvent } from "react-native";
 
 interface IBound {
     x: number;
