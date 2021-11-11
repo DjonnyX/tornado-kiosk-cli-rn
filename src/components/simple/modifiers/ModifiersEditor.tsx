@@ -13,6 +13,7 @@ import { Icons } from "../../../theme";
 import { localize } from "../../../utils/localization";
 import { GridList } from "../../layouts/GridList";
 import { ModalRollTop } from "../ModalRollTop";
+import { NumericStapper } from "../NumericStapper";
 import { SimpleButton } from "../SimpleButton";
 import { ModifierListItem } from "./ModifierListItem";
 
@@ -78,6 +79,12 @@ export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _la
         }
     }, []);
 
+    const changeQuantityHandler = (qnt: number) => {
+        if (!!position) {
+            position.quantity = qnt;
+        }
+    }
+
     const theme = _theme?.themes?.[_theme?.name] as IKioskThemeData;
 
     return (
@@ -117,17 +124,79 @@ export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _la
                                                     position.__product__?.contents[_language.code]?.description
                                                 }</Text>
                                         </View>
-                                        <View style={{ }}>
+                                        <View style={{}}>
                                             <Text style={{
                                                 backgroundColor: theme.modifiers.price.backgroundColor,
-                                                paddingVertical: 14, paddingHorizontal: 28,
+                                                paddingVertical: 8, paddingHorizontal: 8,
                                                 borderRadius: 14, borderWidth: 2, borderColor: theme.modifiers.price.borderColor,
                                                 fontSize: theme.modifiers.price.textFontSize, fontWeight: "bold",
                                                 color: theme.modifiers.price.textColor,
                                                 textTransform: "uppercase",
+                                                marginBottom: 12,
+                                                textAlign: "center",
                                             }}>{
                                                     position.getFormatedSumPerOne(true)
                                                 }</Text>
+                                            <View style={{ width: 144, height: 48 }}>
+                                                <NumericStapper
+                                                    value={position.quantity}
+                                                    buttonStyle={{
+                                                        width: 48, height: 48, borderStyle: "solid", borderWidth: 1, borderRadius: 16,
+                                                        backgroundColor: theme.modifiers.item.quantityStepper.buttons.backgroundColor,
+                                                        borderColor: theme.modifiers.item.quantityStepper.buttons.borderColor,
+                                                        padding: 6
+                                                    }}
+                                                    buttonSelectedStyle={{
+                                                        width: 48, height: 48, borderRadius: 16,
+                                                        backgroundColor: theme.modifiers.item.quantityStepper.buttons.selectedBackgroundColor,
+                                                        borderColor: theme.modifiers.item.quantityStepper.buttons.selectedBackgroundColor,
+                                                        padding: 6,
+                                                        opacity: 1
+                                                    }}
+                                                    disabledButtonStyle={{
+                                                        width: 48, height: 48, borderStyle: "solid", borderWidth: 1, borderRadius: 16,
+                                                        backgroundColor: theme.modifiers.item.quantityStepper.buttons.disabledBackgroundColor,
+                                                        borderColor: theme.modifiers.item.quantityStepper.buttons.disabledBorderColor,
+                                                        padding: 6,
+                                                        opacity: 0.25
+                                                    }}
+                                                    disabledSelectedButtonStyle={{
+                                                        width: 48, height: 48, borderRadius: 16,
+                                                        backgroundColor: theme.modifiers.item.quantityStepper.buttons.disabledSelectedBackgroundColor,
+                                                        borderColor: theme.modifiers.item.quantityStepper.buttons.disabledSelectedBorderColor,
+                                                        padding: 6,
+                                                        opacity: 0.25
+                                                    }}
+                                                    buttonTextStyle={{
+                                                        fontSize: theme.modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "bold",
+                                                        color: theme.modifiers.item.quantityStepper.buttons.textColor as any,
+                                                    }}
+                                                    buttonSelectedTextStyle={{
+                                                        fontSize: theme.modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "bold",
+                                                        color: theme.modifiers.item.quantityStepper.buttons.selectedTextColor as any,
+                                                    }}
+                                                    disabledButtonTextStyle={{
+                                                        fontSize: theme.modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "bold",
+                                                        color: theme.modifiers.item.quantityStepper.buttons.disabledTextColor as any,
+                                                    }}
+                                                    disabledSelectedButtonTextStyle={{
+                                                        fontSize: theme.modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "bold",
+                                                        color: theme.modifiers.item.quantityStepper.buttons.disabledSelectedTextColor as any,
+                                                    }}
+                                                    textStyle={{
+                                                        fontSize: theme.modifiers.item.quantityStepper.indicator.textFontSize, fontWeight: "bold",
+                                                        color: theme.modifiers.item.quantityStepper.indicator.textColor
+                                                    }}
+                                                    iconDecrement="-"
+                                                    iconIncrement="+"
+                                                    onChange={changeQuantityHandler}
+                                                    formatValueFunction={(value: number) => {
+                                                        return String(value);
+                                                    }}
+                                                    min={1}
+                                                    max={position.availableQuantitiy}
+                                                />
+                                            </View>
                                         </View>
                                     </View>
                                     <View>

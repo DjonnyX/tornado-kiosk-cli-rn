@@ -1,4 +1,4 @@
-import React, { Dispatch, useCallback } from "react";
+import React, { Dispatch, useCallback, useEffect } from "react";
 import { FlatList, SafeAreaView, Text, View } from "react-native";
 import { connect } from "react-redux";
 import { StackScreenProps } from "@react-navigation/stack";
