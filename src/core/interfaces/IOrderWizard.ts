@@ -25,6 +25,7 @@ export interface IOrderWizard extends EventEmitter {
     removeViewingPosition(): void;
     closeViewingPosition(): void;
     editProduct: (productNode: MenuNode<ICompiledProduct>) => void;
+    editPosition: (productNode: IPositionWizard) => void;
     editCancel: () => void;
     findPosition: (position: IPositionWizard) => IPositionWizard | undefined;
     add: (position: IPositionWizard, isTemp?: boolean) => IPositionWizard;

@@ -24,7 +24,10 @@ export const ConfirmationOrderListItem = React.memo(({ theme, stateId, orderWiza
     const currentAsset = currentContent?.resources?.icon;
 
     const pressHandler = useCallback((e: GestureResponderEvent) => {
-        position.edit();
+        const isEditable = position.edit();
+        if (!isEditable) {
+            orderWizard?.editPosition(position);
+        }
     }, []);
 
     const setQuantity = (qnt: number) => {

@@ -254,6 +254,15 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
         }
     }
 
+    editPosition(position: IPositionWizard) {
+        if (!!position && position.groups.length === 0) {
+            // Продукт помечается для просмотра
+            this._viewingPosition = position;
+            this.update();
+            this._changeDebounse.call();
+        }
+    }
+
     // Добавление нового продукта или редактирование уже имеющегося в заказе
     addViewingProduct(): void {
         if (!!this._viewingPosition) {
