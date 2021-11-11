@@ -260,7 +260,7 @@ export const PositionDetailsContainer = React.memo(({ _theme, _orderStateId, _la
                                                             return String(value);
                                                         }}
                                                         min={0}
-                                                        max={100}
+                                                        max={position.availableQuantitiy}
                                                     />
                                                 </View>
                                             </View>

@@ -60,7 +60,7 @@ export class PositionWizard extends EventEmitter implements IPositionWizard {
     }
 
     get rests() {
-        return 10; // нужно сделать rests у продукта
+        return PositionWizard.MAX_AVAILABLE_LIMIT; // нужно сделать rests у продукта
     }
 
     get availableQuantitiy() {
