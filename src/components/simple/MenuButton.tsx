@@ -15,8 +15,9 @@ export const MenuButton = ({ theme, onPress, language }: IMenuButtonProps) => {
         <>
             {
                 !!theme &&
-                <SimpleButton title={
-                    localize(language, "kiosk_menu_back_button")
+                <SimpleButton
+                 title={
+                    "" //localize(language, "kiosk_menu_back_button")
                 }
                     styleView={{ opacity: 1 }}
                     style={{

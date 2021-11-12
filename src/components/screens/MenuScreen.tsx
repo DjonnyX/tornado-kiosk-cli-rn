@@ -2,7 +2,7 @@ import React, { Dispatch, useState, useCallback, useEffect } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
 import { View, Dimensions, ScaledSize, LayoutChangeEvent } from "react-native";
 import { connect } from "react-redux";
-import { ICurrency, ICompiledLanguage, ICompiledOrderType, ICompiledProduct, IKioskTheme } from "@djonnyx/tornado-types";
+import { ICurrency, ICompiledLanguage, ICompiledOrderType, ICompiledProduct, IKioskTheme, ICompiledTag } from "@djonnyx/tornado-types";
 import { MainNavigationScreenTypes } from "../navigation";
 import { IAppState } from "../../store/state";
 import { CombinedDataSelectors, MenuSelectors, MyOrderSelectors } from "../../store/selectors";
@@ -25,6 +25,7 @@ interface IMenuSelfProps {
     _orderTypes: Array<ICompiledOrderType>;
     _defaultCurrency: ICurrency;
     _menuStateId: number;
+    _tags: Array<ICompiledTag>;
     _language: ICompiledLanguage;
     _orderType: ICompiledOrderType;
     _orderStateId: number;
@@ -42,7 +43,7 @@ interface IMenuSelfProps {
 
 interface IMenuProps extends StackScreenProps<any, MainNavigationScreenTypes.MENU>, IMenuSelfProps { }
 
-const MenuScreenContainer = React.memo(({ _theme,
+const MenuScreenContainer = React.memo(({ _theme, _tags,
     _languages, _orderTypes, _defaultCurrency, _orderType, _menuWizard, _orderWizard,
     _menuStateId, _language, _orderStateId, _isShowOrderTypes, _onResetOrder, _alertOpen,
     _onChangeLanguage, _onChangeOrderType, _onAddOrderPosition, navigation,
@@ -127,7 +128,7 @@ const MenuScreenContainer = React.memo(({ _theme,
                 }}>
                     <View style={{ position: "absolute", width: menuWidth, height: "100%", zIndex: 1 }}>
                         <Menu theme={theme} menuStateId={_menuStateId} orderType={_orderType} currency={_defaultCurrency}
-                            language={_language} menu={_menuWizard.menu}
+                            language={_language} menu={_menuWizard.menu} tags={_tags}
                             width={menuWidth} height={dimentions.height} cancelOrder={cancelHandler} addPosition={addProductHandler}
                         ></Menu>
                     </View>
@@ -160,6 +161,7 @@ const mapStateToProps = (state: IAppState, ownProps: IMenuProps) => {
         _menuStateId: MenuSelectors.selectStateId(state),
         _languages: CombinedDataSelectors.selectLangages(state),
         _orderTypes: CombinedDataSelectors.selectOrderTypes(state),
+        _tags: CombinedDataSelectors.selectTags(state),
         _language: CapabilitiesSelectors.selectLanguage(state),
         _orderType: CapabilitiesSelectors.selectOrderType(state),
         _orderStateId: MyOrderSelectors.selectStateId(state),

@@ -34,6 +34,10 @@ export class MenuNode<T = ICompiledSelector | ICompiledProduct | any> extends Ev
         return this._parent;
     }
 
+    get tags() {
+        return (this.__rawNode__.content as unknown as ICompiledProduct)?.tags || [];
+    }
+
     protected _stateId: number = 0;
 
     protected _price: number = 0;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native";
-import { ICurrency, ICompiledLanguage, ICompiledOrderType, IKioskThemeData } from "@djonnyx/tornado-types";
+import { ICurrency, ICompiledLanguage, ICompiledOrderType, IKioskThemeData, ICompiledTag } from "@djonnyx/tornado-types";
 import { NavMenuItem } from "./NavMenuItem";
 import { ScrollView } from "react-native-gesture-handler";
 import { GridList } from "../../layouts/GridList";
@@ -13,15 +13,17 @@ interface INavMenuProps {
     node: MenuNode;
     currency: ICurrency;
     language: ICompiledLanguage;
+    selectedTags: Array<ICompiledTag>;
     onPress: (node: MenuNode) => void;
 }
 
-export const NavMenu = React.memo(({ theme, currency, language, node, orderType, menuStateId, onPress }: INavMenuProps) => {
+export const NavMenu = React.memo(({ theme, currency, language, node, selectedTags, orderType, menuStateId, onPress }: INavMenuProps) => {
     return (
         <SafeAreaView style={{ flex: 1, width: "100%" }}>
-            <ScrollView style={{ flex: 1, marginTop: 68 }} horizontal={false}
+            <ScrollView style={{ flex: 1, marginTop: 144 }} horizontal={false}
             >
-                <GridList style={{ flex: 1 }} disbleStartAnimation padding={10} spacing={6} data={node.activeChildren} itemDimension={196}
+                <GridList style={{ flex: 1 }} disbleStartAnimation padding={10} spacing={6} data={
+                    !selectedTags?.length ? node.activeChildren : node.activeChildren?.filter(item => selectedTags.find(tag => item.tags?.indexOf(tag) > -1))} itemDimension={196}
                     animationSkipFrames={10} renderItem={({ item }) => {
                         return <NavMenuItem key={item.id} theme={theme} stateId={item.stateId} node={item} currency={currency} language={language}
                             thumbnailHeight={128} onPress={onPress}></NavMenuItem>
