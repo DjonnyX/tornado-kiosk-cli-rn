@@ -40,7 +40,7 @@ const SnackContainer = React.memo(({ theme, message, duration, visible, onComple
                 !!theme &&
                 <NotificationModal theme={theme} visible={visible}>
                     <Text style={{
-                        fontWeight: "bold", color: theme.common.notificationAlert.textColor,
+                        fontWeight: "600", color: theme.common.notificationAlert.textColor,
                         fontSize: theme.common.notificationAlert.textFontSize
                     }}>{message}</Text>
                 </NotificationModal>

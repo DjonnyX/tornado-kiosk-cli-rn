@@ -16,14 +16,14 @@ export const AlertContent = React.memo(({ theme, title, message, buttons }: IAle
         <View style={{ flexDirection: "column" }}>
             <View style={{ flexDirection: "column", marginBottom: 32 }}>
                 <Text style={{
-                    fontWeight: "bold", textTransform: "uppercase",
+                    fontWeight: "600", textTransform: "uppercase",
                     color: theme.common.alert.titleColor,
                     fontSize: theme.common.alert.titleFontSize
                 }}>
                     {title}
                 </Text>
                 <Text style={{
-                    fontWeight: "bold",
+                    fontWeight: "600",
                     color: theme.common.alert.messageColor,
                     fontSize: theme.common.alert.messageFontSize
                 }}>
@@ -39,7 +39,7 @@ export const AlertContent = React.memo(({ theme, title, message, buttons }: IAle
                         }}
                             textStyle={{
                                 textTransform: "uppercase",
-                                fontWeight: "bold",
+                                fontWeight: "600",
                                 color: theme.common.alert.buttonTextColor,
                                 fontSize: theme.common.alert.buttonTextFontSize,
                             }} onPress={() => {

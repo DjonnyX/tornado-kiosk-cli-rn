@@ -15,6 +15,8 @@ import { MenuWizard } from "../../core/menu/MenuWizard";
 import { MenuNode } from "../../core/menu/MenuNode";
 import { localize } from "../../utils/localization";
 import { IOrderWizard } from "../../core/interfaces";
+import { uiutils } from "../../utils/ui";
+import DropShadow from "react-native-drop-shadow";
 
 interface IMenuSelfProps {
     // store props
@@ -117,6 +119,7 @@ const MenuScreenContainer = React.memo(({ _theme, _tags,
 
     const theme = _theme?.themes?.[_theme?.name];
 
+    const dropShadowStyles = uiutils.createShadow("rgba(0,0,0,0.75)", 16);
     return (
         <>
             {
@@ -124,10 +127,10 @@ const MenuScreenContainer = React.memo(({ _theme, _tags,
                 !!_menuWizard?.menu &&
                 <View onLayout={onChangeLayout} style={{
                     flexDirection: "row", width: "100%", height: "100%",
-                    backgroundColor: theme.menu.backgroundColor
+                    backgroundColor: "#fbfbfb", //theme.menu.backgroundColor
                 }}>
                     <View style={{ position: "absolute", width: menuWidth, height: "100%", zIndex: 1 }}>
-                        <Menu theme={theme} menuStateId={_menuStateId} orderType={_orderType} currency={_defaultCurrency}
+                        <Menu theme={theme} menuStateId={_menuStateId} orderStateId={_orderStateId} orderWizard={_orderWizard!} orderType={_orderType} currency={_defaultCurrency}
                             language={_language} menu={_menuWizard.menu} tags={_tags}
                             width={menuWidth} height={dimentions.height} cancelOrder={cancelHandler} addPosition={addProductHandler}
                         ></Menu>
@@ -140,11 +143,14 @@ const MenuScreenContainer = React.memo(({ _theme, _tags,
                         backgroundColor: theme.menu.draftOrder.backgroundColor,
                         top: theme.menu.draftOrder.padding,
                         borderRadius: theme.menu.draftOrder.borderRadius,
+                        borderWidth: 1, borderColor: "#f0f0f0",
                     }}>
-                        <MyOrderPanel theme={theme} isShowOrderTypes={_isShowOrderTypes} orderStateId={_orderStateId}
-                            currency={_defaultCurrency} language={_language} languages={_languages}
-                            orderType={_orderType} orderTypes={_orderTypes} orderWizard={_orderWizard}
-                            onChangeLanguage={_onChangeLanguage} onChangeOrderType={_onChangeOrderType} onConfirm={confirmHandler}></MyOrderPanel>
+                        <DropShadow style={{ flex: 1, ...dropShadowStyles }}>
+                            <MyOrderPanel theme={theme} isShowOrderTypes={_isShowOrderTypes} orderStateId={_orderStateId}
+                                currency={_defaultCurrency} language={_language} languages={_languages}
+                                orderType={_orderType} orderTypes={_orderTypes} orderWizard={_orderWizard}
+                                onChangeLanguage={_onChangeLanguage} onChangeOrderType={_onChangeOrderType} onConfirm={confirmHandler}></MyOrderPanel>
+                        </DropShadow>
                     </View>
                 </View>
             }

@@ -111,7 +111,7 @@ export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _la
                                         </View>
                                         <View style={{ flex: 1, marginLeft: 30, marginRight: 30 }}>
                                             <Text style={{
-                                                fontSize: theme.modifiers.nameFontSize, fontWeight: "bold", color: theme.modifiers.nameColor,
+                                                fontSize: theme.modifiers.nameFontSize, fontWeight: "600", color: theme.modifiers.nameColor,
                                                 textTransform: "uppercase"
                                             }}>{
                                                     position.__product__?.contents[_language.code]?.name
@@ -129,7 +129,7 @@ export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _la
                                                 backgroundColor: theme.modifiers.price.backgroundColor,
                                                 paddingVertical: 8, paddingHorizontal: 8,
                                                 borderRadius: 14, borderWidth: 2, borderColor: theme.modifiers.price.borderColor,
-                                                fontSize: theme.modifiers.price.textFontSize, fontWeight: "bold",
+                                                fontSize: theme.modifiers.price.textFontSize, fontWeight: "600",
                                                 color: theme.modifiers.price.textColor,
                                                 textTransform: "uppercase",
                                                 marginBottom: 12,
@@ -168,23 +168,23 @@ export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _la
                                                         opacity: 0.25
                                                     }}
                                                     buttonTextStyle={{
-                                                        fontSize: theme.modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "bold",
+                                                        fontSize: theme.modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "600",
                                                         color: theme.modifiers.item.quantityStepper.buttons.textColor as any,
                                                     }}
                                                     buttonSelectedTextStyle={{
-                                                        fontSize: theme.modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "bold",
+                                                        fontSize: theme.modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "600",
                                                         color: theme.modifiers.item.quantityStepper.buttons.selectedTextColor as any,
                                                     }}
                                                     disabledButtonTextStyle={{
-                                                        fontSize: theme.modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "bold",
+                                                        fontSize: theme.modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "600",
                                                         color: theme.modifiers.item.quantityStepper.buttons.disabledTextColor as any,
                                                     }}
                                                     disabledSelectedButtonTextStyle={{
-                                                        fontSize: theme.modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "bold",
+                                                        fontSize: theme.modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "600",
                                                         color: theme.modifiers.item.quantityStepper.buttons.disabledSelectedTextColor as any,
                                                     }}
                                                     textStyle={{
-                                                        fontSize: theme.modifiers.item.quantityStepper.indicator.textFontSize, fontWeight: "bold",
+                                                        fontSize: theme.modifiers.item.quantityStepper.indicator.textFontSize, fontWeight: "600",
                                                         color: theme.modifiers.item.quantityStepper.indicator.textColor
                                                     }}
                                                     iconDecrement="-"
@@ -239,19 +239,19 @@ export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _la
                                                 borderColor: theme.modifiers.group.buttonPrevious.disabledBorderColor,
                                             }}
                                             textStyle={{
-                                                fontWeight: "bold",
+                                                fontWeight: "600",
                                                 color: theme.modifiers.group.buttonPrevious.textColor,
                                                 fontSize: theme.modifiers.group.buttonPrevious.textFontSize,
                                             }}
                                             textStyleDisabled={{
-                                                fontWeight: "bold",
+                                                fontWeight: "600",
                                                 color: theme.modifiers.group.buttonPrevious.disabledTextColor,
                                                 fontSize: theme.modifiers.group.buttonPrevious.textFontSize,
                                             }}
                                             disabled={position.currentGroup === 0} onPress={onPreviousGroup}></SimpleButton>
                                         <View style={{ flex: 1 }}>
                                             <Text style={{
-                                                fontSize: 24, fontWeight: "bold", color: theme.modifiers.group.nameColor,
+                                                fontSize: 24, fontWeight: "600", color: theme.modifiers.group.nameColor,
                                                 textAlign: "center",
                                                 textTransform: "uppercase",
                                                 marginBottom: 6,
@@ -285,12 +285,12 @@ export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _la
                                                 borderColor: theme.modifiers.group.buttonNext.disabledBorderColor,
                                             }}
                                             textStyle={{
-                                                fontWeight: "bold",
+                                                fontWeight: "600",
                                                 color: theme.modifiers.group.buttonNext.textColor,
                                                 fontSize: theme.modifiers.group.buttonNext.textFontSize,
                                             }}
                                             textStyleDisabled={{
-                                                fontWeight: "bold",
+                                                fontWeight: "600",
                                                 color: theme.modifiers.group.buttonNext.disabledTextColor,
                                                 fontSize: theme.modifiers.group.buttonNext.textFontSize,
                                             }}

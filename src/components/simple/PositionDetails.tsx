@@ -166,7 +166,7 @@ export const PositionDetailsContainer = React.memo(({ _theme, _orderStateId, _la
                                         }}>
                                             <Text style={{
                                                 textAlign: "center",
-                                                fontSize: theme.details.frame.nameFontSize, fontWeight: "bold", color: theme.details.frame.nameColor,
+                                                fontSize: theme.details.frame.nameFontSize, fontWeight: "600", color: theme.details.frame.nameColor,
                                                 textTransform: "uppercase", marginBottom: 22,
                                             }}>{
                                                     position.__product__?.contents[_language.code]?.name
@@ -188,7 +188,7 @@ export const PositionDetailsContainer = React.memo(({ _theme, _orderStateId, _la
                                                     backgroundColor: theme.details.frame.price.backgroundColor,
                                                     paddingVertical: 14, paddingHorizontal: 28,
                                                     borderRadius: 14, borderWidth: 2, borderColor: theme.details.frame.price.borderColor,
-                                                    fontSize: theme.details.frame.price.textFontSize, fontWeight: "bold",
+                                                    fontSize: theme.details.frame.price.textFontSize, fontWeight: "600",
                                                     color: theme.details.frame.price.textColor,
                                                     textTransform: "uppercase",
                                                 }}>{
@@ -234,23 +234,23 @@ export const PositionDetailsContainer = React.memo(({ _theme, _orderStateId, _la
                                                             opacity: 0.25
                                                         }}
                                                         buttonTextStyle={{
-                                                            fontSize: theme.details.frame.quantityStepper.buttons.textFontSize, fontWeight: "bold",
+                                                            fontSize: theme.details.frame.quantityStepper.buttons.textFontSize, fontWeight: "600",
                                                             color: theme.details.frame.quantityStepper.buttons.textColor as any,
                                                         }}
                                                         buttonSelectedTextStyle={{
-                                                            fontSize: theme.details.frame.quantityStepper.buttons.textFontSize, fontWeight: "bold",
+                                                            fontSize: theme.details.frame.quantityStepper.buttons.textFontSize, fontWeight: "600",
                                                             color: theme.details.frame.quantityStepper.buttons.selectedTextColor as any,
                                                         }}
                                                         disabledButtonTextStyle={{
-                                                            fontSize: theme.details.frame.quantityStepper.buttons.textFontSize, fontWeight: "bold",
+                                                            fontSize: theme.details.frame.quantityStepper.buttons.textFontSize, fontWeight: "600",
                                                             color: theme.details.frame.quantityStepper.buttons.disabledTextColor as any,
                                                         }}
                                                         disabledSelectedButtonTextStyle={{
-                                                            fontSize: theme.details.frame.quantityStepper.buttons.textFontSize, fontWeight: "bold",
+                                                            fontSize: theme.details.frame.quantityStepper.buttons.textFontSize, fontWeight: "600",
                                                             color: theme.details.frame.quantityStepper.buttons.disabledSelectedTextColor as any,
                                                         }}
                                                         textStyle={{
-                                                            fontSize: theme.details.frame.quantityStepper.indicator.textFontSize, fontWeight: "bold",
+                                                            fontSize: theme.details.frame.quantityStepper.indicator.textFontSize, fontWeight: "600",
                                                             color: theme.details.frame.quantityStepper.indicator.textColor
                                                         }}
                                                         iconDecrement="-"
@@ -291,14 +291,14 @@ export const PositionDetailsContainer = React.memo(({ _theme, _orderStateId, _la
                                                     textStyle={{
                                                         width: "100%",
                                                         textAlign: "center",
-                                                        fontWeight: "bold",
+                                                        fontWeight: "600",
                                                         color: theme.details.frame.buttonApply.textColor,
                                                         fontSize: theme.details.frame.buttonApply.textFontSize,
                                                     }}
                                                     textStyleDisabled={{
                                                         width: "100%",
                                                         textAlign: "center",
-                                                        fontWeight: "bold",
+                                                        fontWeight: "600",
                                                         color: theme.details.frame.buttonApply.disabledTextColor,
                                                         fontSize: theme.details.frame.buttonApply.textFontSize,
                                                     }}
@@ -327,14 +327,14 @@ export const PositionDetailsContainer = React.memo(({ _theme, _orderStateId, _la
                                                         textStyle={{
                                                             width: "100%",
                                                             textAlign: "center",
-                                                            fontWeight: "bold",
+                                                            fontWeight: "600",
                                                             color: theme.details.frame.buttonDelete.textColor,
                                                             fontSize: theme.details.frame.buttonDelete.textFontSize,
                                                         }}
                                                         textStyleDisabled={{
                                                             width: "100%",
                                                             textAlign: "center",
-                                                            fontWeight: "bold",
+                                                            fontWeight: "600",
                                                             color: theme.details.frame.buttonDelete.disabledTextColor,
                                                             fontSize: theme.details.frame.buttonDelete.textFontSize,
                                                         }}

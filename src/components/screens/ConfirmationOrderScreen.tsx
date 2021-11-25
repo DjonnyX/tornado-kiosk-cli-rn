@@ -86,7 +86,7 @@ const ConfirmationOrderScreenContainer = React.memo(({ _theme, _language, _banne
                                     borderRadius: 16, padding: 20, height: 96, justifyContent: "center"
                                 }}
                                 textStyle={{
-                                    textAlign: "center", fontWeight: "bold",
+                                    textAlign: "center", fontWeight: "600",
                                     color: theme.confirmation.backButton.textColor,
                                     fontSize: theme.confirmation.backButton.textFontSize,
                                     textTransform: "uppercase"
@@ -95,7 +95,7 @@ const ConfirmationOrderScreenContainer = React.memo(({ _theme, _language, _banne
                             <View style={{ flex: 1, alignContent: "center", justifyContent: "center" }}>
                                 <Text style={{
                                     fontSize: theme.confirmation.summaryPrice.textFontSize,
-                                    fontWeight: "bold",
+                                    fontWeight: "600",
                                     color: theme.confirmation.summaryPrice.textColor,
                                     textAlign: "center",
                                     textTransform: "uppercase"
@@ -116,7 +116,7 @@ const ConfirmationOrderScreenContainer = React.memo(({ _theme, _language, _banne
                                 }}
                                 textStyle={{
                                     textAlign: "center",
-                                    fontWeight: "bold", color: theme.confirmation.nextButton.textColor,
+                                    fontWeight: "600", color: theme.confirmation.nextButton.textColor,
                                     fontSize: theme.confirmation.nextButton.textFontSize, textTransform: "uppercase"
                                 }}
                                 onPress={onNext}></SimpleButton>

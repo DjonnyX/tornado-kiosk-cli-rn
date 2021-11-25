@@ -48,7 +48,7 @@ export const LanguagePicker = React.memo(({ theme, language, languages, onSelect
                                         uri: `file://${item?.resources?.main?.path}`,
                                     }} resizeMode={FastImage.resizeMode.cover}></FastImage>
                                     <Text style={{
-                                        fontWeight: "bold",
+                                        fontWeight: "600",
                                         color: theme.languageModal.item.textColor,
                                         fontSize: theme.languageModal.item.textFontSize,
                                     }}>

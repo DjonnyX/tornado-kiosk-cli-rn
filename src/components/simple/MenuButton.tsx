@@ -22,10 +22,11 @@ export const MenuButton = ({ theme, onPress, language }: IMenuButtonProps) => {
                     styleView={{ opacity: 1 }}
                     style={{
                         backgroundColor: theme.menu.backButton.backgroundColor,
-                        borderRadius: 8, padding: 20
+                        borderRadius: 8,
+                        marginLeft: -12,
                     }}
                     textStyle={{
-                        fontWeight: "bold",
+                        fontWeight: "600",
                         textTransform: "uppercase",
                         color: theme.menu.backButton.textColor,
                         fontSize: theme.menu.backButton.textFontSize,

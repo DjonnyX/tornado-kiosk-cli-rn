@@ -23,7 +23,7 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
-    "@djonnyx/tornado-assets-store": "^0.1.14",
+    "@djonnyx/tornado-assets-store": "^0.1.15",
     "@djonnyx/tornado-refs-processor": "^1.2.33",
     "@djonnyx/tornado-types": "^1.6.18",
     "@react-native-community/masked-view": "^0.1.11",
@@ -36,6 +36,7 @@
     "eventemitter3": "^3.1.2",
     "react": "16.13.1",
     "react-native": "0.63.4",
+    "react-native-drop-shadow": "0.0.2",
     "react-native-fast-image": "^8.5.11",
     "react-native-gesture-handler": "^1.10.3",
     "react-native-linear-gradient": "^2.5.6",

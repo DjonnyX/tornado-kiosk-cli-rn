@@ -18,6 +18,7 @@ export interface IOrderWizard extends EventEmitter {
     currency: ICurrency;
     language: ICompiledLanguage;
     orderType: ICompiledOrderType;
+    contains(productNode: MenuNode<ICompiledProduct>): boolean;
     respawn(): void;
     gotoPreviousGroup(): void;
     gotoNextGroup(): void;

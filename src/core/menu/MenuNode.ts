@@ -233,6 +233,10 @@ export class MenuNode<T = ICompiledSelector | ICompiledProduct | any> extends Ev
         this._stateId++;
     }
 
+    getPortion(): string {
+        return String((this.__rawNode__.content as unknown as ICompiledProduct)?.weight);
+    }
+
     getFormatedPrice(withCurrency: boolean = false): string {
         let s = priceFormatter(this._price);
         if (withCurrency) {

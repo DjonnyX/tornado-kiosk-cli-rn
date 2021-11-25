@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { ICompiledLanguage, ICompiledTag, IKioskThemeData } from "@djonnyx/tornado-types";
+import Color from "color";
 
 interface ITagListProps {
     theme: IKioskThemeData;
@@ -36,7 +37,7 @@ export const TagsPanel = React.memo(({ theme, tags, language, onSelect }: ITagLi
     return (<View style={{ flexDirection: "row", flexWrap: "wrap", width: "100%" }}>
         {
             tags?.map(tag =>
-                <View style={{ marginHorizontal: 3, marginVertical: 3 }}>
+                <View key={tag.id} style={{ marginHorizontal: 3, marginVertical: 3 }}>
                     <TagButton theme={theme} language={language} tag={tag} onSelect={onSelectHandler}></TagButton>
                 </View>
             )
@@ -65,12 +66,14 @@ const TagButton = React.memo(({ theme, tag, language, onSelect }: ITagButtonProp
         setIsSelected(!isSelected);
     }, [isSelected]);
 
+    const backgroundColor = isSelected ? tag?.contents[language.code]?.color : "rgb(220,220,220)";
 
     return (
         <TouchableOpacity style={{
-            paddingVertical: 6, paddingHorizontal: 12,
+            alignItems: "center",
+            paddingVertical: 6, paddingHorizontal: 16,
             borderRadius: 32,
-            backgroundColor: isSelected ? tag?.contents[language.code]?.color : "rgb(220,220,220)"
+            backgroundColor,
         }} onPress={onPressHandler}>
             <View
                 style={{
@@ -78,8 +81,11 @@ const TagButton = React.memo(({ theme, tag, language, onSelect }: ITagButtonProp
                 }}
             >
                 <Text style={{
-                    color: "black"/*theme.menu.tagsPanel.tag.textColor*/,
+                    fontWeight: "500",
+                    textTransform: "lowercase",
+                    color: Color(backgroundColor).isLight() ? "#232731" : "white"/*theme.menu.tagsPanel.tag.textColor*/,
                     fontSize: 16/*theme.menu.tagsPanel.tag.textSize*/,
+                    lineHeight: 17,
                 }}>
                     {
                         tag?.contents[language.code]?.name

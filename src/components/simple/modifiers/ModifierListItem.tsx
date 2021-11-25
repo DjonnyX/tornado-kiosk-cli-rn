@@ -63,7 +63,7 @@ export const ModifierListItem = React.memo(({ theme, thumbnailHeight, currency, 
                                 borderRadius: 8,
                                 paddingHorizontal: 8,
                                 paddingVertical: 4,
-                                fontSize: theme.modifiers.item.discount.textFontSize, fontWeight: "bold",
+                                fontSize: theme.modifiers.item.discount.textFontSize, fontWeight: "600",
                                 backgroundColor: theme.modifiers.item.discount.backgroundColor,
                                 color: theme.modifiers.item.discount.textColor,
                             }}>
@@ -82,7 +82,7 @@ export const ModifierListItem = React.memo(({ theme, thumbnailHeight, currency, 
                 <Text textBreakStrategy="simple" numberOfLines={4} ellipsizeMode="tail"
                     style={{
                         textAlign: "center", fontSize: theme.modifiers.item.nameFontFontSize, marginBottom: 6, color: theme.modifiers.item.nameColor,
-                        fontWeight: "bold", textTransform: "uppercase"
+                        fontWeight: "600", textTransform: "uppercase"
                     }}>
                     {
                         currentContent?.name
@@ -120,11 +120,11 @@ export const ModifierListItem = React.memo(({ theme, thumbnailHeight, currency, 
                         styleViewOn={{}}
                         styleViewOff={{}}
                         textStyleOn={{
-                            fontSize: theme.modifiers.item.quantitySwitch.on.textFontSize, fontWeight: "bold",
+                            fontSize: theme.modifiers.item.quantitySwitch.on.textFontSize, fontWeight: "600",
                             color: theme.modifiers.item.quantitySwitch.on.textColor,
                         }}
                         textStyleOff={{
-                            fontSize: theme.modifiers.item.quantitySwitch.off.textFontSize, fontWeight: "bold",
+                            fontSize: theme.modifiers.item.quantitySwitch.off.textFontSize, fontWeight: "600",
                             color: theme.modifiers.item.quantitySwitch.off.textColor,
                         }}
                         textStyleOnDisabled={{}}
@@ -163,23 +163,23 @@ export const ModifierListItem = React.memo(({ theme, thumbnailHeight, currency, 
                             opacity: 0.25
                         }}
                         buttonTextStyle={{
-                            fontSize: theme.modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "bold",
+                            fontSize: theme.modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "600",
                             color: theme.modifiers.item.quantityStepper.buttons.textColor as any,
                         }}
                         buttonSelectedTextStyle={{
-                            fontSize: theme.modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "bold",
+                            fontSize: theme.modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "600",
                             color: theme.modifiers.item.quantityStepper.buttons.selectedTextColor as any,
                         }}
                         disabledButtonTextStyle={{
-                            fontSize: theme.modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "bold",
+                            fontSize: theme.modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "600",
                             color: theme.modifiers.item.quantityStepper.buttons.disabledTextColor as any,
                         }}
                         disabledSelectedButtonTextStyle={{
-                            fontSize: theme.modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "bold",
+                            fontSize: theme.modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "600",
                             color: theme.modifiers.item.quantityStepper.buttons.disabledSelectedTextColor as any,
                         }}
                         textStyle={{
-                            fontSize: theme.modifiers.item.quantityStepper.indicator.textFontSize, fontWeight: "bold",
+                            fontSize: theme.modifiers.item.quantityStepper.indicator.textFontSize, fontWeight: "600",
                             color: theme.modifiers.item.quantityStepper.indicator.textColor
                         }}
                         iconDecrement="-"

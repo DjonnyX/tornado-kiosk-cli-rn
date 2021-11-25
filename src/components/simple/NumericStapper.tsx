@@ -186,7 +186,7 @@ export const NumericStapper = React.memo(({ value = 0, iconDecrement = "-", icon
         expandAnimation = Animated.timing(controlsPos, {
             useNativeDriver: false,
             toValue: 1,
-            duration: 250,
+            duration: 100,
             easing: Easing.cubic,
             delay: 10,
         });
@@ -200,7 +200,7 @@ export const NumericStapper = React.memo(({ value = 0, iconDecrement = "-", icon
         expandAnimation = Animated.timing(controlsPos, {
             useNativeDriver: false,
             toValue: 0,
-            duration: 250,
+            duration: 100,
             easing: Easing.cubic,
             delay: 10,
         });

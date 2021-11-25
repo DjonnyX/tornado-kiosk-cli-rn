@@ -219,6 +219,10 @@ export class OrderWizard extends EventEmitter implements IOrderWizard {
         this._changeDebounse.call();
     }
 
+    contains(productNode: MenuNode<ICompiledProduct>): boolean {
+        return !!this._positions.find(pos => pos.__node__.__rawNode__.id === productNode.__rawNode__.id);
+    }
+
     editProduct(productNode: MenuNode<ICompiledProduct>) {
         const existsProduct = this._positions.find(pos => pos.__node__.__rawNode__.id === productNode.__rawNode__.id);
         if (!!existsProduct && existsProduct.groups.length === 0) {
