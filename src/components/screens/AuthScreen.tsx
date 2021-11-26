@@ -6,11 +6,11 @@ import { View, TextInput, Text } from "react-native";
 import { connect } from "react-redux";
 import { CommonActions } from "@react-navigation/native";
 import { switchMap, take, takeUntil } from "rxjs/operators";
-import { IKioskTheme, IKioskThemeData, IStore } from "@djonnyx/tornado-types";
+import { IKioskTheme, IKioskThemeData, IStore, ITerminal } from "@djonnyx/tornado-types";
 import { MainNavigationScreenTypes } from "../navigation";
 import { IAppState } from "../../store/state";
 import { CombinedDataSelectors, CapabilitiesSelectors, SystemSelectors } from "../../store/selectors";
-import { NotificationActions } from "../../store/actions";
+import { CombinedDataActions, NotificationActions } from "../../store/actions";
 import { orderApiService, refApiService } from "../../services";
 import { SystemActions } from "../../store/actions/SystemAction";
 import { SimpleSystemButton } from "../simple";
@@ -77,13 +77,27 @@ const FormSN = React.memo(({ theme, value, isProgress, onComplete }: IFormSNProp
 interface IFormTParams {
     theme: IKioskThemeData;
     stores: Array<IStore>;
+    _terminal: ITerminal | undefined;
+    _storeId: string;
     isProgress: boolean;
     onComplete: (terminalName: string, storeId: string) => void;
 }
 
-const FormTParams = React.memo(({ theme, stores, isProgress, onComplete }: IFormTParams) => {
+const FormTParams = React.memo(({ theme, stores, _storeId, _terminal, isProgress, onComplete }: IFormTParams) => {
     const [terminalName, setTerminalName] = useState<string>("");
     const [storeId, setStoreId] = useState<string>("");
+
+    useEffect(() => {
+        if (!!_terminal?.name) {
+            setTerminalName(_terminal.name);
+        }
+    }, [_terminal]);
+
+    useEffect(() => {
+        if (!!_storeId) {
+            setStoreId(_storeId);
+        }
+    }, [_storeId]);
 
     const changeTerminalNameHandler = (val: string) => {
         setTerminalName(val);
@@ -159,6 +173,7 @@ interface IAuthSelfProps {
     _onChangeSerialNumber: (serialNumber: string) => void;
     _onChangeSetupStep: (setupStep: number) => void;
     _onChangeTerminalId: (terminalId: string) => void;
+    _onChangeTerminal: (terminal: ITerminal) => void;
     _onChangeStoreId: (storeId: string) => void;
     _alertOpen: (alert: IAlertState) => void;
     _theme: IKioskTheme;
@@ -166,6 +181,7 @@ interface IAuthSelfProps {
     _serialNumber: string;
     _setupStep: number;
     _terminalId: string;
+    _terminal: ITerminal | undefined;
     _storeId: string;
     _currentScreen: MainNavigationScreenTypes | undefined;
 
@@ -174,14 +190,31 @@ interface IAuthSelfProps {
 
 interface IAuthProps extends StackScreenProps<any, MainNavigationScreenTypes.LOADING>, IAuthSelfProps { }
 
-const AuthScreenContainer = React.memo(({ _theme, _serialNumber, _setupStep, _terminalId, _storeId, navigation,
-    _alertOpen, _onChangeSerialNumber, _onChangeSetupStep, _onChangeTerminalId, _onChangeStoreId,
+const AuthScreenContainer = React.memo(({ _theme, _serialNumber, _setupStep, _terminalId, _terminal, _storeId, navigation,
+    _alertOpen, _onChangeSerialNumber, _onChangeSetupStep, _onChangeTerminalId, _onChangeTerminal, _onChangeStoreId,
 }: IAuthProps) => {
     const [stores, setStores] = useState<Array<IStore>>([]);
     const [isLicenseValid, setLicenseValid] = useState<boolean>(false);
     const [showProgressBar, setShowProgressBar] = useState<boolean>(false);
     const [retryVerificationId, setRetryVerificationId] = useState<number>(0);
     const [retryGetStores, setRetryGetStores] = useState<number>(0);
+
+    useEffect(() => {
+        if (_terminalId !== undefined) {
+            const unsubscribe$ = new Subject<void>();
+            refApiService.getTerminal(_terminalId).pipe(
+                take(1),
+                takeUntil(unsubscribe$),
+            ).subscribe(v => {
+                _onChangeTerminal(v);
+            });
+
+            return () => {
+                unsubscribe$.next();
+                unsubscribe$.complete();
+            }
+        }
+    }, [_terminalId]);
 
     useEffect(() => {
         const unsubscribe$ = new Subject<void>();
@@ -402,7 +435,8 @@ const AuthScreenContainer = React.memo(({ _theme, _serialNumber, _setupStep, _te
                             {
                                 // Enter terminal name and store
                                 _setupStep === 1 &&
-                                <FormTParams theme={theme} stores={stores} isProgress={showProgressBar} onComplete={saveParamsHandler} />
+                                <FormTParams theme={theme} stores={stores} _terminal={_terminal} _storeId={_storeId}
+                                    isProgress={showProgressBar} onComplete={saveParamsHandler} />
                             }
                         </>
                     }
@@ -428,6 +462,7 @@ const mapStateToProps = (state: IAppState, ownProps: IAuthProps) => {
         _setupStep: SystemSelectors.selectSetupStep(state),
         _terminalId: SystemSelectors.selectTerminalId(state),
         _storeId: SystemSelectors.selectStoreId(state),
+        _terminal: CombinedDataSelectors.selectTerminal(state),
     };
 };
 
@@ -441,6 +476,9 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): any => {
         },
         _onChangeTerminalId: (terminalId: string) => {
             dispatch(SystemActions.setTerminalId(terminalId));
+        },
+        _onChangeTerminal: (terminal: ITerminal) => {
+            dispatch(CombinedDataActions.setTerminal(terminal));
         },
         _onChangeStoreId: (storeId: string) => {
             dispatch(SystemActions.setStoreId(storeId));

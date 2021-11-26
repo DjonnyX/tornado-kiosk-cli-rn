@@ -211,6 +211,7 @@ class DataCollectorServiceContainer extends Component<IDataCollectorServiceProps
                     RefTypes.ADS,
                     RefTypes.TERMINALS,
                     RefTypes.THEMES,
+                    RefTypes.WEIGHT_UNITS,
                 ],
                 initialRefs: this._savedData as any,
             });

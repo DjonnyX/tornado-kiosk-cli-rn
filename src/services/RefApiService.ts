@@ -3,7 +3,7 @@ import { catchError, map, retry, retryWhen, switchMap } from "rxjs/operators";
 import { config } from "../Config";
 import {
     IRef, INode, ISelector, IProduct, ITag, IAsset, ILanguage, ITranslation, IBusinessPeriod, IOrderType, ICurrency,
-    IAppTheme, IAd, IStore, ITerminal, TerminalTypes, ILicense, IKioskThemeData, ISystemTag
+    IAppTheme, IAd, IStore, ITerminal, TerminalTypes, ILicense, IKioskThemeData, ISystemTag, IWeightUnit
 } from "@djonnyx/tornado-types";
 import { genericRetryStrategy } from "../utils/request";
 import { Log } from "./Log";
@@ -628,6 +628,35 @@ class RefApiService implements IDataService<IKioskTheme> {
         return response;
     }
 
+    getTerminal(id: string): Observable<ITerminal> {
+        Log.i("RefApiService", "getTerminal");
+        let response: Observable<ITerminal>;
+        try {
+            response = request(
+                from(this.getAccessToken()).pipe(
+                    switchMap(token => {
+                        return from(
+                            fetch(`${config.refServer.address}/api/v1/terminal/${id}`,
+                                {
+                                    method: "GET",
+                                    headers: {
+                                        "x-access-token": token,
+                                    }
+                                }
+                            )
+                        );
+                    })
+                ),
+            ).pipe(
+                switchMap(res => parseResponse(res)),
+                map(resData => resData.data),
+            );
+        } catch (err) {
+            return throwError(Error("Something went wrong"));
+        }
+        return response;
+    }
+
     getThemes(): Observable<Array<IAppTheme<IKioskTheme>>> {
         Log.i("RefApiService", "getThemes");
         let response: Observable<Array<IAppTheme<IKioskTheme>>>;
@@ -661,6 +690,37 @@ class RefApiService implements IDataService<IKioskTheme> {
 
     getSystemTags(): Observable<Array<ISystemTag>> {
         return throwError(Error("System tags not supported from client."));
+    }
+
+    getWeightUnits(): Observable<Array<IWeightUnit>> {
+        Log.i("RefApiService", "getWeightUnits");
+        let response: Observable<Array<IWeightUnit>>;
+        try {
+            response = request(
+                from(this.getAccessToken()).pipe(
+                    switchMap(token => {
+                        return from(
+                            fetch(`${config.refServer.address}/api/v1/weight-units`,
+                                {
+                                    method: "GET",
+                                    headers: {
+                                        "x-access-token": token,
+                                    },
+                                }
+                            )
+                        );
+                    })
+                ),
+            ).pipe(
+                switchMap(res => parseResponse(res)),
+                map(resData => {
+                    return resData.data;
+                }),
+            );
+        } catch (err) {
+            return throwError(Error("Something went wrong"));
+        }
+        return response;
     }
 }
 

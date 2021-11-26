@@ -233,8 +233,12 @@ export class MenuNode<T = ICompiledSelector | ICompiledProduct | any> extends Ev
         this._stateId++;
     }
 
-    getPortion(): string {
-        return String((this.__rawNode__.content as unknown as ICompiledProduct)?.weight);
+    getPortion(withUnits: boolean = true): string {
+        return `${String((this.__rawNode__.content as unknown as ICompiledProduct)?.weight)} ${withUnits ? this.getWeightUnit() : ""}`;
+    }
+
+    getWeightUnit(): string {
+        return String((this.__rawNode__.content as unknown as ICompiledProduct)?.weightUnit?.contents?.[this._language?.code]?.name) || "";
     }
 
     getFormatedPrice(withCurrency: boolean = false): string {
