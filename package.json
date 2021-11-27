@@ -23,7 +23,7 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
-    "@djonnyx/tornado-assets-store": "^0.1.16",
+    "@djonnyx/tornado-assets-store": "^0.1.18",
     "@djonnyx/tornado-refs-processor": "^1.2.35",
     "@djonnyx/tornado-types": "^1.6.27",
     "@react-native-community/masked-view": "^0.1.11",
