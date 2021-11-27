@@ -8,6 +8,7 @@ import { connect } from "react-redux";
 import { CapabilitiesSelectors, CombinedDataSelectors } from "../../store/selectors";
 import { CommonActions } from "@react-navigation/native";
 import { IKioskTheme } from "@djonnyx/tornado-types";
+import { config } from "../../Config";
 
 interface ILoadingSelfProps {
   // store props
@@ -48,7 +49,11 @@ const LoadingScreenContainer = React.memo(({ _theme, _progress, _loaded, navigat
             progress={_progress / 100}
             indeterminate={_progress === 100 || _progress === 0}
             color={theme.loading.progressBar.trackColor}></ProgressBar>
-          <Text style={{ color: theme.loading.progressBar.textColor, fontSize: theme.loading.progressBar.textFontSize }}>
+          <Text style={{
+            fontFamily: config.fontFamily,
+            color: theme.loading.progressBar.textColor,
+            fontSize: theme.loading.progressBar.textFontSize
+          }}>
             {
               _progress > 0
                 ?

@@ -1,5 +1,6 @@
 import React, { useCallback } from "react";
 import { TouchableOpacity, Text, View } from "react-native";
+import { config } from "../../Config";
 
 interface ICtrlMenuButtonProps {
     onPress: () => void;
@@ -24,7 +25,12 @@ export const CtrlMenuButton = React.memo(({ onPress, text, disabled = false, gra
                 width: "100%", height: "100%", borderRadius: 16, padding: 12, zIndex: 1
             }}
             >
-                <Text style={{ color: "#fff", fontSize: 16, fontWeight: "bold", textTransform: "uppercase" }}>
+                <Text style={{
+                    fontFamily: config.fontFamily,
+                    color: "#fff",
+                    fontSize: 16,
+                    fontWeight: "600"
+                }}>
                     {
                         text
                     }

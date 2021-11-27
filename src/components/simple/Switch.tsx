@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { View, TouchableOpacity, StyleProp, ViewStyle, TextStyle, Text, Animated, Easing, LayoutChangeEvent } from "react-native";
+import { config } from "../../Config";
 
 interface ISwitchProps {
     titleOn?: string;
@@ -44,11 +45,11 @@ export const Switch = React.memo(({ value, titleOn, titleOff,
     useEffect(() => {
         let sViewOn: StyleProp<ViewStyle> = { flex: 1, borderRadius: 3, overflow: "hidden", opacity: disabled ? 0.35 : 1, ...styleViewOn as any };
         let sLayoutOn: StyleProp<ViewStyle> = { flex: 1, flexDirection: "row", justifyContent: "space-around", paddingHorizontal: 22, paddingVertical: 16, ...styleOn as any };
-        let sTextOn: StyleProp<TextStyle> = { fontSize: 14, fontWeight: "bold", ...textStyleOn as any };
+        let sTextOn: StyleProp<TextStyle> = { fontSize: 14, fontWeight: "600", ...textStyleOn as any };
 
         let sViewOff: StyleProp<ViewStyle> = { flex: 1, borderRadius: 3, overflow: "hidden", opacity: disabled ? 0.35 : 1, ...styleViewOff as any };
         let sLayoutOff: StyleProp<ViewStyle> = { flex: 1, flexDirection: "row", justifyContent: "space-around", paddingHorizontal: 22, paddingVertical: 16, ...styleOff as any };
-        let sTextOff: StyleProp<TextStyle> = { fontSize: 14, fontWeight: "bold", ...textStyleOff as any };
+        let sTextOff: StyleProp<TextStyle> = { fontSize: 14, fontWeight: "600", ...textStyleOff as any };
 
         if (disabled) {
             if (!!styleViewOnDisabled) {
@@ -97,7 +98,7 @@ export const Switch = React.memo(({ value, titleOn, titleOff,
         animation = Animated.timing(position, {
             useNativeDriver: false,
             toValue: 0,
-            duration: 250,
+            duration: 100,
             easing: Easing.cubic,
             delay: 10,
         });
@@ -112,7 +113,7 @@ export const Switch = React.memo(({ value, titleOn, titleOff,
         animation = Animated.timing(position, {
             useNativeDriver: false,
             toValue: 1,
-            duration: 250,
+            duration: 100,
             easing: Easing.cubic,
             delay: 10,
         });
@@ -146,7 +147,10 @@ export const Switch = React.memo(({ value, titleOn, titleOff,
                     >
                         {
                             !!titleOff &&
-                            <Text style={styles.sTextOff}>
+                            <Text style={{
+                                ...styles.sTextOff as any,
+                                fontFamily: config.fontFamily,
+                            }}>
                                 {
                                     titleOff
                                 }
@@ -154,7 +158,10 @@ export const Switch = React.memo(({ value, titleOn, titleOff,
                         }
                         {
                             !!formatValueFunction &&
-                            <Text style={styles.sTextOff}>
+                            <Text style={{
+                                ...styles.sTextOff as any,
+                                fontFamily: config.fontFamily,
+                            }}>
                                 {
                                     formatValueFunction(value)
                                 }
@@ -168,7 +175,10 @@ export const Switch = React.memo(({ value, titleOn, titleOff,
                     >
                         {
                             !!titleOn &&
-                            <Text style={styles.sTextOn}>
+                            <Text style={{
+                                ...styles.sTextOn as any,
+                                fontFamily: config.fontFamily,
+                            }}>
                                 {
                                     titleOn
                                 }
@@ -176,7 +186,10 @@ export const Switch = React.memo(({ value, titleOn, titleOff,
                         }
                         {
                             !!formatValueFunction &&
-                            <Text style={styles.sTextOn}>
+                            <Text style={{
+                                ...styles.sTextOn as any,
+                                fontFamily: config.fontFamily,
+                            }}>
                                 {
                                     formatValueFunction(value)
                                 }

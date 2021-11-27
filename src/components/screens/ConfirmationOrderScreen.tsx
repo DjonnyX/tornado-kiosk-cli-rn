@@ -13,6 +13,7 @@ import { ConfirmationOrderListItem } from "../simple/confirmation-order-list"
 import { IAlertState } from "../../interfaces";
 import { localize } from "../../utils/localization";
 import { IOrderWizard } from "../../core/interfaces";
+import { config } from "../../Config";
 
 interface IConfirmationOrderScreenSelfProps {
     // store props
@@ -86,19 +87,18 @@ const ConfirmationOrderScreenContainer = React.memo(({ _theme, _language, _banne
                                     borderRadius: 16, padding: 20, height: 96, justifyContent: "center"
                                 }}
                                 textStyle={{
-                                    textAlign: "center", fontWeight: "bold",
+                                    textAlign: "center", fontWeight: "600",
                                     color: theme.confirmation.backButton.textColor,
                                     fontSize: theme.confirmation.backButton.textFontSize,
-                                    textTransform: "uppercase"
                                 }}
                                 onPress={onPrevious}></SimpleButton>
                             <View style={{ flex: 1, alignContent: "center", justifyContent: "center" }}>
                                 <Text style={{
+                                    fontFamily: config.fontFamily,
                                     fontSize: theme.confirmation.summaryPrice.textFontSize,
-                                    fontWeight: "bold",
+                                    fontWeight: "600",
                                     color: theme.confirmation.summaryPrice.textColor,
                                     textAlign: "center",
-                                    textTransform: "uppercase"
                                 }}>
                                     {
                                         localize(_language, "kiosk_order_sum", _orderWizard?.getFormatedSum(true) || "")
@@ -116,8 +116,8 @@ const ConfirmationOrderScreenContainer = React.memo(({ _theme, _language, _banne
                                 }}
                                 textStyle={{
                                     textAlign: "center",
-                                    fontWeight: "bold", color: theme.confirmation.nextButton.textColor,
-                                    fontSize: theme.confirmation.nextButton.textFontSize, textTransform: "uppercase"
+                                    fontWeight: "600", color: theme.confirmation.nextButton.textColor,
+                                    fontSize: theme.confirmation.nextButton.textFontSize,
                                 }}
                                 onPress={onNext}></SimpleButton>
                         </View>

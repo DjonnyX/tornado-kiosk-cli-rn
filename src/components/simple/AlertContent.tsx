@@ -1,6 +1,7 @@
 import { IKioskThemeData } from "@djonnyx/tornado-types";
 import React from "react";
 import { View, Text } from "react-native";
+import { config } from "../../Config";
 import { IAlertButton } from "../../interfaces";
 import { SimpleButton } from "./SimpleButton";
 
@@ -16,14 +17,16 @@ export const AlertContent = React.memo(({ theme, title, message, buttons }: IAle
         <View style={{ flexDirection: "column" }}>
             <View style={{ flexDirection: "column", marginBottom: 32 }}>
                 <Text style={{
-                    fontWeight: "bold", textTransform: "uppercase",
+                    fontFamily: config.fontFamily,
+                    fontWeight: "600",
                     color: theme.common.alert.titleColor,
                     fontSize: theme.common.alert.titleFontSize
                 }}>
                     {title}
                 </Text>
                 <Text style={{
-                    fontWeight: "bold",
+                    fontFamily: config.fontFamily,
+                    fontWeight: "600",
                     color: theme.common.alert.messageColor,
                     fontSize: theme.common.alert.messageFontSize
                 }}>
@@ -38,8 +41,7 @@ export const AlertContent = React.memo(({ theme, title, message, buttons }: IAle
                             backgroundColor: theme.common.alert.buttonColor, marginLeft: i > 0 ? 12 : 0
                         }}
                             textStyle={{
-                                textTransform: "uppercase",
-                                fontWeight: "bold",
+                                fontWeight: "600",
                                 color: theme.common.alert.buttonTextColor,
                                 fontSize: theme.common.alert.buttonTextFontSize,
                             }} onPress={() => {

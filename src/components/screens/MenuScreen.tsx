@@ -2,7 +2,7 @@ import React, { Dispatch, useState, useCallback, useEffect } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
 import { View, Dimensions, ScaledSize, LayoutChangeEvent } from "react-native";
 import { connect } from "react-redux";
-import { ICurrency, ICompiledLanguage, ICompiledOrderType, ICompiledProduct, IKioskTheme } from "@djonnyx/tornado-types";
+import { ICurrency, ICompiledLanguage, ICompiledOrderType, ICompiledProduct, IKioskTheme, ICompiledTag } from "@djonnyx/tornado-types";
 import { MainNavigationScreenTypes } from "../navigation";
 import { IAppState } from "../../store/state";
 import { CombinedDataSelectors, MenuSelectors, MyOrderSelectors } from "../../store/selectors";
@@ -15,6 +15,8 @@ import { MenuWizard } from "../../core/menu/MenuWizard";
 import { MenuNode } from "../../core/menu/MenuNode";
 import { localize } from "../../utils/localization";
 import { IOrderWizard } from "../../core/interfaces";
+import { uiutils } from "../../utils/ui";
+import DropShadow from "react-native-drop-shadow";
 
 interface IMenuSelfProps {
     // store props
@@ -25,6 +27,7 @@ interface IMenuSelfProps {
     _orderTypes: Array<ICompiledOrderType>;
     _defaultCurrency: ICurrency;
     _menuStateId: number;
+    _tags: Array<ICompiledTag>;
     _language: ICompiledLanguage;
     _orderType: ICompiledOrderType;
     _orderStateId: number;
@@ -42,7 +45,7 @@ interface IMenuSelfProps {
 
 interface IMenuProps extends StackScreenProps<any, MainNavigationScreenTypes.MENU>, IMenuSelfProps { }
 
-const MenuScreenContainer = React.memo(({ _theme,
+const MenuScreenContainer = React.memo(({ _theme, _tags,
     _languages, _orderTypes, _defaultCurrency, _orderType, _menuWizard, _orderWizard,
     _menuStateId, _language, _orderStateId, _isShowOrderTypes, _onResetOrder, _alertOpen,
     _onChangeLanguage, _onChangeOrderType, _onAddOrderPosition, navigation,
@@ -116,6 +119,7 @@ const MenuScreenContainer = React.memo(({ _theme,
 
     const theme = _theme?.themes?.[_theme?.name];
 
+    const dropShadowStyles = uiutils.createShadow("rgba(0,0,0,0.75)", 16);
     return (
         <>
             {
@@ -126,8 +130,8 @@ const MenuScreenContainer = React.memo(({ _theme,
                     backgroundColor: theme.menu.backgroundColor
                 }}>
                     <View style={{ position: "absolute", width: menuWidth, height: "100%", zIndex: 1 }}>
-                        <Menu theme={theme} menuStateId={_menuStateId} orderType={_orderType} currency={_defaultCurrency}
-                            language={_language} menu={_menuWizard.menu}
+                        <Menu theme={theme} menuStateId={_menuStateId} orderStateId={_orderStateId} orderWizard={_orderWizard!} orderType={_orderType} currency={_defaultCurrency}
+                            language={_language} menu={_menuWizard.menu} tags={_tags}
                             width={menuWidth} height={dimentions.height} cancelOrder={cancelHandler} addPosition={addProductHandler}
                         ></Menu>
                     </View>
@@ -139,11 +143,14 @@ const MenuScreenContainer = React.memo(({ _theme,
                         backgroundColor: theme.menu.draftOrder.backgroundColor,
                         top: theme.menu.draftOrder.padding,
                         borderRadius: theme.menu.draftOrder.borderRadius,
+                        borderWidth: 1, borderColor: theme.menu.draftOrder.borderColor,
                     }}>
-                        <MyOrderPanel theme={theme} isShowOrderTypes={_isShowOrderTypes} orderStateId={_orderStateId}
-                            currency={_defaultCurrency} language={_language} languages={_languages}
-                            orderType={_orderType} orderTypes={_orderTypes} orderWizard={_orderWizard}
-                            onChangeLanguage={_onChangeLanguage} onChangeOrderType={_onChangeOrderType} onConfirm={confirmHandler}></MyOrderPanel>
+                        <DropShadow style={{ flex: 1, ...dropShadowStyles }}>
+                            <MyOrderPanel theme={theme} isShowOrderTypes={_isShowOrderTypes} orderStateId={_orderStateId}
+                                currency={_defaultCurrency} language={_language} languages={_languages}
+                                orderType={_orderType} orderTypes={_orderTypes} orderWizard={_orderWizard}
+                                onChangeLanguage={_onChangeLanguage} onChangeOrderType={_onChangeOrderType} onConfirm={confirmHandler}></MyOrderPanel>
+                        </DropShadow>
                     </View>
                 </View>
             }
@@ -160,6 +167,7 @@ const mapStateToProps = (state: IAppState, ownProps: IMenuProps) => {
         _menuStateId: MenuSelectors.selectStateId(state),
         _languages: CombinedDataSelectors.selectLangages(state),
         _orderTypes: CombinedDataSelectors.selectOrderTypes(state),
+        _tags: CombinedDataSelectors.selectTags(state),
         _language: CapabilitiesSelectors.selectLanguage(state),
         _orderType: CapabilitiesSelectors.selectOrderType(state),
         _orderStateId: MyOrderSelectors.selectStateId(state),

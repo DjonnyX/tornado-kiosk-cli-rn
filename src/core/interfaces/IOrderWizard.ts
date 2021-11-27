@@ -18,6 +18,7 @@ export interface IOrderWizard extends EventEmitter {
     currency: ICurrency;
     language: ICompiledLanguage;
     orderType: ICompiledOrderType;
+    contains(productNode: MenuNode<ICompiledProduct>): boolean;
     respawn(): void;
     gotoPreviousGroup(): void;
     gotoNextGroup(): void;
@@ -25,6 +26,7 @@ export interface IOrderWizard extends EventEmitter {
     removeViewingPosition(): void;
     closeViewingPosition(): void;
     editProduct: (productNode: MenuNode<ICompiledProduct>) => void;
+    editPosition: (productNode: IPositionWizard) => void;
     editCancel: () => void;
     findPosition: (position: IPositionWizard) => IPositionWizard | undefined;
     add: (position: IPositionWizard, isTemp?: boolean) => IPositionWizard;

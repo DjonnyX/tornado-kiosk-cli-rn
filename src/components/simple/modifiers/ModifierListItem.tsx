@@ -6,6 +6,7 @@ import { NumericStapper } from "../NumericStapper";
 import { IPositionWizard } from "../../../core/interfaces";
 import { TagList } from "../TagList";
 import { Switch } from "../Switch";
+import { config } from "../../../Config";
 
 interface IModifierListItemProps {
     theme: IKioskThemeData;
@@ -41,7 +42,14 @@ export const ModifierListItem = React.memo(({ theme, thumbnailHeight, currency, 
         : undefined;
 
     return (
-        <View style={{ flex: 1, backgroundColor: theme.modifiers.item.backgroundColor, borderRadius: 16, padding: 22 }}>
+        <View style={{
+            flex: 1,
+            backgroundColor: theme.modifiers.item.backgroundColor,
+            borderColor: theme.modifiers.item.borderColor,
+            borderWidth: 1,
+            borderRadius: 16,
+            padding: 22,
+        }}>
             <TouchableOpacity style={{ alignItems: "center", flex: 1 }} onPress={pressHandler}>
                 <View style={{
                     flexDirection: "row", alignItems: "baseline", justifyContent: !!tags ? "space-around" : "flex-end",
@@ -60,10 +68,11 @@ export const ModifierListItem = React.memo(({ theme, thumbnailHeight, currency, 
                             position: "absolute",
                         }}>
                             <Text style={{
+                                fontFamily: config.fontFamily,
                                 borderRadius: 8,
                                 paddingHorizontal: 8,
                                 paddingVertical: 4,
-                                fontSize: theme.modifiers.item.discount.textFontSize, fontWeight: "bold",
+                                fontSize: theme.modifiers.item.discount.textFontSize, fontWeight: "600",
                                 backgroundColor: theme.modifiers.item.discount.backgroundColor,
                                 color: theme.modifiers.item.discount.textColor,
                             }}>
@@ -81,16 +90,18 @@ export const ModifierListItem = React.memo(({ theme, thumbnailHeight, currency, 
                 </View>
                 <Text textBreakStrategy="simple" numberOfLines={4} ellipsizeMode="tail"
                     style={{
+                        fontFamily: config.fontFamily,
                         textAlign: "center", fontSize: theme.modifiers.item.nameFontFontSize, marginBottom: 6, color: theme.modifiers.item.nameColor,
-                        fontWeight: "bold", textTransform: "uppercase"
+                        fontWeight: "600",
                     }}>
                     {
                         currentContent?.name
                     }
                 </Text>
                 {/* <Text textBreakStrategy="simple" numberOfLines={2} ellipsizeMode="tail" style={{
+                    fontFamily: config.fontFamily,
                     textAlign: "center", fontSize: theme.modifiers.item.descriptionFontSize,
-                    color: theme.modifiers.item.descriptionColor, textTransform: "uppercase",
+                    color: theme.modifiers.item.descriptionColor,
                     marginBottom: 12
                 }}>
                     {
@@ -120,11 +131,11 @@ export const ModifierListItem = React.memo(({ theme, thumbnailHeight, currency, 
                         styleViewOn={{}}
                         styleViewOff={{}}
                         textStyleOn={{
-                            fontSize: theme.modifiers.item.quantitySwitch.on.textFontSize, fontWeight: "bold",
+                            fontSize: theme.modifiers.item.quantitySwitch.on.textFontSize, fontWeight: "600",
                             color: theme.modifiers.item.quantitySwitch.on.textColor,
                         }}
                         textStyleOff={{
-                            fontSize: theme.modifiers.item.quantitySwitch.off.textFontSize, fontWeight: "bold",
+                            fontSize: theme.modifiers.item.quantitySwitch.off.textFontSize, fontWeight: "600",
                             color: theme.modifiers.item.quantitySwitch.off.textColor,
                         }}
                         textStyleOnDisabled={{}}
@@ -163,23 +174,23 @@ export const ModifierListItem = React.memo(({ theme, thumbnailHeight, currency, 
                             opacity: 0.25
                         }}
                         buttonTextStyle={{
-                            fontSize: theme.modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "bold",
+                            fontSize: theme.modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "600",
                             color: theme.modifiers.item.quantityStepper.buttons.textColor as any,
                         }}
                         buttonSelectedTextStyle={{
-                            fontSize: theme.modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "bold",
+                            fontSize: theme.modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "600",
                             color: theme.modifiers.item.quantityStepper.buttons.selectedTextColor as any,
                         }}
                         disabledButtonTextStyle={{
-                            fontSize: theme.modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "bold",
+                            fontSize: theme.modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "600",
                             color: theme.modifiers.item.quantityStepper.buttons.disabledTextColor as any,
                         }}
                         disabledSelectedButtonTextStyle={{
-                            fontSize: theme.modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "bold",
+                            fontSize: theme.modifiers.item.quantityStepper.buttons.textFontSize, fontWeight: "600",
                             color: theme.modifiers.item.quantityStepper.buttons.disabledSelectedTextColor as any,
                         }}
                         textStyle={{
-                            fontSize: theme.modifiers.item.quantityStepper.indicator.textFontSize, fontWeight: "bold",
+                            fontSize: theme.modifiers.item.quantityStepper.indicator.textFontSize, fontWeight: "600",
                             color: theme.modifiers.item.quantityStepper.indicator.textColor
                         }}
                         iconDecrement="-"

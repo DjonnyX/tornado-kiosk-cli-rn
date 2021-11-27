@@ -6,6 +6,7 @@ import { NumericStapper } from "../NumericStapper";
 import { IOrderWizard, IPositionWizard } from "../../../core/interfaces";
 import { IAlertState } from "../../../interfaces";
 import { localize } from "../../../utils/localization";
+import { config } from "../../../Config";
 
 interface ConfirmationOrderListItemProps {
     theme: IKioskThemeData;
@@ -24,7 +25,10 @@ export const ConfirmationOrderListItem = React.memo(({ theme, stateId, orderWiza
     const currentAsset = currentContent?.resources?.icon;
 
     const pressHandler = useCallback((e: GestureResponderEvent) => {
-        position.edit();
+        const isEditable = position.edit();
+        if (!isEditable) {
+            orderWizard?.editPosition(position);
+        }
     }, []);
 
     const setQuantity = (qnt: number) => {
@@ -77,8 +81,9 @@ export const ConfirmationOrderListItem = React.memo(({ theme, stateId, orderWiza
                     <View style={{ flexDirection: "row", marginRight: 20, alignItems: "baseline" }}>
                         <View style={{ flex: 1 }}>
                             <Text numberOfLines={3} ellipsizeMode="tail" style={{
+                                fontFamily: config.fontFamily,
                                 textAlign: "left", fontSize: theme.confirmation.item.nameFontSize,
-                                color: theme.confirmation.item.nameColor, textTransform: "uppercase", fontWeight: "bold"
+                                color: theme.confirmation.item.nameColor, fontWeight: "600"
                             }}>
                                 {
                                     currentContent?.name
@@ -87,8 +92,9 @@ export const ConfirmationOrderListItem = React.memo(({ theme, stateId, orderWiza
                         </View>
                         <View style={{ width: 192, justifyContent: "flex-end" }}>
                             <Text style={{
+                                fontFamily: config.fontFamily,
                                 textAlign: "right", fontSize: theme.confirmation.item.price.textFontSize,
-                                color: theme.confirmation.item.price.textColor, fontWeight: "bold"
+                                color: theme.confirmation.item.price.textColor, fontWeight: "600"
                             }}>
                                 {
                                     `${position.quantity}x${position.getFormatedSumPerOne(true)}`
@@ -101,9 +107,10 @@ export const ConfirmationOrderListItem = React.memo(({ theme, stateId, orderWiza
                             position.nestedPositions.map((p, index) => <View key={index} style={{ flexDirection: "row", marginRight: 20 }}>
                                 <View style={{ flex: 1 }}>
                                     <Text numberOfLines={1} ellipsizeMode="tail" style={{
+                                        fontFamily: config.fontFamily,
                                         textAlign: "left", fontSize: 13,
                                         color: theme.confirmation.nestedItem.nameColor,
-                                        textTransform: "uppercase", fontWeight: "bold"
+                                        fontWeight: "600"
                                     }}>
                                         {
                                             p.__product__?.contents[language?.code].name
@@ -112,8 +119,9 @@ export const ConfirmationOrderListItem = React.memo(({ theme, stateId, orderWiza
                                 </View>
                                 <View style={{ width: 192 }}>
                                     <Text numberOfLines={1} ellipsizeMode="tail" style={{
+                                        fontFamily: config.fontFamily,
                                         textAlign: "right", fontSize: theme.confirmation.nestedItem.price.textFontSize,
-                                        color: theme.confirmation.nestedItem.price.textColor, fontWeight: "bold"
+                                        color: theme.confirmation.nestedItem.price.textColor, fontWeight: "600"
                                     }}>
                                         {
                                             `${p.quantity}x${p.getFormatedPrice(true)}`
@@ -142,15 +150,15 @@ export const ConfirmationOrderListItem = React.memo(({ theme, stateId, orderWiza
                         padding: 6
                     }}
                     buttonTextStyle={{
-                        fontSize: theme.confirmation.item.quantityStepper.buttons.textFontSize, fontWeight: "bold",
+                        fontSize: theme.confirmation.item.quantityStepper.buttons.textFontSize, fontWeight: "600",
                         color: theme.confirmation.item.quantityStepper.buttons.textColor as any,
                     }}
                     disabledButtonTextStyle={{
-                        fontSize: theme.confirmation.item.quantityStepper.buttons.textFontSize, fontWeight: "bold",
+                        fontSize: theme.confirmation.item.quantityStepper.buttons.textFontSize, fontWeight: "600",
                         color: theme.confirmation.item.quantityStepper.buttons.disabledTextColor
                     }}
                     textStyle={{
-                        width: 24, fontSize: theme.confirmation.item.quantityStepper.indicator.textFontSize, fontWeight: "bold",
+                        width: 24, fontSize: theme.confirmation.item.quantityStepper.indicator.textFontSize, fontWeight: "600",
                         color: theme.confirmation.item.quantityStepper.indicator.textColor
                     }}
                     iconDecrement="-"

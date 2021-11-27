@@ -1,9 +1,10 @@
 import React, { useCallback } from "react";
-import { View, Text, GestureResponderEvent } from "react-native";
+import { View, Text, GestureResponderEvent, TouchableOpacity } from "react-native";
 import { ICurrency, ICompiledLanguage, IKioskThemeData } from "@djonnyx/tornado-types";
 import { IOrderWizard, IPositionWizard } from "../../../core/interfaces";
 import { IAlertState } from "../../../interfaces";
 import { localize } from "../../../utils/localization";
+import { config } from "../../../Config";
 
 interface IMyOrderListItemItemProps {
     theme: IKioskThemeData;
@@ -23,7 +24,10 @@ export const MyOrderListItem = React.memo(({ theme, stateId, menuStateId, imageH
     const currentAsset = currentContent?.resources?.icon;
 
     const pressHandler = useCallback((e: GestureResponderEvent) => {
-        position.edit();
+        const isEditable = position.edit();
+        if (!isEditable) {
+            orderWizard?.editPosition(position);
+        }
     }, []);
 
     const setQuantity = useCallback((qnt: number) => {
@@ -59,34 +63,38 @@ export const MyOrderListItem = React.memo(({ theme, stateId, menuStateId, imageH
 
     return (
         <View style={{ flex: 1, paddingHorizontal: 12, marginBottom: 20 }}>
-            {/* <TouchableOpacity style={{ alignItems: "center" }} onPress={pressHandler}> */}
-            {/* <View style={{ flex: 1, width: "100%", height: imageHeight, marginBottom: 2, justifyContent: "flex-end" }}>
+            <TouchableOpacity style={{ flex: 1 }} onPress={pressHandler}>
+                {/* <View style={{ flex: 1, width: "100%", height: imageHeight, marginBottom: 2, justifyContent: "flex-end" }}>
                     <FastImage style={{ width: "100%", height: "100%" }} source={{
                         uri: `file://${currentAsset?.mipmap?.x128}`,
                     }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                 </View> */}
-            <Text numberOfLines={3} ellipsizeMode="tail" style={{
-                textAlign: "center", fontSize: theme.menu.draftOrder.item.nameFontSize, fontWeight: "bold",
-                color: theme.menu.draftOrder.item.nameColor, textTransform: "uppercase"
-            }}>
-                {
-                    currentContent?.name
-                }
-            </Text>
-            <View style={{ marginBottom: 1 }}>
-                <Text style={{
-                    textAlign: "center",
-                    fontWeight: "bold",
-                    fontSize: theme.menu.draftOrder.item.price.textFontSize,
-                    paddingTop: 4, paddingBottom: 4, paddingLeft: 6, paddingRight: 6,
-                    color: theme.menu.draftOrder.item.price.textColor
+                <Text numberOfLines={3} ellipsizeMode="tail" style={{
+                    fontFamily: config.fontFamily,
+                    textAlign: "left",
+                    fontSize: theme.menu.draftOrder.item.nameFontSize,
+                    fontWeight: "600",
+                    color: theme.menu.draftOrder.item.nameColor,
                 }}>
                     {
-                        `${position.quantity} x ${position.getFormatedSumPerOne(true)}`
+                        currentContent?.name
                     }
                 </Text>
-            </View>
-            {/* </TouchableOpacity> */}
+                <View style={{ marginBottom: 1 }}>
+                    <Text style={{
+                        fontFamily: config.fontFamily,
+                        textAlign: "left",
+                        fontWeight: "600",
+                        fontSize: theme.menu.draftOrder.item.price.textFontSize,
+                        paddingTop: 4, paddingBottom: 4, paddingLeft: 6, paddingRight: 6,
+                        color: theme.menu.draftOrder.item.price.textColor
+                    }}>
+                        {
+                            `${position.quantity} x ${position.getFormatedSumPerOne(true)}`
+                        }
+                    </Text>
+                </View>
+            </TouchableOpacity>
             {/* <NumericStapper
                 key={language.code}
                 value={position.quantity}
@@ -104,18 +112,18 @@ export const MyOrderListItem = React.memo(({ theme, stateId, menuStateId, imageH
                     padding: 6
                 }}
                 buttonTextStyle={{
-                    fontWeight: "bold",
+                    fontWeight: "600",
                     fontSize: theme.menu.draftOrder.item.quantityStepper.buttons.textFontSize,
                     color: theme.menu.draftOrder.item.quantityStepper.buttons.textColor as any,
                 }}
                 disabledButtonTextStyle={{
-                    fontWeight: "bold",
+                    fontWeight: "600",
                     fontSize: theme.menu.draftOrder.item.quantityStepper.buttons.textFontSize,
                     color: theme.menu.draftOrder.item.quantityStepper.buttons.disabledTextColor as any,
                 }}
                 textStyle={{
                     width: 44,
-                    fontSize: theme.menu.draftOrder.item.quantityStepper.indicator.textFontSize, fontWeight: "bold",
+                    fontSize: theme.menu.draftOrder.item.quantityStepper.indicator.textFontSize, fontWeight: "600",
                     color: theme.menu.draftOrder.item.quantityStepper.indicator.textColor
                 }}
                 iconDecrement="-"

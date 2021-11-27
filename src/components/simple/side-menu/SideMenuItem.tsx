@@ -4,6 +4,7 @@ import * as Color from "color";
 import FastImage from "react-native-fast-image";
 import { NodeTypes, ICompiledLanguage, IKioskThemeData } from "@djonnyx/tornado-types";
 import { MenuNode } from "../../../core/menu/MenuNode";
+import { config } from "../../../Config";
 
 const getSelectedDepth = (node: MenuNode, selected: MenuNode, depth: number = 0): number => {
     let result = -1;
@@ -148,18 +149,21 @@ export const SideMenuItem = React.memo(({ theme, depth = 0, height = 0, selected
                 <TouchableOpacity style={{
                     flex: 1, justifyContent: "center", alignItems: "center",
                     margin: 8 * size, marginBottom: 4, marginTop: depth === 0 ? 5 : 0, borderRadius: 14,
-                    backgroundColor: actualColor,
+                    // backgroundColor: actualColor,
+                    borderWidth: 2,
+                    borderColor: node === selected ? currentContent.color : "transparent",
                 }} onPress={pressHandler}>
                     <View style={{ padding: 12, width: "100%", justifyContent: "center", alignItems: "center", }}>
                         <FastImage style={{ width: 56 - offset, height: 56 - offset, marginBottom: 5, borderRadius: 16, overflow: "hidden" }} source={{
                             uri: `file://${currentAsset?.mipmap?.x128}`,
                         }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                         <Text style={{
+                            fontFamily: config.fontFamily,
+                            letterSpacing: 0.3,
                             fontSize: theme.menu.sideMenu.item.nameFontSize,
                             color: theme.menu.sideMenu.item.nameColor,
                             textAlign: "center",
-                            fontWeight: "bold",
-                            textTransform: "uppercase"
+                            fontWeight: "600",
                         }}>
                             {
                                 currentContent.name

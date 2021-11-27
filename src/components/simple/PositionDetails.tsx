@@ -3,6 +3,7 @@ import React, { Dispatch, useCallback, useEffect, useRef, useState } from "react
 import { View, Text, ScrollView, TouchableOpacity, Dimensions, LayoutChangeEvent } from "react-native";
 import FastImage from "react-native-fast-image";
 import { connect } from "react-redux";
+import { config } from "../../Config";
 import { PositionWizardModes } from "../../core/enums";
 import { IOrderWizard, IPositionWizard } from "../../core/interfaces";
 import { PositionWizardEventTypes } from "../../core/position-wizard/events";
@@ -154,7 +155,7 @@ export const PositionDetailsContainer = React.memo(({ _theme, _orderStateId, _la
                                                 height: isLandscape ? actualHeight : (actualHeight * .4),
                                                 borderRadius: 16, overflow: "hidden"
                                             }} source={{
-                                                uri: `file://${position.__product__?.contents[_language?.code]?.resources?.icon.path}`,
+                                                uri: `file://${position.__product__?.contents[_language?.code]?.resources?.icon?.path}`,
                                             }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                                         </View>
                                         <View style={{
@@ -162,20 +163,24 @@ export const PositionDetailsContainer = React.memo(({ _theme, _orderStateId, _la
                                             height: isLandscape ? actualHeight - mainMarginDouble : (actualHeight * .6) - mainMarginDouble,
                                             marginVertical: 30, marginHorizontal: 30,
                                             paddingHorizontal: 54, paddingVertical: 54,
-                                            backgroundColor: theme.details.frame.backgroundColor, borderRadius: 24,
+                                            backgroundColor: theme.details.frame.backgroundColor,
+                                            borderWidth: 1, borderColor: theme.details.frame.borderColor,
+                                            borderRadius: 24,
                                         }}>
                                             <Text style={{
+                                                fontFamily: config.fontFamily,
                                                 textAlign: "center",
-                                                fontSize: theme.details.frame.nameFontSize, fontWeight: "bold", color: theme.details.frame.nameColor,
-                                                textTransform: "uppercase", marginBottom: 22,
+                                                fontSize: theme.details.frame.nameFontSize, fontWeight: "600", color: theme.details.frame.nameColor,
+                                                marginBottom: 22,
                                             }}>{
                                                     position.__product__?.contents[_language.code]?.name
                                                 }</Text>
                                             <Text style={{
+                                                fontFamily: config.fontFamily,
                                                 textAlign: "center",
                                                 fontSize: theme.details.frame.descriptionFontSize, color: theme.details.frame.descriptionColor,
                                                 lineHeight: theme.details.frame.descriptionFontSize * 1.5,
-                                                textTransform: "uppercase", marginBottom: 32,
+                                                marginBottom: 32,
                                             }}>{
                                                     position.__product__?.contents[_language.code]?.description
                                                 }</Text>
@@ -185,12 +190,12 @@ export const PositionDetailsContainer = React.memo(({ _theme, _orderStateId, _la
                                                 marginBottom: 22,
                                             }}>
                                                 <Text style={{
+                                                    fontFamily: config.fontFamily,
                                                     backgroundColor: theme.details.frame.price.backgroundColor,
                                                     paddingVertical: 14, paddingHorizontal: 28,
                                                     borderRadius: 14, borderWidth: 2, borderColor: theme.details.frame.price.borderColor,
-                                                    fontSize: theme.details.frame.price.textFontSize, fontWeight: "bold",
+                                                    fontSize: theme.details.frame.price.textFontSize, fontWeight: "600",
                                                     color: theme.details.frame.price.textColor,
-                                                    textTransform: "uppercase",
                                                 }}>{
                                                         position.getFormatedSumPerOne(true)
                                                     }</Text>
@@ -234,23 +239,23 @@ export const PositionDetailsContainer = React.memo(({ _theme, _orderStateId, _la
                                                             opacity: 0.25
                                                         }}
                                                         buttonTextStyle={{
-                                                            fontSize: theme.details.frame.quantityStepper.buttons.textFontSize, fontWeight: "bold",
+                                                            fontSize: theme.details.frame.quantityStepper.buttons.textFontSize, fontWeight: "600",
                                                             color: theme.details.frame.quantityStepper.buttons.textColor as any,
                                                         }}
                                                         buttonSelectedTextStyle={{
-                                                            fontSize: theme.details.frame.quantityStepper.buttons.textFontSize, fontWeight: "bold",
+                                                            fontSize: theme.details.frame.quantityStepper.buttons.textFontSize, fontWeight: "600",
                                                             color: theme.details.frame.quantityStepper.buttons.selectedTextColor as any,
                                                         }}
                                                         disabledButtonTextStyle={{
-                                                            fontSize: theme.details.frame.quantityStepper.buttons.textFontSize, fontWeight: "bold",
+                                                            fontSize: theme.details.frame.quantityStepper.buttons.textFontSize, fontWeight: "600",
                                                             color: theme.details.frame.quantityStepper.buttons.disabledTextColor as any,
                                                         }}
                                                         disabledSelectedButtonTextStyle={{
-                                                            fontSize: theme.details.frame.quantityStepper.buttons.textFontSize, fontWeight: "bold",
+                                                            fontSize: theme.details.frame.quantityStepper.buttons.textFontSize, fontWeight: "600",
                                                             color: theme.details.frame.quantityStepper.buttons.disabledSelectedTextColor as any,
                                                         }}
                                                         textStyle={{
-                                                            fontSize: theme.details.frame.quantityStepper.indicator.textFontSize, fontWeight: "bold",
+                                                            fontSize: theme.details.frame.quantityStepper.indicator.textFontSize, fontWeight: "600",
                                                             color: theme.details.frame.quantityStepper.indicator.textColor
                                                         }}
                                                         iconDecrement="-"
@@ -291,14 +296,14 @@ export const PositionDetailsContainer = React.memo(({ _theme, _orderStateId, _la
                                                     textStyle={{
                                                         width: "100%",
                                                         textAlign: "center",
-                                                        fontWeight: "bold",
+                                                        fontWeight: "600",
                                                         color: theme.details.frame.buttonApply.textColor,
                                                         fontSize: theme.details.frame.buttonApply.textFontSize,
                                                     }}
                                                     textStyleDisabled={{
                                                         width: "100%",
                                                         textAlign: "center",
-                                                        fontWeight: "bold",
+                                                        fontWeight: "600",
                                                         color: theme.details.frame.buttonApply.disabledTextColor,
                                                         fontSize: theme.details.frame.buttonApply.textFontSize,
                                                     }}
@@ -327,14 +332,14 @@ export const PositionDetailsContainer = React.memo(({ _theme, _orderStateId, _la
                                                         textStyle={{
                                                             width: "100%",
                                                             textAlign: "center",
-                                                            fontWeight: "bold",
+                                                            fontWeight: "600",
                                                             color: theme.details.frame.buttonDelete.textColor,
                                                             fontSize: theme.details.frame.buttonDelete.textFontSize,
                                                         }}
                                                         textStyleDisabled={{
                                                             width: "100%",
                                                             textAlign: "center",
-                                                            fontWeight: "bold",
+                                                            fontWeight: "600",
                                                             color: theme.details.frame.buttonDelete.disabledTextColor,
                                                             fontSize: theme.details.frame.buttonDelete.textFontSize,
                                                         }}

@@ -41,6 +41,10 @@ export namespace CombinedDataSelectors {
         return state?.data?.refs.orderTypes;
     });
 
+    export const selectTags = createSelector(getCombinedData, (state) => {
+        return state?.data?.refs.tags;
+    });
+
     export const selectMenu = createSelector(getCombinedData, (state) => {
         return state?.data?.menu;
     });

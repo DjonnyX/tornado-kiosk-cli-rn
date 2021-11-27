@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { View, TouchableOpacity, StyleProp, ViewStyle, TextStyle, Text } from "react-native";
+import { config } from "../../Config";
 
 interface ISimpleButtonProps {
     title: string;
@@ -27,7 +28,7 @@ export const SimpleButton = React.memo(({ children, title, style, styleDisabled,
     useEffect(() => {
         let sView: StyleProp<ViewStyle> = { borderRadius: 3, overflow: "hidden", opacity: disabled ? 0.35 : 1, ...styleView as any };
         let sLayout: StyleProp<ViewStyle> = { flexDirection: "row", alignItems: "center", paddingHorizontal: 22, paddingVertical: 16, ...style as any };
-        let sText: StyleProp<TextStyle> = { fontSize: 14, fontWeight: "bold", ...textStyle as any };
+        let sText: StyleProp<TextStyle> = { fontSize: 14, fontWeight: "600", ...textStyle as any };
 
         if (disabled) {
             if (!!styleViewDisabled) {
@@ -62,7 +63,10 @@ export const SimpleButton = React.memo(({ children, title, style, styleDisabled,
                 {
                     !!children && children
                 }
-                <Text style={styles.sText}>
+                <Text style={{
+                    ...styles.sText as any,
+                    fontFamily: config.fontFamily,
+                }}>
                     {
                         title
                     }
@@ -89,7 +93,7 @@ export const SimpleSystemButton = React.memo(({ title, style, styleDisabled, tex
 
     let sView: StyleProp<ViewStyle> = { borderRadius: 3, overflow: "hidden", opacity: disabled ? 0.35 : 1, ...styleView as any };
     let sLayout: StyleProp<ViewStyle> = { paddingLeft: 22, paddingRight: 22, paddingTop: 16, paddingBottom: 16, ...style as any };
-    let sText: StyleProp<TextStyle> = { fontSize: 14, fontWeight: "bold", ...textStyle as any };
+    let sText: StyleProp<TextStyle> = { fontSize: 14, fontWeight: "600", ...textStyle as any };
 
     if (disabled) {
         if (!!styleViewDisabled) {
@@ -120,12 +124,15 @@ export const SimpleSystemButton = React.memo(({ title, style, styleDisabled, tex
             <View
                 style={styles.sLayout}
             >
-                <Text style={styles.sText}>
+                <Text style={{
+                    ...styles.sText as any,
+                    fontFamily: config.fontFamily,
+                }} >
                     {
                         title
                     }
                 </Text>
             </View>
-        </TouchableOpacity>
+        </TouchableOpacity >
     )
 });

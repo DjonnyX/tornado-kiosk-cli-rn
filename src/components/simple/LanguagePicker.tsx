@@ -4,6 +4,7 @@ import { FlatList } from "react-native-gesture-handler";
 import FastImage from "react-native-fast-image";
 import { ICompiledLanguage, IKioskThemeData } from "@djonnyx/tornado-types";
 import { ModalSolid } from "./ModalSolid";
+import { config } from "../../Config";
 
 interface ILanguagePickerProps {
     theme: IKioskThemeData;
@@ -48,7 +49,8 @@ export const LanguagePicker = React.memo(({ theme, language, languages, onSelect
                                         uri: `file://${item?.resources?.main?.path}`,
                                     }} resizeMode={FastImage.resizeMode.cover}></FastImage>
                                     <Text style={{
-                                        fontWeight: "bold",
+                                        fontFamily: config.fontFamily,
+                                        fontWeight: "600",
                                         color: theme.languageModal.item.textColor,
                                         fontSize: theme.languageModal.item.textFontSize,
                                     }}>

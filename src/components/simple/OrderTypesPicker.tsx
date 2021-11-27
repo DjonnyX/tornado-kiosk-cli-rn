@@ -4,6 +4,7 @@ import { FlatList } from "react-native-gesture-handler";
 import FastImage from "react-native-fast-image";
 import { ICompiledOrderType, ICompiledLanguage, IKioskThemeData } from "@djonnyx/tornado-types";
 import { ModalSolid } from "./ModalSolid";
+import { config } from "../../Config";
 
 interface IOrderTypesPickerProps {
     theme: IKioskThemeData;
@@ -47,17 +48,21 @@ export const OrderTypesPicker = React.memo(({ theme, language, isShow, orderType
                     return <TouchableOpacity onPress={() => {
                         onSelectHandler(item);
                     }}>
-                        <View style={{ flexDirection: "column", alignItems: "center", justifyContent: "center", marginBottom: 32 }}>
+                        <View style={{
+                            flexDirection: "column", alignItems: "center", justifyContent: "center",
+                            borderWidth: 1,
+                            borderColor: theme.orderTypeModal.item.borderColor,
+                            backgroundColor: theme.orderTypeModal.item.backgroundColor,
+                            borderRadius: 16, marginBottom: 8, padding: 12,
+                        }}>
                             <FastImage style={{
-                                width: 128, height: 128, borderWidth: 1,
-                                borderColor: theme.orderTypeModal.item.borderColor,
-                                backgroundColor: theme.orderTypeModal.item.backgroundColor,
-                                borderRadius: 16, marginBottom: 8
+                                width: 128, height: 128,
                             }} source={{
                                 uri: `file://${item.contents[language?.code]?.resources?.main?.mipmap.x128}`,
                             }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                             <Text style={{
-                                fontWeight: "bold",
+                                fontFamily: config.fontFamily,
+                                fontWeight: "600",
                                 color: theme.orderTypeModal.item.textColor,
                                 fontSize: theme.orderTypeModal.item.textFontSize,
                             }}>
@@ -72,13 +77,19 @@ export const OrderTypesPicker = React.memo(({ theme, language, isShow, orderType
             </ModalSolid>
             <TouchableOpacity style={{
                 flex: 1, justifyContent: "center", alignItems: "center", width: "100%", height: "100%", borderRadius: 10,
-                borderWidth: 2,
+                borderWidth: 2, borderColor: theme.orderTypePicker.borderColor,
             }}
                 onPress={onPressHandler}>
                 <View style={{
                     flexDirection: "row", alignItems: "center", paddingLeft: 16, paddingRight: 16, paddingTop: 12, paddingBottom: 12, ...style as any
                 }}>
-                    <Text style={{ fontSize: 13, fontWeight: "bold", textAlign: "center", textTransform: "uppercase", ...textStyle as any }}>
+                    <Text style={{
+                        fontFamily: config.fontFamily,
+                        fontSize: theme.orderTypePicker.textFontSize,
+                        fontWeight: "600",
+                        textAlign: "center",
+                        ...textStyle as any
+                    }}>
                         {
                             currentOrderType?.contents[language?.code]?.name
                         }

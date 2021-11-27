@@ -7,6 +7,7 @@ import { MyOrderList } from "./my-order-list";
 import { CtrlMenuButton } from "./CtrlMenuButton";
 import { localize } from "../../utils/localization";
 import { IOrderWizard } from "../../core/interfaces";
+import { config } from "../../Config";
 
 interface IMyOrderPanelProps {
     theme: IKioskThemeData;
@@ -60,7 +61,12 @@ export const MyOrderPanel = React.memo(({ theme, orderStateId, currency, languag
                 {
                     orderWizard?.positions.length !== 0 &&
                     <View style={{ margin: "auto", marginBottom: 12, alignItems: "center" }}>
-                        <Text style={{ fontWeight: "bold", fontSize: theme.menu.sum.price.textFontSize, color: theme.menu.sum.price.textColor }}>
+                        <Text style={{
+                            fontFamily: config.fontFamily,
+                            fontWeight: "600",
+                            fontSize: theme.menu.sum.price.textFontSize,
+                            color: theme.menu.sum.price.textColor
+                        }}>
                             {
                                 orderWizard?.getFormatedSum(true)
                             }

@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import { View, Text, Animated, Easing } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import {
-    NodeTypes, ICompiledLanguage, ICompiledOrderType, ICurrency, IKioskThemeData,
+    NodeTypes, ICompiledLanguage, ICompiledOrderType, ICurrency, IKioskThemeData, ICompiledTag,
 } from "@djonnyx/tornado-types";
 import { SideMenu } from "./side-menu";
 import { NavMenu } from "./nav-menu";
@@ -12,13 +12,20 @@ import { ModifiersEditor } from "./modifiers";
 import { MenuNode } from "../../core/menu/MenuNode";
 import { localize } from "../../utils/localization";
 import { PositionDetails } from "./PositionDetails";
+import { TagsPanel } from "./TagsPanel";
+import { uiutils } from "../../utils/ui";
+import { IOrderWizard } from "../../core/interfaces";
+import { config } from "../../Config";
 
 interface IMenuProps {
     theme: IKioskThemeData;
     menuStateId: number;
+    orderStateId: number;
+    orderWizard: IOrderWizard;
     orderType: ICompiledOrderType;
     menu: MenuNode;
     currency: ICurrency;
+    tags: Array<ICompiledTag>;
     language: ICompiledLanguage;
     width: number;
     height: number;
@@ -30,9 +37,11 @@ interface IMenuProps {
 const sideMenuWidth = 180;
 
 export const Menu = React.memo(({
-    theme, menu, menuStateId, orderType, language, currency, width, height,
+    theme, menu, menuStateId, orderStateId, orderType, language, currency, tags, width, height, orderWizard,
     cancelOrder, addPosition,
 }: IMenuProps) => {
+    const [isOpened, setIsOpened] = useState<boolean>(false);
+    const [selectedTags, setSelectedTags] = useState<Array<ICompiledTag>>([]);
     const [currentCategory, setCurrentCategory] = useState<MenuNode>(menu);
     const [previousCategory, setPreviousCategory] = useState<MenuNode>(menu);
     const [menuPosition, setMenuPosition] = useState(new Animated.Value(1));
@@ -115,11 +124,13 @@ export const Menu = React.memo(({
         menuAnimation = Animated.timing(menuPosition, {
             useNativeDriver: false,
             toValue: 1,
-            duration: 250,
+            duration: 100,
             easing: Easing.cubic,
             delay: 10,
         });
         menuAnimation.start();
+
+        setIsOpened(false);
     }, []);
 
     // анимация отображения бокового меню
@@ -132,11 +143,13 @@ export const Menu = React.memo(({
         menuAnimation = Animated.timing(menuPosition, {
             useNativeDriver: false,
             toValue: 0,
-            duration: 250,
+            duration: 100,
             easing: Easing.cubic,
             delay: 10,
         });
         menuAnimation.start();
+
+        setIsOpened(true);
     }, []);
 
     // анимация скрытия бокового меню
@@ -148,7 +161,7 @@ export const Menu = React.memo(({
         screenAnimation = Animated.timing(screenPosition, {
             useNativeDriver: false,
             toValue: 0,
-            duration: 250,
+            duration: 100,
             easing: Easing.cubic,
             delay: 10,
         });
@@ -164,11 +177,15 @@ export const Menu = React.memo(({
         screenAnimation = Animated.timing(screenPosition, {
             useNativeDriver: false,
             toValue: 1,
-            duration: 250,
+            duration: 100,
             easing: Easing.cubic,
             delay: 10,
         });
         screenAnimation.start();
+    }, []);
+
+    const onSelectTagsHandler = useCallback((tags: Array<ICompiledTag>) => {
+        setSelectedTags(tags);
     }, []);
 
     return (
@@ -180,7 +197,10 @@ export const Menu = React.memo(({
                     <ModifiersEditor></ModifiersEditor>
                     <View style={{ flex: 1, width, height }}>
 
-                        <View style={{ position: "absolute", overflow: "hidden", flexDirection: "row", width: "100%", height: "100%" }}>
+                        <View style={{
+                            position: "absolute", overflow: "hidden", flexDirection: "row",
+                            width: "100%", height: "100%",
+                        }}>
                             <Animated.View style={{
                                 position: "absolute",
                                 width: sideMenuWidth - theme.menu.sideMenu.padding,
@@ -188,6 +208,7 @@ export const Menu = React.memo(({
                                 backgroundColor: theme.menu.sideMenu.backgroundColor,
                                 top: theme.menu.sideMenu.padding,
                                 borderRadius: theme.menu.sideMenu.borderRadius,
+                                borderWidth: 1, borderColor: theme.menu.sideMenu.borderColor,
                                 left: menuPosition.interpolate({
                                     inputRange: [0, 1],
                                     outputRange: [theme.menu.sideMenu.padding, -sideMenuWidth],
@@ -223,36 +244,61 @@ export const Menu = React.memo(({
                                     easing: Easing.linear,
                                 }),
                             }}>
-                                <LinearGradient
-                                    colors={theme.menu.header.backgroundColor}
-                                    style={{ display: "flex", position: "absolute", width: "100%", height: 96, zIndex: 1 }}
-                                >
-                                    <View style={{ display: "flex", alignItems: "center", flexDirection: "row", width: "100%", height: "100%", padding: 16 }}>
-                                        <Animated.View style={{
-                                            width: 162,
-                                            justifyContent: "center",
-                                            alignItems: "center",
-                                            top: 10,
-                                            left: menuPosition.interpolate({
-                                                inputRange: [0, 1],
-                                                outputRange: [-10, -sideMenuWidth],
-                                            }),
-                                        }}>
-                                            <MenuButton language={language} theme={theme} onPress={onBack}></MenuButton>
-                                        </Animated.View>
-                                        <View style={{ flex: 1 }}></View>
-                                        <Text style={{
-                                            textTransform: "uppercase", fontWeight: "bold",
-                                            color: theme.menu.header.titleColor,
-                                            fontSize: theme.menu.header.titleFontSize, marginRight: 24
-                                        }}>
-                                            {
-                                                currentCategory.__rawNode__.content?.contents[language.code]?.name
-                                                || localize(language, "kiosk_menu_root_title")
-                                            }
-                                        </Text>
-                                    </View>
-                                </LinearGradient>
+                                <Animated.View style={{
+                                    display: "flex", position: "absolute", width: "100%",
+                                    height: menuPosition.interpolate({
+                                        inputRange: [0, 1],
+                                        outputRange: [160, 90],
+                                    }),
+                                }}>
+                                    <LinearGradient
+                                        colors={theme.menu.header.backgroundColor}
+                                        style={{ display: "flex", position: "absolute", width: "100%", height: "100%", zIndex: 1 }}
+                                    >
+                                        <View style={{ display: "flex", alignItems: "flex-start", flexDirection: "column", width: "100%", height: "100%", paddingHorizontal: 16 }}>
+                                            <View style={{ display: "flex", alignItems: "center", flexDirection: "row", width: "100%", height: "auto" }}>
+                                                <Animated.View style={{
+                                                    width: "auto",
+                                                    justifyContent: "center",
+                                                    alignItems: "center",
+                                                    left: menuPosition.interpolate({
+                                                        inputRange: [0, 1],
+                                                        outputRange: [-10, -sideMenuWidth],
+                                                    }),
+                                                }}>
+                                                    <MenuButton language={language} theme={theme} onPress={onBack}></MenuButton>
+                                                </Animated.View>
+                                                <View style={{ flex: 1 }}></View>
+                                                <Text style={{
+                                                    fontWeight: "600",
+                                                    color: theme.menu.header.titleColor,
+                                                    fontSize: theme.menu.header.titleFontSize, marginRight: 24,
+                                                    fontFamily: config.fontFamily,
+                                                }}>
+                                                    {
+                                                        currentCategory.__rawNode__.content?.contents[language.code]?.name
+                                                        || localize(language, "kiosk_menu_root_title")
+                                                    }
+                                                </Text>
+                                            </View>
+                                            <View style={{
+                                                width: "100%",
+                                            }}>
+                                                <Animated.View style={{
+                                                    width: "auto",
+                                                    justifyContent: "center",
+                                                    alignItems: "center",
+                                                    opacity: menuPosition.interpolate({
+                                                        inputRange: [0, 1],
+                                                        outputRange: [1, 0],
+                                                    }),
+                                                }}>
+                                                    <TagsPanel theme={theme} language={language} tags={tags} onSelect={onSelectTagsHandler}></TagsPanel>
+                                                </Animated.View>
+                                            </View>
+                                        </View>
+                                    </LinearGradient>
+                                </Animated.View>
                                 <Animated.View style={{
                                     position: "absolute",
                                     height: "100%",
@@ -262,7 +308,8 @@ export const Menu = React.memo(({
                                         outputRange: [0, height],
                                     }),
                                 }}>
-                                    <NavMenu theme={theme} menuStateId={menuStateId} orderType={orderType}
+                                    <NavMenu theme={theme} orderWizard={orderWizard} isOpened={isOpened} menuStateId={menuStateId} orderStateId={orderStateId}
+                                        orderType={orderType} selectedTags={selectedTags}
                                         node={previousCategory.index <= currentCategory.index ? currentCategory : previousCategory}
                                         language={language} currency={currency} onPress={selectNavMenuCategoryHandler}></NavMenu>
                                 </Animated.View>
@@ -276,7 +323,8 @@ export const Menu = React.memo(({
                                         outputRange: [-height, 0],
                                     }),
                                 }}>
-                                    <NavMenu theme={theme} menuStateId={menuStateId} orderType={orderType}
+                                    <NavMenu theme={theme} orderWizard={orderWizard} isOpened={isOpened} menuStateId={menuStateId} orderStateId={orderStateId}
+                                        orderType={orderType} selectedTags={selectedTags}
                                         node={previousCategory.index > currentCategory.index ? currentCategory : previousCategory}
                                         language={language} currency={currency} onPress={selectNavMenuCategoryHandler}></NavMenu>
                                 </Animated.View>
