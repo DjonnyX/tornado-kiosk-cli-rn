@@ -2,6 +2,7 @@ import { IKioskThemeData } from "@djonnyx/tornado-types";
 import React, { Dispatch, useEffect } from "react";
 import { Text } from "react-native";
 import { connect } from "react-redux";
+import { config } from "../../Config";
 import { NotificationActions } from "../../store/actions";
 import { IAppState } from "../../store/state";
 import { NotificationModal } from "./NotificationModal";
@@ -40,6 +41,7 @@ const SnackContainer = React.memo(({ theme, message, duration, visible, onComple
                 !!theme &&
                 <NotificationModal theme={theme} visible={visible}>
                     <Text style={{
+                        fontFamily: config.fontFamily,
                         fontWeight: "600", color: theme.common.notificationAlert.textColor,
                         fontSize: theme.common.notificationAlert.textFontSize
                     }}>{message}</Text>

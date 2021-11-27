@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { ICompiledLanguage, ICompiledTag, IKioskThemeData } from "@djonnyx/tornado-types";
 import Color from "color";
+import { config } from "../../Config";
 
 interface ITagListProps {
     theme: IKioskThemeData;
@@ -66,7 +67,7 @@ const TagButton = React.memo(({ theme, tag, language, onSelect }: ITagButtonProp
         setIsSelected(!isSelected);
     }, [isSelected]);
 
-    const backgroundColor = isSelected ? tag?.contents[language.code]?.color : "rgb(220,220,220)";
+    const backgroundColor = isSelected ? tag?.contents[language.code]?.color : theme.menu.tagsPanel.tag.backgroundColor;
 
     return (
         <TouchableOpacity style={{
@@ -81,10 +82,11 @@ const TagButton = React.memo(({ theme, tag, language, onSelect }: ITagButtonProp
                 }}
             >
                 <Text style={{
+                    fontFamily: config.fontFamily,
                     fontWeight: "500",
                     textTransform: "lowercase",
-                    color: Color(backgroundColor).isLight() ? "#232731" : "white"/*theme.menu.tagsPanel.tag.textColor*/,
-                    fontSize: 16/*theme.menu.tagsPanel.tag.textSize*/,
+                    color: Color(backgroundColor).isLight() ? theme.menu.tagsPanel.tag.textColorDark : theme.menu.tagsPanel.tag.textColorLight,
+                    fontSize: theme.menu.tagsPanel.tag.fontSize,
                     lineHeight: 17,
                 }}>
                     {

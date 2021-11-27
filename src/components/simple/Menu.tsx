@@ -15,6 +15,7 @@ import { PositionDetails } from "./PositionDetails";
 import { TagsPanel } from "./TagsPanel";
 import { uiutils } from "../../utils/ui";
 import { IOrderWizard } from "../../core/interfaces";
+import { config } from "../../Config";
 
 interface IMenuProps {
     theme: IKioskThemeData;
@@ -207,7 +208,7 @@ export const Menu = React.memo(({
                                 backgroundColor: theme.menu.sideMenu.backgroundColor,
                                 top: theme.menu.sideMenu.padding,
                                 borderRadius: theme.menu.sideMenu.borderRadius,
-                                borderWidth: 1, borderColor: "rgba(0,0,0,0.05)",
+                                borderWidth: 1, borderColor: theme.menu.sideMenu.borderColor,
                                 left: menuPosition.interpolate({
                                     inputRange: [0, 1],
                                     outputRange: [theme.menu.sideMenu.padding, -sideMenuWidth],
@@ -271,7 +272,8 @@ export const Menu = React.memo(({
                                                 <Text style={{
                                                     fontWeight: "600",
                                                     color: theme.menu.header.titleColor,
-                                                    fontSize: theme.menu.header.titleFontSize, marginRight: 24
+                                                    fontSize: theme.menu.header.titleFontSize, marginRight: 24,
+                                                    fontFamily: config.fontFamily,
                                                 }}>
                                                     {
                                                         currentCategory.__rawNode__.content?.contents[language.code]?.name

@@ -18,6 +18,8 @@ class Config implements IConfig {
         checkActivityInterval: 1000,
         resetTimeoutAfterPay: 20,
     };
+
+    fontFamily = "Roboto";
 }
 
 export const config = new Config();

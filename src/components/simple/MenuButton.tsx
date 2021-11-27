@@ -27,7 +27,6 @@ export const MenuButton = ({ theme, onPress, language }: IMenuButtonProps) => {
                     }}
                     textStyle={{
                         fontWeight: "600",
-                        textTransform: "uppercase",
                         color: theme.menu.backButton.textColor,
                         fontSize: theme.menu.backButton.textFontSize,
                     }}

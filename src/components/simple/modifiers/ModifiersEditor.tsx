@@ -4,6 +4,7 @@ import { View, Text, SafeAreaView, ScrollView, TouchableOpacity } from "react-na
 import FastImage from "react-native-fast-image";
 import LinearGradient from "react-native-linear-gradient";
 import { connect } from "react-redux";
+import { config } from "../../../Config";
 import { PositionWizardModes } from "../../../core/enums";
 import { IOrderWizard, IPositionWizard } from "../../../core/interfaces";
 import { PositionWizardEventTypes } from "../../../core/position-wizard/events";
@@ -111,27 +112,30 @@ export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _la
                                         </View>
                                         <View style={{ flex: 1, marginLeft: 30, marginRight: 30 }}>
                                             <Text style={{
-                                                fontSize: theme.modifiers.nameFontSize, fontWeight: "600", color: theme.modifiers.nameColor,
-                                                textTransform: "uppercase"
+                                                fontFamily: config.fontFamily,
+                                                fontSize: theme.modifiers.nameFontSize,
+                                                fontWeight: "600",
+                                                color: theme.modifiers.nameColor,
                                             }}>{
                                                     position.__product__?.contents[_language.code]?.name
                                                 }</Text>
                                             <Text style={{
-                                                fontSize: theme.modifiers.descriptionFontSize, color: theme.modifiers.descriptionColor,
+                                                fontFamily: config.fontFamily,
+                                                fontSize: theme.modifiers.descriptionFontSize,
+                                                color: theme.modifiers.descriptionColor,
                                                 lineHeight: theme.modifiers.descriptionFontSize * 1.5,
-                                                textTransform: "uppercase"
                                             }}>{
                                                     position.__product__?.contents[_language.code]?.description
                                                 }</Text>
                                         </View>
                                         <View style={{}}>
                                             <Text style={{
+                                                fontFamily: config.fontFamily,
                                                 backgroundColor: theme.modifiers.price.backgroundColor,
                                                 paddingVertical: 8, paddingHorizontal: 8,
-                                                borderRadius: 14, borderWidth: 2, borderColor: theme.modifiers.price.borderColor,
+                                                // borderRadius: 14, borderWidth: 2, borderColor: theme.modifiers.price.borderColor,
                                                 fontSize: theme.modifiers.price.textFontSize, fontWeight: "600",
                                                 color: theme.modifiers.price.textColor,
-                                                textTransform: "uppercase",
                                                 marginBottom: 12,
                                                 textAlign: "center",
                                             }}>{
@@ -204,7 +208,11 @@ export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _la
                                     </View>
                                 </View>
                                 <View style={{
-                                    flex: 1, backgroundColor: theme.modifiers.group.backgroundColor, paddingLeft: 34, paddingRight: 34, paddingTop: 34,
+                                    flex: 1,
+                                    backgroundColor: theme.modifiers.group.backgroundColor,
+                                    borderColor: theme.modifiers.group.borderColor,
+                                    borderWidth: 1,
+                                    paddingLeft: 34, paddingRight: 34, paddingTop: 34,
                                     borderTopLeftRadius: 32, borderTopRightRadius: 32, marginHorizontal: 24,
                                 }}>
                                     <View style={{ width: "100%", alignItems: "center", marginBottom: 32 }}>
@@ -251,19 +259,22 @@ export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _la
                                             disabled={position.currentGroup === 0} onPress={onPreviousGroup}></SimpleButton>
                                         <View style={{ flex: 1 }}>
                                             <Text style={{
-                                                fontSize: 24, fontWeight: "600", color: theme.modifiers.group.nameColor,
+                                                fontFamily: config.fontFamily,
+                                                fontSize: 24,
+                                                fontWeight: "600",
+                                                color: theme.modifiers.group.nameColor,
                                                 textAlign: "center",
-                                                textTransform: "uppercase",
                                                 marginBottom: 6,
                                             }}>{
                                                     position.groups[position.currentGroup].__node__.__rawNode__.content?.contents[_language.code]?.name
                                                 }</Text>
                                             <Text style={{
+                                                fontFamily: config.fontFamily,
                                                 fontSize: 14,
                                                 color: position.groups[position.currentGroup].isValid
                                                     ? theme.modifiers.group.descriptionColor
                                                     : theme.modifiers.group.descriptionInvalidColor,
-                                                textAlign: "center", textTransform: "uppercase",
+                                                textAlign: "center",
                                             }}>{
                                                     position.groups[position.currentGroup].__node__.__rawNode__.content?.contents[_language.code]?.description
                                                 }</Text>
@@ -305,7 +316,7 @@ export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _la
                                         <SafeAreaView style={{
                                             flex: 1, width: "100%",
                                         }}>
-                                            <ScrollView ref={_scrollViewRef as any} style={{ flex: 1, marginTop: 68 }} persistentScrollbar>
+                                            <ScrollView ref={_scrollViewRef as any} style={{ flex: 1, marginTop: 74 }} persistentScrollbar>
                                                 <GridList style={{ flex: 1 }} disbleStartAnimation
                                                     padding={10} spacing={6} data={position.groups[position.currentGroup].positions}
                                                     itemDimension={MODIFIER_ITEM_WIDTH} animationSkipFrames={10} renderItem={({ item }) => {

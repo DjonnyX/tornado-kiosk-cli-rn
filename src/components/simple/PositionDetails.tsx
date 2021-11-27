@@ -3,6 +3,7 @@ import React, { Dispatch, useCallback, useEffect, useRef, useState } from "react
 import { View, Text, ScrollView, TouchableOpacity, Dimensions, LayoutChangeEvent } from "react-native";
 import FastImage from "react-native-fast-image";
 import { connect } from "react-redux";
+import { config } from "../../Config";
 import { PositionWizardModes } from "../../core/enums";
 import { IOrderWizard, IPositionWizard } from "../../core/interfaces";
 import { PositionWizardEventTypes } from "../../core/position-wizard/events";
@@ -162,20 +163,24 @@ export const PositionDetailsContainer = React.memo(({ _theme, _orderStateId, _la
                                             height: isLandscape ? actualHeight - mainMarginDouble : (actualHeight * .6) - mainMarginDouble,
                                             marginVertical: 30, marginHorizontal: 30,
                                             paddingHorizontal: 54, paddingVertical: 54,
-                                            backgroundColor: theme.details.frame.backgroundColor, borderRadius: 24,
+                                            backgroundColor: theme.details.frame.backgroundColor,
+                                            borderWidth: 1, borderColor: theme.details.frame.borderColor,
+                                            borderRadius: 24,
                                         }}>
                                             <Text style={{
+                                                fontFamily: config.fontFamily,
                                                 textAlign: "center",
                                                 fontSize: theme.details.frame.nameFontSize, fontWeight: "600", color: theme.details.frame.nameColor,
-                                                textTransform: "uppercase", marginBottom: 22,
+                                                marginBottom: 22,
                                             }}>{
                                                     position.__product__?.contents[_language.code]?.name
                                                 }</Text>
                                             <Text style={{
+                                                fontFamily: config.fontFamily,
                                                 textAlign: "center",
                                                 fontSize: theme.details.frame.descriptionFontSize, color: theme.details.frame.descriptionColor,
                                                 lineHeight: theme.details.frame.descriptionFontSize * 1.5,
-                                                textTransform: "uppercase", marginBottom: 32,
+                                                marginBottom: 32,
                                             }}>{
                                                     position.__product__?.contents[_language.code]?.description
                                                 }</Text>
@@ -185,12 +190,12 @@ export const PositionDetailsContainer = React.memo(({ _theme, _orderStateId, _la
                                                 marginBottom: 22,
                                             }}>
                                                 <Text style={{
+                                                    fontFamily: config.fontFamily,
                                                     backgroundColor: theme.details.frame.price.backgroundColor,
                                                     paddingVertical: 14, paddingHorizontal: 28,
                                                     borderRadius: 14, borderWidth: 2, borderColor: theme.details.frame.price.borderColor,
                                                     fontSize: theme.details.frame.price.textFontSize, fontWeight: "600",
                                                     color: theme.details.frame.price.textColor,
-                                                    textTransform: "uppercase",
                                                 }}>{
                                                         position.getFormatedSumPerOne(true)
                                                     }</Text>

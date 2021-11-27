@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, StyleProp, ViewStyle, TextStyle, Animated, Easing, LayoutChangeEvent } from "react-native";
+import { config } from "../../Config";
 
 interface IBound {
     x: number;
@@ -61,7 +62,10 @@ const NumericStepperButton = ({ icon, style, selectedStyle, textStyle, textSelec
     return (
         <TouchableOpacity onPress={onPress} onLayout={_onLayoutChange}>
             <View style={{ alignItems: "center", justifyContent: "center", ...actualStyle as any }}>
-                <Text style={{ ...actualTextStyle as any }}>
+                <Text style={{
+                    ...actualTextStyle as any,
+                    fontFamily: config.fontFamily,
+                }}>
                     {
                         icon
                     }
@@ -98,7 +102,10 @@ const NumericStepperPlaceholder = React.memo(({ text, disabled, style, textStyle
     return (
         <TouchableOpacity onPress={onPress} onLayout={_onLayoutChange}>
             <View style={{ alignItems: "center", justifyContent: "center", ...style as any }}>
-                <Text style={{ ...textStyle as any }}>
+                <Text style={{
+                    ...textStyle as any,
+                    fontFamily: config.fontFamily,
+                }}>
                     {
                         text
                     }

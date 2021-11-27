@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { View, TouchableOpacity, StyleProp, ViewStyle, TextStyle, Text, Animated, Easing, LayoutChangeEvent } from "react-native";
+import { config } from "../../Config";
 
 interface ISwitchProps {
     titleOn?: string;
@@ -146,7 +147,10 @@ export const Switch = React.memo(({ value, titleOn, titleOff,
                     >
                         {
                             !!titleOff &&
-                            <Text style={styles.sTextOff}>
+                            <Text style={{
+                                ...styles.sTextOff as any,
+                                fontFamily: config.fontFamily,
+                            }}>
                                 {
                                     titleOff
                                 }
@@ -154,7 +158,10 @@ export const Switch = React.memo(({ value, titleOn, titleOff,
                         }
                         {
                             !!formatValueFunction &&
-                            <Text style={styles.sTextOff}>
+                            <Text style={{
+                                ...styles.sTextOff as any,
+                                fontFamily: config.fontFamily,
+                            }}>
                                 {
                                     formatValueFunction(value)
                                 }
@@ -168,7 +175,10 @@ export const Switch = React.memo(({ value, titleOn, titleOff,
                     >
                         {
                             !!titleOn &&
-                            <Text style={styles.sTextOn}>
+                            <Text style={{
+                                ...styles.sTextOn as any,
+                                fontFamily: config.fontFamily,
+                            }}>
                                 {
                                     titleOn
                                 }
@@ -176,7 +186,10 @@ export const Switch = React.memo(({ value, titleOn, titleOff,
                         }
                         {
                             !!formatValueFunction &&
-                            <Text style={styles.sTextOn}>
+                            <Text style={{
+                                ...styles.sTextOn as any,
+                                fontFamily: config.fontFamily,
+                            }}>
                                 {
                                     formatValueFunction(value)
                                 }

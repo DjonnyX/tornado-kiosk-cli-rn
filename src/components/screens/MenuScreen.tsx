@@ -127,7 +127,7 @@ const MenuScreenContainer = React.memo(({ _theme, _tags,
                 !!_menuWizard?.menu &&
                 <View onLayout={onChangeLayout} style={{
                     flexDirection: "row", width: "100%", height: "100%",
-                    backgroundColor: "#fbfbfb", //theme.menu.backgroundColor
+                    backgroundColor: theme.menu.backgroundColor
                 }}>
                     <View style={{ position: "absolute", width: menuWidth, height: "100%", zIndex: 1 }}>
                         <Menu theme={theme} menuStateId={_menuStateId} orderStateId={_orderStateId} orderWizard={_orderWizard!} orderType={_orderType} currency={_defaultCurrency}
@@ -143,7 +143,7 @@ const MenuScreenContainer = React.memo(({ _theme, _tags,
                         backgroundColor: theme.menu.draftOrder.backgroundColor,
                         top: theme.menu.draftOrder.padding,
                         borderRadius: theme.menu.draftOrder.borderRadius,
-                        borderWidth: 1, borderColor: "#f0f0f0",
+                        borderWidth: 1, borderColor: theme.menu.draftOrder.borderColor,
                     }}>
                         <DropShadow style={{ flex: 1, ...dropShadowStyles }}>
                             <MyOrderPanel theme={theme} isShowOrderTypes={_isShowOrderTypes} orderStateId={_orderStateId}

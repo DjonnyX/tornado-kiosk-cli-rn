@@ -5,6 +5,7 @@ import { NodeTypes, ICompiledProduct, ICurrency, ICompiledLanguage, IKioskThemeD
 import { TagList } from "../TagList";
 import { MenuNode } from "../../../core/menu/MenuNode";
 import { IOrderWizard } from "../../../core/interfaces";
+import { config } from "../../../Config";
 
 interface INavMenuItemProps {
     theme: IKioskThemeData;
@@ -37,11 +38,13 @@ export const NavMenuItem = React.memo(({ theme, thumbnailHeight, orderWizard, or
         ? (node.__rawNode__.content as ICompiledProduct).tags
         : undefined;
 
+    const isSelected = orderWizard.contains(node);
+
     return (
         <View style={{
-            flex: 1, backgroundColor: "white"/*"rgba(255,255,255,0.35)"*/,
-            borderWidth: 1,
-            borderColor: orderWizard.contains(node) ? parentContent?.color : "rgba(0,0,0,0.05)"/* theme.menu.navMenu.item.backgroundColor */,
+            flex: 1, backgroundColor: theme.menu.navMenu.item.backgroundColor,
+            borderWidth: isSelected ? 2 : 1,
+            borderColor: isSelected ? parentContent?.color : theme.menu.navMenu.item.borderColor,
             borderRadius: 16, paddingHorizontal: 12, paddingVertical: 10,
         }}>
             <TouchableOpacity style={{ alignItems: "center", flex: 1 }} onPress={pressHandler}>
@@ -63,6 +66,7 @@ export const NavMenuItem = React.memo(({ theme, thumbnailHeight, orderWizard, or
                                 position: "absolute",
                             }}>
                                 <Text style={{
+                                    fontFamily: config.fontFamily,
                                     borderRadius: 8,
                                     paddingHorizontal: 8,
                                     paddingVertical: 4,
@@ -87,25 +91,27 @@ export const NavMenuItem = React.memo(({ theme, thumbnailHeight, orderWizard, or
                             </View>
                         </View>
                         <Text textBreakStrategy="simple" numberOfLines={4} ellipsizeMode="tail" style={{
+                            fontFamily: config.fontFamily,
                             width: "100%",
                             textAlign: node.type === NodeTypes.PRODUCT ? "left" : "center",
                             fontSize: theme.menu.navMenu.item.nameFontSize,
                             letterSpacing: 0.4,
                             lineHeight: theme.menu.navMenu.item.nameFontSize * 1.5, marginBottom: 6, fontWeight: "500",
-                            color: "#232731" //theme.menu.navMenu.item.nameColor,
+                            color: theme.menu.navMenu.item.nameColor,
                         }}>
                             {
                                 currentContent.name
                             }
                         </Text>
                         <Text textBreakStrategy="simple" numberOfLines={2} ellipsizeMode="tail" style={{
+                            fontFamily: config.fontFamily,
                             width: "100%",
                             textAlign: node.type === NodeTypes.PRODUCT ? "left" : "center",
                             fontWeight: "400",
                             letterSpacing: 0.4,
                             lineHeight: theme.menu.navMenu.item.descriptionFontSize * 1.6,
-                            fontSize: 14, //theme.menu.navMenu.item.descriptionFontSize,
-                            color: "#7B7D83", //theme.menu.navMenu.item.descriptionColor,
+                            fontSize: theme.menu.navMenu.item.descriptionFontSize,
+                            color: theme.menu.navMenu.item.descriptionColor,
                             marginBottom: 12
                         }}>
                             {
@@ -125,17 +131,19 @@ export const NavMenuItem = React.memo(({ theme, thumbnailHeight, orderWizard, or
                             marginBottom: 12
                         }}>
                             <Text style={{
+                                fontFamily: config.fontFamily,
                                 flex: 1,
                                 textAlign: "left",
-                                fontSize: 22, //theme.menu.navMenu.item.price.textFontSize,
+                                fontSize: theme.menu.navMenu.item.price.textFontSize,
                                 paddingRight: 14,
-                                color: "#232731" //theme.menu.navMenu.item.price.textColor
+                                color: theme.menu.navMenu.item.price.textColor
                             }}>
                                 {
                                     node.getFormatedPrice(true)
                                 }
                             </Text>
                             <Text style={{
+                                fontFamily: config.fontFamily,
                                 flex: 1,
                                 textAlign: "right", fontSize: theme.menu.navMenu.item.price.textFontSize,
                                 paddingRight: 14, color: theme.menu.navMenu.item.price.textColor

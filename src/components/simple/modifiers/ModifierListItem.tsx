@@ -6,6 +6,7 @@ import { NumericStapper } from "../NumericStapper";
 import { IPositionWizard } from "../../../core/interfaces";
 import { TagList } from "../TagList";
 import { Switch } from "../Switch";
+import { config } from "../../../Config";
 
 interface IModifierListItemProps {
     theme: IKioskThemeData;
@@ -41,7 +42,14 @@ export const ModifierListItem = React.memo(({ theme, thumbnailHeight, currency, 
         : undefined;
 
     return (
-        <View style={{ flex: 1, backgroundColor: theme.modifiers.item.backgroundColor, borderRadius: 16, padding: 22 }}>
+        <View style={{
+            flex: 1,
+            backgroundColor: theme.modifiers.item.backgroundColor,
+            borderColor: theme.modifiers.item.borderColor,
+            borderWidth: 1,
+            borderRadius: 16,
+            padding: 22,
+        }}>
             <TouchableOpacity style={{ alignItems: "center", flex: 1 }} onPress={pressHandler}>
                 <View style={{
                     flexDirection: "row", alignItems: "baseline", justifyContent: !!tags ? "space-around" : "flex-end",
@@ -60,6 +68,7 @@ export const ModifierListItem = React.memo(({ theme, thumbnailHeight, currency, 
                             position: "absolute",
                         }}>
                             <Text style={{
+                                fontFamily: config.fontFamily,
                                 borderRadius: 8,
                                 paddingHorizontal: 8,
                                 paddingVertical: 4,
@@ -81,16 +90,18 @@ export const ModifierListItem = React.memo(({ theme, thumbnailHeight, currency, 
                 </View>
                 <Text textBreakStrategy="simple" numberOfLines={4} ellipsizeMode="tail"
                     style={{
+                        fontFamily: config.fontFamily,
                         textAlign: "center", fontSize: theme.modifiers.item.nameFontFontSize, marginBottom: 6, color: theme.modifiers.item.nameColor,
-                        fontWeight: "600", textTransform: "uppercase"
+                        fontWeight: "600",
                     }}>
                     {
                         currentContent?.name
                     }
                 </Text>
                 {/* <Text textBreakStrategy="simple" numberOfLines={2} ellipsizeMode="tail" style={{
+                    fontFamily: config.fontFamily,
                     textAlign: "center", fontSize: theme.modifiers.item.descriptionFontSize,
-                    color: theme.modifiers.item.descriptionColor, textTransform: "uppercase",
+                    color: theme.modifiers.item.descriptionColor,
                     marginBottom: 12
                 }}>
                     {

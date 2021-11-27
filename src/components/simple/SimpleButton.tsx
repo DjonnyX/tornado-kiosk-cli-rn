@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { View, TouchableOpacity, StyleProp, ViewStyle, TextStyle, Text } from "react-native";
+import { config } from "../../Config";
 
 interface ISimpleButtonProps {
     title: string;
@@ -62,7 +63,10 @@ export const SimpleButton = React.memo(({ children, title, style, styleDisabled,
                 {
                     !!children && children
                 }
-                <Text style={styles.sText}>
+                <Text style={{
+                    ...styles.sText as any,
+                    fontFamily: config.fontFamily,
+                }}>
                     {
                         title
                     }
@@ -120,12 +124,15 @@ export const SimpleSystemButton = React.memo(({ title, style, styleDisabled, tex
             <View
                 style={styles.sLayout}
             >
-                <Text style={styles.sText}>
+                <Text style={{
+                    ...styles.sText as any,
+                    fontFamily: config.fontFamily,
+                }} >
                     {
                         title
                     }
                 </Text>
             </View>
-        </TouchableOpacity>
+        </TouchableOpacity >
     )
 });

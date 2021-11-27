@@ -6,6 +6,7 @@ import { NumericStapper } from "../NumericStapper";
 import { IOrderWizard, IPositionWizard } from "../../../core/interfaces";
 import { IAlertState } from "../../../interfaces";
 import { localize } from "../../../utils/localization";
+import { config } from "../../../Config";
 
 interface ConfirmationOrderListItemProps {
     theme: IKioskThemeData;
@@ -80,8 +81,9 @@ export const ConfirmationOrderListItem = React.memo(({ theme, stateId, orderWiza
                     <View style={{ flexDirection: "row", marginRight: 20, alignItems: "baseline" }}>
                         <View style={{ flex: 1 }}>
                             <Text numberOfLines={3} ellipsizeMode="tail" style={{
+                                fontFamily: config.fontFamily,
                                 textAlign: "left", fontSize: theme.confirmation.item.nameFontSize,
-                                color: theme.confirmation.item.nameColor, textTransform: "uppercase", fontWeight: "600"
+                                color: theme.confirmation.item.nameColor, fontWeight: "600"
                             }}>
                                 {
                                     currentContent?.name
@@ -90,6 +92,7 @@ export const ConfirmationOrderListItem = React.memo(({ theme, stateId, orderWiza
                         </View>
                         <View style={{ width: 192, justifyContent: "flex-end" }}>
                             <Text style={{
+                                fontFamily: config.fontFamily,
                                 textAlign: "right", fontSize: theme.confirmation.item.price.textFontSize,
                                 color: theme.confirmation.item.price.textColor, fontWeight: "600"
                             }}>
@@ -104,9 +107,10 @@ export const ConfirmationOrderListItem = React.memo(({ theme, stateId, orderWiza
                             position.nestedPositions.map((p, index) => <View key={index} style={{ flexDirection: "row", marginRight: 20 }}>
                                 <View style={{ flex: 1 }}>
                                     <Text numberOfLines={1} ellipsizeMode="tail" style={{
+                                        fontFamily: config.fontFamily,
                                         textAlign: "left", fontSize: 13,
                                         color: theme.confirmation.nestedItem.nameColor,
-                                        textTransform: "uppercase", fontWeight: "600"
+                                        fontWeight: "600"
                                     }}>
                                         {
                                             p.__product__?.contents[language?.code].name
@@ -115,6 +119,7 @@ export const ConfirmationOrderListItem = React.memo(({ theme, stateId, orderWiza
                                 </View>
                                 <View style={{ width: 192 }}>
                                     <Text numberOfLines={1} ellipsizeMode="tail" style={{
+                                        fontFamily: config.fontFamily,
                                         textAlign: "right", fontSize: theme.confirmation.nestedItem.price.textFontSize,
                                         color: theme.confirmation.nestedItem.price.textColor, fontWeight: "600"
                                     }}>

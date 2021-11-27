@@ -128,6 +128,14 @@ export const EMBEDED_THEME: IKioskTheme = {
                     titleColor: "rgba(0,0,0,0.75)",
                     titleFontSize: 32,
                 },
+                tagsPanel: {
+                    tag: {
+                        backgroundColor: "rgb(220,220,220)",
+                        fontSize: 16,
+                        textColorLight: "#ffffff",
+                        textColorDark: "#232731",
+                    }
+                },
                 orderPanel: {
                     backgroundColor: "rgba(0,0,0,0.025)",
                 },
@@ -140,6 +148,7 @@ export const EMBEDED_THEME: IKioskTheme = {
                 sideMenu: {
                     backgroundColor: "white",
                     backgroundImage: undefined,
+                    borderColor: "rgba(0,0,0,0.05)",
                     padding: 8,
                     borderRadius: 14,
                     item: {
@@ -154,8 +163,10 @@ export const EMBEDED_THEME: IKioskTheme = {
                 navMenu: {
                     backgroundColor: "transparent",
                     backgroundImage: undefined,
+                    borderColor: "rgba(0,0,0,0.05)",
                     item: {
                         backgroundColor: "transparent",
+                        borderColor: "rgba(0,0,0,0.05)",
                         nameColor: "rgba(0,0,0,0.75)",
                         nameFontSize: 20,
                         descriptionColor: "rgba(0,0,0,0.5)",
@@ -181,6 +192,7 @@ export const EMBEDED_THEME: IKioskTheme = {
                 draftOrder: {
                     backgroundColor: "white",
                     backgroundImage: undefined,
+                    borderColor: "rgba(0,0,0,0.05)",
                     padding: 8,
                     borderRadius: 14,
                     item: {
@@ -234,6 +246,7 @@ export const EMBEDED_THEME: IKioskTheme = {
                 },
                 group: {
                     backgroundColor: "rgba(255, 255, 255, 1)",
+                    borderColor: "rgba(0,0,0,0.05)",
                     nameColor: "rgba(0,0,0,0.75)",
                     descriptionColor: "rgba(0,0,0,0.75)",
                     descriptionInvalidColor: "#ff4e4e",
@@ -266,6 +279,7 @@ export const EMBEDED_THEME: IKioskTheme = {
                 },
                 item: {
                     backgroundColor: "transparent",
+                    borderColor: "rgba(0,0,0,0.05)",
                     nameColor: "rgba(0,0,0,0.75)",
                     nameFontFontSize: 20,
                     descriptionColor: "rgba(0,0,0,0.5)",
@@ -316,6 +330,7 @@ export const EMBEDED_THEME: IKioskTheme = {
                 backgroundColor: "#fff",
                 frame: {
                     backgroundColor: "#fff",
+                    borderColor: "rgba(0,0,0,0.05)",
                     nameColor: "rgba(0,0,0,0.75)",
                     nameFontSize: 32,
                     descriptionColor: "rgba(0,0,0,0.75)",
@@ -545,6 +560,14 @@ export const EMBEDED_THEME: IKioskTheme = {
                     titleColor: "rgba(255,255,255,0.75)",
                     titleFontSize: 32,
                 },
+                tagsPanel: {
+                    tag: {
+                        backgroundColor: "rgb(60,60,60)",
+                        fontSize: 16,
+                        textColorLight: "#ffffff",
+                        textColorDark: "#232731",
+                    }
+                },
                 orderPanel: {
                     backgroundColor: "rgba(255,255,255,0.025)",
                 },
@@ -556,6 +579,7 @@ export const EMBEDED_THEME: IKioskTheme = {
                 },
                 sideMenu: {
                     backgroundColor: "black",
+                    borderColor: "rgba(255,255,255,0.15)",
                     backgroundImage: undefined,
                     padding: 8,
                     borderRadius: 14,
@@ -571,8 +595,10 @@ export const EMBEDED_THEME: IKioskTheme = {
                 navMenu: {
                     backgroundColor: "transparent",
                     backgroundImage: undefined,
+                    borderColor: "rgba(255,255,255,0.05)",
                     item: {
                         backgroundColor: "transparent",
+                        borderColor: "rgba(0,0,0,0.05)",
                         nameColor: "rgba(255,255,255,0.75)",
                         nameFontSize: 20,
                         descriptionColor: "rgba(255,255,255,0.5)",
@@ -598,6 +624,7 @@ export const EMBEDED_THEME: IKioskTheme = {
                 draftOrder: {
                     backgroundColor: "black",
                     backgroundImage: undefined,
+                    borderColor: "rgba(0,0,0,0.05)",
                     padding: 8,
                     borderRadius: 14,
                     item: {
@@ -651,6 +678,7 @@ export const EMBEDED_THEME: IKioskTheme = {
                 },
                 group: {
                     backgroundColor: "rgba(0, 0, 0, 1)",
+                    borderColor: "rgba(255,255,255,0.15)",
                     nameColor: "rgba(255,255,255,0.75)",
                     descriptionColor: "rgba(255,255,255,0.75)",
                     descriptionInvalidColor: "#ff4e4e",
@@ -683,6 +711,7 @@ export const EMBEDED_THEME: IKioskTheme = {
                 },
                 item: {
                     backgroundColor: "transparent",
+                    borderColor: "rgba(255,255,255,0.15)",
                     nameColor: "rgba(255,255,255,0.75)",
                     nameFontFontSize: 20,
                     descriptionColor: "rgba(255,255,255,0.5)",
@@ -733,6 +762,7 @@ export const EMBEDED_THEME: IKioskTheme = {
                 backgroundColor: "#000",
                 frame: {
                     backgroundColor: "#000",
+                    borderColor: "rgba(255,255,255,0.15)",
                     nameColor: "rgba(255,255,255,0.75)",
                     nameFontSize: 32,
                     descriptionColor: "rgba(255,255,255,0.5)",

@@ -16,6 +16,7 @@ import { SystemActions } from "../../store/actions/SystemAction";
 import { SimpleSystemButton } from "../simple";
 import { IAlertState } from "../../interfaces";
 import { interval, Subject } from "rxjs";
+import { config } from "../../Config";
 
 interface IFormSNProps {
     theme: IKioskThemeData;
@@ -56,6 +57,7 @@ const FormSN = React.memo(({ theme, value, isProgress, onComplete }: IFormSNProp
                     : theme.service.textInput.underlineWrongColor
                 }
                 style={{
+                    fontFamily: config.fontFamily,
                     fontSize: theme.service.textInput.textFontSize,
                     textAlign: "center", color: theme.service.textInput.textColor,
                     minWidth: 140, marginBottom: 12
@@ -63,7 +65,11 @@ const FormSN = React.memo(({ theme, value, isProgress, onComplete }: IFormSNProp
                 placeholder="Серийный ключ" onChangeText={changeSerialNumHandler} value={serialNumber} />
             {
                 !isValid &&
-                <Text style={{ fontSize: theme.service.errorLabel.textFontSize, color: theme.service.errorLabel.textColor }}>
+                <Text style={{
+                    fontSize: theme.service.errorLabel.textFontSize,
+                    color: theme.service.errorLabel.textColor,
+                    fontFamily: config.fontFamily,
+                }}>
                     * Обязательное поле
                 </Text>
             }
@@ -119,6 +125,7 @@ const FormTParams = React.memo(({ theme, stores, _storeId, _terminal, isProgress
                     : theme.service.textInput.underlineWrongColor
                 }
                 style={{
+                    fontFamily: config.fontFamily,
                     fontSize: theme.service.textInput.textFontSize,
                     textAlign: "center", color: theme.service.textInput.textColor,
                     minWidth: 180
@@ -126,7 +133,11 @@ const FormTParams = React.memo(({ theme, stores, _storeId, _terminal, isProgress
                 placeholder="Название терминала" onChangeText={changeTerminalNameHandler} value={terminalName} />
             {
                 !isTerminalNameValid &&
-                <Text style={{ fontSize: theme.service.errorLabel.textFontSize, color: theme.service.errorLabel.textColor }}>
+                <Text style={{
+                    fontFamily: config.fontFamily,
+                    fontSize: theme.service.errorLabel.textFontSize,
+                    color: theme.service.errorLabel.textColor
+                }}>
                     * Обязательное поле
                 </Text>
             }
@@ -157,7 +168,11 @@ const FormTParams = React.memo(({ theme, stores, _storeId, _terminal, isProgress
             </Picker>
             {
                 !isStoreIdValid &&
-                <Text style={{ fontSize: theme.service.errorLabel.textFontSize, color: theme.service.errorLabel.textColor }}>
+                <Text style={{
+                    fontFamily: config.fontFamily,
+                    fontSize: theme.service.errorLabel.textFontSize,
+                    color: theme.service.errorLabel.textColor
+                }}>
                     * Обязательное поле
                 </Text>
             }

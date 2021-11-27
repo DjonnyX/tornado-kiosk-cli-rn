@@ -4,6 +4,7 @@ import { ICurrency, ICompiledLanguage, IKioskThemeData } from "@djonnyx/tornado-
 import { IOrderWizard, IPositionWizard } from "../../../core/interfaces";
 import { IAlertState } from "../../../interfaces";
 import { localize } from "../../../utils/localization";
+import { config } from "../../../Config";
 
 interface IMyOrderListItemItemProps {
     theme: IKioskThemeData;
@@ -69,7 +70,10 @@ export const MyOrderListItem = React.memo(({ theme, stateId, menuStateId, imageH
                     }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                 </View> */}
                 <Text numberOfLines={3} ellipsizeMode="tail" style={{
-                    textAlign: "left", fontSize: theme.menu.draftOrder.item.nameFontSize, fontWeight: "600",
+                    fontFamily: config.fontFamily,
+                    textAlign: "left",
+                    fontSize: theme.menu.draftOrder.item.nameFontSize,
+                    fontWeight: "600",
                     color: theme.menu.draftOrder.item.nameColor,
                 }}>
                     {
@@ -78,6 +82,7 @@ export const MyOrderListItem = React.memo(({ theme, stateId, menuStateId, imageH
                 </Text>
                 <View style={{ marginBottom: 1 }}>
                     <Text style={{
+                        fontFamily: config.fontFamily,
                         textAlign: "left",
                         fontWeight: "600",
                         fontSize: theme.menu.draftOrder.item.price.textFontSize,
