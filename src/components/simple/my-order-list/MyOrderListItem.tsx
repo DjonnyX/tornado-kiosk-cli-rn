@@ -70,7 +70,7 @@ export const MyOrderListItem = React.memo(({ theme, stateId, menuStateId, imageH
                     }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                 </View> */}
                 <Text numberOfLines={3} ellipsizeMode="tail" style={{
-                    fontFamily: config.fontFamily,
+                    fontFamily: config.fontFamilyRegular,
                     textAlign: "left",
                     fontSize: theme.menu.draftOrder.item.nameFontSize,
                     fontWeight: "600",
@@ -82,7 +82,7 @@ export const MyOrderListItem = React.memo(({ theme, stateId, menuStateId, imageH
                 </Text>
                 <View style={{ marginBottom: 1 }}>
                     <Text style={{
-                        fontFamily: config.fontFamily,
+                        fontFamily: config.fontFamilyRegular,
                         textAlign: "left",
                         fontWeight: "600",
                         fontSize: theme.menu.draftOrder.item.price.textFontSize,

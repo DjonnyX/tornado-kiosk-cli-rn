@@ -81,7 +81,7 @@ export const ConfirmationOrderListItem = React.memo(({ theme, stateId, orderWiza
                     <View style={{ flexDirection: "row", marginRight: 20, alignItems: "baseline" }}>
                         <View style={{ flex: 1 }}>
                             <Text numberOfLines={3} ellipsizeMode="tail" style={{
-                                fontFamily: config.fontFamily,
+                                fontFamily: config.fontFamilyRegular,
                                 textAlign: "left", fontSize: theme.confirmation.item.nameFontSize,
                                 color: theme.confirmation.item.nameColor, fontWeight: "600"
                             }}>
@@ -92,7 +92,7 @@ export const ConfirmationOrderListItem = React.memo(({ theme, stateId, orderWiza
                         </View>
                         <View style={{ width: 192, justifyContent: "flex-end" }}>
                             <Text style={{
-                                fontFamily: config.fontFamily,
+                                fontFamily: config.fontFamilyRegular,
                                 textAlign: "right", fontSize: theme.confirmation.item.price.textFontSize,
                                 color: theme.confirmation.item.price.textColor, fontWeight: "600"
                             }}>
@@ -107,7 +107,7 @@ export const ConfirmationOrderListItem = React.memo(({ theme, stateId, orderWiza
                             position.nestedPositions.map((p, index) => <View key={index} style={{ flexDirection: "row", marginRight: 20 }}>
                                 <View style={{ flex: 1 }}>
                                     <Text numberOfLines={1} ellipsizeMode="tail" style={{
-                                        fontFamily: config.fontFamily,
+                                        fontFamily: config.fontFamilyRegular,
                                         textAlign: "left", fontSize: 13,
                                         color: theme.confirmation.nestedItem.nameColor,
                                         fontWeight: "600"
@@ -119,7 +119,7 @@ export const ConfirmationOrderListItem = React.memo(({ theme, stateId, orderWiza
                                 </View>
                                 <View style={{ width: 192 }}>
                                     <Text numberOfLines={1} ellipsizeMode="tail" style={{
-                                        fontFamily: config.fontFamily,
+                                        fontFamily: config.fontFamilyRegular,
                                         textAlign: "right", fontSize: theme.confirmation.nestedItem.price.textFontSize,
                                         color: theme.confirmation.nestedItem.price.textColor, fontWeight: "600"
                                     }}>

@@ -17,7 +17,7 @@ export const AlertContent = React.memo(({ theme, title, message, buttons }: IAle
         <View style={{ flexDirection: "column" }}>
             <View style={{ flexDirection: "column", marginBottom: 32 }}>
                 <Text style={{
-                    fontFamily: config.fontFamily,
+                    fontFamily: config.fontFamilyRegular,
                     fontWeight: "600",
                     color: theme.common.alert.titleColor,
                     fontSize: theme.common.alert.titleFontSize
@@ -25,7 +25,7 @@ export const AlertContent = React.memo(({ theme, title, message, buttons }: IAle
                     {title}
                 </Text>
                 <Text style={{
-                    fontFamily: config.fontFamily,
+                    fontFamily: config.fontFamilyRegular,
                     fontWeight: "600",
                     color: theme.common.alert.messageColor,
                     fontSize: theme.common.alert.messageFontSize

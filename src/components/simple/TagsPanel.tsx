@@ -82,7 +82,7 @@ const TagButton = React.memo(({ theme, tag, language, onSelect }: ITagButtonProp
                 }}
             >
                 <Text style={{
-                    fontFamily: config.fontFamily,
+                    fontFamily: config.fontFamilyLite,
                     fontWeight: "500",
                     textTransform: "lowercase",
                     color: Color(backgroundColor).isLight() ? theme.menu.tagsPanel.tag.textColorDark : theme.menu.tagsPanel.tag.textColorLight,

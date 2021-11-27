@@ -57,7 +57,7 @@ const FormSN = React.memo(({ theme, value, isProgress, onComplete }: IFormSNProp
                     : theme.service.textInput.underlineWrongColor
                 }
                 style={{
-                    fontFamily: config.fontFamily,
+                    fontFamily: config.fontFamilyRegular,
                     fontSize: theme.service.textInput.textFontSize,
                     textAlign: "center", color: theme.service.textInput.textColor,
                     minWidth: 140, marginBottom: 12
@@ -68,7 +68,7 @@ const FormSN = React.memo(({ theme, value, isProgress, onComplete }: IFormSNProp
                 <Text style={{
                     fontSize: theme.service.errorLabel.textFontSize,
                     color: theme.service.errorLabel.textColor,
-                    fontFamily: config.fontFamily,
+                    fontFamily: config.fontFamilyRegular,
                 }}>
                     * Обязательное поле
                 </Text>
@@ -125,7 +125,7 @@ const FormTParams = React.memo(({ theme, stores, _storeId, _terminal, isProgress
                     : theme.service.textInput.underlineWrongColor
                 }
                 style={{
-                    fontFamily: config.fontFamily,
+                    fontFamily: config.fontFamilyRegular,
                     fontSize: theme.service.textInput.textFontSize,
                     textAlign: "center", color: theme.service.textInput.textColor,
                     minWidth: 180
@@ -134,7 +134,7 @@ const FormTParams = React.memo(({ theme, stores, _storeId, _terminal, isProgress
             {
                 !isTerminalNameValid &&
                 <Text style={{
-                    fontFamily: config.fontFamily,
+                    fontFamily: config.fontFamilyRegular,
                     fontSize: theme.service.errorLabel.textFontSize,
                     color: theme.service.errorLabel.textColor
                 }}>
@@ -169,7 +169,7 @@ const FormTParams = React.memo(({ theme, stores, _storeId, _terminal, isProgress
             {
                 !isStoreIdValid &&
                 <Text style={{
-                    fontFamily: config.fontFamily,
+                    fontFamily: config.fontFamilyRegular,
                     fontSize: theme.service.errorLabel.textFontSize,
                     color: theme.service.errorLabel.textColor
                 }}>

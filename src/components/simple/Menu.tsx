@@ -273,7 +273,7 @@ export const Menu = React.memo(({
                                                     fontWeight: "600",
                                                     color: theme.menu.header.titleColor,
                                                     fontSize: theme.menu.header.titleFontSize, marginRight: 24,
-                                                    fontFamily: config.fontFamily,
+                                                    fontFamily: config.fontFamilyRegular,
                                                 }}>
                                                     {
                                                         currentCategory.__rawNode__.content?.contents[language.code]?.name

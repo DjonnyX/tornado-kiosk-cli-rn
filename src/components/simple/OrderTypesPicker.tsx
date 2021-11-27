@@ -61,7 +61,7 @@ export const OrderTypesPicker = React.memo(({ theme, language, isShow, orderType
                                 uri: `file://${item.contents[language?.code]?.resources?.main?.mipmap.x128}`,
                             }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                             <Text style={{
-                                fontFamily: config.fontFamily,
+                                fontFamily: config.fontFamilyRegular,
                                 fontWeight: "600",
                                 color: theme.orderTypeModal.item.textColor,
                                 fontSize: theme.orderTypeModal.item.textFontSize,
@@ -84,7 +84,7 @@ export const OrderTypesPicker = React.memo(({ theme, language, isShow, orderType
                     flexDirection: "row", alignItems: "center", paddingLeft: 16, paddingRight: 16, paddingTop: 12, paddingBottom: 12, ...style as any
                 }}>
                     <Text style={{
-                        fontFamily: config.fontFamily,
+                        fontFamily: config.fontFamilyRegular,
                         fontSize: theme.orderTypePicker.textFontSize,
                         fontWeight: "600",
                         textAlign: "center",

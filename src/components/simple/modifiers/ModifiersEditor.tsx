@@ -112,7 +112,7 @@ export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _la
                                         </View>
                                         <View style={{ flex: 1, marginLeft: 30, marginRight: 30 }}>
                                             <Text style={{
-                                                fontFamily: config.fontFamily,
+                                                fontFamily: config.fontFamilyRegular,
                                                 fontSize: theme.modifiers.nameFontSize,
                                                 fontWeight: "600",
                                                 color: theme.modifiers.nameColor,
@@ -120,7 +120,7 @@ export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _la
                                                     position.__product__?.contents[_language.code]?.name
                                                 }</Text>
                                             <Text style={{
-                                                fontFamily: config.fontFamily,
+                                                fontFamily: config.fontFamilyLite,
                                                 fontSize: theme.modifiers.descriptionFontSize,
                                                 color: theme.modifiers.descriptionColor,
                                                 lineHeight: theme.modifiers.descriptionFontSize * 1.5,
@@ -130,7 +130,7 @@ export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _la
                                         </View>
                                         <View style={{}}>
                                             <Text style={{
-                                                fontFamily: config.fontFamily,
+                                                fontFamily: config.fontFamilyRegular,
                                                 backgroundColor: theme.modifiers.price.backgroundColor,
                                                 paddingVertical: 8, paddingHorizontal: 8,
                                                 // borderRadius: 14, borderWidth: 2, borderColor: theme.modifiers.price.borderColor,
@@ -259,7 +259,7 @@ export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _la
                                             disabled={position.currentGroup === 0} onPress={onPreviousGroup}></SimpleButton>
                                         <View style={{ flex: 1 }}>
                                             <Text style={{
-                                                fontFamily: config.fontFamily,
+                                                fontFamily: config.fontFamilyRegular,
                                                 fontSize: 24,
                                                 fontWeight: "600",
                                                 color: theme.modifiers.group.nameColor,
@@ -269,7 +269,7 @@ export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _la
                                                     position.groups[position.currentGroup].__node__.__rawNode__.content?.contents[_language.code]?.name
                                                 }</Text>
                                             <Text style={{
-                                                fontFamily: config.fontFamily,
+                                                fontFamily: config.fontFamilyRegular,
                                                 fontSize: 14,
                                                 color: position.groups[position.currentGroup].isValid
                                                     ? theme.modifiers.group.descriptionColor

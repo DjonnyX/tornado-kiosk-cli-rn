@@ -32,7 +32,7 @@ const PayStatusScreenContainer = React.memo(({ _theme, _language, navigation }: 
                 }}>
                     <View style={{ alignItems: "center", width: "80%", maxWidth: 620 }}>
                         <Text style={{
-                            fontFamily: config.fontFamily,
+                            fontFamily: config.fontFamilyRegular,
                             fontSize: theme.payStatus.primaryMessageFontSize, fontWeight: "600", textAlign: "center",
                             color: theme.payStatus.primaryMessageColor
                         }}>
@@ -41,7 +41,7 @@ const PayStatusScreenContainer = React.memo(({ _theme, _language, navigation }: 
                             }
                         </Text>
                         <Text style={{
-                            fontFamily: config.fontFamily,
+                            fontFamily: config.fontFamilyRegular,
                             fontSize: theme.payStatus.secondaryMessageFontSize, fontWeight: "600", textAlign: "center",
                             color: theme.payStatus.secondaryMessageColor, marginBottom: 40
                         }}>

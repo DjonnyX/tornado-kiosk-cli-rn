@@ -26,7 +26,7 @@ export const CtrlMenuButton = React.memo(({ onPress, text, disabled = false, gra
             }}
             >
                 <Text style={{
-                    fontFamily: config.fontFamily,
+                    fontFamily: config.fontFamilyRegular,
                     color: "#fff",
                     fontSize: 16,
                     fontWeight: "600"

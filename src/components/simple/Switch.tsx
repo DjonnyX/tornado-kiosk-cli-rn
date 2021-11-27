@@ -149,7 +149,7 @@ export const Switch = React.memo(({ value, titleOn, titleOff,
                             !!titleOff &&
                             <Text style={{
                                 ...styles.sTextOff as any,
-                                fontFamily: config.fontFamily,
+                                fontFamily: config.fontFamilyRegular,
                             }}>
                                 {
                                     titleOff
@@ -160,7 +160,7 @@ export const Switch = React.memo(({ value, titleOn, titleOff,
                             !!formatValueFunction &&
                             <Text style={{
                                 ...styles.sTextOff as any,
-                                fontFamily: config.fontFamily,
+                                fontFamily: config.fontFamilyRegular,
                             }}>
                                 {
                                     formatValueFunction(value)
@@ -177,7 +177,7 @@ export const Switch = React.memo(({ value, titleOn, titleOff,
                             !!titleOn &&
                             <Text style={{
                                 ...styles.sTextOn as any,
-                                fontFamily: config.fontFamily,
+                                fontFamily: config.fontFamilyRegular,
                             }}>
                                 {
                                     titleOn
@@ -188,7 +188,7 @@ export const Switch = React.memo(({ value, titleOn, titleOff,
                             !!formatValueFunction &&
                             <Text style={{
                                 ...styles.sTextOn as any,
-                                fontFamily: config.fontFamily,
+                                fontFamily: config.fontFamilyRegular,
                             }}>
                                 {
                                     formatValueFunction(value)

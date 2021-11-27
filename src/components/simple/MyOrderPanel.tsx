@@ -62,7 +62,7 @@ export const MyOrderPanel = React.memo(({ theme, orderStateId, currency, languag
                     orderWizard?.positions.length !== 0 &&
                     <View style={{ margin: "auto", marginBottom: 12, alignItems: "center" }}>
                         <Text style={{
-                            fontFamily: config.fontFamily,
+                            fontFamily: config.fontFamilyRegular,
                             fontWeight: "600",
                             fontSize: theme.menu.sum.price.textFontSize,
                             color: theme.menu.sum.price.textColor

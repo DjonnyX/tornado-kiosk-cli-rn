@@ -64,7 +64,7 @@ const NumericStepperButton = ({ icon, style, selectedStyle, textStyle, textSelec
             <View style={{ alignItems: "center", justifyContent: "center", ...actualStyle as any }}>
                 <Text style={{
                     ...actualTextStyle as any,
-                    fontFamily: config.fontFamily,
+                    fontFamily: config.fontFamilyRegular,
                 }}>
                     {
                         icon
@@ -104,7 +104,7 @@ const NumericStepperPlaceholder = React.memo(({ text, disabled, style, textStyle
             <View style={{ alignItems: "center", justifyContent: "center", ...style as any }}>
                 <Text style={{
                     ...textStyle as any,
-                    fontFamily: config.fontFamily,
+                    fontFamily: config.fontFamilyRegular,
                 }}>
                     {
                         text

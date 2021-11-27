@@ -168,7 +168,7 @@ export const PositionDetailsContainer = React.memo(({ _theme, _orderStateId, _la
                                             borderRadius: 24,
                                         }}>
                                             <Text style={{
-                                                fontFamily: config.fontFamily,
+                                                fontFamily: config.fontFamilyRegular,
                                                 textAlign: "center",
                                                 fontSize: theme.details.frame.nameFontSize, fontWeight: "600", color: theme.details.frame.nameColor,
                                                 marginBottom: 22,
@@ -176,7 +176,7 @@ export const PositionDetailsContainer = React.memo(({ _theme, _orderStateId, _la
                                                     position.__product__?.contents[_language.code]?.name
                                                 }</Text>
                                             <Text style={{
-                                                fontFamily: config.fontFamily,
+                                                fontFamily: config.fontFamilyLite,
                                                 textAlign: "center",
                                                 fontSize: theme.details.frame.descriptionFontSize, color: theme.details.frame.descriptionColor,
                                                 lineHeight: theme.details.frame.descriptionFontSize * 1.5,
@@ -190,7 +190,7 @@ export const PositionDetailsContainer = React.memo(({ _theme, _orderStateId, _la
                                                 marginBottom: 22,
                                             }}>
                                                 <Text style={{
-                                                    fontFamily: config.fontFamily,
+                                                    fontFamily: config.fontFamilyRegular,
                                                     backgroundColor: theme.details.frame.price.backgroundColor,
                                                     paddingVertical: 14, paddingHorizontal: 28,
                                                     borderRadius: 14, borderWidth: 2, borderColor: theme.details.frame.price.borderColor,

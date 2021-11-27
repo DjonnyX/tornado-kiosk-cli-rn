@@ -19,7 +19,9 @@ class Config implements IConfig {
         resetTimeoutAfterPay: 20,
     };
 
-    fontFamily = "Roboto";
+    fontFamilyLite = "Roboto-Light";
+    fontFamilyRegular = "Roboto-Regular";
+    fontFamilyBold = "Roboto-Bold";
 }
 
 export const config = new Config();
