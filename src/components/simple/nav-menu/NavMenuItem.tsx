@@ -145,8 +145,11 @@ export const NavMenuItem = React.memo(({ theme, thumbnailHeight, orderWizard, or
                             <Text style={{
                                 fontFamily: config.fontFamilyRegular,
                                 flex: 1,
-                                textAlign: "right", fontSize: theme.menu.navMenu.item.price.textFontSize,
-                                paddingRight: 14, color: theme.menu.navMenu.item.price.textColor
+                                textAlign: "right",
+                                letterSpacing: 0.4,
+                                lineHeight: theme.menu.navMenu.item.descriptionFontSize * 1.6,
+                                fontSize: theme.menu.navMenu.item.descriptionFontSize,
+                                color: theme.menu.navMenu.item.descriptionColor,
                             }}>
                                 {
                                     node.getPortion()
