@@ -16,6 +16,7 @@ import { GridList } from "../../layouts/GridList";
 import { ModalRollTop } from "../ModalRollTop";
 import { NumericStapper } from "../NumericStapper";
 import { SimpleButton } from "../SimpleButton";
+import { WizardIndicator } from "../WizardIndicator";
 import { ModifierListItem } from "./ModifierListItem";
 
 const MODIFIER_ITEM_WIDTH = 218;
@@ -215,22 +216,10 @@ export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _la
                                     paddingLeft: 34, paddingRight: 34, paddingTop: 34,
                                     borderTopLeftRadius: 32, borderTopRightRadius: 32, marginHorizontal: 24,
                                 }}>
-                                    <View style={{ width: "100%", alignItems: "center", marginBottom: 32 }}>
-                                        <View style={{ width: "100%", flexDirection: "row", height: 4, maxWidth: 300, }}>
-                                            {
-                                                position.groups.map((gr, i) =>
-                                                    <View key={gr.index} style={{
-                                                        flex: 1, marginRight: 12, height: 6, borderRadius: 3,
-                                                        backgroundColor: i === position?.currentGroup
-                                                            ? gr.isValid
-                                                                ? theme.modifiers.group.indicator.currentValidColor
-                                                                : theme.modifiers.group.indicator.currentInvalidColor
-                                                            : theme.modifiers.group.indicator.otherColor
-                                                    }}></View>
-                                                )
-                                            }
-                                        </View>
-                                    </View>
+                                    <WizardIndicator
+                                        theme={theme} language={_language}
+                                        groups={position?.groups} positionStateId={stateId}
+                                        currentGroup={position?.currentGroup} />
                                     <View style={{ width: "100%", flexDirection: "row", marginBottom: -40, zIndex: 2 }}>
                                         <SimpleButton title={
                                             localize(_language, "kiosk_modifiers_group_prev_button")

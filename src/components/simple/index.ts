@@ -7,5 +7,6 @@ export * from "./ModalSolid";
 export * from "./ModalTransparent";
 export * from "./AlertContent";
 export * from "./SimpleButton";
+export * from "./WizardIndicator";
 export * from "./side-menu";
 export * from "./nav-menu";
