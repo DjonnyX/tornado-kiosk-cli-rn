@@ -66,7 +66,7 @@ export const NavMenuItem = React.memo(({ theme, thumbnailHeight, orderWizard, or
                                 position: "absolute",
                             }}>
                                 <Text style={{
-                                    fontFamily: config.fontFamily,
+                                    fontFamily: config.fontFamilyRegular,
                                     borderRadius: 8,
                                     paddingHorizontal: 8,
                                     paddingVertical: 4,
@@ -91,7 +91,7 @@ export const NavMenuItem = React.memo(({ theme, thumbnailHeight, orderWizard, or
                             </View>
                         </View>
                         <Text textBreakStrategy="simple" numberOfLines={4} ellipsizeMode="tail" style={{
-                            fontFamily: config.fontFamily,
+                            fontFamily: config.fontFamilyRegular,
                             width: "100%",
                             textAlign: node.type === NodeTypes.PRODUCT ? "left" : "center",
                             fontSize: theme.menu.navMenu.item.nameFontSize,
@@ -104,7 +104,7 @@ export const NavMenuItem = React.memo(({ theme, thumbnailHeight, orderWizard, or
                             }
                         </Text>
                         <Text textBreakStrategy="simple" numberOfLines={2} ellipsizeMode="tail" style={{
-                            fontFamily: config.fontFamily,
+                            fontFamily: config.fontFamilyLite,
                             width: "100%",
                             textAlign: node.type === NodeTypes.PRODUCT ? "left" : "center",
                             fontWeight: "400",
@@ -131,7 +131,7 @@ export const NavMenuItem = React.memo(({ theme, thumbnailHeight, orderWizard, or
                             marginBottom: 12
                         }}>
                             <Text style={{
-                                fontFamily: config.fontFamily,
+                                fontFamily: config.fontFamilyRegular,
                                 flex: 1,
                                 textAlign: "left",
                                 fontSize: theme.menu.navMenu.item.price.textFontSize,
@@ -143,7 +143,7 @@ export const NavMenuItem = React.memo(({ theme, thumbnailHeight, orderWizard, or
                                 }
                             </Text>
                             <Text style={{
-                                fontFamily: config.fontFamily,
+                                fontFamily: config.fontFamilyRegular,
                                 flex: 1,
                                 textAlign: "right", fontSize: theme.menu.navMenu.item.price.textFontSize,
                                 paddingRight: 14, color: theme.menu.navMenu.item.price.textColor

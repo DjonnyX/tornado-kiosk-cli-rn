@@ -9,5 +9,7 @@ export interface IConfig {
         checkActivityInterval: number;
         resetTimeoutAfterPay: number;
     };
-    fontFamily: string;
+    fontFamilyLite: string;
+    fontFamilyRegular: string;
+    fontFamilyBold: string;
 }

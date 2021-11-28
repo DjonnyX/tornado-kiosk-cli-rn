@@ -65,7 +65,7 @@ export const SimpleButton = React.memo(({ children, title, style, styleDisabled,
                 }
                 <Text style={{
                     ...styles.sText as any,
-                    fontFamily: config.fontFamily,
+                    fontFamily: config.fontFamilyRegular,
                 }}>
                     {
                         title
@@ -126,7 +126,7 @@ export const SimpleSystemButton = React.memo(({ title, style, styleDisabled, tex
             >
                 <Text style={{
                     ...styles.sText as any,
-                    fontFamily: config.fontFamily,
+                    fontFamily: config.fontFamilyRegular,
                 }} >
                     {
                         title

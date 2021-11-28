@@ -68,7 +68,7 @@ export const ModifierListItem = React.memo(({ theme, thumbnailHeight, currency, 
                             position: "absolute",
                         }}>
                             <Text style={{
-                                fontFamily: config.fontFamily,
+                                fontFamily: config.fontFamilyRegular,
                                 borderRadius: 8,
                                 paddingHorizontal: 8,
                                 paddingVertical: 4,
@@ -90,7 +90,7 @@ export const ModifierListItem = React.memo(({ theme, thumbnailHeight, currency, 
                 </View>
                 <Text textBreakStrategy="simple" numberOfLines={4} ellipsizeMode="tail"
                     style={{
-                        fontFamily: config.fontFamily,
+                        fontFamily: config.fontFamilyRegular,
                         textAlign: "center", fontSize: theme.modifiers.item.nameFontFontSize, marginBottom: 6, color: theme.modifiers.item.nameColor,
                         fontWeight: "600",
                     }}>
@@ -99,7 +99,7 @@ export const ModifierListItem = React.memo(({ theme, thumbnailHeight, currency, 
                     }
                 </Text>
                 {/* <Text textBreakStrategy="simple" numberOfLines={2} ellipsizeMode="tail" style={{
-                    fontFamily: config.fontFamily,
+                    fontFamily: config.fontFamilyRegular,
                     textAlign: "center", fontSize: theme.modifiers.item.descriptionFontSize,
                     color: theme.modifiers.item.descriptionColor,
                     marginBottom: 12

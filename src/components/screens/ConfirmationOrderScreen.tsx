@@ -94,7 +94,7 @@ const ConfirmationOrderScreenContainer = React.memo(({ _theme, _language, _banne
                                 onPress={onPrevious}></SimpleButton>
                             <View style={{ flex: 1, alignContent: "center", justifyContent: "center" }}>
                                 <Text style={{
-                                    fontFamily: config.fontFamily,
+                                    fontFamily: config.fontFamilyRegular,
                                     fontSize: theme.confirmation.summaryPrice.textFontSize,
                                     fontWeight: "600",
                                     color: theme.confirmation.summaryPrice.textColor,

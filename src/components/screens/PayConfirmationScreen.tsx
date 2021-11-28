@@ -63,7 +63,7 @@ const PayConfirmationScreenScreenContainer = React.memo(({ _theme, _language, _o
                 }}>
                     <View style={{ flex: 1, alignItems: "center", width: "70%", maxWidth: 620 }}>
                         <Text style={{
-                            fontFamily: config.fontFamily,
+                            fontFamily: config.fontFamilyRegular,
                             fontSize: theme.payConfirmation.primaryMessageFontSize, fontWeight: "600", textAlign: "center",
                             color: theme.payConfirmation.primaryMessageColor
                         }}>
@@ -72,7 +72,7 @@ const PayConfirmationScreenScreenContainer = React.memo(({ _theme, _language, _o
                             }
                         </Text>
                         <Text style={{
-                            fontFamily: config.fontFamily,
+                            fontFamily: config.fontFamilyRegular,
                             fontSize: theme.payConfirmation.primaryMessageFontSize, fontWeight: "600", textAlign: "center",
                             color: theme.payConfirmation.primaryMessageColor
                         }}>
@@ -81,14 +81,14 @@ const PayConfirmationScreenScreenContainer = React.memo(({ _theme, _language, _o
                             }
                         </Text>
                         <Text style={{
-                            fontFamily: config.fontFamily,
+                            fontFamily: config.fontFamilyBold,
                             fontSize: theme.payConfirmation.nameFontSize, fontWeight: "600", textAlign: "center",
                             color: theme.payConfirmation.numberColor
                         }}>
                             {_orderWizard?.result?.code}
                         </Text>
                         <Text style={{
-                            fontFamily: config.fontFamily,
+                            fontFamily: config.fontFamilyRegular,
                             fontSize: theme.payConfirmation.secondaryMessageFontSize, fontWeight: "600", textAlign: "center",
                             color: theme.payConfirmation.secondaryMessageColor
                         }}>
@@ -97,7 +97,7 @@ const PayConfirmationScreenScreenContainer = React.memo(({ _theme, _language, _o
                             }
                         </Text>
                         {/*<Text style={{
-                    fontFamily: config.fontFamily,
+                    fontFamily: config.fontFamilyRegular,
                     fontSize: 20, fontWeight: "600", textAlign: "center",
                     color: theme.payConfirmation.secondaryMessageColor, marginBottom: 40
                 }}>

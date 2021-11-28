@@ -158,7 +158,7 @@ export const SideMenuItem = React.memo(({ theme, depth = 0, height = 0, selected
                             uri: `file://${currentAsset?.mipmap?.x128}`,
                         }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                         <Text style={{
-                            fontFamily: config.fontFamily,
+                            fontFamily: config.fontFamilyRegular,
                             letterSpacing: 0.3,
                             fontSize: theme.menu.sideMenu.item.nameFontSize,
                             color: theme.menu.sideMenu.item.nameColor,
