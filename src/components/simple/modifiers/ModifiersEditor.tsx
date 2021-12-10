@@ -108,7 +108,7 @@ export const ModifiersEditorContainer = React.memo(({ _theme, _orderStateId, _la
                                     <View style={{ flex: 1, width: "100%", flexDirection: "row", alignItems: "flex-start", marginRight: 48, overflow: "hidden" }}>
                                         <View style={{ alignItems: "center" }}>
                                             <FastImage style={{ width: 128, height: 128, borderRadius: 16, overflow: "hidden" }} source={{
-                                                uri: `file://${position.__product__?.contents[_language?.code]?.resources?.icon?.path}`,
+                                                uri: `file://${position.__product__?.contents[_language?.code]?.resources?.main?.path}`,
                                             }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                                         </View>
                                         <View style={{ flex: 1, marginLeft: 30, marginRight: 30 }}>

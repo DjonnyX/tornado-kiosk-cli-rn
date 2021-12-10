@@ -22,7 +22,7 @@ interface ConfirmationOrderListItemProps {
 export const ConfirmationOrderListItem = React.memo(({ theme, stateId, orderWizard, color, currency, language, position,
     alertOpen }: ConfirmationOrderListItemProps) => {
     const currentContent = position.__product__?.contents[language?.code];
-    const currentAsset = currentContent?.resources?.icon;
+    const currentAsset = currentContent?.resources?.main;
 
     const pressHandler = useCallback((e: GestureResponderEvent) => {
         const isEditable = position.edit();

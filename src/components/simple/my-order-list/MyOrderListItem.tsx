@@ -21,7 +21,7 @@ interface IMyOrderListItemItemProps {
 export const MyOrderListItem = React.memo(({ theme, stateId, menuStateId, imageHeight, currency, language, position,
     orderWizard, alertOpen }: IMyOrderListItemItemProps) => {
     const currentContent = position.__product__?.contents[language?.code];
-    const currentAsset = currentContent?.resources?.icon;
+    const currentAsset = currentContent?.resources?.main;
 
     const pressHandler = useCallback((e: GestureResponderEvent) => {
         const isEditable = position.edit();

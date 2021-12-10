@@ -32,7 +32,7 @@ export const NavMenuItem = React.memo(({ theme, thumbnailHeight, orderWizard, or
     const parentContent = parentNode?.__rawNode__?.content?.contents[language?.code];
 
     const currentContent = node.__rawNode__.content?.contents[language?.code];
-    const currentAsset = currentContent?.resources?.icon;
+    const currentAsset = currentContent?.resources?.main;
 
     const tags = node.type === NodeTypes.PRODUCT && (node.__rawNode__.content as ICompiledProduct).tags?.length > 0
         ? (node.__rawNode__.content as ICompiledProduct).tags
@@ -145,8 +145,11 @@ export const NavMenuItem = React.memo(({ theme, thumbnailHeight, orderWizard, or
                             <Text style={{
                                 fontFamily: config.fontFamilyRegular,
                                 flex: 1,
-                                textAlign: "right", fontSize: theme.menu.navMenu.item.price.textFontSize,
-                                paddingRight: 14, color: theme.menu.navMenu.item.price.textColor
+                                textAlign: "right",
+                                letterSpacing: 0.4,
+                                lineHeight: theme.menu.navMenu.item.descriptionFontSize * 1.6,
+                                fontSize: theme.menu.navMenu.item.descriptionFontSize,
+                                color: theme.menu.navMenu.item.descriptionColor,
                             }}>
                                 {
                                     node.getPortion()
