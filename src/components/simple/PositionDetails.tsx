@@ -155,7 +155,7 @@ export const PositionDetailsContainer = React.memo(({ _theme, _orderStateId, _la
                                                 height: isLandscape ? actualHeight : (actualHeight * .4),
                                                 borderRadius: 16, overflow: "hidden"
                                             }} source={{
-                                                uri: `file://${position.__product__?.contents[_language?.code]?.resources?.icon?.path}`,
+                                                uri: `file://${position.__product__?.contents[_language?.code]?.resources?.main?.path}`,
                                             }} resizeMode={FastImage.resizeMode.contain}></FastImage>
                                         </View>
                                         <View style={{

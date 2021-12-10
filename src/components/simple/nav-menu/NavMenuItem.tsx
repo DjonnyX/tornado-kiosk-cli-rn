@@ -32,7 +32,7 @@ export const NavMenuItem = React.memo(({ theme, thumbnailHeight, orderWizard, or
     const parentContent = parentNode?.__rawNode__?.content?.contents[language?.code];
 
     const currentContent = node.__rawNode__.content?.contents[language?.code];
-    const currentAsset = currentContent?.resources?.icon;
+    const currentAsset = currentContent?.resources?.main;
 
     const tags = node.type === NodeTypes.PRODUCT && (node.__rawNode__.content as ICompiledProduct).tags?.length > 0
         ? (node.__rawNode__.content as ICompiledProduct).tags

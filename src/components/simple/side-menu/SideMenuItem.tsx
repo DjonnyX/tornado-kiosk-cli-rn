@@ -106,7 +106,7 @@ export const SideMenuItem = React.memo(({ theme, depth = 0, height = 0, selected
     };
 
     const currentContent = node.__rawNode__.content?.contents[language?.code];
-    const currentAsset = currentContent?.resources?.icon;
+    const currentAsset = currentContent?.resources?.main;
     const color = theme.menu.sideMenu.item.backgroundColor; //currentContent.color;
     const isLight = Color.rgb(color).isLight();
     const actualColor = node === selected ?

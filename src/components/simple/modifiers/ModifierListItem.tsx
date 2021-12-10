@@ -35,7 +35,7 @@ export const ModifierListItem = React.memo(({ theme, thumbnailHeight, currency, 
     }
 
     const currentContent = position.__product__?.contents[language?.code];
-    const currentAsset = currentContent?.resources?.icon;
+    const currentAsset = currentContent?.resources?.main;
 
     const tags = !!position.__product__?.tags && position.__product__?.tags?.length > 0
         ? position.__product__?.tags
